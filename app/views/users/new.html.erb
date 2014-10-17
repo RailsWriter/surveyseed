@@ -19,10 +19,13 @@
 					</header>
 					
 					<content>
-						<p class="qualification-question">Steps: Qualify ----> Complete survey ----> Collect reward</p>
+						<p class="qualification-question">Qualify ----> Complete survey ----> Collect reward</p>
 						<p>Enter the month and year of your birth</p>
-						<%= select_month(Date.today) %>
-						<%= select_year(Date.today, start_year: 1914, end_year: 2014) %>
+						<%= form_for (@user) do |f| %>
+							<%= f.select :birth_month, (Time.zone.now.month)..(Time.zone.now.month + 3) %>
+							<%= f.select :birth_year, (Time.zone.now.year-100)..(Time.zone.now.year) %>
+							<%= f.submit "Next"%>
+						<% end %>
 						/* If IE then ....? */
 					</content>
 					
