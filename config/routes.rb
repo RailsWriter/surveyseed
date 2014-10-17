@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'users/new'
+
+  get 'users/status'
+
   root 'leads#home'
 
   get 'leads/thanks'
