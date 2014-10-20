@@ -1,0 +1,9 @@
+<h1> Gender </h1>
+
+<p>Read our TOS here ...</p>
+<%= form_tag("gender", method: "post") do %>
+	<% check_box_tag(:gender) %>
+	<% label_tag(:gender, "Male") %>
+	<% label_tag(:gender, "Female")%>
+	<%= submit_tag "Next" %>
+<% end %>

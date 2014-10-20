@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
-  
-  get 'users/status'
 
   root 'leads#home'
 
   get 'leads/thanks'
+  
+  post 'users/eval_age', 'users/sign_tos'
+  get 'users/qq1', 'users/qq2'
+  
+  
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

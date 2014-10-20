@@ -19,14 +19,15 @@
 					</header>
 					
 					<content>
-						<p class="qualification-question">Qualify ----> Complete survey ----> Collect reward</p>
+						<p class="qualification-questions">Qualify ----> Complete survey ----> Collect reward</p>
 						<p>Enter the month and year of your birth</p>
-						<%= form_for (@user) do |f| %>
+						<%= form_for (@user), url: {action: "eval_age"} do |f| %>
 							<%= f.select :birth_month, (Time.zone.now.month)..(Time.zone.now.month + 3) %>
 							<%= f.select :birth_year, (Time.zone.now.year-100)..(Time.zone.now.year) %>
-							<%= f.submit "Next"%>
+							<%= f.submit "Next" %>
 						<% end %>
 						/* If IE then ....? */
+					
 					</content>
 					
 				</article>
