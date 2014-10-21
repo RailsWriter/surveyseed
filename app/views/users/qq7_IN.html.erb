@@ -1,0 +1,22 @@
+<h1>Education_IN</h1>
+
+<p>What is the highest degree or level of school you have completed?</p>
+<%= form_tag("education_IN", method: "post") do %>
+	<%= check_box_tag 'education', 'Primary school or less' %>
+	<%= label_tag(:education, "Primary school or less") %><br>
+	<%= check_box_tag 'education', 'Some high school' %>
+	<%= label_tag(:education, "Some high school") %><br>
+	<%= check_box_tag 'education', 'Graduated high school' %>
+	<%= label_tag(:education, "Graduated high school") %><br>
+	<%= check_box_tag 'education', 'Some college / Trade School' %>
+	<%= label_tag(:education, "Some college / Trade School") %><br>
+	<%= check_box_tag 'education', 'Graduated from college / Trade School' %>
+	<%= label_tag(:education, "Graduated from college / Trade School") %><br>
+	<%= check_box_tag 'education', 'Some university but did not finish' %>
+	<%= label_tag(:education, "Some university but did not finish") %><br>	
+	<%= check_box_tag 'education', 'University undergraduate degree, such as Bachelors Degree' %>
+	<%= label_tag(:education, "University undergraduate degree, such as Bachelors Degree") %><br>
+	<%= check_box_tag 'education', 'University graduate degree, such as Masters or PhD' %>
+	<%= label_tag(:education, "University graduate degree, such as Masters or PhD") %><br>
+	<%= submit_tag "Next" %>
+<% end %>

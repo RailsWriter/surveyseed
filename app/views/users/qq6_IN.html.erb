@@ -1,0 +1,14 @@
+<h1>Race</h1>
+
+<p>What is your caste? please select one or more choices.</p>
+<%= form_tag("race_IN", method: "post") do %>
+	<%= check_box_tag 'race[]', 'Brahmin' %>
+	<%= label_tag(:race, "Brahmin") %><br>
+	<%= check_box_tag 'race[]', 'Scheduled Caste' %>
+	<%= label_tag(:race, "Scheduled Caste") %><br>
+	<%= check_box_tag 'race[]', 'Other' %>
+	<%= label_tag(:race, "Other") %><br>
+	<%= check_box_tag 'race[]', 'Choose not to answer' %>
+	<%= label_tag(:race, "Choose not to answer") %><br>
+	<%= submit_tag "Next" %>
+<% end %>

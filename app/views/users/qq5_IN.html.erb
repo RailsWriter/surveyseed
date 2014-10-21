@@ -1,0 +1,12 @@
+<h1>Ethnicity_IN</h1>
+
+<p>Please select which group you most identify yourself with.</p>
+<%= form_tag("ethnicity_IN", method: "post") do %>
+	<%= check_box_tag 'ethnicity', 'Aboriginal' %>
+	<%= label_tag(:ethnicity, "Aboriginal") %><br>
+	<%= check_box_tag 'ethnicity', 'North Indian' %>
+	<%= label_tag(:ethnicity, "North Indian") %><br>
+	<%= check_box_tag 'ethnicity', 'South Indian' %>
+	<%= label_tag(:ethnicity, "South Indian") %><br>
+	<%= submit_tag "Next" %>
+<% end %>

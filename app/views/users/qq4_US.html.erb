@@ -1,0 +1,8 @@
+<h1>ZIP</h1>
+
+<p>Enter your ZIP code:</p>
+<%= form_tag("zip_US", method: "post") do %>
+	<%= text_field_tag 'zip', nil, maxlength: 5 %>
+	<%= label_tag(:zip) %><br>
+	<%= submit_tag "Next" %>
+<% end %>

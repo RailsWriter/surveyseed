@@ -4,8 +4,24 @@ one:
   birth_month: 1
   birth_year: 1
   tos: false
+  gender: MyString
+  country: MyString
+  ZIP: MyString
+  ethnicity: MyString
+  race: MyString
+  eduation: MyString
+  householdcomp: 1
+  householdincome: MyString
 
 two:
   birth_month: 1
   birth_year: 1
   tos: false
+  gender: MyString
+  country: MyString
+  ZIP: MyString
+  ethnicity: MyString
+  race: MyString
+  eduation: MyString
+  householdcomp: 1
+  householdincome: MyString

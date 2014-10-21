@@ -1,0 +1,8 @@
+<h1>Postal Code</h1>
+
+<p>Enter your PIN code:</p>
+<%= form_tag("zip_IN", method: "post") do %>
+	<%= text_field_tag 'zip', nil, maxlength: 6 %>
+	<%= label_tag(:PIN) %><br>
+	<%= submit_tag "Next" %>
+<% end %>

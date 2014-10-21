@@ -1,0 +1,16 @@
+<h1>Race_US</h1>
+
+<p>What is your race? please select one or more choices.</p>
+<%= form_tag("race_US", method: "post") do %>
+	<%= check_box_tag 'race[]', 'White' %>
+	<%= label_tag(:race, "White") %><br>
+	<%= check_box_tag 'race[]', 'Black or African American' %>
+	<%= label_tag(:race, "Black or African American") %><br>
+	<%= check_box_tag 'race[]', 'American Indian or Alaska Native' %>
+	<%= label_tag(:race, "American Indian or Alaska Native") %><br>
+	<%= check_box_tag 'race[]', 'Other' %>
+	<%= label_tag(:race, "Other") %><br>
+	<%= check_box_tag 'race[]', 'Choose not to answer' %>
+	<%= label_tag(:race, "Choose not to answer") %><br>
+	<%= submit_tag "Next" %>
+<% end %>

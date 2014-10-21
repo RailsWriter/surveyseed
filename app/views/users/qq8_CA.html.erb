@@ -1,0 +1,10 @@
+<h1>HHI_CA</h1>
+
+<p>What is your household income:</p>
+<%= form_tag("householdincome_CA", method: "post") do %>
+	<%= check_box_tag 'hhi', '0-5000' %>
+	<%= label_tag(:hhi, "< $5,000") %><br>
+	<%= check_box_tag 'hhi', '5000-9999' %>
+	<%= label_tag(:hhi, "$5,000 - $9,999") %><br>
+	<%= submit_tag "Next" %>
+<% end %>

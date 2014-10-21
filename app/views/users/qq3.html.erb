@@ -1,0 +1,12 @@
+<h1>Country</h1>
+
+<p>Your country of residence:</p>
+<%= form_tag("country", method: "post") do %>
+	<%= check_box_tag 'country', 'USA' %>
+	<%= label_tag(:country, "USA") %><br>
+	<%= check_box_tag 'country', 'Canada' %>
+	<%= label_tag(:country, "Canada") %><br>
+	<%= check_box_tag 'country', 'India' %>
+	<%= label_tag(:country, "India") %><br>
+	<%= submit_tag "Next" %>
+<% end %>

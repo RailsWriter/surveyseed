@@ -1,0 +1,8 @@
+<h1>Household Composition</h1>
+
+<p>How many people are living or staying at your current address?</p>
+<%= form_tag("householdcomp", method: "post") do %>
+	<%= number_field(:householdcomp, :range, in: 1..12) %>
+	<%= label_tag(:Household_Composition) %><br>
+	<%= submit_tag "Next" %>
+<% end %>

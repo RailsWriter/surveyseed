@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141018212126) do
+ActiveRecord::Schema.define(version: 20141020042033) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -25,8 +25,16 @@ ActiveRecord::Schema.define(version: 20141018212126) do
     t.integer  "birth_month"
     t.integer  "birth_year"
     t.boolean  "tos"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.string   "gender"
+    t.string   "country"
+    t.string   "ZIP"
+    t.string   "ethnicity"
+    t.string   "race"
+    t.string   "eduation"
+    t.integer  "householdcomp"
+    t.string   "householdincome"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
 end

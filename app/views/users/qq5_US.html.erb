@@ -1,0 +1,18 @@
+<h1>Ethnicity_US</h1>
+
+<p>Are you of Hispanic, Latino or Spanish origin?</p>
+<%= form_tag("ethnicity_US", method: "post") do %>
+	<%= check_box_tag 'ethnicity', 'No, not of Hispanic, latino or Spanish origin' %>
+	<%= label_tag(:ethnicity, "No, not of Hispanic, latino or Spanish origin") %><br>
+	<%= check_box_tag 'ethnicity', 'Yes, Mexican, Mexican American, or Chicano' %>
+	<%= label_tag(:ethnicity, "Yes, Mexican, Mexican American, or Chicano") %><br>
+	<%= check_box_tag 'ethnicity', 'Yes, Puerto Rican' %>
+	<%= label_tag(:ethnicity, "Yes, Puerto Rican") %><br>
+	<%= check_box_tag 'ethnicity', 'Yes, Cuban' %>
+	<%= label_tag(:ethnicity, "Yes, Cuban") %><br>
+	<%= check_box_tag 'ethnicity', 'Yes, Other Hispanic, Latino or Spanish origin' %>
+	<%= label_tag(:ethnicity, "Yes, Other Hispanic, Latino or Spanish origin") %><br>
+	<%= check_box_tag 'ethnicity', 'Prefer not to answer' %>
+	<%= label_tag(:ethnicity, "Prefer not to answer") %><br>	
+	<%= submit_tag "Next" %>
+<% end %>

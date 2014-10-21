@@ -1,0 +1,8 @@
+<h1>Postal Code</h1>
+
+<p>Enter your CAPOST1 code:</p>
+<%= form_tag("zip_CA", method: "post") do %>
+	<%= text_field_tag 'zip', nil, maxlength: 6 %>
+	<%= label_tag(:CAPOSTA1) %><br>
+	<%= submit_tag "Next" %>
+<% end %>
