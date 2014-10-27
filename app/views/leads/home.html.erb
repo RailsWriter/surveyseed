@@ -1,30 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<h1>NewCo Home Page</h1>
+<head>
+	<title>Marketing page</title>
+	<meta charset="utf-8" />	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
 <body class ="body">
-<center><h3>We automate the way to engage with online audience for market research projects.</h3></center>
+<!---
+ <div class="header">
+    <div class="container">
+			<center><%= image_tag image_path('Trends.jpg') %></center>
+   	</div> 
+ </div>
 	
-<h3>We offer</h3>
-<li>International reach</li>
-<li>Best in breed quality</li>
-<li>Conformance to best practices in the market research industry
+-->
+	
+ <div class="hero">
+	 <div class="container">
+		<center>
+			<h1>TRENDS</h1><br>
+			<p>We are building innovative technologies and solutions for programmatic content delivery to mobile users.<p>
+		</center>
+	</div>
+ </div>
 
-<h3>Market research firms use our technology for</h3>
-<li>Panel recruitment</li>
-	
-<h3> Contact Us </h3>	
-<%= form_for @lead do |f| %>
-<div>
-	<%= f.label :name %>
-	<%= f.text_field :name %><br>		
-	<p>
-		<%= f.label :email %>
-		<%= f.text_field :email %><br />
-	</p>
-	<p>
-		<%= f.label :mesage %><br>
-		<%= f.text_area :message, size: "20x5" %><br />		
-	</p>
-</div>
-	<%= f.submit "Send" %>
-<% end %>
+ <div class="contact">
+    <div class="container">
+		<center><h1> We love to talk!</h1></center><br>
+		<div id="form_hdr">Contact Us</div><br>
+			<%= form_for @lead do |f| %>
+				<fieldset>
+					<%= f.text_field :name, placeholder: "Name", :class => "input" %><br><br>
+					<%= f.text_field :email, placeholder: "Email", :class => "input" %><br><br>
+					<%= f.text_field :email, placeholder: "Phone Number", :class => "input" %><br><br>
+					<%= f.text_area :message, placeholder: "Your message", :class => "textarea" %><br><br>
+					<%= f.submit "Send", :class => "button" %>
+				</fieldset>
+			<% end %>
+   	</div>
+ </div>
+
 </body>
