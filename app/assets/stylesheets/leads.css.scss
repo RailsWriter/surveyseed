@@ -17,24 +17,29 @@
 		min-width:100%;
 	}
 	
-  	.header {
-        padding: 0.8em;
-		height: 50px;
-        color: white;
-        font-family: Roboto, helvetica, arial, sans-serif;
-        background-color: white;
-        background-size: cover;
-  	}
+	h1 {
+		font-weight: 150;
+		font-size: 20px;			
+	}
+	
+	p {
+		font-weight: 100;
+		font-size: 15px;
+	}
+
+	#p1 {
+		font-weight: 100;
+		font-size: 15px;
+		color: black;
+	}
 	
   	.hero {
-        padding: 0.8em;
-		height: 200px;
-		font-weight: 10;
-		font-size: 5px;
-	    color: white;
+		height:200px;
+	    color: black;
         font-family: Roboto, helvetica, arial, sans-serif;
-        background-image: image_url('goldengateredux.png');
-        background-size: cover;
+        background-image: image_url('worldcropped.jpg');
+		background-size: cover;
+		background-repeat: no-repeat;
   	}
 	
   	.contact {
@@ -43,15 +48,9 @@
 		font-size: 6px;
 	    color: white;
         font-family: Roboto, helvetica, arial, sans-serif;
-        background-color: black;
-		background-image: image_url('network-neurons-2-1043923-s.jpg');
+        background-color: grey;
         background-size: cover;
   	}
-	
-	#form_hdr {
-		padding-left: 20px;
-		font-size: 10px;
-	}
 
 	fieldset {
 		padding-left: 20px;
@@ -66,7 +65,7 @@
 	    padding: 0.5em;
 		border-width: 0;
 	    border-radius: 0em;
-		width: 250px;
+		width: 260px;
 		font-family: sans-serif;
 	}
 	
@@ -76,7 +75,7 @@
 	    padding: 0.5em;
 		border-width: 0;
 	    border-radius: 0em;
-		width: 250px;
+		width: 260px;
 		font-family: sans-serif;
 		box-sizing: border-box;
 	}
@@ -87,65 +86,81 @@
 	    padding: 0.5em;
 		border-width: 0;
 	    border-radius: 0em;
-		width: 250px;
+		width: 260px;
 		color: white;
 		background: red;
 		font-family: sans-serif;
 		box-sizing: border-box;
 	}
 	
-	@media (max-width: 600px) {
-		#header div img {
-			width: 25%;
-			height:25%;
-			box-sizing: border-box;
+	.footer {
+        padding: 0.8em;
+	    color: black;
+        font-family: Roboto, helvetica, arial, sans-serif;
+        background-color: white;
+	}
+	
+	@media only screen and (max-width: 600px) {
+		#p2.footer {
+			font-weight: 10;
+			font-size: 10px;
 		}
 	}
 	
-	@media (min-width: 601px) and (max-width: 1023px) {
-		#header div img {
-			width: 25%;
-			height:25%;
-			box-sizing: border-box;
-		}
-		#hero {
-			height:350px;
-			box-sizing: border-box;
-		}
-	}
-	
-	@media (min-width: 1024px) {
-		#header div img {
-			width: 25%;
-			height:25%;
+	@media only screen and (min-width: 601px) and (max-width: 1023px) {
+		h1 {
+			font-weight: 550;
+			font-size: 50px;			
 		}
 		
+		p {
+			font-weight: 100;
+			font-size: 20px;
+		}
+		
+		.hero {
+			height:400px;
+		}
+		
+		#p1 {
+			font-weight: 250;
+			font-size: 25px;
+			color: black;
+		}
+		
+		#p2.footer {
+			font-weight: 20;
+			font-size: 10px;
+		}
+	}
+	
+	@media only screen and (min-width: 1024px) and (max-width: 1223px) {	
 		h1 {
-			font-weight: 400;
+			font-weight: 600;
 			font-size: 60px;			
 		}
 
 		p {
-			font-weight: 200;
-			font-size: 25px;			
+			font-weight: 500;
+			font-size: 30px;			
 		}
 		
 	  	.hero {
 	        padding: 0.8em;
-			height: 924px;
+			height: 650px;
 	  	}
 
 	  	.contact {
 	        padding-top: 0.8em;
 		    color: white;
 	        font-family: Roboto, helvetica, arial, sans-serif;
-	        background-color: black;
 	        background-size: cover;
 	  	}
-		
-		#form_hdr {
-			padding-left: 60px;
-			font-size: 18px;
+
+		#p1 {
+			font-weight: 300;
+			font-size: 30px;
+			color: black;
 		}
 
 		fieldset {
@@ -155,4 +170,53 @@
 		    border-radius: 0em;
 		    font-family: sans-serif;
 		}	
+		
+		#p2.footer {
+			font-weight: 25;
+			font-size: 15px;
+		}
 	}
+		
+		@media only screen and (min-width: 1224px) {	
+			h1 {
+				font-weight: 600;
+				font-size: 60px;			
+			}
+
+			p {
+				font-weight: 500;
+				font-size: 30px;			
+			}
+		
+		  	.hero {
+		        padding: 0.8em;
+				height: 1000px;
+				
+		  	}
+
+		  	.contact {
+		        padding-top: 0.8em;
+			    color: white;
+		        font-family: Roboto, helvetica, arial, sans-serif;
+		        background-size: cover;
+		  	}
+
+			#p1 {
+				font-weight: 300;
+				font-size: 30px;
+				color: black;
+			}
+
+			fieldset {
+				padding-left: 60px;
+			    font-size: 1.5em;
+				border-width: 0;
+			    border-radius: 0em;
+			    font-family: sans-serif;
+			}	
+		
+			#p2.footer {
+				font-weight: 25;
+				font-size: 15px;
+			}
+		}
