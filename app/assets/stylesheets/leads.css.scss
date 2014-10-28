@@ -1,7 +1,222 @@
 // Place all the styles related to the Leads controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-body {
-	font-size: 80%;
-	text-align: right;
-}
+
+<!-- // [start style] -->
+
+	html {
+	  box-sizing: border-box;
+	}
+	*, *:before, *:after {
+	  box-sizing: inherit;
+	}
+	
+	.body {
+        margin: 0;
+        padding: 0;
+		min-width:100%;
+	}
+	
+	h1 {
+		font-weight: 150;
+		font-size: 20px;			
+	}
+	
+	p {
+		font-weight: 100;
+		font-size: 15px;
+	}
+
+	#p1 {
+		font-weight: 100;
+		font-size: 15px;
+		color: black;
+	}
+	
+  	.hero {
+		height:200px;
+	    color: black;
+        font-family: Roboto, helvetica, arial, sans-serif;
+        background-image: image_url('worldcropped.jpg');
+		background-size: cover;
+		background-repeat: no-repeat;
+  	}
+	
+  	.contact {
+        padding-top: 0.8em;
+		font-weight: 10;
+		font-size: 6px;
+	    color: white;
+        font-family: Roboto, helvetica, arial, sans-serif;
+        background-color: grey;
+        background-size: cover;
+  	}
+
+	fieldset {
+		padding-left: 20px;
+	    font-size: 1.5em;
+		border-width: 0;
+	    border-radius: 0em;
+	    font-family: sans-serif;
+	}
+	
+	.input {
+	    font-size: 1.5em;
+	    padding: 0.5em;
+		border-width: 0;
+	    border-radius: 0em;
+		width: 260px;
+		font-family: sans-serif;
+	}
+	
+	.textarea {
+	    padding-left: 2em;
+		font-size: 1.5em;
+	    padding: 0.5em;
+		border-width: 0;
+	    border-radius: 0em;
+		width: 260px;
+		font-family: sans-serif;
+		box-sizing: border-box;
+	}
+	
+	.button {
+		padding-left: 2em;
+	    font-size: 1.5em;
+	    padding: 0.5em;
+		border-width: 0;
+	    border-radius: 0em;
+		width: 260px;
+		color: white;
+		background: red;
+		font-family: sans-serif;
+		box-sizing: border-box;
+	}
+	
+	.footer {
+        padding: 0.8em;
+	    color: black;
+        font-family: Roboto, helvetica, arial, sans-serif;
+        background-color: white;
+	}
+	
+	@media only screen and (max-width: 600px) {
+		#p2.footer {
+			font-weight: 10;
+			font-size: 10px;
+		}
+	}
+	
+	@media only screen and (min-width: 601px) and (max-width: 1023px) {
+		h1 {
+			font-weight: 550;
+			font-size: 50px;			
+		}
+		
+		p {
+			font-weight: 100;
+			font-size: 20px;
+		}
+		
+		.hero {
+			height:400px;
+		}
+		
+		#p1 {
+			font-weight: 250;
+			font-size: 25px;
+			color: black;
+		}
+		
+		#p2.footer {
+			font-weight: 20;
+			font-size: 10px;
+		}
+	}
+	
+	@media only screen and (min-width: 1024px) and (max-width: 1223px) {	
+		h1 {
+			font-weight: 600;
+			font-size: 60px;			
+		}
+
+		p {
+			font-weight: 500;
+			font-size: 30px;			
+		}
+		
+	  	.hero {
+	        padding: 0.8em;
+			height: 650px;
+	  	}
+
+	  	.contact {
+	        padding-top: 0.8em;
+		    color: white;
+	        font-family: Roboto, helvetica, arial, sans-serif;
+	        background-size: cover;
+	  	}
+
+		#p1 {
+			font-weight: 300;
+			font-size: 30px;
+			color: black;
+		}
+
+		fieldset {
+			padding-left: 60px;
+		    font-size: 1.5em;
+			border-width: 0;
+		    border-radius: 0em;
+		    font-family: sans-serif;
+		}	
+		
+		#p2.footer {
+			font-weight: 25;
+			font-size: 15px;
+		}
+	}
+		
+		@media only screen and (min-width: 1224px) {	
+			h1 {
+				font-weight: 600;
+				font-size: 60px;			
+			}
+
+			p {
+				font-weight: 500;
+				font-size: 30px;			
+			}
+		
+		  	.hero {
+		        padding: 0.8em;
+				height: 1000px;
+				
+		  	}
+
+		  	.contact {
+		        padding-top: 0.8em;
+			    color: white;
+		        font-family: Roboto, helvetica, arial, sans-serif;
+		        background-size: cover;
+		  	}
+
+			#p1 {
+				font-weight: 300;
+				font-size: 30px;
+				color: black;
+			}
+
+			fieldset {
+				padding-left: 60px;
+			    font-size: 1.5em;
+				border-width: 0;
+			    border-radius: 0em;
+			    font-family: sans-serif;
+			}	
+		
+			#p2.footer {
+				font-weight: 25;
+				font-size: 15px;
+			}
+		}

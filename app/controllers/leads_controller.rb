@@ -10,7 +10,8 @@ class LeadsController < ApplicationController
     @lead = Lead.new(lead_params)
     if @lead.save
       # Handle a successful save.
-      redirect_to '/leads/thanks'
+      flash[:alert] = "Thanks, we will be in touch soon!"
+      redirect_to '/'
     else
       render 'home'
     end
@@ -19,6 +20,6 @@ class LeadsController < ApplicationController
   private
     
     def lead_params
-      params.require(:lead).permit(:name, :email, :message)
+      params.require(:lead).permit(:name, :email, :phone, :message)
     end
 end
