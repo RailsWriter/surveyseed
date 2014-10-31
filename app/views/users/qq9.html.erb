@@ -1,8 +1,36 @@
-<h1>Household Composition</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<p>How many people are living or staying at your current address?</p>
-<%= form_tag("householdcomp", method: "post") do %>
-	<%= number_field(:householdcomp, :range, in: 1..12) %>
-	<%= label_tag(:Household_Composition) %><br>
-	<%= submit_tag "Next" %>
-<% end %>
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<br>
+		
+		<div class="header">
+			<center>
+				<h1>Household Composition</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<fieldset>
+				<p>How many people are living or staying at your current address?</p>
+				<%= form_tag("householdcomp", method: "post") do %>
+					<%= number_field(:householdcomp, :range, in: 1..50) %>
+					<%= label_tag(:Household_Composition) %><br><br>	
+					<%= submit_tag "Next" %>
+				<% end %>
+			</fieldset>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('cooltext1780310221.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

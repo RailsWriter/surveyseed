@@ -1,18 +1,46 @@
-<h1>Ethnicity_CA</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<p>Please select which group you most identify yourself with.</p>
-<%= form_tag("ethnicity_CA", method: "post") do %>
-	<%= check_box_tag 'ethnicity', 'Aboriginal(North American Indian, Metis, Inuit, etc.)' %>
-	<%= label_tag(:ethnicity, "Aboriginal(North American Indian, Metis, Inuit, etc.)") %><br>
-	<%= check_box_tag 'ethnicity', 'African' %>
-	<%= label_tag(:ethnicity, "African") %><br>
-	<%= check_box_tag 'ethnicity', 'American(US)' %>
-	<%= label_tag(:ethnicity, "American(US)") %><br>
-	<%= check_box_tag 'ethnicity', 'Arabic / Middle Eastern' %>
-	<%= label_tag(:ethnicity, "Arabic / Middle Eastern") %><br>
-	<%= check_box_tag 'ethnicity', 'British' %>
-	<%= label_tag(:ethnicity, "British") %><br>
-	<%= check_box_tag 'ethnicity', 'Cambodian' %>
-	<%= label_tag(:ethnicity, "Cambodian") %><br>	
-	<%= submit_tag "Next" %>
-<% end %>
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<br>
+		
+		<div class="header">
+			<center>
+				<h1>Ethnicity</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<fieldset>
+				<p>Please select which group you most identify yourself with:</p>
+				<%= form_tag("ethnicity_CA", method: "post") do %>
+					<%= check_box_tag 'ethnicity', 'Aboriginal(North American Indian, Metis, Inuit, etc.)' %>
+					<%= label_tag(:ethnicity, "Aboriginal(North American Indian, Metis, Inuit, etc.)") %><br>
+					<%= check_box_tag 'ethnicity', 'African' %>
+					<%= label_tag(:ethnicity, "African") %><br>
+					<%= check_box_tag 'ethnicity', 'American(US)' %>
+					<%= label_tag(:ethnicity, "American(US)") %><br>
+					<%= check_box_tag 'ethnicity', 'Arabic / Middle Eastern' %>
+					<%= label_tag(:ethnicity, "Arabic / Middle Eastern") %><br>
+					<%= check_box_tag 'ethnicity', 'British' %>
+					<%= label_tag(:ethnicity, "British") %><br>
+					<%= check_box_tag 'ethnicity', 'Cambodian' %>
+					<%= label_tag(:ethnicity, "Cambodian") %><br><br>	
+					<%= submit_tag "Next" %>
+				<% end %>
+			</fieldset>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('cooltext1780310221.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

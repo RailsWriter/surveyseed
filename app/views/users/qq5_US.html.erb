@@ -1,18 +1,46 @@
-<h1>Ethnicity_US</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<p>Are you of Hispanic, Latino or Spanish origin?</p>
-<%= form_tag("ethnicity_US", method: "post") do %>
-	<%= check_box_tag 'ethnicity', 'No, not of Hispanic, latino or Spanish origin' %>
-	<%= label_tag(:ethnicity, "No, not of Hispanic, latino or Spanish origin") %><br>
-	<%= check_box_tag 'ethnicity', 'Yes, Mexican, Mexican American, or Chicano' %>
-	<%= label_tag(:ethnicity, "Yes, Mexican, Mexican American, or Chicano") %><br>
-	<%= check_box_tag 'ethnicity', 'Yes, Puerto Rican' %>
-	<%= label_tag(:ethnicity, "Yes, Puerto Rican") %><br>
-	<%= check_box_tag 'ethnicity', 'Yes, Cuban' %>
-	<%= label_tag(:ethnicity, "Yes, Cuban") %><br>
-	<%= check_box_tag 'ethnicity', 'Yes, Other Hispanic, Latino or Spanish origin' %>
-	<%= label_tag(:ethnicity, "Yes, Other Hispanic, Latino or Spanish origin") %><br>
-	<%= check_box_tag 'ethnicity', 'Prefer not to answer' %>
-	<%= label_tag(:ethnicity, "Prefer not to answer") %><br>	
-	<%= submit_tag "Next" %>
-<% end %>
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<br>
+		
+		<div class="header">
+			<center>
+				<h1>Ethnicity</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<fieldset>
+				<p>Are you of Hispanic, Latino or Spanish origin?</p>
+				<%= form_tag("ethnicity_US", method: "post") do %>
+					<%= check_box_tag 'ethnicity', 'No, not of Hispanic, latino or Spanish origin' %>
+					<%= label_tag(:ethnicity, "No, not of Hispanic, latino or Spanish origin") %><br>
+					<%= check_box_tag 'ethnicity', 'Yes, Mexican, Mexican American, or Chicano' %>
+					<%= label_tag(:ethnicity, "Yes, Mexican, Mexican American, or Chicano") %><br>
+					<%= check_box_tag 'ethnicity', 'Yes, Puerto Rican' %>
+					<%= label_tag(:ethnicity, "Yes, Puerto Rican") %><br>
+					<%= check_box_tag 'ethnicity', 'Yes, Cuban' %>
+					<%= label_tag(:ethnicity, "Yes, Cuban") %><br>
+					<%= check_box_tag 'ethnicity', 'Yes, Other Hispanic, Latino or Spanish origin' %>
+					<%= label_tag(:ethnicity, "Yes, Other Hispanic, Latino or Spanish origin") %><br>
+					<%= check_box_tag 'ethnicity', 'Prefer not to answer' %>
+					<%= label_tag(:ethnicity, "Prefer not to answer") %><br><br>	
+					<%= submit_tag "Next" %>
+				<% end %>
+			</fieldset>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('cooltext1780310221.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

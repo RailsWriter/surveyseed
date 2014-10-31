@@ -1,12 +1,40 @@
-<h1>Ethnicity_IN</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<p>Please select which group you most identify yourself with.</p>
-<%= form_tag("ethnicity_IN", method: "post") do %>
-	<%= check_box_tag 'ethnicity', 'Aboriginal' %>
-	<%= label_tag(:ethnicity, "Aboriginal") %><br>
-	<%= check_box_tag 'ethnicity', 'North Indian' %>
-	<%= label_tag(:ethnicity, "North Indian") %><br>
-	<%= check_box_tag 'ethnicity', 'South Indian' %>
-	<%= label_tag(:ethnicity, "South Indian") %><br>
-	<%= submit_tag "Next" %>
-<% end %>
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<br>
+		
+		<div class="header">
+			<center>
+				<h1>Ethnicity</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<fieldset>
+				<p>Please select which group you most identify yourself with:</p>
+				<%= form_tag("ethnicity_IN", method: "post") do %>
+					<%= check_box_tag 'ethnicity', 'Aboriginal' %>
+					<%= label_tag(:ethnicity, "Aboriginal") %><br>
+					<%= check_box_tag 'ethnicity', 'North Indian' %>
+					<%= label_tag(:ethnicity, "North Indian") %><br>
+					<%= check_box_tag 'ethnicity', 'South Indian' %>
+					<%= label_tag(:ethnicity, "South Indian") %><br><br>	
+					<%= submit_tag "Next" %>
+				<% end %>
+			</fieldset>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('cooltext1780310221.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

@@ -1,22 +1,50 @@
-<h1>Education_CA</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<p>What is the highest degree or level of school you have completed?</p>
-<%= form_tag("education_CA", method: "post") do %>
-	<%= check_box_tag 'education', 'Primary school or less' %>
-	<%= label_tag(:education, "Primary school or less") %><br>
-	<%= check_box_tag 'education', 'Some high school' %>
-	<%= label_tag(:education, "Some high school") %><br>
-	<%= check_box_tag 'education', 'Graduated high school' %>
-	<%= label_tag(:education, "Graduated high school") %><br>
-	<%= check_box_tag 'education', 'Some college / CEGEP / Trade School' %>
-	<%= label_tag(:education, "Some college / CEGEP / Trade School") %><br>
-	<%= check_box_tag 'education', 'Graduated from college / CEGEP / Trade School' %>
-	<%= label_tag(:education, "Graduated from college / CEGEP / Trade School") %><br>
-	<%= check_box_tag 'education', 'Some university but did not finish' %>
-	<%= label_tag(:education, "Some university but did not finish") %><br>	
-	<%= check_box_tag 'education', 'University undergraduate degree, such as Bachelors Degree' %>
-	<%= label_tag(:education, "University undergraduate degree, such as Bachelors Degree") %><br>
-	<%= check_box_tag 'education', 'University graduate degree, such as Masters or PhD' %>
-	<%= label_tag(:education, "University graduate degree, such as Masters or PhD") %><br>
-	<%= submit_tag "Next" %>
-<% end %>
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<br>
+		
+		<div class="header">
+			<center>
+				<h1>Education</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<fieldset>
+				<p>What is the highest degree or level of school you have completed?</p>
+				<%= form_tag("education_CA", method: "post") do %>
+					<%= check_box_tag 'education', 'Primary school or less' %>
+					<%= label_tag(:education, "Primary school or less") %><br>
+					<%= check_box_tag 'education', 'Some high school' %>
+					<%= label_tag(:education, "Some high school") %><br>
+					<%= check_box_tag 'education', 'Graduated high school' %>
+					<%= label_tag(:education, "Graduated high school") %><br>
+					<%= check_box_tag 'education', 'Some college / CEGEP / Trade School' %>
+					<%= label_tag(:education, "Some college / CEGEP / Trade School") %><br>
+					<%= check_box_tag 'education', 'Graduated from college / CEGEP / Trade School' %>
+					<%= label_tag(:education, "Graduated from college / CEGEP / Trade School") %><br>
+					<%= check_box_tag 'education', 'Some university but did not finish' %>
+					<%= label_tag(:education, "Some university but did not finish") %><br>	
+					<%= check_box_tag 'education', 'University undergraduate degree, such as Bachelors Degree' %>
+					<%= label_tag(:education, "University undergraduate degree, such as Bachelors Degree") %><br>
+					<%= check_box_tag 'education', 'University graduate degree, such as Masters or PhD' %>
+					<%= label_tag(:education, "University graduate degree, such as Masters or PhD") %><br><br>	
+					<%= submit_tag "Next" %>
+				<% end %>
+			</fieldset>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('cooltext1780310221.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

@@ -1,6 +1,35 @@
-<h1>TOS</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<p>Read our TOS here ...</p>
-<%= form_tag("sign_tos", method: "post") do %>
-	<%= submit_tag "I Agree" %>
-<% end %>
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<br>
+		
+		<div class="header">
+			<center>
+				<h1>Terms of Service</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<center>
+				<p>I am above 13 yrs. old. I have read and agree with the <a href="http://www.google.com">terms of service></a>.</p>
+				<%= form_tag("sign_tos", method: "post") do %>
+					<%= submit_tag "I Agree" %>
+				<% end %>
+				
+			</center>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('cooltext1780310221.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

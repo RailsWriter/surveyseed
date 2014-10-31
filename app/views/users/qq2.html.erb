@@ -1,10 +1,38 @@
-<h1> Gender </h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<p>Your gender:</p>
-<%= form_tag("gender", method: "post") do %>
-	<%= check_box_tag 'gender', 'Male' %>
-	<%= label_tag(:gender, "Male") %><br>
-	<%= check_box_tag 'gender', 'Female' %>
-	<%= label_tag(:gender, "Female") %><br>
-	<%= submit_tag "Next" %>
-<% end %>
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<br>
+		
+		<div class="header">
+			<center>
+				<h1>Gender</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<fieldset>
+				<p>Your gender:</p>
+				<%= form_tag("gender", method: "post") do %>
+					<%= check_box_tag 'gender', 'Male' %>
+					<%= label_tag(:gender, "Male") %><br>
+					<%= check_box_tag 'gender', 'Female' %>
+					<%= label_tag(:gender, "Female") %><br><br>
+					<%= submit_tag "Next" %>
+				<% end %>
+			</fieldset>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('cooltext1780310221.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

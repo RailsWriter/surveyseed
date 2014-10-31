@@ -1,41 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-	<title>Users HTML5 theme</title>
-	<meta charset="utf-8" />	
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
 
-<body class="body">
-	<header class="mainHeader">
-		<%= image_tag "logo.gif" %>
-	</header>
+	<body class="body">
+		<br>
 		
-	<div class="mainContent">
-		<div class="content">	
-				<article class="topcontent">	
-					<header>
-						<h2><a href="#" rel="bookmark" title="Permalink to this POST TITLE">Welcome! Here are the steps to get the reward:</a></h2>
-					</header>
-					
-					<content>
-						<p class="qualification-questions">Qualify ----> Complete survey ----> Collect reward</p>
-						<p>Enter the month and year of your birth</p>
-						<%= form_for (@user), url: {action: "eval_age"} do |f| %>
-							<%= f.select :birth_month, (Time.zone.now.month)..(Time.zone.now.month + 3) %>
-							<%= f.select :birth_year, (Time.zone.now.year-100)..(Time.zone.now.year) %>
-							<%= f.submit "Next" %>
-						<% end %>
-						/* If IE then ....? */
-					
-					</content>
-					
-				</article>
-	
-	<footer class="mainFooter">
-		<p>Copyright &copy; 2014 <a href="http://newco.com">NewCo</a></p>
-	</footer>
+		<div class="header">
+			<center>
+				<%= image_tag image_path('cooltext1780309402.png') %>
+			</center>
+		</header>
+		
+		<div class="topcontent">
+			<center>
+				<h4>Welcome!</h4>
+				<p>Steps to get reward:</p>
+				<p>Qualify ---> Complete survey ---> Get reward</p>
+			</center>
+		</topcontent>
+		
+		<div class="content">
+			<center>
+				<h2>Select the month and year of your birth:</h2>
+				<%= form_for (@user), url: {action: "eval_age"} do |f| %>
+					<%= f.select :birth_month, 1 .. 12 %>
+					<%= f.select :birth_year, (Time.zone.now.year-100)..(Time.zone.now.year) %>
+					<%= f.submit "Next" %>
+				<% end %>
+			</center>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				Copyright © by KwikTrends. All rights reserved.
+			</center>
+		</footer>
 
-</body>
+	</body>	
+
 </html>

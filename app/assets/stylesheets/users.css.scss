@@ -5,23 +5,16 @@
 /* ===========================
    ======= Body style ======== 
    =========================== */
-   
-body {
-	background-image: url('img/bg.png');
-	color: #000305;
+
+.body {
+    margin: 0;
+    padding: 5px;
+	color: black;
 	font-size: 87.5%; /* Base font size: 14px */
 	font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-	line-height: 1.429;
-	margin: 0;
-	padding: 0;
-	text-align: left;
+	background-color:white;
 	}
 	
-.body {
-	clear: both; 
-	margin: 0 auto; 
-	width: 70%;
-}
 	
 /* ===========================
    ========= Headings ======== 
@@ -41,6 +34,7 @@ h2, h3, h4, h5, h6 {
 /* ===========================
    ======= Anchor style ====== 
    =========================== */
+
 a {
 	outline: 0;
 	}
@@ -66,133 +60,57 @@ a:hover, a:active {
    ===== Main Header ===== 
    =========================== */
 
-.mainHeader img {
-	width: 30%;
-	height: auto;
-	margin: 3% 0;
+.header {
+}
+
+/* ===========================
+   ======= TopContent Area ====== 
+   =========================== */
+
+.topcontent {	
 }
 
 /* ===========================
    ======= Content Area ====== 
    =========================== */
 
-.mainContent {
-	overflow: hidden;
-	line-height: 25px;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-}
-
-.topcontent {
-	background-color: #FFF;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;	
-	padding: 3% 5%;	
+.content {
+	margin-top:10%;
 	margin-bottom: 3%;
 }
 
-.content {
-	width: 100%;
-	float: left;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;	
-}
-
-.qualification-questions {
-	color: #777;
-	font-size: 85%;
-}
+fieldset {
+	padding-left: 60px;
+    font-size: 0.9em;
+	border-width: 0;
+    border-radius: 0em;
+}	
 
 /* ===========================
    ========= Footer ========== 
    =========================== */
 
-.mainFooter {
-	width: 100%;
-	float: left;
-	margin-top: 2%;
+.footer {
+	height:30px;
+	margin-top: 20%;
 	margin-bottom: 2%;
-	padding-left: 0;
-	background-color: #666;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;	
-	color: #FFF;	
-}
-
-.mainFooter p {
-	width: 91%;
-	margin: 2% auto;
-}
+	padding-left: 0px;
+	border-radius: 0px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	background-color:white;
+}	
 
 /* ===========================
    ====== Media Queries ====== 
    =========================== */
 
-@media only screen and (min-width : 150px) and (max-width : 780px)
+@media only screen and (min-width : 1024px) and (max-width : 1824px)
 {
-	.body {
-		clear: both; 
-		margin: 0 auto; 
-		width: 90%;
-		font-size: 90%;
-	}
-		
-	.mainHeader img {
-		width: 100%;
-		height: auto;
-		margin-bottom: 3%;
-	}
-	
-	.mainContent {
-		overflow: hidden;
-		line-height: 25px;
-		border-radius: 5px;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;
-		margin-top: 4%;
-		margin-bottom: 2%;
-	}
-	
-	.topcontent {
-		background-color: #FFF;
-		border-radius: 5px;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;	
-		padding: 2% 5%;
-		margin-bottom: 4%;
-	}
-		
-	.content {
-		width: 100%;
-		float: left;
-		border-radius: 5px;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;	
+	fieldset {
+		padding-left: 200px;
+	    font-size: 1.5em;
+		border-width: 0;
+	    border-radius: 0em;
 	}	
-
-	.qualification-questions {
-		color: #777;
-		font-size: 85%;
-	}
-		
-	.mainFooter {
-		width: 100%;
-		float: left;
-		margin: 2% 0;
-		padding-left: 0;
-		background-color: #666;
-		border-radius: 5px;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;	
-		color: #FFF;	
-	}
-	
-	.mainFooter p {
-		width: 86%;
-		margin: 2% auto;
-	}
 }

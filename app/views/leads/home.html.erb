@@ -2,54 +2,55 @@
 <html lang="en">
 
 <head>
-	<title>Marketing page</title>
+	<title>Marketing home page</title>
 	<meta charset="utf-8" />	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 
-<!---
- <div class="header">
-    <div class="container">
-			<center><%= image_tag image_path('Trends.jpg') %></center>
-   	</div> 
- </div>
-	
--->
 <body class ="body">	
- <div class="hero">
-	 <div class="container">
-		<center>
-			<h1>Zeemly</h1>
-			<p>Find the best respondents to complete market research studies.<p>
-		</center>
+
+ <div id="header">
+	 <div id="container1">
+		 <center><%= image_tag image_path('cooltext1780310221.png') %></center>
 	</div>
  </div>
 
- <div class="contact">
-    <div class="container">
-		<center><p>Contact us to learn more about our approach. </p><br>
-			<div id="p1"><%= alert %></h2></div>
-			<br>
+ <div id="hero">
+	 <div id="container2">
+		<center>
+			<p id="bigfont">KwikTrends builds automation technologies for the market research industry.<p>
+		</center>
+ 	</div>
+ </div>
+
+ <div id="contact">
+    <div id="container3">
+		<center><p>Contact us to learn more about our products.</p>
+			<div id="p1"><%= alert %></h2></div><br>
 			<%= form_for @lead do |f| %>
-				<fieldset>
+	
 					<%= f.text_field :name, placeholder: "Name", :class => "input" %><br><br>
 					<%= f.text_field :email, placeholder: "Email", :class => "input" %><br><br>
 					<%= f.text_field :phone, placeholder: "Phone Number", :class => "input" %><br><br>
 					<%= f.text_area :message, placeholder: "Your message", :class => "textarea" %><br><br>
 					<%= f.submit "Send", :class => "button" %>
-				</fieldset>
+				
 			<% end %>
+		</center>
    	</div>
-	</center>
  </div>
 
 
- <div class="footer" id="p2">
-    <div class="container">
-			<%= image_tag image_path('images.jpeg') %>
-			<center>Copyright © by Zeemly, Inc. All rights reserved.</center>
-   	</div> 
+ <div id="footer">
+    <div id="container4">
+		<center>
+			<%= image_tag image_path('images.jpeg') %><br>
+			Copyright © by KwickTrends. All rights reserved.
+		</center>
+	</div>
  </div>
 
 </body>
+
+</html>

@@ -7,14 +7,15 @@
 	html {
 	  box-sizing: border-box;
 	}
+	
 	*, *:before, *:after {
+	/* This helps with boxes above and below in the form to align properly */
 	  box-sizing: inherit;
 	}
 	
 	.body {
         margin: 0;
         padding: 0;
-		min-width:100%;
 	}
 	
 	h1 {
@@ -33,78 +34,109 @@
 		color: black;
 	}
 	
-  	.hero {
-		height:200px;
-	    color: black;
-        font-family: Roboto, helvetica, arial, sans-serif;
-        background-image: image_url('worldcropped.jpg');
+	#bigfont {
+		font-weight: 700;
+		font-size: 20px;
+		color: white;
+		font-family: Roboto, helvetica, arial, sans-serif;
+	}
+	
+	#header {
+		height: 50px;
+		background-color: white;
+	}
+	
+	#container1 {
+	    margin-left: auto;
+	    margin-right: auto;
+	    background-color: transparent;
+	}
+	
+  	#hero {
+		height: 200px; /* same as the height of background image */
 		background-size: cover;
+        background-image: image_url('worldcropped.jpg');
 		background-repeat: no-repeat;
+		margin-bottom: 0px;
   	}
 	
-  	.contact {
-        padding-top: 0.8em;
+	#container2 {
+	    margin-left: auto;
+	    margin-right: auto;
+		margin-top:0px;
+		padding-top:4.0em; /* positions text in container */
+	    background-color: transparent;
+	}
+	
+  	#contact {
+        margin-top: 0px;
+		padding-top: 0.5em;
+		padding-bottom: 1.8em;
+        background-color: grey;
+  	}
+	
+	#container3 {
+	    margin-left: auto;
+	    margin-right: auto;
+		padding-top: 0.0em;
+	    width: 90%;
 		font-weight: 10;
 		font-size: 6px;
 	    color: white;
         font-family: Roboto, helvetica, arial, sans-serif;
-        background-color: grey;
-        background-size: cover;
-  	}
+	    background-color: transparent;
+	}
 
-	fieldset {
-		padding-left: 20px;
-	    font-size: 1.5em;
-		border-width: 0;
+	fieldset {		
+		/* Take it out */
+		padding-left: 0px;
+		border-width: 0em;
 	    border-radius: 0em;
-	    font-family: sans-serif;
 	}
 	
 	.input {
-	    font-size: 1.5em;
+	    font-size: 2em;
 	    padding: 0.5em;
-		border-width: 0;
+		border-width: 0em;
 	    border-radius: 0em;
 		width: 260px;
 		font-family: sans-serif;
 	}
 	
 	.textarea {
-	    padding-left: 2em;
-		font-size: 1.5em;
+		font-size: 2em;
 	    padding: 0.5em;
-		border-width: 0;
+		border-width: 0em;
 	    border-radius: 0em;
 		width: 260px;
 		font-family: sans-serif;
-		box-sizing: border-box;
 	}
 	
 	.button {
-		padding-left: 2em;
-	    font-size: 1.5em;
+	    font-size: 2.5em;
 	    padding: 0.5em;
-		border-width: 0;
+		border-width: 0em;
 	    border-radius: 0em;
 		width: 260px;
+		font-family: sans-serif;
 		color: white;
 		background: red;
-		font-family: sans-serif;
-		box-sizing: border-box;
 	}
 	
-	.footer {
+	#footer {
         padding: 0.8em;
-	    color: black;
+        background-color: blue;
+	}
+	
+	#container4 {
+	    margin-left: auto;
+	    margin-right: auto;
+	    background-color: transparent;
+	    color: white;
         font-family: Roboto, helvetica, arial, sans-serif;
-        background-color: white;
 	}
 	
 	@media only screen and (max-width: 600px) {
-		#p2.footer {
-			font-weight: 10;
-			font-size: 10px;
-		}
 	}
 	
 	@media only screen and (min-width: 601px) and (max-width: 1023px) {
@@ -118,8 +150,19 @@
 			font-size: 20px;
 		}
 		
-		.hero {
+		#hero {
 			height:400px;
+		}
+		
+		#container2 {
+			padding-top:10.0em;
+		}
+		
+		#bigfont {
+			font-weight: 900;
+			font-size: 25px;
+			color: white;
+			font-family: Roboto, helvetica, arial, sans-serif;
 		}
 		
 		#p1 {
@@ -128,7 +171,7 @@
 			color: black;
 		}
 		
-		#p2.footer {
+		#footer {
 			font-weight: 20;
 			font-size: 10px;
 		}
@@ -145,12 +188,23 @@
 			font-size: 30px;			
 		}
 		
-	  	.hero {
-	        padding: 0.8em;
+	  	#hero {
+	        padding: 1.0em;
 			height: 650px;
 	  	}
+		
+		#container2 {
+			padding-top:10.0em;
+		}
+		
+		#bigfont {
+			font-weight: 900;
+			font-size: 30px;
+			color: white;
+			font-family: Roboto, helvetica, arial, sans-serif;
+		}
 
-	  	.contact {
+	  	#contact {
 	        padding-top: 0.8em;
 		    color: white;
 	        font-family: Roboto, helvetica, arial, sans-serif;
@@ -171,7 +225,7 @@
 		    font-family: sans-serif;
 		}	
 		
-		#p2.footer {
+		#footer {
 			font-weight: 25;
 			font-size: 15px;
 		}
@@ -188,13 +242,24 @@
 				font-size: 30px;			
 			}
 		
-		  	.hero {
+		  	#hero {
 		        padding: 0.8em;
 				height: 1000px;
 				
 		  	}
+			
+			#container2 {
+				padding-top:20em;
+			}
+			
+			#bigfont {
+				font-weight: 900;
+				font-size: 35px;
+				color: white;
+				font-family: Roboto, helvetica, arial, sans-serif;
+			}
 
-		  	.contact {
+		  	#contact {
 		        padding-top: 0.8em;
 			    color: white;
 		        font-family: Roboto, helvetica, arial, sans-serif;
@@ -215,7 +280,7 @@
 			    font-family: sans-serif;
 			}	
 		
-			#p2.footer {
+			#footer {
 				font-weight: 25;
 				font-size: 15px;
 			}
