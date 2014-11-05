@@ -13,9 +13,9 @@
 	  box-sizing: inherit;
 	}
 	
-	.body {
-        margin: 0;
-        padding: 0;
+	body {
+        margin: 0px;
+        padding: 0px;
 	}
 	
 	h1 {
@@ -35,15 +35,17 @@
 	}
 	
 	#bigfont {
-		font-weight: 700;
+		font-weight: 300;
 		font-size: 20px;
-		color: white;
+		color: black;
 		font-family: Roboto, helvetica, arial, sans-serif;
 	}
 	
 	#header {
-		height: 50px;
-		background-color: white;
+		height: 70px;
+		padding-top: 15px;
+		padding-left:20px;
+		background-color: #525A5C;
 	}
 	
 	#container1 {
@@ -53,26 +55,30 @@
 	}
 	
   	#hero {
-		height: 200px; /* same as the height of background image */
-		background-size: cover;
+/*		height: 300px;   same as the height of background image - moved to per device section */
+		background-size: cover; /* better because picture does not resize to keep full picture in view */
         background-image: image_url('worldcropped.jpg');
 		background-repeat: no-repeat;
-		margin-bottom: 0px;
+		background-position: center top;
+/*		background-size: 100% auto; worst because picture resizes to keep full picture in view */
+/*		background-attachment: fixed; worst as it makes the rest of the body rollover hero image */
   	}
 	
 	#container2 {
-	    margin-left: auto;
-	    margin-right: auto;
-		margin-top:0px;
-		padding-top:4.0em; /* positions text in container */
+/*	    margin-left: auto; */
+/*	    margin-right: auto; */
+/*		margin-top:0px; */
+		padding-top:4.0em;  /* positions text in container */
 	    background-color: transparent;
 	}
 	
   	#contact {
+		height:300; /* keeps the block nice and fixed width on screen */
         margin-top: 0px;
 		padding-top: 0.5em;
 		padding-bottom: 1.8em;
-        background-color: grey;
+        background-color: #F7A643;
+		background-size: cover; /* covers full availablr space */
   	}
 	
 	#container3 {
@@ -86,16 +92,9 @@
         font-family: Roboto, helvetica, arial, sans-serif;
 	    background-color: transparent;
 	}
-
-	fieldset {		
-		/* Take it out */
-		padding-left: 0px;
-		border-width: 0em;
-	    border-radius: 0em;
-	}
 	
 	.input {
-	    font-size: 2em;
+	    font-size: 2.2em;
 	    padding: 0.5em;
 		border-width: 0em;
 	    border-radius: 0em;
@@ -104,7 +103,7 @@
 	}
 	
 	.textarea {
-		font-size: 2em;
+		font-size: 2.2em;
 	    padding: 0.5em;
 		border-width: 0em;
 	    border-radius: 0em;
@@ -120,12 +119,14 @@
 		width: 260px;
 		font-family: sans-serif;
 		color: white;
-		background: red;
+		background: #229936;
 	}
 	
 	#footer {
-        padding: 0.8em;
-        background-color: blue;
+        padding: 2.8em;
+        background-color: #A5ACB3;
+	/*	height: 300px; 
+		background-size: cover; */
 	}
 	
 	#container4 {
@@ -136,7 +137,24 @@
         font-family: Roboto, helvetica, arial, sans-serif;
 	}
 	
+	#container4 a {
+		color:white;
+	  	text-decoration: none;
+	 }
+	
+	#smallfont {
+		font-weight: 50;
+		font-size: 10px;
+		color: white;
+		font-family: Roboto, helvetica, arial, sans-serif;
+	}
+	
 	@media only screen and (max-width: 600px) {
+		
+	  	#hero {
+			height: 300px;  /* same as the height of background image */
+			background-size: cover;
+		}
 	}
 	
 	@media only screen and (min-width: 601px) and (max-width: 1023px) {
@@ -151,7 +169,8 @@
 		}
 		
 		#hero {
-			height:400px;
+			height:400px; /* keep as the desired height of background image */
+			background-size: cover; /* looses cover property even though defined in All */
 		}
 		
 		#container2 {
@@ -159,38 +178,42 @@
 		}
 		
 		#bigfont {
-			font-weight: 900;
+			font-weight: 400;
 			font-size: 25px;
-			color: white;
+			color: black;
 			font-family: Roboto, helvetica, arial, sans-serif;
 		}
 		
+	  	#contact {
+			height:400;
+	        margin-top: 0px;
+			padding-top: 0.5em;
+			padding-bottom: 1.8em;
+	        background-color: #F7A643;
+			background-size: cover;
+	  	}
+		
 		#p1 {
-			font-weight: 250;
+			font-weight: 300;
 			font-size: 25px;
 			color: black;
 		}
-		
-		#footer {
-			font-weight: 20;
-			font-size: 10px;
-		}
 	}
 	
-	@media only screen and (min-width: 1024px) and (max-width: 1223px) {	
+	@media only screen and (min-width: 1024px) and (max-width: 2023px) {	
 		h1 {
 			font-weight: 600;
 			font-size: 60px;			
 		}
 
 		p {
-			font-weight: 500;
-			font-size: 30px;			
+			font-weight: 100;
+			font-size: 20px;			
 		}
 		
 	  	#hero {
-	        padding: 1.0em;
-			height: 650px;
+			height: 400px; /* same as for tablet screen */
+			background-size: cover;
 	  	}
 		
 		#container2 {
@@ -198,40 +221,58 @@
 		}
 		
 		#bigfont {
-			font-weight: 900;
-			font-size: 30px;
-			color: white;
+			font-weight: 500;
+			font-size: 25px;
+			color: black;
 			font-family: Roboto, helvetica, arial, sans-serif;
 		}
-
+		
 	  	#contact {
-	        padding-top: 0.8em;
-		    color: white;
-	        font-family: Roboto, helvetica, arial, sans-serif;
-	        background-size: cover;
+	        margin-top: 0px;
+			padding-top: 0.5em;
+			padding-bottom: 1.8em;
+	        background-color: #F7A643;
+			height:400;
+			background-size: cover;
 	  	}
-
+		
 		#p1 {
-			font-weight: 300;
+			font-weight: 350;
 			font-size: 30px;
 			color: black;
 		}
 
-		fieldset {
-			padding-left: 60px;
-		    font-size: 1.5em;
-			border-width: 0;
+		.input {
+		    font-size: 2em;
+		    padding: 0.5em;
+			border-width: 0em;
 		    border-radius: 0em;
-		    font-family: sans-serif;
-		}	
-		
-		#footer {
-			font-weight: 25;
-			font-size: 15px;
+			width: 360px;
+			font-family: sans-serif;
+		}
+	
+		.textarea {
+			font-size: 2.1em;
+		    padding: 0.5em;
+			border-width: 0em;
+		    border-radius: 0em;
+			width: 360px;
+			font-family: sans-serif;
+		}
+	
+		.button {
+		    font-size: 2.5em;
+		    padding: 0.5em;
+			border-width: 0em;
+		    border-radius: 0em;
+			width: 360px;
+			font-family: sans-serif;
+			color: white;
+			background: #229936;
 		}
 	}
 		
-		@media only screen and (min-width: 1224px) {	
+		@media only screen and (min-width: 2024px) {	
 			h1 {
 				font-weight: 600;
 				font-size: 60px;			
@@ -243,9 +284,8 @@
 			}
 		
 		  	#hero {
-		        padding: 0.8em;
-				height: 1000px;
-				
+				height: 400px; /* same as tablet and desktop */
+				width: 1824px;
 		  	}
 			
 			#container2 {
@@ -253,21 +293,24 @@
 			}
 			
 			#bigfont {
-				font-weight: 900;
-				font-size: 35px;
-				color: white;
+				font-weight: 500;
+				font-size: 30px;
+				color: black;
 				font-family: Roboto, helvetica, arial, sans-serif;
 			}
 
 		  	#contact {
-		        padding-top: 0.8em;
-			    color: white;
-		        font-family: Roboto, helvetica, arial, sans-serif;
-		        background-size: cover;
+				height:400;
+		        margin-top: 0px;
+				padding-top: 0.5em;
+				padding-bottom: 1.8em;
+		        background-color: #F7A643;
+				background-size: cover;
+				font-family: Roboto, helvetica, arial, sans-serif;
 		  	}
-
+			
 			#p1 {
-				font-weight: 300;
+				font-weight: 400;
 				font-size: 30px;
 				color: black;
 			}
@@ -278,10 +321,34 @@
 				border-width: 0;
 			    border-radius: 0em;
 			    font-family: sans-serif;
-			}	
-		
-			#footer {
-				font-weight: 25;
-				font-size: 15px;
+			}
+			
+			.input {
+			    font-size: 2em;
+			    padding: 0.5em;
+				border-width: 0em;
+			    border-radius: 0em;
+				width: 460px;
+				font-family: sans-serif;
+			}
+	
+			.textarea {
+				font-size: 2.1em;
+			    padding: 0.5em;
+				border-width: 0em;
+			    border-radius: 0em;
+				width: 460px;
+				font-family: sans-serif;
+			}
+	
+			.button {
+			    font-size: 2.5em;
+			    padding: 0.5em;
+				border-width: 0em;
+			    border-radius: 0em;
+				width: 460px;
+				font-family: sans-serif;
+				color: white;
+				background: #229936;
 			}
 		}

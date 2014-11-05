@@ -12,14 +12,14 @@
 
  <div id="header">
 	 <div id="container1">
-		 <center><%= image_tag image_path('cooltext1780310221.png') %></center>
+		 <%= image_tag image_path('cooltext1784832111.png') %>
 	</div>
  </div>
 
  <div id="hero">
 	 <div id="container2">
 		<center>
-			<p id="bigfont">We are building automation technologies for the market research industry.<p>
+			<p id="bigfont">Innovations in marketing technologies.<p>
 		</center>
  	</div>
  </div>
@@ -28,26 +28,24 @@
     <div id="container3">
 		<center><p>Contact us to learn more about our products.</p>
 			<div id="p1"><%= alert %></h2></div><br>
-			<%= form_for @lead do |f| %>
-	
+			<%= form_for @lead do |f| %>	
 					<%= f.text_field :name, placeholder: "Name", :class => "input" %><br><br>
 					<%= f.text_field :email, placeholder: "Email", :class => "input" %><br><br>
-					<%= f.text_field :phone, placeholder: "Phone Number", :class => "input" %><br><br>
-					<%= f.text_area :message, placeholder: "Your message", :class => "textarea" %><br><br>
-					<%= f.submit "Send", :class => "button" %>
-				
+					<%= f.text_field :phone, placeholder: "Phone", :class => "input" %><br><br>
+					<%= f.text_area :message, placeholder: "Message", :class => "textarea" %><br><br>
+					<%= f.submit "Send", :class => "button" %>				
 			<% end %>
 		</center>
    	</div>
  </div>
 
-
  <div id="footer">
     <div id="container4">
-		<center>
-			<%= image_tag image_path('images.jpeg') %><br>
-			Copyright © by KwickTrends. All rights reserved.
-		</center>
+		<!-- %= image_tag image_path('images.jpeg') % -->
+		<p align="center" id="smallfont">Copyright © by Ketsci. All rights reserved.
+		<!-- a href="privacy_policy_11032014.pdf">Privacy Policy.</a -->
+		<!-- a href="terms_and_conditions_11032014.pdf">Terms and Conditions.</a -->
+		</p>
 	</div>
  </div>
 
