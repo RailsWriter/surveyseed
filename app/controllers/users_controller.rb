@@ -7,6 +7,12 @@ class UsersController < ApplicationController
   end
   
   def show
+    data = {
+          'request.remote_ip' => request.remote_ip,
+          'request.ip' => request.ip,
+        }
+
+        render json: data
   end
   
   def create
