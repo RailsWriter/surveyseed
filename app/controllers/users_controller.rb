@@ -11,8 +11,11 @@ class UsersController < ApplicationController
           'request.remote_ip' => request.remote_ip,
           'request.ip' => request.ip,
         }
+        
+    hdr = env['HTTP_USER_AGENT']
+    sid = session.id
 
-        render json: data
+        render json: 'ip address: '+request.remote_ip+' Hrd: '+hdr+' session id: '+sid 
   end
   
   def create
