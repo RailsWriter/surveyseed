@@ -7,15 +7,12 @@ class UsersController < ApplicationController
   end
   
   def show
-    data = {
-          'request.remote_ip' => request.remote_ip,
-          'request.ip' => request.ip,
-        }
-        
+   
+    remote_ip = request.remote_ip
     hdr = env['HTTP_USER_AGENT']
     sid = session.id
 
-        render json: 'ip address: '+request.remote_ip+' Hrd: '+hdr+' session id: '+sid 
+    render json: 'ip address: '+remote_ip+' UserAgent: '+hdr+' session id: '+sid
   end
   
   def create
@@ -29,7 +26,15 @@ class UsersController < ApplicationController
     @user.user_agent = env['HTTP_USER_AGENT']
     @user.session_id = session.id
     
-    if @age>13 then @user.save
+    frequent_user(@user.ip_address)
+    if @user_is_not_a_very_frequent_user == false
+      p 'A ROBOT'
+    else
+      p 'NOT A FREQ USER'
+    end
+      
+      
+    if @age>13 and @user_is_not_a_very_frequent_user then @user.save
       redirect_to '/users/tos'
     else
       redirect_to '/users/show'
@@ -190,4 +195,15 @@ class UsersController < ApplicationController
       params.require(:user).permit(:birth_month, :birth_year)
     end
   
+    def frequent_user(ip_address)
+      number_of_attempts = User.where("ip_address = ?", ip_address).where("created_at > ?", (Time.now - 1.day)).count
+      p 'Number_of_attempts =', number_of_attempts
+        
+      if (number_of_attempts <= 4)
+        @user_is_not_a_very_frequent_user = true
+      else
+        @user_is_not_a_very_frequent_user = false
+      end
+    end
+
   end
