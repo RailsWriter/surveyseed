@@ -24,6 +24,11 @@ class UsersController < ApplicationController
   def eval_age
     @user = User.new(user_params)
     @age = Time.zone.now.year-@user.birth_year
+    
+    @user.ip_address = request.remote_ip
+    @user.user_agent = env['HTTP_USER_AGENT']
+    @user.session_id = session.id
+    
     if @age>13 then @user.save
       redirect_to '/users/tos'
     else
