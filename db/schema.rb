@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141109033158) do
+ActiveRecord::Schema.define(version: 20141111024018) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -20,6 +20,32 @@ ActiveRecord::Schema.define(version: 20141109033158) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "phone"
+  end
+
+  create_table "us_geos", force: true do |t|
+    t.string   "zip"
+    t.string   "zip_type"
+    t.string   "primary_city"
+    t.string   "acceptable_cities"
+    t.string   "unacceptable_cities"
+    t.string   "county"
+    t.string   "timezone"
+    t.string   "area_codes"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.string   "world_region"
+    t.string   "country"
+    t.boolean  "decommissioned"
+    t.integer  "estimated_population"
+    t.string   "notes"
+    t.string   "City"
+    t.string   "CriteriaID"
+    t.string   "State"
+    t.string   "StateAbrv"
+    t.string   "DMARegion"
+    t.string   "DMARegionCode"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
   create_table "users", force: true do |t|

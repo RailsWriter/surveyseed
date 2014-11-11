@@ -1,0 +1,47 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  zip: MyString
+  zip_type: MyString
+  primary_city: MyString
+  acceptable_cities: MyString
+  unacceptable_cities: MyString
+  county: MyString
+  timezone: MyString
+  area_codes: MyString
+  latitude: 1.5
+  longitude: 1.5
+  world_region: MyString
+  country: MyString
+  decommissioned: false
+  estimated_population: 1
+  notes: MyString
+  City: MyString
+  CriteriaID: MyString
+  State: MyString
+  StateAbrv: MyString
+  DMARegion: MyString
+  DMARegionCode: MyString
+
+two:
+  zip: MyString
+  zip_type: MyString
+  primary_city: MyString
+  acceptable_cities: MyString
+  unacceptable_cities: MyString
+  county: MyString
+  timezone: MyString
+  area_codes: MyString
+  latitude: 1.5
+  longitude: 1.5
+  world_region: MyString
+  country: MyString
+  decommissioned: false
+  estimated_population: 1
+  notes: MyString
+  City: MyString
+  CriteriaID: MyString
+  State: MyString
+  StateAbrv: MyString
+  DMARegion: MyString
+  DMARegionCode: MyString
