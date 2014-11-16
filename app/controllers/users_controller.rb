@@ -26,14 +26,17 @@ class UsersController < ApplicationController
     else  
       ip_address = request.remote_ip
 
-      if User.where(ip_address: 'ip_address').exists? then
+      if User.where(ip_address: ip_address).exists? then
         first_time_user=false
+        p 'EVALAGE: USER EXISTS'
       else
         first_time_user=true
+        p 'EVALAGE: USER DOES NOT EXIST'
       end
 
       if (first_time_user) then
         # Create a new-user record
+        p 'EVALAGE: FIRST TIME USER'
         @user = User.new(user_params)
         @user.user_agent = env['HTTP_USER_AGENT']
         @user.session_id = session.id
@@ -50,19 +53,23 @@ class UsersController < ApplicationController
       end
     
       if (first_time_user==false) then
-        @user=User.where(ip_address: 'ip_address')
-        if @user.black_listed==true then
+        user=User.where(ip_address: ip_address).first
+        #NTS: Why do I have to stop at first. Optimizes. But there should be not more than 1 entry.
+        p user
+        if user.black_listed==true then
           redirect_to '/users/show'
         else
-          @user.birth_month=params[:user][:birth_month]
-          @user.birth_year=params[:user][:birth_year]    
-          @user.session_id = session.id
-          @user.tos = false
-          @user.attempts_time_stamps_array << Time.now
-          @user.save
+          p 'EVALAGE: REPEAT USER'
+          user.birth_month=params[:user][:birth_month]
+          user.birth_year=params[:user][:birth_year]    
+          user.session_id = session.id
+          user.tos = false
+          user.attempts_time_stamps_array = user.attempts_time_stamps_array + [Time.now]
+#         user.number_of_attempts_in_last_24hrs= user.number_of_attempts_in_last_24hrs+1
+          user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
+          user.save
           
-          @user.number_of_attempts_in_last_24hrs=@user.attempts_time_stamps_array.count { |x| x < (Time.now-1.day) }
-          
+          p user
           redirect_to '/users/tos'
         end
       end
