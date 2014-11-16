@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<br>
+		
+		<div class="header">
+			<center>
+				<h1>Economy</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<fieldset>
+				<p>In my opinion the economy of our country:</p>
+				<%= form_tag("trap_question_2b", method: "post") do %>
+					<%= check_box_tag 'trap_question_2b_response', 'Should be left alone' %>
+					<%= label_tag(:trap_question_2b_response, "Should be left alone") %><br>
+					<%= check_box_tag 'trap_question_2b_response', 'Needs much to be improved' %>
+					<%= label_tag(:trap_question_2b_response, "Needs much to be improved") %><br>
+					<%= check_box_tag 'trap_question_2b_response', 'Going really well' %>
+					<%= label_tag(:trap_question_2b_response, "Going really well") %><br><br>
+					<%= submit_tag "Next" %>
+				<% end %>
+			</fieldset>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('cooltext1784832111.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

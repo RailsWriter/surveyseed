@@ -1,2 +1,3 @@
-class User < ActiveRecord::Base
+class User < ActiveRecord::Base    
+  serialize :attempts_time_stamps_array, Array
 end

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<br>
+		
+		<div class="header">
+			<center>
+				<h1>Colors</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<fieldset>
+				<p>Please choose green in the options below:</p>
+				<%= form_tag("trap_question_1", method: "post") do %>
+					<%= check_box_tag 'color', 'Red' %>
+					<%= label_tag(:color, "Red") %><br>
+					<%= check_box_tag 'color', 'Green' %>
+					<%= label_tag(:color, "Green") %><br>
+					<%= check_box_tag 'color', 'Purple' %>
+					<%= label_tag(:color, "Purple") %><br>
+					<%= check_box_tag 'color', 'Blue' %>
+					<%= label_tag(:color, "Blue") %><br><br>
+					<%= submit_tag "Next" %>
+				<% end %>
+			</fieldset>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('cooltext1784832111.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>
