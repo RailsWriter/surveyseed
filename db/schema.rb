@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141116101522) do
+ActiveRecord::Schema.define(version: 20141117001500) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -48,7 +48,31 @@ ActiveRecord::Schema.define(version: 20141116101522) do
     t.datetime "updated_at",           null: false
   end
 
-# Could not dump table "users" because of following NoMethodError
-#   undefined method `[]' for nil:NilClass
+  create_table "users", force: true do |t|
+    t.integer  "birth_month"
+    t.integer  "birth_year"
+    t.boolean  "tos"
+    t.string   "gender"
+    t.string   "country"
+    t.string   "ZIP"
+    t.string   "ethnicity"
+    t.string   "race"
+    t.string   "eduation"
+    t.integer  "householdcomp"
+    t.string   "householdincome"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.string   "session_id"
+    t.string   "ip_address"
+    t.string   "user_agent"
+    t.string   "trap_question_1_response"
+    t.string   "trap_question_2a_response"
+    t.string   "trap_question_2b_response"
+    t.boolean  "watch_listed"
+    t.boolean  "black_listed"
+    t.string   "user_id"
+    t.integer  "number_of_attempts_in_last_24hrs"
+    t.text     "attempts_time_stamps_array"
+  end
 
 end
