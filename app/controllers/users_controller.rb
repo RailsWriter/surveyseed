@@ -65,10 +65,8 @@ class UsersController < ApplicationController
           user.session_id = session.id
           user.tos = false
           user.attempts_time_stamps_array = user.attempts_time_stamps_array + [Time.now]
-#         user.number_of_attempts_in_last_24hrs= user.number_of_attempts_in_last_24hrs+1
           user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
           user.save
-          
           p user
           redirect_to '/users/tos'
         end
@@ -84,9 +82,7 @@ class UsersController < ApplicationController
     
 
     if ( user.number_of_attempts_in_last_24hrs==nil ) then
-      user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x < (Time.now-1.day) }
-#      user.attempts_time_stamps_array = [Time.now]
-#      user.number_of_attempts_in_last_24hrs=1
+      user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
     else
     end
     
