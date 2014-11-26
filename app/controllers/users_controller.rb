@@ -10,7 +10,10 @@ class UsersController < ApplicationController
     remote_ip = request.remote_ip
     hdr = env['HTTP_USER_AGENT']
     sid = session.id
+#    it = Rank.new(1)
+#    render json: 'ip address: '+remote_ip+' UserAgent: '+hdr+' @RANK =' +@rank+' session id: '+sid
     render json: 'ip address: '+remote_ip+' UserAgent: '+hdr+' session id: '+sid
+
   end
   
   def create
