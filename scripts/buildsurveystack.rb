@@ -1,7 +1,5 @@
 # This script runs every few hrs (15 mins min) to get suitable surveys from Federated Sample Offerwall to Ketsci stack
 
-ENV['RAILS_ENV'] = ARGV.first || ENV['RAILS_ENV'] || 'development'
-require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'httparty'
 
 # Get offerwall surveys from Federated Sample
