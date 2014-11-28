@@ -306,6 +306,32 @@ class UsersController < ApplicationController
     redirect_to '/users/show'
   end
     
+  def ranksurveysforuser (session_id)
+    user=User.find_by session_id: session.id
+    if user.Gender == 'Male' then
+      GenderPreCode = 1
+    else
+      GenderPreCode = 2
+
+      # Surveys that user is qualified for
+      
+      Survey.where(( Survey.Qualification_Gender == nil | GenderPreCode ) && ( Survey.Qualification_Age & (Time.zone.now.year-user.birth_year).to_a != nil ) && ( Survey.Qualification_ZIP & (user.ZIP).to_a != nil )).order(Survey.rank) do |i|
+        user.QualifiedSurveys[i] << Survey.SurveyNumber
+
+        # Is there quota available for the user's profile among the surveys he/she is qualified for
+
+      Survey.where ((Survey.SurveyNumber is part of user.QualifiedSurveys[] ) && ( Survey.Quota_Gender == nil | GenderPreCode ) && ( Survey.Quota_Age & (Time.zone.now.year-user.birth_year).to_a != nil ) && ( Survey.Quota_ZIP & (user.ZIP).to_a != nil )).order(Survey.rank) do |i|
+          user.SupplierLinks[i] << Survey.SupplierLinks["LiveLink"]
+      
+    
+  def userride (session_id)
+    
+    user=User.find_by session_id: session.id
+    redirect_to user.QualifiedSurveys[0]+user.userid
+  
+  end
+    
+    
   private
     def user_params
       params.require(:user).permit(:birth_month, :birth_year)
