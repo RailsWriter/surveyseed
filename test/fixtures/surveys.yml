@@ -1,0 +1,87 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  SurveyName: MyString
+  SurveyNumber: 1
+  SurveySID: MyString
+  AccountName: MyString
+  CountryLanguageID: 1
+  LengthOfInterview: 1
+  BidIncidence: 1.5
+  Conversion: 1
+  CPI: 1.5
+  FieldEndDate: 2014-11-28 02:21:27
+  IndustryID: 1
+  StudyTypeID: 1
+  OverallCompletes: 1
+  TotalRemaining: 1
+  CompletionPercentage: 1
+  SurveyGroup: MyString
+  BidLengthOfInterview: 1
+  TerminationLengthOfInterview: 1
+  IsTrueSample: MyString
+  SurveyMobileConversion: 1
+  SurveyQuotaCalcTypeID: 1
+  SampleTypeID: 1
+  QualificationAgePreCodes: MyText
+  QualificationGenderPreCodes: MyText
+  QualificationZIPPreCodes: MyText
+  QualificationHHIPreCodes: MyText
+  QualificationEducationPreCodes: MyText
+  QualificationHHCPreCodes: MyText
+  QualificationEthnicityPreCodes: MyText
+  QualificationRacePreCodes: MyText
+  QuotaAgePreCodes: MyText
+  QuotaGenderPreCodes: MyText
+  QuotaZIPPreCodes: MyText
+  QuotaHHIPreCodes: MyText
+  QuotaEducationPreCodes: MyText
+  QuotaHHCPreCodes: MyText
+  QuotaEthnicityPreCodes: MyText
+  QuotaRacePreCodes: MyText
+  SurveyStillLive: false
+  SurveyGrossRank: 1
+  SupplierLinks: MyText
+
+two:
+  SurveyName: MyString
+  SurveyNumber: 1
+  SurveySID: MyString
+  AccountName: MyString
+  CountryLanguageID: 1
+  LengthOfInterview: 1
+  BidIncidence: 1.5
+  Conversion: 1
+  CPI: 1.5
+  FieldEndDate: 2014-11-28 02:21:27
+  IndustryID: 1
+  StudyTypeID: 1
+  OverallCompletes: 1
+  TotalRemaining: 1
+  CompletionPercentage: 1
+  SurveyGroup: MyString
+  BidLengthOfInterview: 1
+  TerminationLengthOfInterview: 1
+  IsTrueSample: MyString
+  SurveyMobileConversion: 1
+  SurveyQuotaCalcTypeID: 1
+  SampleTypeID: 1
+  QualificationAgePreCodes: MyText
+  QualificationGenderPreCodes: MyText
+  QualificationZIPPreCodes: MyText
+  QualificationHHIPreCodes: MyText
+  QualificationEducationPreCodes: MyText
+  QualificationHHCPreCodes: MyText
+  QualificationEthnicityPreCodes: MyText
+  QualificationRacePreCodes: MyText
+  QuotaAgePreCodes: MyText
+  QuotaGenderPreCodes: MyText
+  QuotaZIPPreCodes: MyText
+  QuotaHHIPreCodes: MyText
+  QuotaEducationPreCodes: MyText
+  QuotaHHCPreCodes: MyText
+  QuotaEthnicityPreCodes: MyText
+  QuotaRacePreCodes: MyText
+  SurveyStillLive: false
+  SurveyGrossRank: 1
+  SupplierLinks: MyText

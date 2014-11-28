@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141117001500) do
+ActiveRecord::Schema.define(version: 20141128102127) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -20,6 +20,52 @@ ActiveRecord::Schema.define(version: 20141117001500) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "phone"
+  end
+
+  create_table "surveys", force: true do |t|
+    t.string   "SurveyName"
+    t.integer  "SurveyNumber"
+    t.string   "SurveySID"
+    t.string   "AccountName"
+    t.integer  "CountryLanguageID"
+    t.integer  "LengthOfInterview"
+    t.float    "BidIncidence"
+    t.integer  "Conversion"
+    t.float    "CPI"
+    t.datetime "FieldEndDate"
+    t.integer  "IndustryID"
+    t.integer  "StudyTypeID"
+    t.integer  "OverallCompletes"
+    t.integer  "TotalRemaining"
+    t.integer  "CompletionPercentage"
+    t.string   "SurveyGroup"
+    t.integer  "BidLengthOfInterview"
+    t.integer  "TerminationLengthOfInterview"
+    t.string   "IsTrueSample"
+    t.integer  "SurveyMobileConversion"
+    t.integer  "SurveyQuotaCalcTypeID"
+    t.integer  "SampleTypeID"
+    t.text     "QualificationAgePreCodes"
+    t.text     "QualificationGenderPreCodes"
+    t.text     "QualificationZIPPreCodes"
+    t.text     "QualificationHHIPreCodes"
+    t.text     "QualificationEducationPreCodes"
+    t.text     "QualificationHHCPreCodes"
+    t.text     "QualificationEthnicityPreCodes"
+    t.text     "QualificationRacePreCodes"
+    t.text     "QuotaAgePreCodes"
+    t.text     "QuotaGenderPreCodes"
+    t.text     "QuotaZIPPreCodes"
+    t.text     "QuotaHHIPreCodes"
+    t.text     "QuotaEducationPreCodes"
+    t.text     "QuotaHHCPreCodes"
+    t.text     "QuotaEthnicityPreCodes"
+    t.text     "QuotaRacePreCodes"
+    t.boolean  "SurveyStillLive"
+    t.integer  "SurveyGrossRank"
+    t.text     "SupplierLinks"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
   create_table "us_geos", force: true do |t|

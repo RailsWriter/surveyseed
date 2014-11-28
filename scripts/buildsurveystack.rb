@@ -19,9 +19,13 @@ puts totalavailablesurveys+1
 
 (0..totalavailablesurveys).each do |i|
   if ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 72) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 72) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 11)) && ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 8) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 9) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 10) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 12) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && ((offerwallresponse["Surveys"][i]["BidIncidence"] == nil ) || (offerwallresponse["Surveys"][i]["BidIncidence"] > 10 )) && ((offerwallresponse["Surveys"][i]["BidLengthOfInterview"] == nil ) || (offerwallresponse["Surveys"][i]["BidLengthOfInterview"] < 31)) then
-    #	Survey = Survey.new
-    #	Survey.SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
-    #	Survey.SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
+    @survey = Survey.new
+    @survey.SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
+    @survey.SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
+    @survey.StudyTypeID = offerwallresponse["Surveys"][i]["StudyTypeID"]
+    @survey.CountryLanguageID = offerwallresponse["Surveys"][i]["CountryLanguageID"]
+    @survey.BidIncidence = offerwallresponse["Surveys"][i]["BidIncidence"]
+    @survey.BidLengthOfInterview = offerwallresponse["Surveys"][i]["BidLengthOfInterview"]
    
 	  SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
 	  SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
@@ -50,20 +54,20 @@ puts totalavailablesurveys+1
         case SurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
           when 42
             puts '42:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-            # Survey.Qualification_Age = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+            @survey.QualificationAgePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
           when 43
             puts '43:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-            # Survey.Qualification_Gender = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+            @survey.QualificationGenderPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
           # when 42
           # puts '42'
-          # Survey.Qualification_ZIP = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+          # Survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
         end
       end
     else
       puts 'SurveyQualifications or Questions is NIL'
-      # Survey.Qualification_Age = nil
-      # Survey.Qualification_Gender = nil
-      # Survey.Qualification_ZIP = nil
+      @survey.QualificationAgePreCodes = nil
+      @survey.QualificationGenderPreCodes = nil
+      @survey.QualificationZIPPreCodes = nil
     end
     
     # Get Survey Quotas Information by SurveyNumber
@@ -87,21 +91,21 @@ puts totalavailablesurveys+1
         puts SurveyQuotas["SurveyQuotas"][k]["Questions"]
         
         if (SurveyQuotas["SurveyQuotas"][k]["Questions"] == nil ) then
-          # Survey.Quota_Age = nil
-          # Survey.Quota_Gender = nil
-          # Survey.Quota_ZIP = nil
+          @survey.QuotaAgePreCodes = nil
+          @survey.QuotaGenderPreCodes = nil
+          @survey.QuotaZIPPreCodes = nil
         else
           (0..SurveyQuotas["SurveyQuotas"][k]["Questions"].length-1).each do |l|
             case SurveyQuotas["SurveyQuotas"][k]["Questions"][l]["QuestionID"]
               when 42
                 puts '42:', SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
-                # Survey.Quota_Age = SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
+                @survey.QuotaAgePreCodes = SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
               when 43
-                puts '43', SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
-                # Survey.Quota_Gender = SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
+                puts '43:', SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
+                @survey.QuotaGenderPreCodes = SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
               # when 42
               # puts '42'
-              # Survey.Quota_ZIP = SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
+              @survey.QuotaZIPPreCodes = SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
             end
           end
         end
@@ -112,24 +116,34 @@ puts totalavailablesurveys+1
     case offerwallresponse["Surveys"][i]["Conversion"]
       when 0..4
         puts "Rank 1"
+        @survey.SurveyGrossRank = 1
       when 5..9
         puts "Rank 2"
+        @survey.SurveyGrossRank = 2
       when 10..14
         puts "Rank 3"
+        @survey.SurveyGrossRank = 3
       when 15..19
         puts "Rank 4"
+        @survey.SurveyGrossRank = 4
       when 20..24
         puts "Rank 5"
+        @survey.SurveyGrossRank = 5
       when 25..29
         puts "Rank 6"
+        @survey.SurveyGrossRank = 6
       when 30..34
         puts "Rank 7"
+        @survey.SurveyGrossRank = 7
       when 35..39
         puts "Rank 8"
+        @survey.SurveyGrossRank = 8
       when 40..44
         puts "Rank 9"
+        @survey.SurveyGrossRank = 9
       when 45..100
         puts "Rank 10"
+        @survey.SurveyGrossRank = 10
     end
     
     # Create Supplierlink for the survey
@@ -146,9 +160,9 @@ puts totalavailablesurveys+1
     end while SurveyQuotas.code != 200
     puts SupplierLink["SupplierLink"]
     puts SupplierLink["SupplierLink"]["LiveLink"]
-    # Survey.SupplierLink=SupplierLink["SupplierLink"]["LiveLink"]    
+    @survey.SupplierLinks=SupplierLink["SupplierLink"]   
     
-    #	Survey.save - in separate country tables Survey_US, ...
+    @survey.save
     
   else
   end
