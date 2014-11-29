@@ -5,7 +5,7 @@ require 'httparty'
 # Get offerwall surveys from Federated Sample
 
 begin
-  sleep(5)
+  sleep(4)
   puts 'CONNECTING FOR OFFERWALL SURVEYS LIST'
   offerwallresponse = HTTParty.get("http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com/Supply/v1/Surveys/AllOfferwall/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E")
     rescue HTTParty::Error => e
@@ -18,7 +18,10 @@ totalavailablesurveys = offerwallresponse["ResultCount"] - 1
 puts totalavailablesurveys+1
 
 (0..totalavailablesurveys).each do |i|
-  if ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 72) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 72) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 11)) && ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 8) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 9) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 10) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 12) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && ((offerwallresponse["Surveys"][i]["BidIncidence"] == nil ) || (offerwallresponse["Surveys"][i]["BidIncidence"] > 10 )) && ((offerwallresponse["Surveys"][i]["BidLengthOfInterview"] == nil ) || (offerwallresponse["Surveys"][i]["BidLengthOfInterview"] < 31)) then
+  if ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 6) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 7) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9)) && ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 8) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 9) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 10) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 12) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && ((offerwallresponse["Surveys"][i]["BidIncidence"] == nil ) || (offerwallresponse["Surveys"][i]["BidIncidence"] > 10 )) && ((offerwallresponse["Surveys"][i]["BidLengthOfInterview"] == nil ) || (offerwallresponse["Surveys"][i]["BidLengthOfInterview"] < 31)) then
+
+    # Save key offerwall data for each survey
+    
     @survey = Survey.new
     @survey.SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
     @survey.SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
@@ -27,90 +30,6 @@ puts totalavailablesurveys+1
     @survey.BidIncidence = offerwallresponse["Surveys"][i]["BidIncidence"]
     @survey.BidLengthOfInterview = offerwallresponse["Surveys"][i]["BidLengthOfInterview"]
    
-	  SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
-	  SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
-    puts 'PROCESSING i =', i
-	  puts SurveyName, SurveyNumber, offerwallresponse["Surveys"][i]["CountryLanguageID"]
-    
-    # Get Survey Qualifications Information by SurveyNumber
-    
-    begin
-      sleep(5)
-      puts 'CONNECTING FOR QUALIFICATIONS INFORMATION'
-      SurveyQualifications = HTTParty.get('http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com/Supply/v1/SurveyQualifications/BySurveyNumberForOfferwall/'+SurveyNumber.to_s+'?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
-        rescue HTTParty::Error => e
-        puts 'HttParty::Error '+ e.message
-        retry
-    end while SurveyQualifications.code != 200
-
-    if SurveyQualifications["SurveyQualification"]["Questions"]!=nil then
-      NumberOfQualificationsQuestions = SurveyQualifications["SurveyQualification"]["Questions"].length-1
-      puts NumberOfQualificationsQuestions+1
-    
-      (0..NumberOfQualificationsQuestions).each do |j|
-        # Survey.Questions = SurveyQualifications["SurveyQualification"]["Questions"]
-        puts SurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
-        
-        case SurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
-          when 42
-            puts '42:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-            @survey.QualificationAgePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-          when 43
-            puts '43:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-            @survey.QualificationGenderPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-          # when 42
-          # puts '42'
-          # Survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-        end
-      end
-    else
-      puts 'SurveyQualifications or Questions is NIL'
-      @survey.QualificationAgePreCodes = nil
-      @survey.QualificationGenderPreCodes = nil
-      @survey.QualificationZIPPreCodes = nil
-    end
-    
-    # Get Survey Quotas Information by SurveyNumber
-    begin
-      sleep(5)
-      puts 'CONNECTING FOR QUOTA INFORMATION'
-      SurveyQuotas = HTTParty.get('http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com/Supply/v1/SurveyQuotas/BySurveyNumber/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
-        rescue HTTParty::Error => e
-        puts 'HttParty::Error '+ e.message
-        retry
-    end while SurveyQuotas.code != 200
-
-    # Survey.SurveyStillLive = SurveyQuotas["SurveyStillLive"]
-      NumberOfQuotas = SurveyQuotas["SurveyQuotas"].length-1
-      puts NumberOfQuotas+1
-
-      (0..NumberOfQuotas).each do |k|
-        NumberOfRespondents = SurveyQuotas["SurveyQuotas"][k]["NumberOfRespondents"]
-        SurveyQuotaCPI = SurveyQuotas["SurveyQuotas"][k]["QuotaCPI"]
-        puts NumberOfRespondents, SurveyQuotaCPI
-        puts SurveyQuotas["SurveyQuotas"][k]["Questions"]
-        
-        if (SurveyQuotas["SurveyQuotas"][k]["Questions"] == nil ) then
-          @survey.QuotaAgePreCodes = nil
-          @survey.QuotaGenderPreCodes = nil
-          @survey.QuotaZIPPreCodes = nil
-        else
-          (0..SurveyQuotas["SurveyQuotas"][k]["Questions"].length-1).each do |l|
-            case SurveyQuotas["SurveyQuotas"][k]["Questions"][l]["QuestionID"]
-              when 42
-                puts '42:', SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
-                @survey.QuotaAgePreCodes = SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
-              when 43
-                puts '43:', SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
-                @survey.QuotaGenderPreCodes = SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
-              # when 42
-              # puts '42'
-              @survey.QuotaZIPPreCodes = SurveyQuotas["SurveyQuotas"][k]["Questions"][l].values_at("PreCodes")
-            end
-          end
-        end
-      end
-    
     # Assign an initial gross rank to the chosen survey
     
     case offerwallresponse["Surveys"][i]["Conversion"]
@@ -145,11 +64,81 @@ puts totalavailablesurveys+1
         puts "Rank 10"
         @survey.SurveyGrossRank = 10
     end
+
+    # Code for testing
     
-    # Create Supplierlink for the survey
+	  SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
+	  SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
+    puts 'PROCESSING i =', i
+	  puts SurveyName, SurveyNumber, offerwallresponse["Surveys"][i]["CountryLanguageID"]
+    
+
+    # Get Survey Qualifications Information by SurveyNumber
     
     begin
-      sleep(5)
+      sleep(4)
+      puts 'CONNECTING FOR QUALIFICATIONS INFORMATION'
+      SurveyQualifications = HTTParty.get('http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com/Supply/v1/SurveyQualifications/BySurveyNumberForOfferwall/'+SurveyNumber.to_s+'?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+        rescue HTTParty::Error => e
+        puts 'HttParty::Error '+ e.message
+        retry
+    end while SurveyQualifications.code != 200
+
+    # By default all users are qualified
+    
+    @survey.QualificationAgePreCodes = ["ALL"]
+    @survey.QualificationGenderPreCodes = ["ALL"]
+    @survey.QualificationZIPPreCodes = ["ALL"] 
+
+    # Insert specific qualifications where required
+
+    if SurveyQualifications["SurveyQualification"]["Questions"] == nil then
+      puts 'SurveyQualifications or Questions is NIL'
+      @survey.QualificationAgePreCodes = ["ALL"]
+      @survey.QualificationGenderPreCodes = ["ALL"]
+      @survey.QualificationZIPPreCodes = ["ALL"]  
+    else
+      NumberOfQualificationsQuestions = SurveyQualifications["SurveyQualification"]["Questions"].length-1
+      puts NumberOfQualificationsQuestions+1
+    
+      (0..NumberOfQualificationsQuestions).each do |j|
+        # Survey.Questions = SurveyQualifications["SurveyQualification"]["Questions"]
+        puts SurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
+        
+        case SurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
+          when 42
+            puts '42:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+            @survey.QualificationAgePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+          when 43
+            puts '43:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+            @survey.QualificationGenderPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+          when 45
+          puts '45:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+          @survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+        end
+      end      
+    end
+    
+    # Get Survey Quotas Information by SurveyNumber
+    begin
+      sleep(4)
+      puts 'CONNECTING FOR QUOTA INFORMATION'
+      SurveyQuotas = HTTParty.get('http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com/Supply/v1/SurveyQuotas/BySurveyNumber/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+        rescue HTTParty::Error => e
+        puts 'HttParty::Error '+ e.message
+        retry
+    end while SurveyQuotas.code != 200
+
+    # Save quotas information for each survey
+    
+    @survey.SurveyStillLive = SurveyQuotas["SurveyStillLive"]
+#    @survey.SurveyStatusCode = SurveyQuotas["SurveyStatusCode"]
+#    @survey.SurveyQuotas = SurveyQuotas["SurveyQuotas"]
+        
+    # Get Supplierlinks for the survey
+    
+    begin
+      sleep(4)
       puts 'POSTING TO GET SURVEYLINK'
       SupplierLink = HTTParty.post('http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com/Supply/v1/SupplierLinks/Create/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E',
         :body => { :SupplierLinkTypeCode => "OWS", :TrackingTypeCode => "S2S" }.to_json,
@@ -157,13 +146,16 @@ puts totalavailablesurveys+1
         rescue HTTParty::Error => e
         puts 'HttParty::Error '+ e.message
         retry
-    end while SurveyQuotas.code != 200
+    end while SupplierLink.code != 200
     puts SupplierLink["SupplierLink"]
     puts SupplierLink["SupplierLink"]["LiveLink"]
     @survey.SupplierLinks=SupplierLink["SupplierLink"]   
     
+    # Finally save the survey information in the database
     @survey.save
     
   else
+    # This survey does not meet the CountryLanguageID, SurveyType, BidIncidence, Bid InterviewLength criteria
   end
+  # End of total available surveys
 end

@@ -10,7 +10,7 @@ one:
   BidIncidence: 1.5
   Conversion: 1
   CPI: 1.5
-  FieldEndDate: 2014-11-28 02:21:27
+  FieldEndDate: 2014-11-29 15:19:09
   IndustryID: 1
   StudyTypeID: 1
   OverallCompletes: 1
@@ -31,17 +31,12 @@ one:
   QualificationHHCPreCodes: MyText
   QualificationEthnicityPreCodes: MyText
   QualificationRacePreCodes: MyText
-  QuotaAgePreCodes: MyText
-  QuotaGenderPreCodes: MyText
-  QuotaZIPPreCodes: MyText
-  QuotaHHIPreCodes: MyText
-  QuotaEducationPreCodes: MyText
-  QuotaHHCPreCodes: MyText
-  QuotaEthnicityPreCodes: MyText
-  QuotaRacePreCodes: MyText
+  SurveyQuotas: MyText
+  SurveyStatusCode: MyString
   SurveyStillLive: false
   SurveyGrossRank: 1
-  SupplierLinks: MyText
+  SurveyExactRank: 1
+  SupplierLink: MyText
 
 two:
   SurveyName: MyString
@@ -53,7 +48,7 @@ two:
   BidIncidence: 1.5
   Conversion: 1
   CPI: 1.5
-  FieldEndDate: 2014-11-28 02:21:27
+  FieldEndDate: 2014-11-29 15:19:09
   IndustryID: 1
   StudyTypeID: 1
   OverallCompletes: 1
@@ -74,14 +69,9 @@ two:
   QualificationHHCPreCodes: MyText
   QualificationEthnicityPreCodes: MyText
   QualificationRacePreCodes: MyText
-  QuotaAgePreCodes: MyText
-  QuotaGenderPreCodes: MyText
-  QuotaZIPPreCodes: MyText
-  QuotaHHIPreCodes: MyText
-  QuotaEducationPreCodes: MyText
-  QuotaHHCPreCodes: MyText
-  QuotaEthnicityPreCodes: MyText
-  QuotaRacePreCodes: MyText
+  SurveyQuotas: MyText
+  SurveyStatusCode: MyString
   SurveyStillLive: false
   SurveyGrossRank: 1
-  SupplierLinks: MyText
+  SurveyExactRank: 1
+  SupplierLink: MyText

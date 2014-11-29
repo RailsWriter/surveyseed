@@ -31,17 +31,12 @@ class CreateSurveys < ActiveRecord::Migration
       t.text :QualificationHHCPreCodes
       t.text :QualificationEthnicityPreCodes
       t.text :QualificationRacePreCodes
-      t.text :QuotaAgePreCodes
-      t.text :QuotaGenderPreCodes
-      t.text :QuotaZIPPreCodes
-      t.text :QuotaHHIPreCodes
-      t.text :QuotaEducationPreCodes
-      t.text :QuotaHHCPreCodes
-      t.text :QuotaEthnicityPreCodes
-      t.text :QuotaRacePreCodes
+      t.text :SurveyQuotas
+      t.string :SurveyStatusCode
       t.boolean :SurveyStillLive
       t.integer :SurveyGrossRank
-      t.text :SupplierLinks
+      t.integer :SurveyExactRank
+      t.text :SupplierLink
 
       t.timestamps null: false
     end
