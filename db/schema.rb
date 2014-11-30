@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141128102127) do
+ActiveRecord::Schema.define(version: 20141129235305) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -53,17 +53,12 @@ ActiveRecord::Schema.define(version: 20141128102127) do
     t.text     "QualificationHHCPreCodes"
     t.text     "QualificationEthnicityPreCodes"
     t.text     "QualificationRacePreCodes"
-    t.text     "QuotaAgePreCodes"
-    t.text     "QuotaGenderPreCodes"
-    t.text     "QuotaZIPPreCodes"
-    t.text     "QuotaHHIPreCodes"
-    t.text     "QuotaEducationPreCodes"
-    t.text     "QuotaHHCPreCodes"
-    t.text     "QuotaEthnicityPreCodes"
-    t.text     "QuotaRacePreCodes"
+    t.text     "SurveyQuotas"
+    t.string   "SurveyStatusCode"
     t.boolean  "SurveyStillLive"
     t.integer  "SurveyGrossRank"
-    t.text     "SupplierLinks"
+    t.integer  "SurveyExactRank"
+    t.text     "SupplierLink"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
   end
@@ -119,6 +114,10 @@ ActiveRecord::Schema.define(version: 20141128102127) do
     t.string   "user_id"
     t.integer  "number_of_attempts_in_last_24hrs"
     t.text     "attempts_time_stamps_array"
+    t.string   "age"
+    t.text     "SupplierLink"
+    t.text     "QualifiedSurveys"
+    t.text     "SurveysWithMatchingQuota"
   end
 
 end

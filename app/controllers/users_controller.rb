@@ -41,7 +41,11 @@ class UsersController < ApplicationController
         # Create a new-user record
         p 'EVALAGE: FIRST TIME USER'
         @user = User.new(user_params)
- #      @user.age = (Time.zone.now.year-user.birth_year).to_s
+        @user.age = (Time.zone.now.year-user.birth_year).to_s
+        # These get a blank entry on the list due to save action
+ #       @user.QualifiedSurveys = []
+#        @user.SurveysWithMatchingQuota = []
+ #       @user.SupplierLink = []
         @user.user_agent = env['HTTP_USER_AGENT']
         @user.session_id = session.id
         @user.user_id = SecureRandom.hex(16)
@@ -66,7 +70,11 @@ class UsersController < ApplicationController
           p 'EVALAGE: REPEAT USER'
           user.birth_month=params[:user][:birth_month]
           user.birth_year=params[:user][:birth_year]    
-  #       user.age = (Time.zone.now.year-user.birth_year).to_s        
+          user.age = (Time.zone.now.year-user.birth_year).to_s   
+          # These get a blank entry on the list due to save action
+ #         user.QualifiedSurveys = []     
+ #         user.SurveysWithMatchingQuota = []
+ #         user.SupplierLink = []
           user.session_id = session.id
           user.tos = false
           user.attempts_time_stamps_array = user.attempts_time_stamps_array + [Time.now]
@@ -317,6 +325,13 @@ class UsersController < ApplicationController
       @GenderPreCode = [ "2" ]
     end
     
+    # Just in case user goes back to last qualification question and returns - this prevents the array from adding duplicates to previous list
+    user.QualifiedSurveys = []
+    user.SurveysWithMatchingQuota = []
+    user.SupplierLink = []
+#    @tmp = []
+    
+    
 #    @age = (Time.zone.now.year-user.birth_year).to_s
 
       # Surveys that user is qualified for
@@ -325,97 +340,136 @@ class UsersController < ApplicationController
     puts "STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
 
     Survey.where("CountryLanguageID = 6 OR CountryLanguageID = 9").order( "SurveyGrossRank" ).each do |survey|
-      if (((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ] )) then
+      if ((( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode ) && (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || ([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ] ) && ( survey.SurveyStillLive )) then
         
         #Prints for testing code
           
         ans0 = ( survey.try(:QualificationGenderPreCodes) )
-        ans1 = ( survey.QualificationGenderPreCodes == "ALL" ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
-        ans2 = ([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age]
-        ans3 = ([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ]
-        puts 'Ans0:', ans0, 'Ans1:', ans1, 'age:', @age, 'Ans2:', ans2, 'Ans3:', ans3
-        puts 'USER QUALIFIED FOR SURVEY NUMBER =', survey.SurveyNumber, 'RANK=', survey.SurveyGrossRank, 'Gender=', survey, survey.QualificationGenderPreCodes, 'AGE=', @age, 'AGE PreCodes=', survey.QualificationAgePreCodes, 'User Entered ZIP:', user.ZIP, 'ZIP PreCodes:', survey.QualificationZIPPreCodes
-        # user.QualifiedSurveys << survey.SurveyNumber
+        ans1 = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
+        ans2 = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
+        ans3 = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
+        puts 'BEGIN: USER QUALIFIED FOR SURVEY NUMBER =', survey.SurveyNumber, 'RANK=', survey.SurveyGrossRank, 'Gender from Survey=', survey.QualificationGenderPreCodes, 'User enetered Gender: ', @GenderPreCode, 'USER ENTERED AGE=', user.age, 'AGE PreCodes from Survey=', survey.QualificationAgePreCodes, 'User Entered ZIP:', user.ZIP, 'ZIP PreCodes from Survey:', survey.QualificationZIPPreCodes
+        puts 'Ans1 - Gender match:', ans1, 'Ans2 - Age match:', ans2, 'Ans3 - ZIP match:', ans3
+        
+        user.QualifiedSurveys << survey.SurveyNumber
+        
       else
         # This survey qualifications did not match with the user
         # Print for testing/verification
-        ans4 = (@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode
-        puts 'Else: ', 'Gender PreCodes: ', survey.QualificationGenderPreCodes, '@GenderPreCode:', @GenderPreCode, 'Ans4:', ans4
+        ans4 = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
+        ans5 = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
+        ans6 = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
+        puts 'END: USER DID NOT QUALIFY FOR THIS SURVEY', survey.SurveyNumber
+        puts 'Ans4 - Gender match:', ans4, 'Ans5 - Age match:', ans5, 'Ans6 - ZIP match:', ans6
       end
-      # End of all surveys in teh database
+      # End of all surveys in the database that meet the country, age, gender and ZIP criteria
     end
 
-    # Lets save the surveys user qualifies for in this user's record of database in rank order
+    if user.QualifiedSurveys == [] then
+      puts 'You did not qualify for a survey so taking you to show page with that message'
+      redirect redirect_to '/users/show'
+    else
+      # delete the empty item from initialization
+ #     @tmp = user.QualifiedSurveys.flatten.compact
+ #    user.QualifiedSurveys = @tmp
+      puts 'IN TOTAL USER HAS QUALIFIED FOR =', user.QualifiedSurveys
+
+      # Lets save the surveys user qualifies for in this user's record of database in rank order
       user.save
 
-    # Look through surveys this user is qualified for to check if there is quota available
+      # Look through surveys this user is qualified for to check if there is quota available
         
       (0..user.QualifiedSurveys.length-1).each do |j|
         @surveynumber = user.QualifiedSurveys[j]
+ #       survey = Survey.where( "SurveyNumber = ?", @surveynumber )
+        Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey|
 
-        NumberOfQuotas = survey.SurveyQuotas.length-1
-        puts NumberOfQuotas+1
+        @NumberOfQuotas = survey.SurveyQuotas.length-1
+        puts 'NumberofQuotas:', @NumberOfQuotas+1
 
-        (0..NumberOfQuotas).each do |k|
-          NumberOfRespondents = survey.SurveyQuotas[k]["NumberOfRespondents"]
-          SurveyQuotaCPI = survey.SurveyQuotas[k]["QuotaCPI"]
-          puts NumberOfRespondents, SurveyQuotaCPI
+        (0..@NumberOfQuotas).each do |k|
+          @NumberOfRespondents = survey.SurveyQuotas[k]["NumberOfRespondents"]
+          @SurveyQuotaCPI = survey.SurveyQuotas[k]["QuotaCPI"]
+          puts 'NumberofRespondents:', @NumberOfRespondents, 'QuotaCPI:', @SurveyQuotaCPI
           puts survey.SurveyQuotas[k]["Questions"]
         
           if (survey.SurveyQuotas[k]["Questions"] == nil ) then
             # Quota is open for all users so add this survey number to user's ride
             puts 'Quota is open for all users'
-            user.surveysthathavequota << @surveynumber
+            user.SurveysWithMatchingQuota << @surveynumber
           else
             # check if a quota exists for this user by matching precodes for all questions in the quota
+            # Assume all quotas are available unless proven false
+            
+            agequotaexists=true
+            genderquotaexists=true
+            @ZIPquotaexists=true
             
             (0..survey.SurveyQuotas[k]["Questions"].length-1).each do |l|
+              puts 'l=', l  
               case survey.SurveyQuotas[k]["Questions"][l]["QuestionID"]
-
+                
                 when 42
                   puts '42:', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
                   if ([ user.age ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.age ] ) then
                     agequotaexists=true
+                    puts 'Age question matches'
                   else
                     agequotaexists=false
+                    puts 'Age question does not match'
                   end
                 when 43
                   puts '43:', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
                   
                   if ( @GenderPreCode & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == @GenderPreCode ) then
                     genderquotaexists=true
+                    puts 'Gender question matches'
                   else
                     genderquotaexists=false
+                    puts 'Gender question does not match'
                   end
                   
                 when 45
                   puts '45', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
                   
                   if ([ user.ZIP ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.ZIP ] ) then
-                    ZIPquotaexists=true
+                    @ZIPquotaexists=true
+                    puts 'ZIP question matches'
                   else
-                    ZIPquotaexists=false
-                  end
-                  
-                  # Quota k exists if qualifications for user profile match
-                  if (agequotaexists && genderquotaexists && ZIPquotaexists) then
-                    user.surveysthathavequota << @surveynumber
-                  else
-                    # End validating if this quota matches or not
-                    # End if
+                    @ZIPquotaexists=false
+                    puts 'ZIP question does not match'
                   end
                   # End case
-              end
-              # End l
-            end      
-            # End if
-          end        
-          #End k
+                end
+                # End l
+              end  
+                  # Quota k exists if qualifications for user profile match
+                  if ((agequotaexists == false) || (genderquotaexists == false) || (@ZIPquotaexists == false)) then
+                    puts 'This overall quota did not match the user'
+                  else
+                    puts 'This overall quota matches what we know about the user'
+#                    @tmp << @surveynumber
+                    user.SurveysWithMatchingQuota << @surveynumber
+                    # End if
+                  end                    
+              # End if
+            end        
+            #End k
+          end
+          # End where
         end
         # End j
       end
+        # End 'if' user did qualify for survey(s)
+    end
 
+      
       # Lets save the survey numbers that the user meets the quota requirements for in this user's record of database in rank order
+      
+#      puts '@tmp.compact:', @tmp.uniq
+#      user.SurveysWithMatchingQuota = @tmp.uniq
+      user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
+      puts 'List of unique surveys where quota is available:', user.SurveysWithMatchingQuota
       user.save
       
       # Begin the ride
@@ -428,17 +482,21 @@ class UsersController < ApplicationController
     
     user=User.find_by session_id: session_id
     
-    (0..user.surveysthathavequota.length-1).each do |i|
-      @SurveyNumber = user.surveysthathavequota[i]
-      @survey = Survey.where( "SurveyNumber = ?", @SurveyNumber )
-      user.SupplierLinks << @survey.SupplierLinks["LiveLink"]
+    (0..user.SurveysWithMatchingQuota.length-1).each do |i|
+      @SurveyNumber = user.SurveysWithMatchingQuota[i]
+#      survey = Survey.where( "SurveyNumber = ?", @SurveyNumber )
+      Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey|
+         user.SupplierLink << survey.SupplierLink["LiveLink"]
+      end
     end
     
-    puts 'USER HAS QUOTA FOR SUPPLIERLINKS =', user.SupplierLinks
+    puts 'USER HAS QUOTA FOR SUPPLIERLINKS =', user.SupplierLink
 
     # Start the ride
+    @PID = 'KETSCI_TEST'
 #    redirect_to user.QualifiedSurveys[0]+user.session_id
-    redirect_to '/users/show'
+#   redirect_to 'http://www.google.com'
+  redirect_to user.SupplierLink[0]+@PID
   
   end
     

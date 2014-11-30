@@ -132,8 +132,8 @@ puts totalavailablesurveys+1
     # Save quotas information for each survey
     
     @survey.SurveyStillLive = SurveyQuotas["SurveyStillLive"]
-#    @survey.SurveyStatusCode = SurveyQuotas["SurveyStatusCode"]
-#    @survey.SurveyQuotas = SurveyQuotas["SurveyQuotas"]
+    @survey.SurveyStatusCode = SurveyQuotas["SurveyStatusCode"]
+    @survey.SurveyQuotas = SurveyQuotas["SurveyQuotas"]
         
     # Get Supplierlinks for the survey
     
@@ -149,7 +149,7 @@ puts totalavailablesurveys+1
     end while SupplierLink.code != 200
     puts SupplierLink["SupplierLink"]
     puts SupplierLink["SupplierLink"]["LiveLink"]
-    @survey.SupplierLinks=SupplierLink["SupplierLink"]   
+    @survey.SupplierLink=SupplierLink["SupplierLink"]   
     
     # Finally save the survey information in the database
     @survey.save
