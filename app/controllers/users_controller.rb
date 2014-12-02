@@ -493,10 +493,14 @@ class UsersController < ApplicationController
     puts 'USER HAS QUOTA FOR SUPPLIERLINKS =', user.SupplierLink
 
     # Start the ride
+    
+# PID could be the user_id or maybe append any other data for security or better tracking
     @PID = 'KETSCI_TEST'
-#    redirect_to user.QualifiedSurveys[0]+user.session_id
-#   redirect_to 'http://www.google.com'
+
+# Append user profile parameters before sending user to Fulcrum
   redirect_to user.SupplierLink[0]+@PID
+  
+
   
   end
     

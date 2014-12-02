@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'redirects/status'
+
   root 'leads#home'
   get 'leads/thanks'
   
