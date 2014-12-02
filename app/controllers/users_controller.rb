@@ -41,7 +41,7 @@ class UsersController < ApplicationController
         # Create a new-user record
         p 'EVALAGE: FIRST TIME USER'
         @user = User.new(user_params)
-        @user.age = (Time.zone.now.year-user.birth_year).to_s
+        @user.age = (Time.zone.now.year-@user.birth_year).to_s
         # These get a blank entry on the list due to save action
  #       @user.QualifiedSurveys = []
 #        @user.SurveysWithMatchingQuota = []
@@ -367,7 +367,7 @@ class UsersController < ApplicationController
 
     if user.QualifiedSurveys == [] then
       puts 'You did not qualify for a survey so taking you to show page with that message'
-      redirect redirect_to '/users/show'
+      redirect_to '/users/show'
     else
       # delete the empty item from initialization
  #     @tmp = user.QualifiedSurveys.flatten.compact
