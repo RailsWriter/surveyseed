@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141203192020) do
+ActiveRecord::Schema.define(version: 20141203194309) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -53,14 +53,14 @@ ActiveRecord::Schema.define(version: 20141203192020) do
     t.text     "QualificationHHCPreCodes"
     t.text     "QualificationEthnicityPreCodes"
     t.text     "QualificationRacePreCodes"
-    t.text     "SurveyQuotas"
+    t.text     "SurveyQuotas",                   limit: 50000000
     t.string   "SurveyStatusCode"
     t.boolean  "SurveyStillLive"
     t.integer  "SurveyGrossRank"
     t.integer  "SurveyExactRank"
     t.text     "SupplierLink"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
   end
 
   create_table "us_geos", force: true do |t|
