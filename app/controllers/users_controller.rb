@@ -21,7 +21,7 @@ class UsersController < ApplicationController
 
   def eval_age
   # calculate age for COPA eligibility
-#      @age = Time.zone.now.year-@user.birth_year    
+#   @age = Time.zone.now.year-@user.birth_year    
     @age = Time.zone.now.year-params[:user][:birth_year].to_i
 # BUG: calculate age correctly  
     if @age<13 then
@@ -42,6 +42,8 @@ class UsersController < ApplicationController
         p 'EVALAGE: FIRST TIME USER'
         @user = User.new(user_params)
         @user.age = (Time.zone.now.year-@user.birth_year).to_s
+        # Get the advertiser id to determine payout value
+#       @user.payout = should be extracted from advertiser id in call
         # These get a blank entry on the list due to save action
  #       @user.QualifiedSurveys = []
 #        @user.SurveysWithMatchingQuota = []
@@ -342,6 +344,8 @@ class UsersController < ApplicationController
     Survey.where("CountryLanguageID = 6 OR CountryLanguageID = 9").order( "SurveyGrossRank" ).each do |survey|
       if ((( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode ) && (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || ([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ] ) && ( survey.SurveyStillLive )) then
         
+# Add condition that survey.CPI > user.payout
+        
         #Prints for testing code
           
         ans0 = ( survey.try(:QualificationGenderPreCodes) )
@@ -498,8 +502,8 @@ class UsersController < ApplicationController
     @PID = 'KETSCI_TEST'
 
 # Append user profile parameters before sending user to Fulcrum
-  redirect_to user.SupplierLink[0]+@PID
-  
+#  redirect_to user.SupplierLink[0]+@PID
+  redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=f8dff25d-1148-46f5-83b6-8fed68eca3fa&PID=KETSCI_TEST'
 
   
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141129235305) do
+ActiveRecord::Schema.define(version: 20141203192020) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 20141129235305) do
     t.integer  "SampleTypeID"
     t.text     "QualificationAgePreCodes"
     t.text     "QualificationGenderPreCodes"
-    t.text     "QualificationZIPPreCodes"
+    t.text     "QualificationZIPPreCodes",       limit: 1000000
     t.text     "QualificationHHIPreCodes"
     t.text     "QualificationEducationPreCodes"
     t.text     "QualificationHHCPreCodes"
@@ -59,8 +59,8 @@ ActiveRecord::Schema.define(version: 20141129235305) do
     t.integer  "SurveyGrossRank"
     t.integer  "SurveyExactRank"
     t.text     "SupplierLink"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
   end
 
   create_table "us_geos", force: true do |t|
