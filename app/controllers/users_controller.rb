@@ -7,13 +7,24 @@ class UsersController < ApplicationController
   end
   
   def show
-    remote_ip = request.remote_ip
-    hdr = env['HTTP_USER_AGENT']
-    sid = session.id
-#    it = Rank.new(1)
-#    render json: 'ip address: '+remote_ip+' UserAgent: '+hdr+' @RANK =' +@rank+' session id: '+sid
-    render json: 'ip address: '+remote_ip+' UserAgent: '+hdr+' session id: '+sid
 
+    case params[:status]
+    when '1'
+      redirect_to '/users/default'
+    when '2'
+      redirect_to '/users/success'
+    when '3'
+      redirect_to '/users/failure'
+    when '4'
+      redirect_to '/users/overquota'
+    when '5'
+      redirect_to '/users/qterm'
+    when '6'
+      remote_ip = request.remote_ip
+      hdr = env['HTTP_USER_AGENT']
+      sid = session.id
+      render json: 'ip address: '+remote_ip+' UserAgent: '+hdr+' session id: '+sid
+    end
   end
   
   def create
@@ -25,7 +36,7 @@ class UsersController < ApplicationController
     @age = Time.zone.now.year-params[:user][:birth_year].to_i
 # BUG: calculate age correctly  
     if @age<13 then
-      redirect_to '/users/show'
+      redirect_to '/users/show?status=3'
     else  
       ip_address = request.remote_ip
 
@@ -470,10 +481,23 @@ class UsersController < ApplicationController
       
       # Lets save the survey numbers that the user meets the quota requirements for in this user's record of database in rank order
       
-#      puts '@tmp.compact:', @tmp.uniq
-#      user.SurveysWithMatchingQuota = @tmp.uniq
       user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
-      puts 'List of unique surveys where quota is available:', user.SurveysWithMatchingQuota
+      puts 'List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
+
+
+# REMOVE AFTER TESTING      
+      @tmp_SurveysWithMatchingQuota = []
+      (0..user.SurveysWithMatchingQuota.length-1).each do |i|
+        if user.SurveysWithMatchingQuota[i].to_i > 67820 then
+          @tmp_SurveysWithMatchingQuota << user.SurveysWithMatchingQuota[i]
+        else
+          p 'Skipping this survey due to no SupplierLink', user.SurveysWithMatchingQuota[i]
+        end
+      end
+      user.SurveysWithMatchingQuota = @tmp_SurveysWithMatchingQuota
+      puts 'REDUCED List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
+# UPTO HERE      
+      
       user.save
       
       # Begin the ride
@@ -484,28 +508,36 @@ class UsersController < ApplicationController
     
   def userride (session_id)
     
-    user=User.find_by session_id: session_id
+    user = User.find_by session_id: session_id
     
     (0..user.SurveysWithMatchingQuota.length-1).each do |i|
-      @SurveyNumber = user.SurveysWithMatchingQuota[i]
-#      survey = Survey.where( "SurveyNumber = ?", @SurveyNumber )
+      @surveynumber = user.SurveysWithMatchingQuota[i]
       Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey|
-         user.SupplierLink << survey.SupplierLink["LiveLink"]
+         user.SupplierLink[i] = survey.SupplierLink["LiveLink"]
+         p 'User can be sent to these surveys by rank order:', user.SupplierLink[i]
       end
     end
     
     puts 'USER HAS QUOTA FOR SUPPLIERLINKS =', user.SupplierLink
+    
+    
+    
+    # Save the list of SupplierLinks in user record
+    user.save
 
     # Start the ride
     
 # PID could be the user_id or maybe append any other data for security or better tracking
-    @PID = 'KETSCI_TEST'
+#    @PID = 'KETSCI_TEST'
+    @PID = user.user_id   
 
 # Append user profile parameters before sending user to Fulcrum
-#  redirect_to user.SupplierLink[0]+@PID
-  redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=f8dff25d-1148-46f5-83b6-8fed68eca3fa&PID=KETSCI_TEST'
 
-  
+  redirect_to user.SupplierLink[0]+@PID
+  p 'User will be sent to this survey by rank order:', user.SupplierLink[0]+@PID
+
+ # redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=caca1523-bff2-481d-aacd-45a0805b8eef&PID=KETSCI_TEST'
+
   end
     
   private
