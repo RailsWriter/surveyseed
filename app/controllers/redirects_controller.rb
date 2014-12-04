@@ -26,7 +26,7 @@ class RedirectsController < ApplicationController
         user = User.find_by user_id: @PID
   #      user.SurveysCompleted << params[:tsfn]
         survey = Survey.find_by SurveyNumber: params[:tsfn]
-        survey.CompletedBy = @PID
+   #     survey.CompletedBy = @PID
 
         redirect_to '/redirects/success'
 
@@ -40,8 +40,8 @@ class RedirectsController < ApplicationController
         @PID = params[:PID]
         user = User.find_by user_id: @PID
   #      user.SurveysAttempted << params[:tsfn]
-        SupplierLink = SupplierLink.drop(1)
-        puts 'Remaining surveys to attempt:', SupplierLink
+  #      SupplierLink = SupplierLink.drop(1)
+  #      puts 'Remaining surveys to attempt:', SupplierLink
   #      redirect_to user.SupplierLink[0]+@PID
         
         redirect_to '/redirects/failure'
@@ -58,8 +58,8 @@ class RedirectsController < ApplicationController
         user = User.find_by user_id: @PID
   #      user.SurveysAttempted << params[:tsfn]
 
-        SupplierLink = SupplierLink.drop(1)
-        puts 'Remaining surveys to attempt:', SupplierLink
+ #       SupplierLink = SupplierLink.drop(1)
+  #      puts 'Remaining surveys to attempt:', SupplierLink
   #      redirect_to user.SupplierLink[0]+@PID
              
         redirect_to '/redirects/overquota'

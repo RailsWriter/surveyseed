@@ -533,9 +533,9 @@ class UsersController < ApplicationController
 
 # Append user profile parameters before sending user to Fulcrum
 
-  redirect_to user.SupplierLink[0]+@PID
   p 'User will be sent to this survey by rank order:', user.SupplierLink[0]+@PID
-
+  redirect_to user.SupplierLink[0]+@PID
+  
  # redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=caca1523-bff2-481d-aacd-45a0805b8eef&PID=KETSCI_TEST'
 
   end
