@@ -12,7 +12,7 @@ class RedirectsController < ApplicationController
         p 'CLIENT_QUERYSTRING = ', @CQS
         @url = request.original_url
         p 'url =', @url
-        redirect_to '/users/show?status=1'
+        redirect_to '/redirects/default'
         
         # save in User and Survey tables
 
@@ -28,7 +28,7 @@ class RedirectsController < ApplicationController
         survey = Survey.find_by SurveyNumber: params[:tsfn]
         survey.CompletedBy = @PID
 
-        redirect_to '/users/show?status=2'
+        redirect_to '/redirects/success'
 
       when "3"
         # FailureLink: https://www.ketsci.com/redirects/status?status=3&PID=[%PID%]&cq=[%CLIENT_QUERYSTRING%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
@@ -42,9 +42,9 @@ class RedirectsController < ApplicationController
   #      user.SurveysAttempted << params[:tsfn]
         SupplierLink = SupplierLink.drop(1)
         puts 'Remaining surveys to attempt:', SupplierLink
-        redirect_to user.SupplierLink[0]+@PID
+  #      redirect_to user.SupplierLink[0]+@PID
         
-        redirect_to '/users/show?status=3'
+        redirect_to '/redirects/failure'
         
         
       when "4"
@@ -60,9 +60,9 @@ class RedirectsController < ApplicationController
 
         SupplierLink = SupplierLink.drop(1)
         puts 'Remaining surveys to attempt:', SupplierLink
-        redirect_to user.SupplierLink[0]+@PID
+  #      redirect_to user.SupplierLink[0]+@PID
              
-        redirect_to '/users/show?status=4'
+        redirect_to '/redirects/overquota'
       
     
       when "5"
@@ -75,9 +75,10 @@ class RedirectsController < ApplicationController
         user = User.find_by user_id: @PID
 #        user.blacklisted = true
 
-        redirect_to '/users/show?status=5'
+        redirect_to '/redirects/qterm'
         
     end
     
   end
+  
 end
