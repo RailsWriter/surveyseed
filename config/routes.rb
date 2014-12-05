@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   resources :leads
   resources :users
-  # resources :redirects
+  resources :redirects
   
   # You can have the root of your site routed with "root"
   # root 'welcome#index'

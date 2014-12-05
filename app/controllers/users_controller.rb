@@ -352,7 +352,7 @@ class UsersController < ApplicationController
       
     puts "STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
 
-    Survey.where("CountryLanguageID = 6 OR CountryLanguageID = 9").order( "SurveyGrossRank" ).each do |survey|
+    Survey.where("CountryLanguageID = 6 OR CountryLanguageID = 9 OR CountryLanguageID = 27").order( "SurveyGrossRank" ).each do |survey|
       if ((( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode ) && (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || ([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ] ) && ( survey.SurveyStillLive )) then
         
 # Add condition that survey.CPI > user.payout
@@ -382,7 +382,7 @@ class UsersController < ApplicationController
 
     if user.QualifiedSurveys == [] then
       puts 'You did not qualify for a survey so taking you to show page with that message'
-      redirect_to '/users/show'
+      userride (session_id)
     else
       # delete the empty item from initialization
  #     @tmp = user.QualifiedSurveys.flatten.compact
@@ -477,15 +477,13 @@ class UsersController < ApplicationController
       end
         # End 'if' user did qualify for survey(s)
     end
-
-      
+    
       # Lets save the survey numbers that the user meets the quota requirements for in this user's record of database in rank order
       
       user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
       puts 'List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
 
-
-# REMOVE AFTER TESTING      
+# *********** REMOVE AFTER TESTING      
       @tmp_SurveysWithMatchingQuota = []
       (0..user.SurveysWithMatchingQuota.length-1).each do |i|
         if user.SurveysWithMatchingQuota[i].to_i > 67820 then
@@ -509,32 +507,34 @@ class UsersController < ApplicationController
   def userride (session_id)
     
     user = User.find_by session_id: session_id
+
+    if (user.QualifiedSurveys || user.SurveysWithMatchingQuota) == nil then
+      p 'No Surveys with matching quota found in users_controller'
+      redirect_to 'redirects/status?status=3'
+    else
+    end
     
     (0..user.SurveysWithMatchingQuota.length-1).each do |i|
       @surveynumber = user.SurveysWithMatchingQuota[i]
       Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey|
          user.SupplierLink[i] = survey.SupplierLink["LiveLink"]
-         p 'User can be sent to these surveys by rank order:', user.SupplierLink[i]
       end
     end
     
     puts 'USER HAS QUOTA FOR SUPPLIERLINKS =', user.SupplierLink
-    
-    
-    
+     
     # Save the list of SupplierLinks in user record
     user.save
 
     # Start the ride
     
-# PID could be the user_id or maybe append any other data for security or better tracking
-#    @PID = 'KETSCI_TEST'
+    # PID could be the user_id or maybe append any other data for security or better tracking
     @PID = user.user_id   
 
 # Append user profile parameters before sending user to Fulcrum
 
-  p 'User will be sent to this survey by rank order:', user.SupplierLink[0]+@PID
-  redirect_to user.SupplierLink[0]+@PID
+    p 'User will be sent to this survey:', user.SupplierLink[0]+@PID
+    redirect_to user.SupplierLink[0]+@PID
   
  # redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=caca1523-bff2-481d-aacd-45a0805b8eef&PID=KETSCI_TEST'
 
