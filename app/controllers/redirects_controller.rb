@@ -27,18 +27,18 @@ class RedirectsController < ApplicationController
         else
           # save attempt info in User and Survey tables
           
-          user = User.find_by user_id: params[:PID]
+#         user = User.find_by user_id: params[:PID]
+          user = User.last
+          
           user.SurveysAttempted << params[:tsfn]
 #         Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
-# @a=params[:tsfn]
-# @b=[params[:cost], params[:tsfn]]
           user.SurveysCompleted.store("params[:tsfn]"=>[params[:cost], params[:tsfn]])
           user.save
 
           survey = Survey.find_by SurveyNumber: params[:tsfn]
           p 'Just completed survey:', survey.SurveyNumber, 'by user_id:', user.user_id
-#         survey.CompletedBy = params[:PID]
-#         survey.ActualTimeInSurvey = params[:tis]
+          survey.CompletedBy = params[:PID]
+          survey.ActualTimeInSurvey = params[:tis]
           survey.save
 
           # Give user chance to take another survey
@@ -61,11 +61,11 @@ class RedirectsController < ApplicationController
         else
           # save attempt info in User and Survey tables
 #          user = User.find_by user_id: params[:PID]          
-#          user.SurveysAttempted << params[:tsfn]
 
           @user = User.last
-          @user.ZIP="99999" 
-                   
+          @user.ZIP="88888" 
+
+          user.SurveysAttempted << params[:tsfn]                   
           @user.save
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
         end
@@ -77,14 +77,16 @@ class RedirectsController < ApplicationController
 
 # turn to t'test' be true on launch 
         if params[:PID] != 'test' then
-          redirect_to 'https://www.ketsci.com/redirects/overquota'
+          redirect_to 'https://www.ketsci.com/redirects/overquota?&OQ=1'
         else
-          render json: 'OQ'
-          user = User.find_by user_id: params[:PID]
-          
           # save attempt info in User and Survey tables
+#          user = User.find_by user_id: params[:PID]
+          user = User.last
+          
           user.SurveysAttempted << params[:tsfn]
           user.save
+
+          redirect_to 'https://www.ketsci.com/redirects/overquota?&OQ=2'
           
           # Give user chance to take another survey
 #         if (user.SupplierLink) then
