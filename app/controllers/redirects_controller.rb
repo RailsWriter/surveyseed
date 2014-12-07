@@ -33,11 +33,13 @@ class RedirectsController < ApplicationController
 # @a=params[:tsfn]
 # @b=[params[:cost], params[:tsfn]]
           user.SurveysCompleted.store("params[:tsfn]"=>[params[:cost], params[:tsfn]])
+          user.save
 
           survey = Survey.find_by SurveyNumber: params[:tsfn]
           p 'Just completed survey:', survey.SurveyNumber, 'by user_id:', user.user_id
 #         survey.CompletedBy = params[:PID]
 #         survey.ActualTimeInSurvey = params[:tis]
+          survey.save
 
           # Give user chance to take another survey
           if (user.SupplierLink) then
@@ -57,13 +59,14 @@ class RedirectsController < ApplicationController
         if params[:PID] != 'test' then
           redirect_to 'https://www.ketsci.com/redirects/failure&FAILED=1'
         else
-#          render json: 'FAILED'
           # save attempt info in User and Survey tables
 #          user = User.find_by user_id: params[:PID]          
 #          user.SurveysAttempted << params[:tsfn]
 
-          user = User.last
-          user.ZIP=99999
+          @user = User.last
+          @user.ZIP="99999" 
+                   
+          @user.save
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
         end
         
@@ -81,6 +84,7 @@ class RedirectsController < ApplicationController
           
           # save attempt info in User and Survey tables
           user.SurveysAttempted << params[:tsfn]
+          user.save
           
           # Give user chance to take another survey
 #         if (user.SupplierLink) then
@@ -102,6 +106,7 @@ class RedirectsController < ApplicationController
           user = User.find_by user_id: params[:PID]
           user.SurveysAttempted << params[:tsfn]
           user.black_listed = true
+          user.save
           redirect_to 'https://www.ketsci.com/redirects/qterm'
         end
     end
