@@ -55,13 +55,16 @@ class RedirectsController < ApplicationController
 
 # turn to 'test' be true on launch        
         if params[:PID] != 'test' then
-          redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED'
+          redirect_to 'https://www.ketsci.com/redirects/failure&FAILED=1'
         else
-          render json: 'FAILED'
+#          render json: 'FAILED'
           # save attempt info in User and Survey tables
-          user = User.find_by user_id: params[:PID]          
-          user.SurveysAttempted << params[:tsfn]
-#          redirect_to 'https://www.ketsci.com/redirects/failure'
+#          user = User.find_by user_id: params[:PID]          
+#          user.SurveysAttempted << params[:tsfn]
+
+          user = User.last
+          user.ZIP=99999
+          redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
         end
         
       when "4"
