@@ -30,7 +30,9 @@ class RedirectsController < ApplicationController
           user = User.find_by user_id: params[:PID]
           user.SurveysAttempted << params[:tsfn]
 #         Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
-          user.SurveysCompleted.store ("params[:tsfn]", [params[:cost], params[:tsfn]])
+# @a=params[:tsfn]
+# @b=[params[:cost], params[:tsfn]]
+          user.SurveysCompleted.store("params[:tsfn]"=>[params[:cost], params[:tsfn]])
 
           survey = Survey.find_by SurveyNumber: params[:tsfn]
           p 'Just completed survey:', survey.SurveyNumber, 'by user_id:', user.user_id
