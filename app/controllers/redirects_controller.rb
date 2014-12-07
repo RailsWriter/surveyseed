@@ -22,54 +22,67 @@ class RedirectsController < ApplicationController
         p 'Suceess'
         # save attempt info in User and Survey tables
 
-        @PID = params[:PID]
-        user = User.find_by user_id: @PID
-  #      user.SurveysCompleted << params[:tsfn]
-        survey = Survey.find_by SurveyNumber: params[:tsfn]
-  #     survey.SurveyCompltedBy = @PID
-
-        redirect_to 'https://www.ketsci.com/redirects/success'
-
-      when "3"
-        # FailureLink: https://www.ketsci.com/redirects/status?status=3&PID=[%PID%]&cqs=[%CLIENT_QUERYSTRING%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
-        
-        p 'Failure'
-        
-        # save attempt info in User and Survey tables
-      
-        @PID = params[:PID]
-        
-        if @PID = 'test' then
-          redirect_to 'https://www.ketsci.com/redirects/failure'
+        if params[:PID] = 'test' then
+          redirect_to 'https://www.ketsci.com/redirects/success'
         else
+          # save attempt info in User and Survey tables
+          
+          user = User.find_by user_id: params[:PID]
+          user.SurveysAttempted << params[:tsfn]
+#         Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
+          user.SurveysCompleted.store ("params[:tsfn]", [params[:cost], params[:tsfn]])
+
+          survey = Survey.find_by SurveyNumber: params[:tsfn]
+          p 'Just completed survey:', survey.SurveyNumber, 'by user_id:', user.user_id
+#         survey.CompletedBy = params[:PID]
+#         survey.ActualTimeInSurvey = params[:tis]
+
           # Give user chance to take another survey
-          user = User.find_by user_id: @PID
           if (user.SupplierLink) then
             redirect_to user.SupplierLink[0]+@PID
           else
-            redirect_to 'https://www.ketsci.com/redirects/default'
-          en
+            redirect_to 'https://www.ketsci.com/redirects/failure?&SUCCESS'
+          end
+        end
+
+      when "3"
+        # FailureLink: https://www.ketsci.com/redirects/status?status=3&PID=[%PID%]&cqs=[%CLIENT_QUERYSTRING%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
+        # This link is used when there are no ways to get user to do a survey e.g. if they are under age or no they do not qualify for any surveys.
+        
+        p 'Failure'
+
+# turn to 'test' be true on launch        
+        if params[:PID] != 'test' then
+          redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED'
+        else
+          render json: 'FAILED'
+          # save attempt info in User and Survey tables
+          user = User.find_by user_id: params[:PID]          
+          user.SurveysAttempted << params[:tsfn]
+#          redirect_to 'https://www.ketsci.com/redirects/failure'
         end
         
       when "4"
         # OverQuotaLink: https://www.ketsci.com/redirects/status?status=4&PID=[%PID%]&cqs=[%CLIENT_QUERYSTRING%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
         
         p 'OQuota'
-        
-        # save attempt info in User and Survey tables
-        
-        @PID = params[:PID]
-        
-        if @PID = 'test' then
+
+# turn to t'test' be true on launch 
+        if params[:PID] != 'test' then
           redirect_to 'https://www.ketsci.com/redirects/overquota'
         else
+          render json: 'OQ'
+          user = User.find_by user_id: params[:PID]
+          
+          # save attempt info in User and Survey tables
+          user.SurveysAttempted << params[:tsfn]
+          
           # Give user chance to take another survey
-          user = User.find_by user_id: @PID
-          if (user.SupplierLink) then
-            redirect_to user.SupplierLink[0]+@PID
-          else
-            redirect_to 'https://www.ketsci.com/redirects/default'
-          end
+#         if (user.SupplierLink) then
+#            redirect_to user.SupplierLink[0]+@PID
+#          else
+#            redirect_to 'https://www.ketsci.com/redirects/failure'
+#          end
         end
     
       when "5"
@@ -77,14 +90,15 @@ class RedirectsController < ApplicationController
         
         p 'QTerm'
 
-        # save attempt info in User and Survey tables
-        
-        @PID = params[:PID]
-        user = User.find_by user_id: @PID
-#        user.blacklisted = true
-
-        redirect_to 'https://www.ketsci.com/redirects/qterm'
-        
+        if params[:PID] = 'test' then
+          redirect_to 'https://www.ketsci.com/redirects/qterm'
+        else
+          # save attempt info in User and Survey tables
+          user = User.find_by user_id: params[:PID]
+          user.SurveysAttempted << params[:tsfn]
+          user.black_listed = true
+          redirect_to 'https://www.ketsci.com/redirects/qterm'
+        end
     end
     
   end

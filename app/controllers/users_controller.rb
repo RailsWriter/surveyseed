@@ -53,7 +53,7 @@ class UsersController < ApplicationController
 #        @user.age = (Time.zone.now.year-@user.birth_year).to_s
         # Get the advertiser id to determine payout value
 #       @user.payout = should be extracted from advertiser id in call
-        # Initialize user ride related lists. These get a blank entry on the list due to save action       
+        # Initialize user ride related lists. These protect from getting old lists, if the user restarts taking surveys in the same session after a long break. However, these get a blank entry on the list due to save action       
         @user.QualifiedSurveys = 
         @user.SurveysWithMatchingQuota = []
         @user.SupplierLink = []
@@ -122,16 +122,16 @@ class UsersController < ApplicationController
       p 'FIRST TIME USER'
       redirect_to '/users/qq2'
     else
-    end
     
-    # set 24 hr survey attempts in separate sessions from same device/IP address here
-    if (user.number_of_attempts_in_last_24hrs < 50) then
-      p 'A REPEAT USER'
-      # skip gender and other demo questions due to responses in last 24 hrs
+      # set 24 hr survey attempts in separate sessions from same device/IP address here
+      if (user.number_of_attempts_in_last_24hrs < 50) then
+        p 'A REPEAT USER'
+        # skip gender and other demo questions due to responses in last 24 hrs
         redirect_to '/users/qq9'
-    else
+      else
         # user has made too many attempts to take surveys
         redirect_to '/users/24hrsquotaexceeded'
+      end
     end
       
     # set 24 hr survey completes quota here
@@ -371,7 +371,7 @@ class UsersController < ApplicationController
       @GenderPreCode = [ "2" ]
     end
     
-    # Just in case user goes back to last qualification question and returns - this prevents the array from adding duplicates to previous list
+    # Just in case user goes back to last qualification question and returns - this prevents the array from adding duplicates to previous list. Need to prevent back action across the board and then delete these to avaoid blank entries in these arrays.
     user.QualifiedSurveys = []
     user.SurveysWithMatchingQuota = []
     user.SupplierLink = []
@@ -513,16 +513,16 @@ class UsersController < ApplicationController
       puts 'List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
 
 # *********** REMOVE AFTER TESTING      
-#      @tmp_SurveysWithMatchingQuota = []
-#      (0..user.SurveysWithMatchingQuota.length-1).each do |i|
-#        if user.SurveysWithMatchingQuota[i].to_i > 67820 then
-#          @tmp_SurveysWithMatchingQuota << user.SurveysWithMatchingQuota[i]
-#        else
-#          p 'Skipping this survey due to no SupplierLink', user.SurveysWithMatchingQuota[i]
-#        end
-#      end
-#      user.SurveysWithMatchingQuota = @tmp_SurveysWithMatchingQuota
-#      puts 'REDUCED List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
+      @tmp_SurveysWithMatchingQuota = []
+      (0..user.SurveysWithMatchingQuota.length-1).each do |i|
+        if user.SurveysWithMatchingQuota[i].to_i > 76793 then
+          @tmp_SurveysWithMatchingQuota << user.SurveysWithMatchingQuota[i]
+        else
+          p 'Skipping this survey due to no SupplierLink', user.SurveysWithMatchingQuota[i]
+        end
+      end
+      user.SurveysWithMatchingQuota = @tmp_SurveysWithMatchingQuota
+      puts 'REDUCED List of (unique) surveys where SupplierLink is available:', user.SurveysWithMatchingQuota
 # UPTO HERE      
       
       user.save
@@ -565,29 +565,28 @@ class UsersController < ApplicationController
     user.save
 
     # Start the ride
-    
-# Uncomment in production - PID could be the user_id or other remember_id
-#    @PID = user.user_id   
+    @PID = user.user_id   
 
 # Append user profile parameters like AGE, GENDER, etc, before sending user to Fulcrum (Does not help since are nagating between the surveys?)
 
-# **** For testing
+# **** For testing (with PID preset to test in TestLink)
     p 'User will be sent to this survey:', user.SupplierLink[0]
-    
-    # remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
+#   remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
+    @EntryLink = user.SupplierLink[0]
     user.SupplierLink = user.SupplierLink.drop(1)
-    redirect_to user.SupplierLink[0]
+    redirect_to @EntryLink 
 # ***** until here
   
 # Alternate hardcoded test link in case navigation fails  
 #  redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=c805cd4a-cbc1-4d48-80cf-0139385a5384&FIRID=MSDHONI7&SUMSTAT=1&PID=test'
 
-# Uncomment for launch
-#        p 'User will be sent to this survey:', user.SupplierLink[0]+@PID
-#        remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
-#        user.SupplierLink = user.SupplierLink.drop(1)
-#        redirect_to user.SupplierLink[0]+@PID
-
+# ****** Uncomment for launch
+#    p 'User will be sent to this survey:', user.SupplierLink[0]+@PID
+#   remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
+#    @EntryLink = user.SupplierLink[0]+@PID
+#    user.SupplierLink = user.SupplierLink.drop(1)
+#    redirect_to @EntryLink
+# *** until here
   end
   
   def age(dob_month, dob_date, dob_year)

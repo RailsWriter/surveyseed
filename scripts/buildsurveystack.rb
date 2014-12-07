@@ -23,7 +23,7 @@ begin
   totalavailablesurveys = offerwallresponse["ResultCount"] - 1
   puts totalavailablesurveys+1
   
-  # Remove the last && about survey number - was a duplicate in staging
+# **************** Remove the last few && about survey number - was a duplicate in staging
 
   (0..totalavailablesurveys).each do |i|
     if ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 5) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 8) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9)) && ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 8) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 9) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 10) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 12) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && ((offerwallresponse["Surveys"][i]["BidIncidence"] == nil ) || (offerwallresponse["Surveys"][i]["BidIncidence"] > 10 )) && ((offerwallresponse["Surveys"][i]["BidLengthOfInterview"] == nil ) || (offerwallresponse["Surveys"][i]["BidLengthOfInterview"] < 41)) && (offerwallresponse["Surveys"][i]["SurveyNumber"] != 67820) && (offerwallresponse["Surveys"][i]["SurveyNumber"] != 66091) then
@@ -51,7 +51,7 @@ begin
     
       case offerwallresponse["Surveys"][i]["Conversion"]
         when 0..4
-          puts "Rank 10"
+          puts "Lowest Rank 10"
           @survey.SurveyGrossRank = 10
         when 5..9
           puts "Rank 9"
@@ -78,7 +78,7 @@ begin
           puts "Rank 2"
           @survey.SurveyGrossRank = 2
         when 45..100
-          puts "Rank 1"
+          puts "Highest Rank 1"
           @survey.SurveyGrossRank = 1
         end
 
