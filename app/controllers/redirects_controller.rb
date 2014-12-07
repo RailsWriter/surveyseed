@@ -62,11 +62,11 @@ class RedirectsController < ApplicationController
           # save attempt info in User and Survey tables
 #          user = User.find_by user_id: params[:PID]          
 
-          @user = User.last
-          @user.ZIP="88888" 
+          user = User.last
+          user.ZIP="88888" 
 
           user.SurveysAttempted << params[:tsfn]                   
-          @user.save
+          user.save
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
         end
         
