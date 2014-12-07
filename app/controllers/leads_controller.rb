@@ -2,9 +2,6 @@ class LeadsController < ApplicationController
   def home
       @lead = Lead.new
   end
-
-   def thanks
-    end
   
   def create
     @lead = Lead.new(lead_params)

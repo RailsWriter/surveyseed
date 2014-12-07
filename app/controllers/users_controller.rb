@@ -3,27 +3,20 @@ class UsersController < ApplicationController
     @user = User.new        
   end
 
-  def status
-  end
-  
   def show
-
     case params[:status]
-    when '1'
-      redirect_to '/users/default'
-    when '2'
-      redirect_to '/users/success'
-    when '3'
-      redirect_to '/users/failure'
-    when '4'
-      redirect_to '/users/overquota'
-    when '5'
-      redirect_to '/users/qterm'
-    when '6'
-      remote_ip = request.remote_ip
-      hdr = env['HTTP_USER_AGENT']
-      sid = session.id
-      render json: 'ip address: '+remote_ip+' UserAgent: '+hdr+' session id: '+sid
+      when '1'
+        redirect_to '/users/failure'
+      when '2'
+        redirect_to '/users/qterm'
+      when '3'
+        redirect_to '/users/24hrsquotaexceeded'
+      when '4'
+        # for debugging
+        remote_ip = request.remote_ip
+        hdr = env['HTTP_USER_AGENT']
+        sid = session.id
+        render json: 'ip address: '+remote_ip+' UserAgent: '+hdr+' session id: '+sid
     end
   end
   
@@ -32,36 +25,42 @@ class UsersController < ApplicationController
 
   def eval_age
   # calculate age for COPA eligibility
-#   @age = Time.zone.now.year-@user.birth_year    
-    @age = Time.zone.now.year-params[:user][:birth_year].to_i
-# BUG: calculate age correctly  
+    @age = age( params[:user][:birth_month], params[:user][:birth_date], params[:user][:birth_year] )  
+    p 'Age works out to be', @age
     if @age<13 then
-      redirect_to '/users/show?status=3'
+      p 'Entered age is < 13'
+      # should be replaced by call to userride
+      redirect_to 'http://www.ketsci.com/redirects/status?status=3'
     else  
+      # Enter the user in our system or find user's record      
       ip_address = request.remote_ip
+      session_id = session.id
 
-      if User.where(ip_address: ip_address).exists? then
+# Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
+      if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
         first_time_user=false
-        p 'EVALAGE: USER EXISTS'
+        p 'EVAL_AGE: USER EXISTS'
       else
         first_time_user=true
-        p 'EVALAGE: USER DOES NOT EXIST'
+        p 'EVAL_AGE: USER DOES NOT EXIST'
       end
 
       if (first_time_user) then
         # Create a new-user record
         p 'EVALAGE: FIRST TIME USER'
         @user = User.new(user_params)
-        @user.age = (Time.zone.now.year-@user.birth_year).to_s
+        @user.age = @age.to_s
+#        @user.age = (Time.zone.now.year-@user.birth_year).to_s
         # Get the advertiser id to determine payout value
 #       @user.payout = should be extracted from advertiser id in call
-        # These get a blank entry on the list due to save action
- #       @user.QualifiedSurveys = []
-#        @user.SurveysWithMatchingQuota = []
- #       @user.SupplierLink = []
+        # Initialize user ride related lists. These get a blank entry on the list due to save action       
+        @user.QualifiedSurveys = 
+        @user.SurveysWithMatchingQuota = []
+        @user.SupplierLink = []
         @user.user_agent = env['HTTP_USER_AGENT']
-        @user.session_id = session.id
-        @user.user_id = SecureRandom.hex(16)
+        @user.session_id = session_id
+#        @user.user_id = SecureRandom.hex(16)
+        @user.user_id = SecureRandom.urlsafe_base64
         @user.ip_address = ip_address
         @user.tos = false
         @user.number_of_attempts_in_last_24hrs=1
@@ -69,25 +68,30 @@ class UsersController < ApplicationController
         @user.black_listed=false
         @user.attempts_time_stamps_array = [Time.now]
         @user.save
+        p @user
         redirect_to '/users/tos'
       else
       end
     
       if (first_time_user==false) then
-        user=User.where(ip_address: ip_address).first
+        user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
+#        user = User.where( "ip_address = ip_address AND session_id = session.id" )
+
         #NTS: Why do I have to stop at first. Optimizes. But there should be not more than 1 entry.
         p user
         if user.black_listed==true then
-          redirect_to '/users/show'
+          userride (session_id)
+#          redirect_to 'http://www.ketsci.com/redirects/qterm'
         else
-          p 'EVALAGE: REPEAT USER'
+          p 'EVAL_AGE: REPEAT USER'
+          user.birth_date=params[:user][:birth_date]
           user.birth_month=params[:user][:birth_month]
           user.birth_year=params[:user][:birth_year]    
-          user.age = (Time.zone.now.year-user.birth_year).to_s   
+          user.age = @age.to_s 
           # These get a blank entry on the list due to save action
- #         user.QualifiedSurveys = []     
- #         user.SurveysWithMatchingQuota = []
- #         user.SupplierLink = []
+          user.QualifiedSurveys = []     
+          user.SurveysWithMatchingQuota = []
+          user.SupplierLink = []
           user.session_id = session.id
           user.tos = false
           user.attempts_time_stamps_array = user.attempts_time_stamps_array + [Time.now]
@@ -101,14 +105,14 @@ class UsersController < ApplicationController
   end
   
   def sign_tos
-    
+      
     user=User.find_by session_id: session.id
     p user
     user.tos=true
-    
 
+    # Update number of attempts in last 24 hrs record of the user
     if ( user.number_of_attempts_in_last_24hrs==nil ) then
-      user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
+      user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.utc.now-1.day) }
     else
     end
     
@@ -118,21 +122,28 @@ class UsersController < ApplicationController
       p 'FIRST TIME USER'
       redirect_to '/users/qq2'
     else
-      p 'A REPEAT USER'
-      if (user.number_of_attempts_in_last_24hrs < 400) then
-        # review 5
-        # No need to ask qualification questions, just show offers
-#      redirect_to '/users/show'
-        redirect_to '/users/qq2' # temporary - delete
-      else
-        p 'Exceeded quota of surveys to fill for today'
-  #     redirect_to '/users/show'
-        redirect_to '/users/qq2' # temporary - delete
-      end
     end
+    
+    # set 24 hr survey attempts in separate sessions from same device/IP address here
+    if (user.number_of_attempts_in_last_24hrs < 50) then
+      p 'A REPEAT USER'
+      # skip gender and other demo questions due to responses in last 24 hrs
+        redirect_to '/users/qq9'
+    else
+        # user has made too many attempts to take surveys
+        redirect_to '/users/24hrsquotaexceeded'
+    end
+      
+    # set 24 hr survey completes quota here
+#    if (user.SurveysCompleted[count { |x| x > (Time.now-1.day) } == 5) then
+#       p 'Exceeded quota of surveys to fill for today'
+#       redirect_to '/users/24hrsquotaexceeded'
+#     else
+#     end
   end
   
   def gender
+    
     user=User.find_by session_id: session.id
     user.gender=params[:gender]
     user.save
@@ -179,15 +190,18 @@ class UsersController < ApplicationController
         if user.watch_listed then
           user.black_listed=true
           user.save
-          redirect_to '/users/show'
+          # send to quality term the user
+          userride (session_id)
         else
           user.watch_listed=true
           user.save
-          redirect_to '/users/show'
+          # Flash user to pay attention
+          flash[:alert] = "Please pay more attention to your responses!"
         end
       else
         user.save
-        redirect_to '/users/show'
+        # Flash user to pay attention
+        flash[:alert] = "Please pay more attention to your responses!"
       end
     else
       user.save
@@ -196,6 +210,7 @@ class UsersController < ApplicationController
   end    
   
   def country
+     
     user=User.find_by session_id: session.id
     user.country=params[:country]
     user.save
@@ -211,6 +226,7 @@ class UsersController < ApplicationController
   end
   
   def zip_US
+
     user=User.find_by session_id: session.id
     user.ZIP=params[:zip]
     user.save
@@ -218,6 +234,7 @@ class UsersController < ApplicationController
   end
   
   def zip_CA
+
     user=User.find_by session_id: session.id
     user.ZIP=params[:zip]
     user.save
@@ -225,6 +242,7 @@ class UsersController < ApplicationController
   end
   
   def zip_IN
+
     user=User.find_by session_id: session.id
     user.ZIP=params[:zip]
     user.save
@@ -232,6 +250,7 @@ class UsersController < ApplicationController
   end
   
   def ethnicity_US
+
     user=User.find_by session_id: session.id
     user.ethnicity=params[:ethnicity]
     user.save
@@ -239,6 +258,7 @@ class UsersController < ApplicationController
   end
   
   def ethnicity_CA
+
     user=User.find_by session_id: session.id
     user.ethnicity=params[:ethnicity]
     user.save
@@ -246,6 +266,7 @@ class UsersController < ApplicationController
   end
   
   def ethnicity_IN
+
     user=User.find_by session_id: session.id
     user.ethnicity=params[:ethnicity]
     user.save
@@ -253,6 +274,7 @@ class UsersController < ApplicationController
   end
   
   def householdincome
+
     user=User.find_by session_id: session.id
     user.householdincome=params[:hhi]
     user.save
@@ -260,6 +282,7 @@ class UsersController < ApplicationController
   end
   
   def race_US
+
     user=User.find_by session_id: session.id
     user.race=params[:race].to_s
     user.save
@@ -267,6 +290,7 @@ class UsersController < ApplicationController
   end
   
   def race_CA
+
     user=User.find_by session_id: session.id
     user.race=params[:race].to_s
     user.save
@@ -274,6 +298,7 @@ class UsersController < ApplicationController
   end
   
   def race_IN
+
     user=User.find_by session_id: session.id
     user.race=params[:race].to_s
     user.save
@@ -281,6 +306,7 @@ class UsersController < ApplicationController
   end
   
   def education_US
+
     user=User.find_by session_id: session.id
     user.eduation=params[:education]
     user.save
@@ -288,6 +314,7 @@ class UsersController < ApplicationController
   end
   
   def education_CA
+
     user=User.find_by session_id: session.id
     user.eduation=params[:education]
     user.save
@@ -295,13 +322,15 @@ class UsersController < ApplicationController
   end
   
   def education_IN
+
     user=User.find_by session_id: session.id
     user.eduation=params[:education]
     user.save
     redirect_to '/users/qq8_IN'
   end
 
-  def householdincome_US
+  def householdincome_US  
+
     user=User.find_by session_id: session.id
     user.householdincome=params[:hhi]
     user.save
@@ -309,20 +338,23 @@ class UsersController < ApplicationController
   end
 
   def householdincome_CA
+
     user=User.find_by session_id: session.id
     user.householdincome=params[:hhi]
     user.save
     redirect_to '/users/tq2b'
   end
 
-  def householdincome_IN
+  def householdincome_IN  
+
     user=User.find_by session_id: session.id
     user.householdincome=params[:hhi]
     user.save
     redirect_to '/users/tq2b'
   end
   
-  def householdcomp
+  def householdcomp  
+
     user=User.find_by session_id: session.id
     user.householdcomp=params[:householdcomp][:range]
     user.save
@@ -331,6 +363,7 @@ class UsersController < ApplicationController
   end
 
   def ranksurveysforuser (session_id)
+
     user=User.find_by session_id: session_id
     if user.gender == 'Male' then
       @GenderPreCode = [ "1" ]
@@ -342,17 +375,13 @@ class UsersController < ApplicationController
     user.QualifiedSurveys = []
     user.SurveysWithMatchingQuota = []
     user.SupplierLink = []
-#    @tmp = []
-    
-    
-#    @age = (Time.zone.now.year-user.birth_year).to_s
 
       # Surveys that user is qualified for
 # change countrylanguageid setting
       
     puts "STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
 
-    Survey.where("CountryLanguageID = 6 OR CountryLanguageID = 9 OR CountryLanguageID = 27").order( "SurveyGrossRank" ).each do |survey|
+    Survey.where("CountryLanguageID = 5 OR CountryLanguageID = 9 OR CountryLanguageID = 8").order( "SurveyGrossRank" ).each do |survey|
       if ((( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode ) && (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || ([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ] ) && ( survey.SurveyStillLive )) then
         
 # Add condition that survey.CPI > user.payout
@@ -387,7 +416,7 @@ class UsersController < ApplicationController
       # delete the empty item from initialization
  #     @tmp = user.QualifiedSurveys.flatten.compact
  #    user.QualifiedSurveys = @tmp
-      puts 'IN TOTAL USER HAS QUALIFIED FOR =', user.QualifiedSurveys
+      puts 'IN TOTAL USER HAS QUALIFIED FOR the following surveys=', user.QualifiedSurveys
 
       # Lets save the surveys user qualifies for in this user's record of database in rank order
       user.save
@@ -484,16 +513,16 @@ class UsersController < ApplicationController
       puts 'List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
 
 # *********** REMOVE AFTER TESTING      
-      @tmp_SurveysWithMatchingQuota = []
-      (0..user.SurveysWithMatchingQuota.length-1).each do |i|
-        if user.SurveysWithMatchingQuota[i].to_i > 67820 then
-          @tmp_SurveysWithMatchingQuota << user.SurveysWithMatchingQuota[i]
-        else
-          p 'Skipping this survey due to no SupplierLink', user.SurveysWithMatchingQuota[i]
-        end
-      end
-      user.SurveysWithMatchingQuota = @tmp_SurveysWithMatchingQuota
-      puts 'REDUCED List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
+#      @tmp_SurveysWithMatchingQuota = []
+#      (0..user.SurveysWithMatchingQuota.length-1).each do |i|
+#        if user.SurveysWithMatchingQuota[i].to_i > 67820 then
+#          @tmp_SurveysWithMatchingQuota << user.SurveysWithMatchingQuota[i]
+#        else
+#          p 'Skipping this survey due to no SupplierLink', user.SurveysWithMatchingQuota[i]
+#        end
+#      end
+#      user.SurveysWithMatchingQuota = @tmp_SurveysWithMatchingQuota
+#      puts 'REDUCED List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
 # UPTO HERE      
       
       user.save
@@ -508,16 +537,25 @@ class UsersController < ApplicationController
     
     user = User.find_by session_id: session_id
 
-    if (user.QualifiedSurveys || user.SurveysWithMatchingQuota) == nil then
-      p 'No Surveys with matching quota found in users_controller'
-      redirect_to 'redirects/status?status=3'
+    # If user is blacklisted, qterm
+    if user.black_listed == true then
+      redirects_to 'http://www.ketsci.com/redirects/status?status=5'  
     else
     end
     
+    # If the user does not qualify for any survey in the inventory, failure
+    if (user.QualifiedSurveys || user.SurveysWithMatchingQuota) == nil then
+      p 'No Surveys with matching quota found in users_controller'
+      redirect_to 'http://www.ketsci.com/redirects/status?status=3'
+    else
+    end
+    
+     # If the user qualifies for one or more survey, redirect to the top ranked survey and repeat until success/failure/OT/QT
     (0..user.SurveysWithMatchingQuota.length-1).each do |i|
       @surveynumber = user.SurveysWithMatchingQuota[i]
       Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey|
-         user.SupplierLink[i] = survey.SupplierLink["LiveLink"]
+# Change from test to live link
+         user.SupplierLink[i] = survey.SupplierLink["TestLink"]
       end
     end
     
@@ -528,21 +566,41 @@ class UsersController < ApplicationController
 
     # Start the ride
     
-    # PID could be the user_id or maybe append any other data for security or better tracking
-    @PID = user.user_id   
+# Uncomment in production - PID could be the user_id or other remember_id
+#    @PID = user.user_id   
 
-# Append user profile parameters before sending user to Fulcrum
+# Append user profile parameters like AGE, GENDER, etc, before sending user to Fulcrum (Does not help since are nagating between the surveys?)
 
-    p 'User will be sent to this survey:', user.SupplierLink[0]+@PID
-    redirect_to user.SupplierLink[0]+@PID
+# **** For testing
+    p 'User will be sent to this survey:', user.SupplierLink[0]
+    
+    # remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
+    user.SupplierLink = user.SupplierLink.drop(1)
+    redirect_to user.SupplierLink[0]
+# ***** until here
   
- # redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=caca1523-bff2-481d-aacd-45a0805b8eef&PID=KETSCI_TEST'
+# Alternate hardcoded test link in case navigation fails  
+#  redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=c805cd4a-cbc1-4d48-80cf-0139385a5384&FIRID=MSDHONI7&SUMSTAT=1&PID=test'
 
+# Uncomment for launch
+#        p 'User will be sent to this survey:', user.SupplierLink[0]+@PID
+#        remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
+#        user.SupplierLink = user.SupplierLink.drop(1)
+#        redirect_to user.SupplierLink[0]+@PID
+
+  end
+  
+  def age(dob_month, dob_date, dob_year)
+    
+    dob = (dob_date +'-'+ dob_month +'-'+ dob_year).to_date
+#    p 'dob', dob
+    now = Time.now.utc.to_date
+    now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
   end
     
   private
     def user_params
-      params.require(:user).permit(:birth_month, :birth_year)
+      params.require(:user).permit(:birth_date, :birth_month, :birth_year)
     end
 
 end

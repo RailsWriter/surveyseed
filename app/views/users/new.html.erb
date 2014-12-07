@@ -12,22 +12,24 @@
 		
 		<div class="header">
 			<center>
-				<%= image_tag image_path('cooltext1784832111.png') %>
+				<%= image_tag image_path('KetsciLogo.png') %>
 			</center>
 		</header>
 		
 		<div class="topcontent">
 			<center>
-				<h4>Welcome!</h4>
-				<p>Qualify ---> Complete survey ---> Get reward</p>
+				<br>
+				<h3>Welcome!</h3>
+				<p><h4>Qualify ---> Complete survey ---> Get reward</h4></p>
 			</center>
 		</topcontent>
 		
 		<div class="content">
 			<center>
-				<h2>Select the month and year of your birth:</h2>
+				<h2>Enter your date of birth</h2>
 				<%= form_for (@user), url: {action: "eval_age"} do |f| %>
 					<%= f.select :birth_month, 1 .. 12 %>
+					<%= f.select :birth_date, 1 .. 31 %>
 					<%= f.select :birth_year, (Time.zone.now.year-100)..(Time.zone.now.year) %>
 					<%= f.submit "Next" %>
 				<% end %>
@@ -36,7 +38,7 @@
 				
 		<footer class="footer">
 			<center>
-				Copyright © by Ketsci. All rights reserved.
+				Copyright © by Ketsci, Inc. All rights reserved.
 			</center>
 		</footer>
 

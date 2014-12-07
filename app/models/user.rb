@@ -3,4 +3,7 @@ class User < ActiveRecord::Base
   serialize :QualifiedSurveys, Array
   serialize :SurveysWithMatchingQuota, Array
   serialize :SupplierLink, Array
+  serialize :SupplierLink, Array
+  serialize :SurveysAttempted, Array
+  serialize :SurveysCompleted, Hash
 end
