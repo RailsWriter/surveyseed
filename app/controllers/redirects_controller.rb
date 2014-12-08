@@ -6,15 +6,11 @@ class RedirectsController < ApplicationController
       when "1"
         # DefaultLink: https://www.ketsci.com/redirects/status?status=1&PID=[%PID%]&cqs=[%CLIENT_QUERYSTRING%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
         
-        @PID = params[:PID]
-        p 'PID = ', @PID
-        @cqs = params[:cqs]
-        p 'CLIENT_QUERYSTRING = ', @CQS
-        @url = request.original_url
-        p 'url =', @url
-        redirect_to 'https://www.ketsci.com/redirects/default'
+        # User lands up here if anything unclear happens in the ride. Best course seems to be to send the user back to very begining to start over.
+        # redirect_to 'https://www.ketsci.com/redirects/default'
         
-        # save attempt info in User and Survey tables
+        redirect_to 'https://www.ketsci.com/users/new'
+        # save attempt info in User and Survey tables - not sure if this is possible or needed
 
       when "2"
         # SuccessLink: https://www.ketsci.com/redirects/status?status=2&PID=[%PID%]&cqs=[%CLIENT_QUERYSTRING%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]&cost=[%COST%]
@@ -63,7 +59,6 @@ class RedirectsController < ApplicationController
 #          @user = User.find_by user_id: params[:PID]          
 
           @user = User.last
-          @user.ZIP="88888"
           @user.SurveysAttempted << params[:tsfn]                   
           @user.save
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
