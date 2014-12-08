@@ -574,11 +574,11 @@ class UsersController < ApplicationController
 #   remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
     @EntryLink = user.SupplierLink[0]
     user.SupplierLink = user.SupplierLink.drop(1)
-#    redirect_to @EntryLink 
+    redirect_to @EntryLink 
 # ***** until here
   
 # Alternate hardcoded test link in case navigation fails  
-  redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=8c047e4e-bf66-4014-bbb6-8b3fd6ebc3ac&FIRID=MSDHONI7&SUMSTAT=1&PID=test'
+# redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=8c047e4e-bf66-4014-bbb6-8b3fd6ebc3ac&FIRID=MSDHONI7&SUMSTAT=1&PID=test'
 
 # ****** Uncomment for launch
 #    p 'User will be sent to this survey:', user.SupplierLink[0]+@PID
