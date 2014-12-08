@@ -8,7 +8,7 @@ class RedirectsController < ApplicationController
         
         @PID = params[:PID]
         p 'PID = ', @PID
-        @CQS = params[:cqs]
+        @cqs = params[:cqs]
         p 'CLIENT_QUERYSTRING = ', @CQS
         @url = request.original_url
         p 'url =', @url
@@ -22,8 +22,8 @@ class RedirectsController < ApplicationController
         p 'Suceess'
         # save attempt info in User and Survey tables
 
-        if params[:PID] = 'test' then
-          redirect_to 'https://www.ketsci.com/redirects/success'
+        if params[:PID] != 'test' then
+          redirect_to 'https://www.ketsci.com/redirects/success&SUCCESS=1'
         else
           # save attempt info in User and Survey tables
           
@@ -45,7 +45,7 @@ class RedirectsController < ApplicationController
           if (@user.SupplierLink) then
             redirect_to @user.SupplierLink[0]+@PID
           else
-            redirect_to 'https://www.ketsci.com/redirects/failure?&SUCCESS'
+            redirect_to 'https://www.ketsci.com/redirects/failure?&SUCCESS=2'
           end
         end
 
@@ -63,8 +63,7 @@ class RedirectsController < ApplicationController
 #          @user = User.find_by user_id: params[:PID]          
 
           @user = User.last
-          @user.ZIP="88888" 
-
+          @user.ZIP="88888"
           @user.SurveysAttempted << params[:tsfn]                   
           @user.save
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
