@@ -578,7 +578,7 @@ class UsersController < ApplicationController
 # ***** until here
   
 # Alternate hardcoded test link in case navigation fails  
-  redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=bfd9022b-ba4e-4586-b1ca-ef628434c794&FIRID=MSDHONI7&SUMSTAT=1&PID=test'
+  redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=8c047e4e-bf66-4014-bbb6-8b3fd6ebc3ac&FIRID=MSDHONI7&SUMSTAT=1&PID=test'
 
 # ****** Uncomment for launch
 #    p 'User will be sent to this survey:', user.SupplierLink[0]+@PID
