@@ -576,7 +576,8 @@ class UsersController < ApplicationController
 #   remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
     @EntryLink = user.SupplierLink[0]
     user.SupplierLink = user.SupplierLink.drop(1)
-    redirect_to @EntryLink 
+    user.save
+    redirect_to @EntryLink
 # ***** until here
   
 # Alternate hardcoded test link in case navigation fails  
@@ -587,6 +588,7 @@ class UsersController < ApplicationController
 #   remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
 #    @EntryLink = user.SupplierLink[0]+@PID
 #    user.SupplierLink = user.SupplierLink.drop(1)
+#    user.save
 #    redirect_to @EntryLink
 # *** until here
   end
