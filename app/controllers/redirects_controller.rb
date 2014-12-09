@@ -18,6 +18,7 @@ class RedirectsController < ApplicationController
         p 'Suceess'
         # save attempt info in User and Survey tables
 
+# turn to t'test' be true on launch 
         if params[:PID] != 'test' then
           redirect_to 'https://www.ketsci.com/redirects/success&SUCCESS=1'
         else
@@ -27,19 +28,19 @@ class RedirectsController < ApplicationController
           @user = User.last
           
           @user.SurveysAttempted << params[:tsfn]
-#         Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
-          @user.SurveysCompleted.store("params[:tsfn]"=>[params[:cost], params[:tsfn]])
+          # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
+          @user.SurveysCompleted[params[:tsfn]] = [params[:cost], params[:tsfn]]
           @user.save
 
           @survey = Survey.find_by SurveyNumber: params[:tsfn]
-          p 'Just completed survey:', @survey.SurveyNumber, 'by user_id:', @user.user_id
-          @survey.CompletedBy = params[:PID]
-          @survey.ActualTimeInSurvey = params[:tis]
+          p 'Just completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
+          # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
+          @survey.CompletedBy[params[:PID]] = [params[:tis], params[:tsfn]]
           @survey.save
 
           # Give user chance to take another survey
-          if (@user.SupplierLink) then
-            redirect_to @user.SupplierLink[0]+@PID
+         if (@user.SupplierLink) then
+          redirect_to @user.SupplierLink[0]+params[:PID]
           else
             redirect_to 'https://www.ketsci.com/redirects/failure?&SUCCESS=2'
           end
@@ -80,14 +81,12 @@ class RedirectsController < ApplicationController
           @user.SurveysAttempted << params[:tsfn]
           @user.save
 
-          redirect_to 'https://www.ketsci.com/redirects/overquota?&OQ=2'
-          
           # Give user chance to take another survey
-#         if (@user.SupplierLink) then
-#            redirect_to @user.SupplierLink[0]+@PID
-#          else
-#            redirect_to 'https://www.ketsci.com/redirects/failure'
-#          end
+          if (@user.SupplierLink) then
+            redirect_to @user.SupplierLink[0]+params[:PID]
+          else
+            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
+          end
         end
     
       when "5"
@@ -95,15 +94,18 @@ class RedirectsController < ApplicationController
         
         p 'QTerm'
 
-        if params[:PID] = 'test' then
-          redirect_to 'https://www.ketsci.com/redirects/qterm'
+# turn to t'test' be true on launch 
+        if params[:PID] != 'test' then
+          redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=1'
         else
           # save attempt info in User and Survey tables
-          @user = User.find_by user_id: params[:PID]
+#          @user = User.find_by user_id: params[:PID]
+          @user = User.last
+          
           @user.SurveysAttempted << params[:tsfn]
           @user.black_listed = true
           @user.save
-          redirect_to 'https://www.ketsci.com/redirects/qterm'
+          redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=2'
         end
     end
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141206095616) do
+ActiveRecord::Schema.define(version: 20141209032057) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 20141206095616) do
     t.text     "SupplierLink"
     t.datetime "created_at",                                      null: false
     t.datetime "updated_at",                                      null: false
+    t.text     "CompletedBy"
   end
 
   create_table "us_geos", force: true do |t|

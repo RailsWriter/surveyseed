@@ -10,6 +10,7 @@ class Survey < ActiveRecord::Base
   serialize :QualificationEthnicityPreCodes, Array
   serialize :QualificationRacePreCodes, Array
   serialize :SurveyQuotas, Array
+  serialize :CompletedBy, Hash
   serialize :SupplierLink, Hash
   
 end
