@@ -48,7 +48,8 @@ class RedirectsController < ApplicationController
 
       when "3"
         # FailureLink: https://www.ketsci.com/redirects/status?status=3&PID=[%PID%]&cqs=[%CLIENT_QUERYSTRING%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
-        # This link is used when there are no ways to get user to do a survey e.g. if they are under age or no they do not qualify for any surveys.
+        # FED uses this link is used when user is under age or they do not qualify for the survey they attempted. However since Ketsci eliminates those users already, this user
+        # can be sent to try other surveys. If he/she has not qualified for any survey then take them to failure view.
         
         p 'Failure'
 
@@ -58,11 +59,21 @@ class RedirectsController < ApplicationController
         else
           # save attempt info in User and Survey tables
 #          @user = User.find_by user_id: params[:PID]          
-
           @user = User.last
-          @user.SurveysAttempted << params[:tsfn]                   
-          @user.save
-          redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
+
+          # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
+          if params[:tsfn] != nil then
+            @user.SurveysAttempted << params[:tsfn]                   
+            @user.save
+          else
+          end
+
+          # Give user chance to take another survey unless they do not qualify for any (other) survey          
+          if (@user.SupplierLink) then
+            redirect_to @user.SupplierLink[0]+params[:PID]
+          else
+            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
+          end
         end
         
       when "4"

@@ -410,7 +410,7 @@ class UsersController < ApplicationController
     end
 
     if user.QualifiedSurveys == [] then
-      puts 'You did not qualify for a survey so taking you to show page with that message'
+      puts 'You did not qualify for a survey so taking you to show FailureLink page'
       userride (session_id)
     else
       # delete the empty item from initialization
@@ -536,17 +536,19 @@ class UsersController < ApplicationController
   def userride (session_id)
     
     user = User.find_by session_id: session_id
+    
+    @PID = user.user_id
 
     # If user is blacklisted, qterm
     if user.black_listed == true then
-      redirects_to 'http://www.ketsci.com/redirects/status?status=5'  
+      redirects_to 'https://www.ketsci.com/redirects/status?status=5'+'&PID='+@PID
     else
     end
     
-    # If the user does not qualify for any survey in the inventory, failure
-    if (user.QualifiedSurveys || user.SurveysWithMatchingQuota) == nil then
+    # The user does not qualify for any survey in the inventory, from the begining. (Failure/Terminate)
+    if ((user.QualifiedSurveys == nil) || (user.SurveysWithMatchingQuota == nil)) then
       p 'No Surveys with matching quota found in users_controller'
-      redirect_to 'http://www.ketsci.com/redirects/status?status=3'
+      redirect_to 'https://www.ketsci.com/redirects/status?status=3'+'&PID='+@PID
     else
     end
     
