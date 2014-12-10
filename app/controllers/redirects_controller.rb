@@ -20,7 +20,7 @@ class RedirectsController < ApplicationController
 
 # turn to t'test' be true on launch 
         if params[:PID] != 'test' then
-          redirect_to 'https://www.ketsci.com/redirects/success&SUCCESS=1'
+          redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'
         else
           # save attempt info in User and Survey tables
           

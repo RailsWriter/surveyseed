@@ -1,6 +1,14 @@
 class LeadsController < ApplicationController
+  
   def home
+    #  require 'mixpanel-ruby'
+    #  @tracker = Mixpanel::Tracker.new(e5606382b5fdf6308a1aa86a678d6674)
+        
       @lead = Lead.new
+      @ip_address = request.remote_ip
+			
+		#	mixpanel.identity("mixpanel_user_id")
+    #  mixpanel.track("mixpanel_user_id", @ip_address)
   end
   
   def create
