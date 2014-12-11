@@ -1,6 +1,27 @@
 class RedirectsController < ApplicationController
   def status
     
+    require 'base64'
+    require 'hmac-sha1'
+    
+    # Check if the response is valid by authenticating SHA-1 encrption
+    @SHA1key = 'uhstarvsuio765jalksrWE'
+    @Url = request.original_url
+    @ParsedUrl = @Url.partition ("oenc=")
+    p 'Url = ', @Url, '@BaseUrl=', @ParsedUrl[0], '@Signature =', @ParsedUrl[2]   
+    @BaseUrl = @ParsedUrl[0]
+    @Signature = @ParsedUrl[2]
+    @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
+    p 'Validate =', @validateSHA1hash
+    
+    if (@validateSHA1hash != @Signature) then
+      # invalid response, discard
+      redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
+      return
+    else
+      # response is authentic, do nothing
+    end
+    
     case params[:status] 
       
       when "1"
@@ -14,8 +35,9 @@ class RedirectsController < ApplicationController
 
       when "2"
         # SuccessLink: https://www.ketsci.com/redirects/status?status=2&PID=[%PID%]&cqs=[%CLIENT_QUERYSTRING%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]&cost=[%COST%]
-        
+     
         p 'Suceess'
+        
         # save attempt info in User and Survey tables
 
 # turn to t'test' be true on launch 

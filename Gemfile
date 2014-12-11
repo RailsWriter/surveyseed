@@ -48,6 +48,8 @@ gem 'sqlite3',     '1.3.9'
   gem 'spring'
   
   gem 'mixpanel-ruby'
+  gem 'ruby-hmac'
+  
 end
 
 group :test do
