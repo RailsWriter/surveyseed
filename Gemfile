@@ -35,6 +35,9 @@ gem 'httparty'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'mixpanel-ruby'
+gem 'ruby-hmac'
+
 group :development, :test do
 gem 'sqlite3',     '1.3.9'
 
@@ -46,10 +49,6 @@ gem 'sqlite3',     '1.3.9'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-  
-  gem 'mixpanel-ruby'
-  gem 'ruby-hmac'
-  
 end
 
 group :test do
