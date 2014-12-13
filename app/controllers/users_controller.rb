@@ -377,9 +377,14 @@ class UsersController < ApplicationController
     user.SupplierLink = []
 
       # Surveys that user is qualified for
-# change countrylanguageid setting
+      
+      # Is this a TEST with a network provider then route it to run the standard test survey.
+      
+      
+      
       
     puts "STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
+# change countrylanguageid setting to match user countryID only
 
     Survey.where("CountryLanguageID = 5 OR CountryLanguageID = 9 OR CountryLanguageID = 8").order( "SurveyGrossRank" ).each do |survey|
       if ((( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode ) && (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || ([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ] ) && ( survey.SurveyStillLive )) then
@@ -515,7 +520,7 @@ class UsersController < ApplicationController
 # *********** REMOVE AFTER TESTING      
       @tmp_SurveysWithMatchingQuota = []
       (0..user.SurveysWithMatchingQuota.length-1).each do |i|
-        if user.SurveysWithMatchingQuota[i].to_i > 76793 then
+        if user.SurveysWithMatchingQuota[i].to_i > 67821 then
           @tmp_SurveysWithMatchingQuota << user.SurveysWithMatchingQuota[i]
         else
           p 'Skipping this survey due to no SupplierLink', user.SurveysWithMatchingQuota[i]

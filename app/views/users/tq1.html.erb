@@ -8,8 +8,6 @@
 	</head>
 
 	<body class="body">
-		<br>
-		
 		<div class="header">
 			<center>
 				<h1>Colors</h1>
@@ -17,9 +15,12 @@
 		</header>
 		
 		<div class="content">
-			<fieldset>
-				<p>Please choose green in the options below:</p>
+			<center>
+				<p>Please choose green from the options below:</p>
+			</center>
 				<%= form_tag("trap_question_1", method: "post") do %>
+				<fieldset>
+					<div class="mytags">
 					<%= check_box_tag 'color', 'Red' %>
 					<%= label_tag(:color, "Red") %><br>
 					<%= check_box_tag 'color', 'Green' %>
@@ -28,14 +29,20 @@
 					<%= label_tag(:color, "Purple") %><br>
 					<%= check_box_tag 'color', 'Blue' %>
 					<%= label_tag(:color, "Blue") %><br><br>
+					</div>
+					<div class="myinput">
+					<center>
 					<%= submit_tag "Next" %>
+					</center>
+					</div>
+				</fieldset>
 				<% end %>
-			</fieldset>
+			
 		</content>
 				
 		<footer class="footer">
 			<center>
-				<%= image_tag image_path('cooltext1784832111.png') %>
+				<%= image_tag image_path('KetsciLogo.png') %>
 			</center>
 		</footer>
 	</body>	

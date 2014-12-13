@@ -17,29 +17,38 @@
 		</header>
 		
 		<div class="content">
-			<fieldset>
+			<center>
 				<p>What is the highest degree or level of school you have completed?</p>
+				</center>
+				
 				<%= form_tag("education_US", method: "post") do %>
-					<%= check_box_tag 'education', 'Grade 4 or less' %>
+				<fieldset>
+				<div class="myethnicityinput">
+					<%= radio_button_tag 'education', 'Grade 4 or less' %>
 					<%= label_tag(:education, "Grade 4 or less") %><br>
-					<%= check_box_tag 'education', 'Grade 5 to 8' %>
+					<%= radio_button_tag 'education', 'Grade 5 to 8' %>
 					<%= label_tag(:education, "Grade 5 to 8") %><br>
-					<%= check_box_tag 'education', 'Grade 9 to 11' %>
+					<%= radio_button_tag 'education', 'Grade 9 to 11' %>
 					<%= label_tag(:education, "Grade 9 to 11") %><br>
-					<%= check_box_tag 'education', 'Grade 12 (no diploma)' %>
+					<%= radio_button_tag 'education', 'Grade 12 (no diploma)' %>
 					<%= label_tag(:education, "Grade 12 (no diploma)") %><br>
-					<%= check_box_tag 'education', 'Regular High School Diploma' %>
+					<%= radio_button_tag 'education', 'Regular High School Diploma' %>
 					<%= label_tag(:education, "Regular High School Diploma") %><br>
-					<%= check_box_tag 'education', 'GED or alternate credential' %>
+					<%= radio_button_tag 'education', 'GED or alternate credential' %>
 					<%= label_tag(:education, "GED or alternate credential") %><br><br>	
+					</div>
+					<div class="myinput">
+					<center>
 					<%= submit_tag "Next" %>
+					</center>
+					</div>
+					</fieldset>					
 				<% end %>
-			</fieldset>
 		</content>
 				
 		<footer class="footer">
 			<center>
-				<%= image_tag image_path('cooltext1780310221.png') %>
+				<%= image_tag image_path('KetsciLogo.png') %>
 			</center>
 		</footer>
 	</body>	

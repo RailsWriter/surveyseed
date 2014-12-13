@@ -10,7 +10,7 @@
     margin: 0;
     padding: 5px;
 	color: black;
-	font-size: 87.5%; /* Base font size: 14px */
+	font-size: 100%; /* Base font size: 14px */
 	font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 	background-color:white;
 	}
@@ -74,17 +74,82 @@ a:hover, a:active {
    ======= Content Area ====== 
    =========================== */
 
-.content {
-	margin-top:10%;
+#content {
+	margin-top:5%;
 	margin-bottom: 3%;
+}
+
+
+
+form.myform select {
+	width: 10%;
+	height: 30px;
+    font-size:1em;
+    color:white;
+    background-color:blue;
+}
+
+form.myform input {
+	width: 10%;
+	height: 30px;
+    font-size:1em;
+    color:white;
+    background-color:red;
+}
+
+#content .agree input {
+  width: 15%;
+  height: 50px;
+  font-size:1.25em;
+  color:white;
+  background-color:red;
 }
 
 fieldset {
 	padding-left: 60px;
-    font-size: 0.9em;
+    font-size: .5em;
 	border-width: 0;
     border-radius: 0em;
 }	
+
+.mytags input {
+	width: 4%;
+	height: 30px;
+	display:inline;
+	margin-left: 45%;
+	color:black;
+	background-color:white;
+}
+
+.myzipinput input {
+	width: 10%;
+	height: 30px;
+	text-align: center;
+	margin-left: 45%;
+	color:black;
+	background-color:white;
+}
+
+.myethnicityinput input {
+	width: 4%;
+	height: 30px;
+	text-align: center;
+	margin-left: 35%;
+	color:black;
+	background-color:white;
+}
+
+.myinput {
+	margin-top: 3%;
+}
+
+fieldset input {
+  width: 10%;
+  height: 30px;
+  font-size:0.8em;
+  color:white;
+  background-color:red;
+}
 
 /* ===========================
    ========= Footer ========== 
@@ -92,7 +157,7 @@ fieldset {
 
 .footer {
 	height:30px;
-	margin-top: 20%;
+	margin-top: 10%;
 	margin-bottom: 2%;
 	padding-left: 0px;
 	border-radius: 0px;
@@ -108,9 +173,10 @@ fieldset {
 @media only screen and (min-width : 1024px) and (max-width : 1824px)
 {
 	fieldset {
-		padding-left: 200px;
-	    font-size: 1.5em;
+		font-size: 1.25em;
+		padding-left: 0px;
 		border-width: 0;
 	    border-radius: 0em;
 	}	
+	
 }

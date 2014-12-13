@@ -7,9 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 
-	<body class="body">
-		<br>
-		
+	<body class="body">		
 		<div class="header">
 			<center>
 				<h1>Caste</h1>
@@ -17,9 +15,13 @@
 		</header>
 		
 		<div class="content">
-			<fieldset>
+			<center>
 				<p>What is your caste? Please select one or more choices.</p>
+			</center>
+				
 				<%= form_tag("race_IN", method: "post") do %>
+				<fieldset>
+				<div class="myethnicityinput">
 					<%= check_box_tag 'race[]', 'Brahmin' %>
 					<%= label_tag(:race, "Brahmin") %><br>
 					<%= check_box_tag 'race[]', 'Scheduled Caste' %>
@@ -28,14 +30,19 @@
 					<%= label_tag(:race, "Other") %><br>
 					<%= check_box_tag 'race[]', 'Choose not to answer' %>
 					<%= label_tag(:race, "Choose not to answer") %><br><br>	
+					</div>
+					<div class="myinput">
+					<center>
 					<%= submit_tag "Next" %>
+					</center>
+					</div>
+					</fieldset>
 				<% end %>
-			</fieldset>
 		</content>
 				
 		<footer class="footer">
 			<center>
-				<%= image_tag image_path('cooltext1780310221.png') %>
+				<%= image_tag image_path('KetsciLogo.png') %>
 			</center>
 		</footer>
 	</body>	

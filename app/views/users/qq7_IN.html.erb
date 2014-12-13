@@ -8,8 +8,6 @@
 	</head>
 
 	<body class="body">
-		<br>
-		
 		<div class="header">
 			<center>
 				<h1>Education</h1>
@@ -17,9 +15,12 @@
 		</header>
 		
 		<div class="content">
-			<fieldset>
+			<center>
 				<p>What is the highest degree or level of school you have completed?</p>
+				</center>
 				<%= form_tag("education_IN", method: "post") do %>
+				<fieldset>
+				<div class="myethnicityinput">
 					<%= check_box_tag 'education', 'Primary school or less' %>
 					<%= label_tag(:education, "Primary school or less") %><br>
 					<%= check_box_tag 'education', 'Some high school' %>
@@ -36,14 +37,19 @@
 					<%= label_tag(:education, "University undergraduate degree, such as Bachelors Degree") %><br>
 					<%= check_box_tag 'education', 'University graduate degree, such as Masters or PhD' %>
 					<%= label_tag(:education, "University graduate degree, such as Masters or PhD") %><br><br>	
+					</div>
+					<div class="myinput">
+					<center>
 					<%= submit_tag "Next" %>
+					</center>
+					</div>
+					</fieldset>
 				<% end %>
-			</fieldset>
 		</content>
 				
 		<footer class="footer">
 			<center>
-				<%= image_tag image_path('cooltext1780310221.png') %>
+				<%= image_tag image_path('KetsciLogo.png') %>
 			</center>
 		</footer>
 	</body>	

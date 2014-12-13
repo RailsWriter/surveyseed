@@ -17,23 +17,35 @@
 		</header>
 		
 		<div class="content">
-			<fieldset>
+			<center>
 				<p>Please select which group you most identify yourself with:</p>
+				</center>
 				<%= form_tag("ethnicity_IN", method: "post") do %>
-					<%= check_box_tag 'ethnicity', 'Aboriginal' %>
+				<fieldset>
+				<div class="myethnicityinput">
+					<%= radio_button_tag 'ethnicity', 'Aboriginal' %>
 					<%= label_tag(:ethnicity, "Aboriginal") %><br>
-					<%= check_box_tag 'ethnicity', 'North Indian' %>
+					<%= radio_button_tag 'ethnicity', 'North Indian' %>
 					<%= label_tag(:ethnicity, "North Indian") %><br>
-					<%= check_box_tag 'ethnicity', 'South Indian' %>
-					<%= label_tag(:ethnicity, "South Indian") %><br><br>	
+					<%= radio_button_tag 'ethnicity', 'South Indian' %>
+					<%= label_tag(:ethnicity, "South Indian") %><br>
+					<%= radio_button_tag 'ethnicity', 'Eastern Indian' %>
+					<%= label_tag(:ethnicity, "Eastern Indian") %><br>
+					<%= radio_button_tag 'ethnicity', 'Western Indian' %>
+					<%= label_tag(:ethnicity, "Western Indian") %><br><br>
+					</div>
+					<div class="myinput">
+					<center>
 					<%= submit_tag "Next" %>
-				<% end %>
+			</center>
+			</div>
 			</fieldset>
+				<% end %>
 		</content>
 				
 		<footer class="footer">
 			<center>
-				<%= image_tag image_path('cooltext1780310221.png') %>
+				<%= image_tag image_path('KetsciLogo.png') %>
 			</center>
 		</footer>
 	</body>	

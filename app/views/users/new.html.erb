@@ -8,37 +8,39 @@
 	</head>
 
 	<body class="body">
-		<br>
-		
 		<div class="header">
 			<center>
-				<%= image_tag image_path('KetsciLogo.png') %>
+				<h1>WELCOME !</h1>
 			</center>
 		</header>
 		
 		<div class="topcontent">
 			<center>
 				<br>
-				<h3>Welcome!</h3>
-				<p><h4>Qualify ---> Complete survey ---> Get reward</h4></p>
+				<br>
+				<p><h4>QUALIFY  -->  COMPLETE A SURVEY  -->  GET REWARD</h4></p>
 			</center>
 		</topcontent>
-		
+		<br>
 		<div class="content">
 			<center>
-				<h2>Enter your date of birth</h2>
-				<%= form_for (@user), url: {action: "eval_age"} do |f| %>
+				<h3>Enter your date of birth</h3>
+					<h4>MM-DD-YYYY</h4><br><br>
+			
+				<%= form_for (@user), url: {action: "eval_age"}, :html => { :class => "myform"} do |f| %>
+				
 					<%= f.select :birth_month, 1 .. 12 %>
 					<%= f.select :birth_date, 1 .. 31 %>
-					<%= f.select :birth_year, (Time.zone.now.year-100)..(Time.zone.now.year) %>
+					<%= f.select :birth_year, (Time.zone.now.year).downto(Time.zone.now.year-100).to_a %>
 					<%= f.submit "Next" %>
+				</center>
 				<% end %>
-			</center>
+			
 		</content>
-				
+		<br>
 		<footer class="footer">
 			<center>
-				Copyright © by Ketsci, Inc. All rights reserved.
+				<%= image_tag image_path('KetsciLogo.png') %>
 			</center>
 		</footer>
 

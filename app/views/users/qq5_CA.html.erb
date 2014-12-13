@@ -17,29 +17,37 @@
 		</header>
 		
 		<div class="content">
-			<fieldset>
+			<center>
 				<p>Please select which group you most identify yourself with:</p>
+			</center>
 				<%= form_tag("ethnicity_CA", method: "post") do %>
-					<%= check_box_tag 'ethnicity', 'Aboriginal(North American Indian, Metis, Inuit, etc.)' %>
+			<fieldset>
+				<div class="myethnicityinput">				
+					<%= radio_button_tag 'ethnicity', 'Aboriginal(North American Indian, Metis, Inuit, etc.)' %>
 					<%= label_tag(:ethnicity, "Aboriginal(North American Indian, Metis, Inuit, etc.)") %><br>
-					<%= check_box_tag 'ethnicity', 'African' %>
+					<%= radio_button_tag 'ethnicity', 'African' %>
 					<%= label_tag(:ethnicity, "African") %><br>
-					<%= check_box_tag 'ethnicity', 'American(US)' %>
+					<%= radio_button_tag 'ethnicity', 'American(US)' %>
 					<%= label_tag(:ethnicity, "American(US)") %><br>
-					<%= check_box_tag 'ethnicity', 'Arabic / Middle Eastern' %>
+					<%= radio_button_tag 'ethnicity', 'Arabic / Middle Eastern' %>
 					<%= label_tag(:ethnicity, "Arabic / Middle Eastern") %><br>
-					<%= check_box_tag 'ethnicity', 'British' %>
+					<%= radio_button_tag 'ethnicity', 'British' %>
 					<%= label_tag(:ethnicity, "British") %><br>
-					<%= check_box_tag 'ethnicity', 'Cambodian' %>
+					<%= radio_button_tag 'ethnicity', 'Cambodian' %>
 					<%= label_tag(:ethnicity, "Cambodian") %><br><br>	
+				</div>
+				<div class="myinput">
+				<center>
 					<%= submit_tag "Next" %>
+				</center>
+				</div>
+				</fieldset>
 				<% end %>
-			</fieldset>
 		</content>
 				
 		<footer class="footer">
 			<center>
-				<%= image_tag image_path('cooltext1780310221.png') %>
+				<%= image_tag image_path('KetsciLogo.png') %>
 			</center>
 		</footer>
 	</body>	

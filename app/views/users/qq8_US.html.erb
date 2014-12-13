@@ -8,8 +8,6 @@
 	</head>
 
 	<body class="body">
-		<br>
-		
 		<div class="header">
 			<center>
 				<h1>Household Income</h1>
@@ -17,21 +15,30 @@
 		</header>
 		
 		<div class="content">
-			<fieldset>
+			<center>
 				<p>Please indicate your household income:</p>
+			</center>
+				
 				<%= form_tag("householdincome_US", method: "post") do %>
-					<%= check_box_tag 'hhi', '0-5000' %>
+				<fieldset>
+				<div class="myethnicityinput">
+					<%= radio_button_tag 'hhi', '0-5000' %>
 					<%= label_tag(:hhi, "< $5,000") %><br>
-					<%= check_box_tag 'hhi', '5000-9999' %>
+					<%= radio_button_tag 'hhi', '5000-9999' %>
 					<%= label_tag(:hhi, "$5,000 - $9,999") %><br><br>	
+					</div>
+					<div class="myinput">
+					<center>
 					<%= submit_tag "Next" %>
+					</center>
+					</div>
+					</fieldset>
 				<% end %>
-			</fieldset>
 		</content>
 				
 		<footer class="footer">
 			<center>
-				<%= image_tag image_path('cooltext1780310221.png') %>
+				<%= image_tag image_path('KetsciLogo.png') %>
 			</center>
 		</footer>
 	</body>	
