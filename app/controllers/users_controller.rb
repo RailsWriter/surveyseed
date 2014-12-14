@@ -134,14 +134,14 @@ require 'httparty'
     
     user.save
     
+    # Address good and bad repeat access behaviour after they have resigned TOS (PP)
     if ( user.attempts_time_stamps_array.length==1 ) then
-      p 'FIRST TIME USER'
+      p 'TOS: FIRST TIME USER'
       redirect_to '/users/qq2'
     else
-    
+      p 'TOS: A REPEAT USER'
       # set 24 hr survey attempts in separate sessions from same device/IP address here
       if (user.number_of_attempts_in_last_24hrs < 50) then
-        p 'A REPEAT USER'
         # skip gender and other demo questions due to responses in last 24 hrs
         redirect_to '/users/qq9'
       else
@@ -433,25 +433,32 @@ require 'httparty'
     user.SurveysWithMatchingQuota = []
     user.SupplierLink = []
 
-      # Surveys that user is qualified for
+      # Lets find surveys that user is qualified for.
       
-      # If this is a TEST e.g. with a network provider then route it to run the standard test survey.
+      # If this is a TEST e.g. with a network provider then route user to run the standard test survey.
       @netid = user.netid
       p '@netid', @netid
-      net = Network.find_by netid: @netid
-      p 'net =', net
-      if (net.status == "TEST") then
-        case (net.testcompletes.length)
-          when 0..9
-            net.testcompletes[user.clickid] = [Time.now]
-            redirect_to '/users/samplesurvey'
-# redirect_to 'https://www.ketsci.com'
-            return
-          when 10..100000000
-            redirect_to '/users/testattemptsmaxd'
-            return
+      if Network.where(netid: @netid).exists? then
+        net = Network.find_by netid: @netid
+        p 'net =', net
+        if (net.status == "TEST") then
+          case (net.testcompletes.length)
+            when 0..9
+              net.testcompletes[user.clickid] = [Time.now]
+              redirect_to '/users/samplesurvey'
+              return
+            when 10..100000000
+              redirect_to '/users/testattemptsmaxd'
+              return
+        end
+        else
+          # Not a TEST user
         end
       else
+        # Bad netid, Network is not known
+        p 'TEST NETWORK: BAD NETWOK'
+        redirect_to 'http://www.ketsci.com/redirects/status?status=3&BADNET=1'
+        return
       end
       
     puts "STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
