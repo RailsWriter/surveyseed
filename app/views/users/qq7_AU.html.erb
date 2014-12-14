@@ -7,9 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 
-	<body class="body">
-		<br>
-		
+	<body class="body">		
 		<div class="header">
 			<center>
 				<h1>Education</h1>
@@ -20,28 +18,27 @@
 			<center>
 				<p>What is the highest degree or level of school you have completed?</p>
 				</center>
-				
-				<%= form_tag("education_US", method: "post") do %>
+				<%= form_tag("education_AU", method: "post") do %>
 				<fieldset>
 				<div class="myethnicityinput">
 					<%= check_box_tag 'education', '1' %>
-					<%= label_tag(:education, "3rd Grade or less") %><br>
+					<%= label_tag(:education, "Elementary School > 3rd Grade") %><br>
 					<%= check_box_tag 'education', '2' %>
-					<%= label_tag(:education, "Middle School - Grades 4 - 8") %><br>
+					<%= label_tag(:education, "Middle School 4th Grade – 12th Grade") %><br>
 					<%= check_box_tag 'education', '3' %>
 					<%= label_tag(:education, "Completed some high school") %><br>
 					<%= check_box_tag 'education', '4' %>
-					<%= label_tag(:education, "High school graduate") %><br>
+					<%= label_tag(:education, "Secondary graduate") %><br>
 					<%= check_box_tag 'education', '5' %>
-					<%= label_tag(:education, "Other post high school vocational training") %><br>
+					<%= label_tag(:education, "Other post secondary vocational training") %><br>
 					<%= check_box_tag 'education', '6' %>
 					<%= label_tag(:education, "Completed some college") %><br>
 					<%= check_box_tag 'education', '7' %>
 					<%= label_tag(:education, "Associate Degree") %><br>
 					<%= check_box_tag 'education', '8' %>
-					<%= label_tag(:education, "College Degree (such as B.A., B.S.)") %><br>
+					<%= label_tag(:education, "College Degree") %><br>
 					<%= check_box_tag 'education', '9' %>
-					<%= label_tag(:education, "Completed some graduate, but no degree (delete post)") %><br>	
+					<%= label_tag(:education, "Completed some postgraduate") %><br>	
 					<%= check_box_tag 'education', '10' %>
 					<%= label_tag(:education, "Masters degree") %><br>
 					<%= check_box_tag 'education', '11' %>
@@ -54,8 +51,9 @@
 					<%= submit_tag "Next" %>
 					</center>
 					</div>
-					</fieldset>					
+					</fieldset>
 				<% end %>
+			</fieldset>
 		</content>
 				
 		<footer class="footer">

@@ -18,7 +18,7 @@
 		
 		<div class="content">
 			<center>
-				<p>Please select which group you most identify yourself with:</p>
+				<p>Which group do you most identify yourself with?</p>
 			</center>
 				<%= form_tag("ethnicity_CA", method: "post") do %>
 			<fieldset>
@@ -34,15 +34,26 @@
 					<%= radio_button_tag 'ethnicity', 'British' %>
 					<%= label_tag(:ethnicity, "British") %><br>
 					<%= radio_button_tag 'ethnicity', 'Cambodian' %>
-					<%= label_tag(:ethnicity, "Cambodian") %><br><br>	
+					<%= label_tag(:ethnicity, "Cambodian") %><br>
+					<%= radio_button_tag 'ethnicity', 'Canadian' %>
+					<%= label_tag(:ethnicity, "Canadian") %><br>
+					<%= radio_button_tag 'ethnicity', 'Caribbean (not including Jamaican)' %>
+					<%= label_tag(:ethnicity, "Caribbean (not including Jamaican)") %><br>
+					<%= radio_button_tag 'ethnicity', 'Chinese' %>
+					<%= label_tag(:ethnicity, "Chinese") %><br>
+					<%= radio_button_tag 'ethnicity', 'Dutsch (Netherlands)' %>
+					<%= label_tag(:ethnicity, "Dutsch (Netherlands)") %><br>
+					<%= radio_button_tag 'ethnicity', 'Prefer not to answer' %>
+					<%= label_tag(:ethnicity, "Prefer not to answer") %><br><br>				
 				</div>
+				
 				<div class="myinput">
-				<center>
-					<%= submit_tag "Next" %>
-				</center>
+					<center>
+						<%= submit_tag "Next" %>
+					</center>
 				</div>
-				</fieldset>
-				<% end %>
+			</fieldset>
+			<% end %>
 		</content>
 				
 		<footer class="footer">

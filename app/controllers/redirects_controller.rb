@@ -51,13 +51,13 @@ class RedirectsController < ApplicationController
           
           @user.SurveysAttempted << params[:tsfn]
           # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
-          @user.SurveysCompleted[params[:tsfn]] = [params[:cost], params[:tsfn]]
+          @user.SurveysCompleted[params[:tsfn]] = [params[:cost], params[:tsfn], @user.clickid, @user.netid]
           @user.save
 
           @survey = Survey.find_by SurveyNumber: params[:tsfn]
           p 'Just completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
           # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
-          @survey.CompletedBy[params[:PID]] = [params[:tis], params[:tsfn]]
+          @survey.CompletedBy[params[:PID]] = [params[:tis], params[:tsfn], @user.clickid, @user.netid]
           @survey.save
 
           # Give user chance to take another survey

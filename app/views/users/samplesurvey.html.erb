@@ -8,33 +8,25 @@
 	</head>
 
 	<body class="body">
-		<br>
-		
 		<div class="header">
 			<center>
-				<h1>Postal Code</h1>
+				<h1>Sample Survey</h1>
 			</center>
 		</header>
 		
-		<div class="content">
+		<div id="content">
 			<center>
-				<p>What are the first three digits of your Postal Code?</p>
+				<p>Congratulations, you have qualified to take the sample survey. To proceed press continue below.</p><br><br>	
+					<%= form_tag("p1action", method: "post") do %>
+					<div class="agree">
+					<%= submit_tag "Continue" %>
+				</div>
 				</center>
-				<%= form_tag("zip_CA", method: "post") do %>
-				<fieldset>
-				<div class="myzipinput">
-					<%= text_field_tag 'zip', nil, maxlength: 3 %>
-					<%= label_tag(:CAPOSTA1, '') %><br><br>
-					</div>
-					<div class="myinput">
-					<center>
-					<%= submit_tag "Next" %>
-						</center>
-						</div>
-					</fieldset>
 				<% end %>
-				
+			
 		</content>
+		<br>
+		<br>
 				
 		<footer class="footer">
 			<center>

@@ -7,7 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 
-	<body class="body">
+	<body class="body">		
 		<div class="header">
 			<center>
 				<h1>Household Composition</h1>
@@ -18,21 +18,31 @@
 			<center>
 				<p>How many people are living or staying at your current address?</p>
 			</center>
-				
 				<%= form_tag("householdcomp", method: "post") do %>
 				<fieldset>
-				<div class="myethnicityinput">
-					<%= number_field(:householdcomp, :range, in: 1..50) %>
-					<%= label_tag(:Household_Composition) %><br><br>	
+					<div class="myethnicityinput">
+					<%= radio_button_tag 'householdcomp', '1' %>
+					<%= label_tag(:householdcomp, "1 person") %><br>
+					<%= radio_button_tag 'householdcomp', '2' %>
+					<%= label_tag(:householdcomp, "2 persons") %><br>
+					<%= radio_button_tag 'householdcomp', '3' %>
+					<%= label_tag(:householdcomp, "3 persons") %><br>
+					<%= radio_button_tag 'householdcomp', '4' %>
+					<%= label_tag(:householdcomp, "4 persons") %><br>
+					<%= radio_button_tag 'householdcomp', '5' %>
+					<%= label_tag(:householdcomp, "5 persons") %><br>
+					<%= radio_button_tag 'householdcomp', '6' %>
+					<%= label_tag(:householdcomp, "More than 5 persons") %><br>
+					<%= radio_button_tag 'householdcomp', '7' %>
+					<%= label_tag(:householdcomp, "Prefer not to answer") %><br><br>
 					</div>
 					<div class="myinput">
 					<center>
 					<%= submit_tag "Next" %>
 					</center>
 					</div>
-					</fieldset>
+				</fieldset>
 				<% end %>
-			</fieldset>
 		</content>
 				
 		<footer class="footer">

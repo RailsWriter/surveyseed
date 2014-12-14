@@ -1,5 +1,15 @@
 class UsersController < ApplicationController
+
+require 'httparty'
+
   def new
+    
+    # Parse incoming click URL e.g. http://localhost:3000/users/new?NID=Aiuy56420xzLL7862rtwsxcAHxsdhjkl&CID=333333
+#   @netid = params[:NID]
+#    @clickid = params[:CID]
+#    p 'netid=', @netid
+#    p 'clickid', @clickid
+    
     @user = User.new        
   end
 
@@ -24,6 +34,9 @@ class UsersController < ApplicationController
   end
 
   def eval_age
+    p 'NID=', params[:netid]
+    p 'CID=', params[:clickid]
+    
   # calculate age for COPA eligibility
     @age = age( params[:user][:birth_month], params[:user][:birth_date], params[:user][:birth_year] )  
     p 'Age works out to be', @age
@@ -32,10 +45,12 @@ class UsersController < ApplicationController
       # should be replaced by call to userride
       redirect_to 'http://www.ketsci.com/redirects/status?status=3'
     else  
-      # Enter the user in our system or find user's record      
+      # Enter the user with the following credentials in our system or find user's record  
       ip_address = request.remote_ip
       session_id = session.id
-
+      netid = params[:netid]
+      clickid = params[:clickid]
+      
 # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
       if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
         first_time_user=false
@@ -50,16 +65,15 @@ class UsersController < ApplicationController
         p 'EVALAGE: FIRST TIME USER'
         @user = User.new(user_params)
         @user.age = @age.to_s
-#        @user.age = (Time.zone.now.year-@user.birth_year).to_s
-        # Get the advertiser id to determine payout value
+        @user.netid = netid
+        @user.clickid = clickid
 #       @user.payout = should be extracted from advertiser id in call
         # Initialize user ride related lists. These protect from getting old lists, if the user restarts taking surveys in the same session after a long break. However, these get a blank entry on the list due to save action       
-        @user.QualifiedSurveys = 
+        @user.QualifiedSurveys = []
         @user.SurveysWithMatchingQuota = []
         @user.SupplierLink = []
         @user.user_agent = env['HTTP_USER_AGENT']
         @user.session_id = session_id
-#        @user.user_id = SecureRandom.hex(16)
         @user.user_id = SecureRandom.urlsafe_base64
         @user.ip_address = ip_address
         @user.tos = false
@@ -75,7 +89,7 @@ class UsersController < ApplicationController
     
       if (first_time_user==false) then
         user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
-#        user = User.where( "ip_address = ip_address AND session_id = session.id" )
+        # user = User.where( "ip_address = ip_address AND session_id = session.id" )
 
         #NTS: Why do I have to stop at first. Optimizes. But there should be not more than 1 entry.
         p user
@@ -87,7 +101,9 @@ class UsersController < ApplicationController
           user.birth_date=params[:user][:birth_date]
           user.birth_month=params[:user][:birth_month]
           user.birth_year=params[:user][:birth_year]    
-          user.age = @age.to_s 
+          user.age = @age.to_s
+          user.netid = netid
+          user.clickid = clickid
           # These get a blank entry on the list due to save action
           user.QualifiedSurveys = []     
           user.SurveysWithMatchingQuota = []
@@ -157,7 +173,12 @@ class UsersController < ApplicationController
       user.save
       redirect_to '/users/qq3'
     else
-      redirect_to '/users/show'
+#      redirect_to '/users/show'
+      user.watch_listed=true
+      user.save
+      # Flash user to pay attention
+      flash[:alert] = "Please pay more attention to your responses!"
+      redirect_to '/users/tq1'
     end
   end
   
@@ -179,7 +200,7 @@ class UsersController < ApplicationController
     user=User.find_by session_id: session.id
     user.trap_question_2a_response=params[:trap_question_2a_response]
     user.save
-    redirect_to '/users/qq6_IN'
+    redirect_to '/users/qq7_IN'
   end
   
   def trap_question_2b
@@ -197,11 +218,13 @@ class UsersController < ApplicationController
           user.save
           # Flash user to pay attention
           flash[:alert] = "Please pay more attention to your responses!"
+          redirect_to '/users/tq2b'
         end
       else
         user.save
         # Flash user to pay attention
         flash[:alert] = "Please pay more attention to your responses!"
+        redirect_to '/users/tq2b'
       end
     else
       user.save
@@ -214,13 +237,21 @@ class UsersController < ApplicationController
     user=User.find_by session_id: session.id
     user.country=params[:country]
     user.save
-    if user.country=="USA" then 
+    if user.country=="9" then 
       redirect_to '/users/qq4_US'
     else
-      if user.country=="Canada" then
+      if user.country=="6" then
         redirect_to '/users/qq4_CA'
       else
-        redirect_to '/users/qq4_IN'
+        if user.country=="5" then
+          redirect_to '/users/qq4_AU'
+        else
+          if user.country=="7" then
+            redirect_to '/users/qq4_IN'
+          else
+            redirect_to 'http://www.ketsci.com/redirects/status?status=3'
+          end
+        end
       end
     end
   end
@@ -249,6 +280,14 @@ class UsersController < ApplicationController
     redirect_to '/users/qq5_IN'
   end
   
+  def zip_AU
+
+    user=User.find_by session_id: session.id
+    user.ZIP=params[:zip]
+    user.save
+    redirect_to '/users/qq7_AU'
+  end
+  
   def ethnicity_US
 
     user=User.find_by session_id: session.id
@@ -273,13 +312,13 @@ class UsersController < ApplicationController
     redirect_to '/users/tq2a_IN'
   end
   
-  def householdincome
+#  def householdincome
 
-    user=User.find_by session_id: session.id
-    user.householdincome=params[:hhi]
-    user.save
-    redirect_to '/users/show'
-  end
+#    user=User.find_by session_id: session.id
+#    user.householdincome=params[:hhi]
+#    user.save
+#    redirect_to '/users/show'
+#  end
   
   def race_US
 
@@ -328,6 +367,14 @@ class UsersController < ApplicationController
     user.save
     redirect_to '/users/qq8_IN'
   end
+  
+  def education_AU
+
+    user=User.find_by session_id: session.id
+    user.eduation=params[:education]
+    user.save
+    redirect_to '/users/qq8_AU'
+  end
 
   def householdincome_US  
 
@@ -353,10 +400,19 @@ class UsersController < ApplicationController
     redirect_to '/users/tq2b'
   end
   
+  def householdincome_AU  
+
+    user=User.find_by session_id: session.id
+    user.householdincome=params[:hhi]
+    user.save
+    redirect_to '/users/qq9'
+  end
+  
   def householdcomp  
 
     user=User.find_by session_id: session.id
-    user.householdcomp=params[:householdcomp][:range]
+#    user.householdcomp=params[:householdcomp][:range]
+    user.householdcomp=params[:householdcomp]
     user.save
     ranksurveysforuser(session.id)
 #    redirect_to '/users/show'
@@ -365,11 +421,12 @@ class UsersController < ApplicationController
   def ranksurveysforuser (session_id)
 
     user=User.find_by session_id: session_id
-    if user.gender == 'Male' then
-      @GenderPreCode = [ "1" ]
-    else
-      @GenderPreCode = [ "2" ]
-    end
+    @GenderPreCode = user.gender
+#    if user.gender == 'Male' then
+#      @GenderPreCode = [ "1" ]
+#    else
+#      @GenderPreCode = [ "2" ]
+#    end
     
     # Just in case user goes back to last qualification question and returns - this prevents the array from adding duplicates to previous list. Need to prevent back action across the board and then delete these to avaoid blank entries in these arrays.
     user.QualifiedSurveys = []
@@ -378,10 +435,24 @@ class UsersController < ApplicationController
 
       # Surveys that user is qualified for
       
-      # Is this a TEST with a network provider then route it to run the standard test survey.
-      
-      
-      
+      # If this is a TEST e.g. with a network provider then route it to run the standard test survey.
+      @netid = user.netid
+      p '@netid', @netid
+      net = Network.find_by netid: @netid
+      p 'net =', net
+      if (net.status == "TEST") then
+        case (net.testcompletes.length)
+          when 0..9
+            net.testcompletes[user.clickid] = [Time.now]
+            redirect_to '/users/samplesurvey'
+# redirect_to 'https://www.ketsci.com'
+            return
+          when 10..100000000
+            redirect_to '/users/testattemptsmaxd'
+            return
+        end
+      else
+      end
       
     puts "STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
 # change countrylanguageid setting to match user countryID only
@@ -604,6 +675,31 @@ class UsersController < ApplicationController
 #    p 'dob', dob
     now = Time.now.utc.to_date
     now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+  end
+
+
+  # Sample survey pages control logic (p0 to success)
+  
+  def p1action
+    redirect_to '/users/p2'
+  end
+  
+  def p2action
+    redirect_to '/users/p3'
+  end
+  
+  def p3action
+    session_id = session.id
+    user = User.find_by session_id: session_id
+    @clickid = user.clickid
+    p 'CID=', @clickid
+   # begin
+  #    HTTParty.post('http://www.ketsci.com/networks/netid=@netid?&CLICKID=@clickid')
+   #     rescue HTTParty::Error => e
+    #    puts 'HttParty::Error '+ e.message
+     #   retry
+  #  end while SupplierLink.code != 200
+    redirect_to '/users/successful'
   end
     
   private

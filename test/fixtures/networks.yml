@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  netid: MyString
+  payout: 1.5
+  status: MyString
+  testcompletes: MyText
+  completes: MyText
+
+two:
+  name: MyString
+  netid: MyString
+  payout: 1.5
+  status: MyString
+  testcompletes: MyText
+  completes: MyText

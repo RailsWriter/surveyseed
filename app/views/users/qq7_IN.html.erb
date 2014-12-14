@@ -16,27 +16,35 @@
 		
 		<div class="content">
 			<center>
-				<p>What is the highest degree or level of school you have completed?</p>
+				<p>What is the highest level of education you have completed?</p>
 				</center>
 				<%= form_tag("education_IN", method: "post") do %>
 				<fieldset>
 				<div class="myethnicityinput">
-					<%= check_box_tag 'education', 'Primary school or less' %>
-					<%= label_tag(:education, "Primary school or less") %><br>
-					<%= check_box_tag 'education', 'Some high school' %>
-					<%= label_tag(:education, "Some high school") %><br>
-					<%= check_box_tag 'education', 'Graduated high school' %>
-					<%= label_tag(:education, "Graduated high school") %><br>
-					<%= check_box_tag 'education', 'Some college / Trade School' %>
-					<%= label_tag(:education, "Some college / Trade School") %><br>
-					<%= check_box_tag 'education', 'Graduated from college / Trade School' %>
-					<%= label_tag(:education, "Graduated from college / Trade School") %><br>
-					<%= check_box_tag 'education', 'Some university but did not finish' %>
-					<%= label_tag(:education, "Some university but did not finish") %><br>	
-					<%= check_box_tag 'education', 'University undergraduate degree, such as Bachelors Degree' %>
-					<%= label_tag(:education, "University undergraduate degree, such as Bachelors Degree") %><br>
-					<%= check_box_tag 'education', 'University graduate degree, such as Masters or PhD' %>
-					<%= label_tag(:education, "University graduate degree, such as Masters or PhD") %><br><br>	
+					<%= check_box_tag 'education', '1' %>
+					<%= label_tag(:education, "Completed some Elementary School (ages 0-14)") %><br>
+					<%= check_box_tag 'education', '2' %>
+					<%= label_tag(:education, "Elementary School (ages 0-14)") %><br>
+					<%= check_box_tag 'education', '3' %>
+					<%= label_tag(:education, "Completed some Secondary Education (ages 14-18)") %><br>
+					<%= check_box_tag 'education', '4' %>
+					<%= label_tag(:education, "Secondary Education graduate (ages 14-18)") %><br>
+					<%= check_box_tag 'education', '5' %>
+					<%= label_tag(:education, "Other post high school vocational training") %><br>
+					<%= check_box_tag 'education', '6' %>
+					<%= label_tag(:education, "Completed some college") %><br>
+					<%= check_box_tag 'education', '7' %>
+					<%= label_tag(:education, "Associate Degree") %><br>
+					<%= check_box_tag 'education', '8' %>
+					<%= label_tag(:education, "College Degree") %><br>
+					<%= check_box_tag 'education', '9' %>
+					<%= label_tag(:education, "Completed some postgraduate") %><br>	
+					<%= check_box_tag 'education', '10' %>
+					<%= label_tag(:education, "Masters degree") %><br>
+					<%= check_box_tag 'education', '11' %>
+					<%= label_tag(:education, "Doctorate degree") %><br>
+					<%= check_box_tag 'education', '12' %>
+					<%= label_tag(:education, "None of the above") %><br><br>
 					</div>
 					<div class="myinput">
 					<center>

@@ -79,7 +79,18 @@ a:hover, a:active {
 	margin-bottom: 3%;
 }
 
+#p1 {
+	font-weight: 350;
+	font-size: 30px;
+	color: red;
+}
 
+fieldset {
+	font-size: 1.25em;
+	padding-left: 0px;
+	border-width: 0;
+    border-radius: 0em;
+}	
 
 form.myform select {
 	width: 10%;
@@ -104,13 +115,6 @@ form.myform input {
   color:white;
   background-color:red;
 }
-
-fieldset {
-	padding-left: 60px;
-    font-size: .5em;
-	border-width: 0;
-    border-radius: 0em;
-}	
 
 .mytags input {
 	width: 4%;
@@ -170,13 +174,5 @@ fieldset input {
    ====== Media Queries ====== 
    =========================== */
 
-@media only screen and (min-width : 1024px) and (max-width : 1824px)
-{
-	fieldset {
-		font-size: 1.25em;
-		padding-left: 0px;
-		border-width: 0;
-	    border-radius: 0em;
-	}	
-	
-}
+@media only screen and (min-width : 50px) and (max-width : 100px)
+{}

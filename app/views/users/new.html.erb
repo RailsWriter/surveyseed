@@ -24,14 +24,20 @@
 		<br>
 		<div class="content">
 			<center>
-				<h3>Enter your date of birth</h3>
+				<h3>What is the date of your birth?</h3>
 					<h4>MM-DD-YYYY</h4><br><br>
 			
 				<%= form_for (@user), url: {action: "eval_age"}, :html => { :class => "myform"} do |f| %>
-				
 					<%= f.select :birth_month, 1 .. 12 %>
 					<%= f.select :birth_date, 1 .. 31 %>
 					<%= f.select :birth_year, (Time.zone.now.year).downto(Time.zone.now.year-100).to_a %>
+					
+					<%= hidden_field_tag :clickid, params[:CID] %>
+					<%= hidden_field_tag :netid, params[:NID] %>
+					<%= hidden_field_tag :session_id, session.id %>
+					<%= hidden_field_tag :ip_address, request.remote_ip %>
+					
+					
 					<%= f.submit "Next" %>
 				</center>
 				<% end %>

@@ -12,27 +12,27 @@
 		
 		<div class="header">
 			<center>
-				<h1>Ethnicity</h1>
+				<h1>Region</h1>
 			</center>
 		</header>
 		
 		<div class="content">
 			<center>
-				<p>Please select which group you most identify yourself with:</p>
+				<p>Which group do you (most) identify yourself with?</p>
 				</center>
 				<%= form_tag("ethnicity_IN", method: "post") do %>
 				<fieldset>
 				<div class="myethnicityinput">
-					<%= radio_button_tag 'ethnicity', 'Aboriginal' %>
-					<%= label_tag(:ethnicity, "Aboriginal") %><br>
-					<%= radio_button_tag 'ethnicity', 'North Indian' %>
-					<%= label_tag(:ethnicity, "North Indian") %><br>
-					<%= radio_button_tag 'ethnicity', 'South Indian' %>
-					<%= label_tag(:ethnicity, "South Indian") %><br>
-					<%= radio_button_tag 'ethnicity', 'Eastern Indian' %>
-					<%= label_tag(:ethnicity, "Eastern Indian") %><br>
-					<%= radio_button_tag 'ethnicity', 'Western Indian' %>
-					<%= label_tag(:ethnicity, "Western Indian") %><br><br>
+					<%= radio_button_tag 'ethnicity', 'North India' %>
+					<%= label_tag(:ethnicity, "North India") %><br>
+					<%= radio_button_tag 'ethnicity', 'South India' %>
+					<%= label_tag(:ethnicity, "South India") %><br>
+					<%= radio_button_tag 'ethnicity', 'Eastern India' %>
+					<%= label_tag(:ethnicity, "Eastern India") %><br>
+					<%= radio_button_tag 'ethnicity', 'Western India' %>
+					<%= label_tag(:ethnicity, "Western India") %><br>
+					<%= radio_button_tag 'ethnicity', 'Prefer not to answer' %>
+					<%= label_tag(:ethnicity, "Prefer not to answer") %><br><br>
 					</div>
 					<div class="myinput">
 					<center>

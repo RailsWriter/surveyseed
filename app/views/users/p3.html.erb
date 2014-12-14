@@ -7,29 +7,28 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 
-	<body class="body">
+	<body class="body">		
 		<div class="header">
 			<center>
-				<h1>Colors</h1>
+				<h1>Drones</h1>
 			</center>
 		</header>
 		
 		<div class="content">
 			<center>
-				<div id="p1"><h2><%= alert %></h2></div><br>
-				<p>Please choose green from the options below:</p>
+				<p>In how many years do you think drones will start making home deliveries in mass?</p>
 			</center>
-				<%= form_tag("trap_question_1", method: "post") do %>
+				<%= form_tag("p3action", method: "post") do %>
 				<fieldset>
 					<div class="mytags">
-					<%= radio_button_tag 'color', 'Red' %>
-					<%= label_tag(:color, "Red") %><br>
-					<%= radio_button_tag 'color', 'Green' %>
-					<%= label_tag(:color, "Green") %><br>
-					<%= radio_button_tag 'color', 'Purple' %>
-					<%= label_tag(:color, "Purple") %><br>
-					<%= radio_button_tag 'color', 'Blue' %>
-					<%= label_tag(:color, "Blue") %><br><br>
+					<%= radio_button_tag 'ans2', '1' %>
+					<%= label_tag(:country, "3-5 yrs.") %><br>
+					<%= radio_button_tag 'ans2', '2' %>
+					<%= label_tag(:country, "8-10 yrs.") %><br>
+					<%= radio_button_tag 'ans2', '3' %>
+					<%= label_tag(:country, "11-20 yrs.") %><br>
+					<%= radio_button_tag 'ans2', '4' %>
+					<%= label_tag(:country, "Who knows!") %><br><br>
 					</div>
 					<div class="myinput">
 					<center>
@@ -38,7 +37,6 @@
 					</div>
 				</fieldset>
 				<% end %>
-			
 		</content>
 				
 		<footer class="footer">

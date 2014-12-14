@@ -16,8 +16,8 @@
 		
 		<div class="content">
 			<center>
-				<h2><%= alert %></h2><br>
-				<p>In my opinion the economy of our country:</p>
+				<div id="p1"><h2><%= alert %></h2></div><br>
+				<p>What do you think about the current economy of our country?</p>
 			</center>
 				<%= form_tag("trap_question_2b", method: "post") do %>
 				<fieldset>
@@ -26,8 +26,8 @@
 					<%= label_tag(:trap_question_2b_response, "Should be left alone") %><br>
 					<%= check_box_tag 'trap_question_2b_response', 'Needs much to be improved' %>
 					<%= label_tag(:trap_question_2b_response, "Needs much to be improved") %><br>
-					<%= check_box_tag 'trap_question_2b_response', 'Going really well' %>
-					<%= label_tag(:trap_question_2b_response, "Going really well") %><br><br>
+					<%= check_box_tag 'trap_question_2b_response', 'Doing really well' %>
+					<%= label_tag(:trap_question_2b_response, "Doing really well") %><br><br>
 					</div>
 					<div class="myinput">
 					<center>

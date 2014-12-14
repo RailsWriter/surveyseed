@@ -16,18 +16,20 @@
 		
 		<div class="content">
 			<center>
-				<p>Select your country of residence:</p>
+				<p>In which country do you live?</p>
 			</center>
 				<%= form_tag("country", method: "post") do %>
 				<fieldset>
 					<div class="mytags">
-					<%= radio_button_tag 'country', 'USA' %>
+					<%= radio_button_tag 'country', '9' %>
 					<%= label_tag(:country, "USA") %><br>
-					<%= radio_button_tag 'country', 'Canada' %>
+					<%= radio_button_tag 'country', '6' %>
 					<%= label_tag(:country, "Canada") %><br>
-					<%= radio_button_tag 'country', 'India' %>
+					<%= radio_button_tag 'country', '7' %>
 					<%= label_tag(:country, "India") %><br>
-					<%= radio_button_tag 'country', 'None' %>
+					<%= radio_button_tag 'country', '5' %>
+					<%= label_tag(:country, "Australia") %><br>
+					<%= radio_button_tag 'country', '0' %>
 					<%= label_tag(:country, "None of the above") %><br><br>
 					</div>
 					<div class="myinput">

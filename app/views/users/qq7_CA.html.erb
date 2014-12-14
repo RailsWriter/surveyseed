@@ -21,22 +21,30 @@
 				<%= form_tag("education_CA", method: "post") do %>
 				<fieldset>
 				<div class="myethnicityinput">
-					<%= check_box_tag 'education', 'Primary school or less' %>
-					<%= label_tag(:education, "Primary school or less") %><br>
-					<%= check_box_tag 'education', 'Some high school' %>
-					<%= label_tag(:education, "Some high school") %><br>
-					<%= check_box_tag 'education', 'Graduated high school' %>
-					<%= label_tag(:education, "Graduated high school") %><br>
-					<%= check_box_tag 'education', 'Some college / CEGEP / Trade School' %>
-					<%= label_tag(:education, "Some college / CEGEP / Trade School") %><br>
-					<%= check_box_tag 'education', 'Graduated from college / CEGEP / Trade School' %>
-					<%= label_tag(:education, "Graduated from college / CEGEP / Trade School") %><br>
-					<%= check_box_tag 'education', 'Some university but did not finish' %>
-					<%= label_tag(:education, "Some university but did not finish") %><br>	
-					<%= check_box_tag 'education', 'University undergraduate degree, such as Bachelors Degree' %>
-					<%= label_tag(:education, "University undergraduate degree, such as Bachelors Degree") %><br>
-					<%= check_box_tag 'education', 'University graduate degree, such as Masters or PhD' %>
-					<%= label_tag(:education, "University graduate degree, such as Masters or PhD") %><br><br>	
+					<%= check_box_tag 'education', '1' %>
+					<%= label_tag(:education, "3rd Grade or less") %><br>
+					<%= check_box_tag 'education', '2' %>
+					<%= label_tag(:education, "Middle School - Grades 4 - 8") %><br>
+					<%= check_box_tag 'education', '3' %>
+					<%= label_tag(:education, "Completed some high school") %><br>
+					<%= check_box_tag 'education', '4' %>
+					<%= label_tag(:education, "High school graduate") %><br>
+					<%= check_box_tag 'education', '5' %>
+					<%= label_tag(:education, "Other post high school vocational training") %><br>
+					<%= check_box_tag 'education', '6' %>
+					<%= label_tag(:education, "Completed some college") %><br>
+					<%= check_box_tag 'education', '7' %>
+					<%= label_tag(:education, "Associate Degree") %><br>
+					<%= check_box_tag 'education', '8' %>
+					<%= label_tag(:education, "College Degree") %><br>
+					<%= check_box_tag 'education', '9' %>
+					<%= label_tag(:education, "Completed some postgraduate") %><br>	
+					<%= check_box_tag 'education', '10' %>
+					<%= label_tag(:education, "Masters degree") %><br>
+					<%= check_box_tag 'education', '11' %>
+					<%= label_tag(:education, "Doctorate degree") %><br>
+					<%= check_box_tag 'education', '12' %>
+					<%= label_tag(:education, "None of the above") %><br><br>
 					</div>
 					<div class="myinput">
 					<center>
@@ -50,7 +58,7 @@
 				
 		<footer class="footer">
 			<center>
-				<%= image_tag image_path('cooltext1780310221.png') %>
+				<%= image_tag image_path('KetsciLogo.png') %>
 			</center>
 		</footer>
 	</body>	

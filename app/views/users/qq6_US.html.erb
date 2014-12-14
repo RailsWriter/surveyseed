@@ -16,21 +16,43 @@
 		
 		<div class="content">
 			<center>
-				<p>What is your race? Please select one or more choices.</p>
+				<p>Which of the following best describes your race?</p>
 			</center>
 				<%= form_tag("race_US", method: "post") do %>
 				<fieldset>
 				<div class="myethnicityinput">
-					<%= check_box_tag 'race[]', 'White' %>
+					<%= check_box_tag 'race[]', '1' %>
 					<%= label_tag(:race, "White") %><br>
-					<%= check_box_tag 'race[]', 'Black or African American' %>
+					<%= check_box_tag 'race[]', '2' %>
 					<%= label_tag(:race, "Black or African American") %><br>
-					<%= check_box_tag 'race[]', 'American Indian or Alaska Native' %>
+					<%= check_box_tag 'race[]', '3' %>
 					<%= label_tag(:race, "American Indian or Alaska Native") %><br>
-					<%= check_box_tag 'race[]', 'Other' %>
-					<%= label_tag(:race, "Other") %><br>
-					<%= check_box_tag 'race[]', 'Choose not to answer' %>
-					<%= label_tag(:race, "Choose not to answer") %><br><br>	
+					<%= check_box_tag 'race[]', '4' %>
+					<%= label_tag(:race, "Asian - Asian Indian") %><br>
+					<%= check_box_tag 'race[]', '5' %>
+					<%= label_tag(:race, "Asian - Chinese") %><br>
+					<%= check_box_tag 'race[]', '6' %>
+					<%= label_tag(:race, "Asian - Filipino") %><br>
+					<%= check_box_tag 'race[]', '7' %>
+					<%= label_tag(:race, "Asian - Japanese") %><br>
+					<%= check_box_tag 'race[]', '8' %>
+					<%= label_tag(:race, "Asian - Korean") %><br>
+					<%= check_box_tag 'race[]', '9' %>
+					<%= label_tag(:race, "Asian - Vietnamese") %><br>
+					<%= check_box_tag 'race[]', '10' %>
+					<%= label_tag(:race, "Asian - Other") %><br>
+					<%= check_box_tag 'race[]', '11' %>
+					<%= label_tag(:race, "Pacific Islander - Native Hawaiian") %><br>
+					<%= check_box_tag 'race[]', '12' %>
+					<%= label_tag(:race, "Pacific Islander - Gaumanian") %><br>
+					<%= check_box_tag 'race[]', '13' %>
+					<%= label_tag(:race, "Pacific Islander - Samoan") %><br>
+					<%= check_box_tag 'race[]', '14' %>
+					<%= label_tag(:race, "Pacific Islander - Other Pacific Islander") %><br>
+					<%= check_box_tag 'race[]', '15' %>
+					<%= label_tag(:race, "Some other race") %><br>
+					<%= check_box_tag 'race[]', '16' %>
+					<%= label_tag(:race, "Prefer not to answer") %><br><br>	
 					</div>
 					<div class="myinput">
 					<center>

@@ -1,3 +1,172 @@
 // Place all the styles related to the Redirects controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+/* ===========================
+   ======= Body style ======== 
+   =========================== */
+
+.body {
+    margin: 0;
+    padding: 5px;
+	color: black;
+	font-size: 100%; /* Base font size: 14px */
+	font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	background-color:white;
+	}
+	
+	
+/* ===========================
+   ========= Headings ======== 
+   =========================== */
+h2 {font-size: 1.571em}	/* 22px */
+h3 {font-size: 1.429em}	/* 20px */
+h4 {font-size: 1.286em}	/* 18px */
+h5 {font-size: 1.143em}	/* 16px */
+h6 {font-size: 1em}		/* 14px */
+
+h2, h3, h4, h5, h6 {
+	font-weight: 400;
+	line-height: 1.1;
+	margin-bottom: .8em;
+}
+
+/* ===========================
+   ======= Anchor style ====== 
+   =========================== */
+
+a {
+	outline: 0;
+	}
+
+a img {
+	border: 0px; 
+	text-decoration: none;
+}
+
+a:link, a:visited {
+	color: #CF5C3F;
+	padding: 0 1px;
+	text-decoration: none;
+}
+
+a:hover, a:active {
+	background-color: #CF5C3F;
+	color: #fff;
+	text-decoration: none;
+}
+
+/* ===========================
+   ===== Main Header ===== 
+   =========================== */
+
+.header {
+}
+
+/* ===========================
+   ======= TopContent Area ====== 
+   =========================== */
+
+.topcontent {	
+}
+
+/* ===========================
+   ======= Content Area ====== 
+   =========================== */
+
+#content {
+	margin-top:5%;
+	margin-bottom: 3%;
+}
+
+fieldset {
+	font-size: 1.25em;
+	padding-left: 0px;
+	border-width: 0;
+    border-radius: 0em;
+}	
+
+form.myform select {
+	width: 10%;
+	height: 30px;
+    font-size:1em;
+    color:white;
+    background-color:blue;
+}
+
+form.myform input {
+	width: 10%;
+	height: 30px;
+    font-size:1em;
+    color:white;
+    background-color:red;
+}
+
+#content .agree input {
+  width: 15%;
+  height: 50px;
+  font-size:1.25em;
+  color:white;
+  background-color:red;
+}
+
+.mytags input {
+	width: 4%;
+	height: 30px;
+	display:inline;
+	margin-left: 45%;
+	color:black;
+	background-color:white;
+}
+
+.myzipinput input {
+	width: 10%;
+	height: 30px;
+	text-align: center;
+	margin-left: 45%;
+	color:black;
+	background-color:white;
+}
+
+.myethnicityinput input {
+	width: 4%;
+	height: 30px;
+	text-align: center;
+	margin-left: 35%;
+	color:black;
+	background-color:white;
+}
+
+.myinput {
+	margin-top: 3%;
+}
+
+fieldset input {
+  width: 10%;
+  height: 30px;
+  font-size:0.8em;
+  color:white;
+  background-color:red;
+}
+
+/* ===========================
+   ========= Footer ========== 
+   =========================== */
+
+.footer {
+	height:30px;
+	margin-top: 10%;
+	margin-bottom: 2%;
+	padding-left: 0px;
+	border-radius: 0px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	background-color:white;
+}	
+
+/* ===========================
+   ====== Media Queries ====== 
+   =========================== */
+
+@media only screen and (min-width : 50px) and (max-width : 100px)
+{}

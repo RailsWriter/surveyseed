@@ -12,28 +12,28 @@
 		
 		<div class="header">
 			<center>
-				<h1>Postal Code</h1>
+				<h1>Postcode</h1>
 			</center>
 		</header>
 		
 		<div class="content">
 			<center>
-				<p>What are the first three digits of your Postal Code?</p>
+				<p>What is your Postcode?</p>
 				</center>
-				<%= form_tag("zip_CA", method: "post") do %>
+				<%= form_tag("zip_AU", method: "post") do %>
 				<fieldset>
 				<div class="myzipinput">
-					<%= text_field_tag 'zip', nil, maxlength: 3 %>
-					<%= label_tag(:CAPOSTA1, '') %><br><br>
-					</div>
-					<div class="myinput">
-					<center>
+					<%= text_field_tag 'zip', nil, maxlength: 4 %>
+					<%= label_tag(:PIN, '') %><br><br>
+				</div>
+				<div class="myinput">
+				<center>
 					<%= submit_tag "Next" %>
-						</center>
-						</div>
-					</fieldset>
+				</center>
+				</div>
+				</fieldset>
 				<% end %>
-				
+			</fieldset>
 		</content>
 				
 		<footer class="footer">
