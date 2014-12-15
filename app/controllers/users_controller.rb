@@ -249,7 +249,7 @@ require 'httparty'
           if user.country=="7" then
             redirect_to '/users/qq4_IN'
           else
-            redirect_to 'http://www.ketsci.com/redirects/status?status=3'
+            redirect_to 'http://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
           end
         end
       end
@@ -421,12 +421,11 @@ require 'httparty'
   def ranksurveysforuser (session_id)
 
     user=User.find_by session_id: session_id
-    @GenderPreCode = user.gender
-#    if user.gender == 'Male' then
-#      @GenderPreCode = [ "1" ]
-#    else
-#      @GenderPreCode = [ "2" ]
-#    end
+    if user.gender == '1' then
+      @GenderPreCode = [ "1" ]
+    else
+      @GenderPreCode = [ "2" ]
+    end
     
     # Just in case user goes back to last qualification question and returns - this prevents the array from adding duplicates to previous list. Need to prevent back action across the board and then delete these to avaoid blank entries in these arrays.
     user.QualifiedSurveys = []
@@ -441,37 +440,60 @@ require 'httparty'
       if Network.where(netid: @netid).exists? then
         net = Network.find_by netid: @netid
         p 'net =', net
-        if (net.status == "TEST") then
+        if (net.status == "EXTTEST") then
           case (net.testcompletes.length)
             when 0..9
-              net.testcompletes[user.clickid] = [Time.now]
+              net.testcompletes[user.clickid] = [1]
               redirect_to '/users/samplesurvey'
               return
             when 10..100000000
               redirect_to '/users/testattemptsmaxd'
               return
-        end
+          end
         else
-          # Not a TEST user
+          if (net.status == "INACTIVE") then
+            redirect_to 'http://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
+            return
+          else
+            # MUST BE AN ACTIVE NETWORK or INTTEST -> Continue
+          end
         end
       else
         # Bad netid, Network is not known
         p 'TEST NETWORK: BAD NETWOK'
-        redirect_to 'http://www.ketsci.com/redirects/status?status=3&BADNET=1'
+        redirect_to 'http://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
         return
       end
       
     puts "STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
-# change countrylanguageid setting to match user countryID only
+    # change countrylanguageid setting to match user countryID only
+    @usercountry = (user.country).to_i
+    p '*************** RANKSURVEYS FOR USER: User country is =', @usercountry
 
-    Survey.where("CountryLanguageID = 5 OR CountryLanguageID = 9 OR CountryLanguageID = 8").order( "SurveyGrossRank" ).each do |survey|
+#    Survey.where("CountryLanguageID = 5 OR CountryLanguageID = 9 OR CountryLanguageID = 8").order( "SurveyGrossRank" ).each do |survey|
+
+if (Survey.where("CountryLanguageID = ?", @usercountry)).exists? then
+  # do nothing
+  p 'NOT NIL NOT NIL'
+else
+  p '******************** USERRIDE: No Surveys with country language found in users_controller'
+  redirect_to 'https://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
+  return
+#  @NoSurveysForThisCountryLanguage = true
+#  user.QualifiedSurveys == nil
+#  userride(session_id)
+end
+
+
+      Survey.where("CountryLanguageID = ?", @usercountry).order( "SurveyGrossRank" ).each do |survey|
+
       if ((( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode ) && (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || ([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ] ) && ( survey.SurveyStillLive )) then
         
 # Add condition that survey.CPI > user.payout
         
         #Prints for testing code
           
-        ans0 = ( survey.try(:QualificationGenderPreCodes) )
+ #       ans0 = ( survey.try(:QualificationGenderPreCodes) )
         ans1 = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
         ans2 = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
         ans3 = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
@@ -596,16 +618,16 @@ require 'httparty'
       puts 'List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
 
 # *********** REMOVE AFTER TESTING      
-      @tmp_SurveysWithMatchingQuota = []
-      (0..user.SurveysWithMatchingQuota.length-1).each do |i|
-        if user.SurveysWithMatchingQuota[i].to_i > 67821 then
-          @tmp_SurveysWithMatchingQuota << user.SurveysWithMatchingQuota[i]
-        else
-          p 'Skipping this survey due to no SupplierLink', user.SurveysWithMatchingQuota[i]
-        end
-      end
-      user.SurveysWithMatchingQuota = @tmp_SurveysWithMatchingQuota
-      puts 'REDUCED List of (unique) surveys where SupplierLink is available:', user.SurveysWithMatchingQuota
+#      @tmp_SurveysWithMatchingQuota = []
+#      (0..user.SurveysWithMatchingQuota.length-1).each do |i|
+#        if user.SurveysWithMatchingQuota[i].to_i > 67821 then
+#          @tmp_SurveysWithMatchingQuota << user.SurveysWithMatchingQuota[i]
+#        else
+#          p 'Skipping this survey due to no SupplierLink', user.SurveysWithMatchingQuota[i]
+#        end
+#      end
+#      user.SurveysWithMatchingQuota = @tmp_SurveysWithMatchingQuota
+#      puts 'REDUCED List of (unique) surveys where SupplierLink is available:', user.SurveysWithMatchingQuota
 # UPTO HERE      
       
       user.save
@@ -622,16 +644,18 @@ require 'httparty'
     
     @PID = user.user_id
 
-    # If user is blacklisted, qterm
+    # If user is blacklisted, then qterm
     if user.black_listed == true then
-      redirects_to 'https://www.ketsci.com/redirects/status?status=5'+'&PID='+@PID
+      redirect_to 'https://www.ketsci.com/redirects/status?status=5'+'&PID='+@PID
     else
     end
     
     # The user does not qualify for any survey in the inventory, from the begining. (Failure/Terminate)
-    if ((user.QualifiedSurveys == nil) || (user.SurveysWithMatchingQuota == nil)) then
-      p 'No Surveys with matching quota found in users_controller'
+    if ((user.QualifiedSurveys.empty?) || (user.SurveysWithMatchingQuota.empty?)) then
+# if ((user.SurveysWithMatchingQuota.empty?)) then
+      p '******************** USERRIDE: No Surveys matching quals/quota found in users_controller'
       redirect_to 'https://www.ketsci.com/redirects/status?status=3'+'&PID='+@PID
+      return
     else
     end
     
@@ -655,7 +679,7 @@ require 'httparty'
 # Append user profile parameters like AGE, GENDER, etc, before sending user to Fulcrum (Does not help since are nagating between the surveys?)
 
 # **** For testing (with PID preset to test in TestLink)
-    p 'User will be sent to this survey:', user.SupplierLink[0]
+    p '*******USERRIDE: User will be sent to this survey:', user.SupplierLink[0]
 #   remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
     @EntryLink = user.SupplierLink[0]
     user.SupplierLink = user.SupplierLink.drop(1)
@@ -683,7 +707,6 @@ require 'httparty'
     now = Time.now.utc.to_date
     now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
   end
-
 
   # Sample survey pages control logic (p0 to success)
   

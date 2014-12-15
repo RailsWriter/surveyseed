@@ -1,5 +1,27 @@
 require 'httparty'
 
+# Set flag to 'prod' to use production and 'stag' for staging base URL
+
+flag = 'stag'
+prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
+staging_base_url = "http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com"
+
+p "**************************** QUOTA UPDATE: ENV is set to", flag
+
+if flag == 'prod' then
+  base_url = prod_base_url
+else
+  if flag == 'stag' then
+    base_url = staging_base_url
+  else
+    p "******** QUOTA UPDATE: SET base URL correctly *******"
+  end
+end
+
+p " ************* QUOTA UPDATE: base url is", base_url
+
+
+
 # Check if any survey's totalquota changed since last time checked 'today'
 
 begin
@@ -9,12 +31,23 @@ begin
   
   begin
     sleep(3)
-#  today = DateTime.yesterday.strftime('%Y-%m-%d')
-    today = "2014-11-25"
-  
+    yesterday = DateTime.yesterday.strftime('%Y-%m-%d')
+#    yesterday = "2014-11-30"
+ 
+    p "Updating since DATE YYYY-MM-DD =", yesterday
   
     puts 'CONNECTING FOR ALLOCATED SURVEYS WITH QUOTA UPDATES BY DATE'
-    SurveyQuotaUpdatesByDate = HTTParty.get('http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com/Supply/v1/Surveys/SupplierAllocations/ByDate/'+today+'?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+    
+    if flag == 'prod' then
+      SurveyQuotaUpdatesByDate = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/ByDate/'+yesterday+'?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
+    else
+      if flag == 'stag' then
+        SurveyQuotaUpdatesByDate = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/ByDate/'+yesterday+'?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+      else
+      end
+    end
+       
+#    SurveyQuotaUpdatesByDate = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/ByDate/'+yesterday+'?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
       rescue HTTParty::Error => e
         puts 'HttParty::Error '+ e.message
       retry
@@ -32,7 +65,18 @@ begin
       begin
         sleep(3)
         puts 'CONNECTING FOR NEW QUOTA INFO for surveynumber =', @surveynumber
-        UpdatedSurveyQuotas = HTTParty.get('http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com/Supply/v1/SurveyQuotas/BySurveyNumber/'+@surveynumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+        
+        if flag == 'prod' then
+          UpdatedSurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+@surveynumber.to_s+'/5458?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
+        else
+          if flag == 'stag' then
+            UpdatedSurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+@surveynumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+          else
+          end
+        end
+        
+#        UpdatedSurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+@surveynumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+        
         rescue HTTParty::Error => e
           puts 'HttParty::Error '+ e.message
         retry
@@ -47,7 +91,7 @@ begin
         puts 'Saving surveynumber: ', @surveynumber
         survey.save
       end
-      puts 'i = ', i         
+      puts 'Updated survey count i = ', i         
     end
 
     timenow = Time.now

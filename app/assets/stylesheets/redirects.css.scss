@@ -79,6 +79,12 @@ a:hover, a:active {
 	margin-bottom: 3%;
 }
 
+#p1 {
+	font-weight: 350;
+	font-size: 30px;
+	color: red;
+}
+
 fieldset {
 	font-size: 1.25em;
 	padding-left: 0px;
@@ -90,24 +96,24 @@ form.myform select {
 	width: 10%;
 	height: 30px;
     font-size:1em;
-    color:white;
-    background-color:blue;
+    color:black;
+    background-color:white;
 }
 
 form.myform input {
 	width: 10%;
 	height: 30px;
     font-size:1em;
-    color:white;
-    background-color:red;
+    color:black;
+    background-color:white;
 }
 
 #content .agree input {
   width: 15%;
   height: 50px;
   font-size:1.25em;
-  color:white;
-  background-color:red;
+  color:black;
+  background-color:white;
 }
 
 .mytags input {
@@ -145,8 +151,8 @@ fieldset input {
   width: 10%;
   height: 30px;
   font-size:0.8em;
-  color:white;
-  background-color:red;
+  color:black;
+  background-color:white;
 }
 
 /* ===========================
