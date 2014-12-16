@@ -13,17 +13,18 @@ class RedirectsController < ApplicationController
     @Signature = @ParsedUrl[2]
     @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
     p 'Validate 1 =', @validateSHA1hash
-    @validateSHA1hash = @validateSHA1hash.to_str    
-#    @validateSHA1hash = @validateSHA1hash.sub(/[+]/, ‘-’).sub(/[\/]/, ‘_’)
+#    @validateSHA1hash = @validateSHA1hash.to_str    
+    @validateSHA1hash = @validateSHA1hash.gsub '+', ‘-’
     p 'Validate 2 =', @validateSHA1hash
-    @validateSHA1hash= @validateSHA1hash.sub! '=', ''
+    @validateSHA1hash = @validateSHA1hash.gsub '/', ‘_’
     p 'Validate 3 =', @validateSHA1hash
+    @validateSHA1hash= @validateSHA1hash.gsub '=', ''
+    p 'Validate 4 =', @validateSHA1hash
     
-#    if (@validateSHA1hash != @Signature) then
- if (@validateSHA1hash == @Signature) then
+    if (@validateSHA1hash != @Signature) then
       # invalid response, discard
-      redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
-      return
+#      redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
+#      return
     else
       # response is authentic, do nothing
     end
