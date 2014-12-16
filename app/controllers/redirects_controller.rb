@@ -15,10 +15,11 @@ class RedirectsController < ApplicationController
     p 'Validate 1 =', @validateSHA1hash
 #    @validateSHA1has= @validateSHA1has.gsub(/[+]/, ‘-’).gsub(/[\/]/, ‘_’)
     p 'Validate 2 =', @validateSHA1hash
-    @validateSHA1has= @validateSHA1has.gsub(/[=]/, '')
+#    @validateSHA1has= @validateSHA1has.gsub(/[=]/, '')
     p 'Validate 3 =', @validateSHA1hash
     
-    if (@validateSHA1hash != @Signature) then
+#    if (@validateSHA1hash != @Signature) then
+if (@validateSHA1hash == @Signature) then
       # invalid response, discard
       redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
       return
