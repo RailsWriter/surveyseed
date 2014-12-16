@@ -11,7 +11,7 @@ class RedirectsController < ApplicationController
     p 'Url = ', @Url, '@BaseUrl=', @ParsedUrl[0], '@Signature =', @ParsedUrl[2]   
     @BaseUrl = @ParsedUrl[0]
     @Signature = @ParsedUrl[2]
-    @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
+    @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip.sub(/[+]/, ‘-’).sub(/[\/]/, ‘_’).sub(/[=]/, '');
     p 'Validate =', @validateSHA1hash
     
     if (@validateSHA1hash != @Signature) then
@@ -48,7 +48,7 @@ class RedirectsController < ApplicationController
         # save attempt info in User and Survey tables
 
 # turn to t'test' be true on launch 
-        if params[:PID] != 'test' then
+        if params[:PID] == 'test' then
           redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'
         else
           # save attempt info in User and Survey tables
@@ -74,12 +74,26 @@ class RedirectsController < ApplicationController
           @survey.CompletedBy[params[:PID]] = [params[:tis], params[:tsfn], @user.clickid, @user.netid]
           @survey.save
 
-          # Give user a chance to take another survey
-         if (@user.SupplierLink) then
-          redirect_to @user.SupplierLink[0]+params[:PID]
+          # Postback the network about success with users clickid
+          if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+            begin
+              @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                rescue HTTParty::Error => e
+                puts 'HttParty::Error '+ e.message
+                retry
+            end while @FyberPostBack.code != 200
           else
-            redirect_to 'https://www.ketsci.com/redirects/failure?&SUCCESS=2'
           end
+
+# Give user a chance to take another survey
+#         if (@user.SupplierLink) then
+#          redirect_to @user.SupplierLink[0]+params[:PID]
+#          else
+#            redirect_to 'https://www.ketsci.com/redirects/failure?&SUCCESS=2'
+#          end
+
+          # Happy ending
+          redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'
         end
 
       when "3"
@@ -90,7 +104,7 @@ class RedirectsController < ApplicationController
         p 'Failure'
 
 # turn to 'test' be true on launch        
-        if params[:PID] != 'test' then
+        if params[:PID] == 'test' then
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
         else
           # save attempt info in User and Survey tables
@@ -118,7 +132,7 @@ class RedirectsController < ApplicationController
         p 'OQuota'
 
 # turn to t'test' be true on launch 
-        if params[:PID] != 'test' then
+        if params[:PID] == 'test' then
           redirect_to 'https://www.ketsci.com/redirects/overquota?&OQ=1'
         else
           # save attempt info in User and Survey tables
@@ -142,7 +156,7 @@ class RedirectsController < ApplicationController
         p 'QTerm'
 
 # turn to t'test' be true on launch 
-        if params[:PID] != 'test' then
+        if params[:PID] == 'test' then
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=1'
         else
           # save attempt info in User and Survey tables

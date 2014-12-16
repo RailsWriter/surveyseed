@@ -15,8 +15,6 @@ require 'httparty'
 
   def show
     case params[:status]
-      when '1'
-        redirect_to '/users/failure'
       when '2'
         redirect_to '/users/qterm'
       when '3'
@@ -43,7 +41,8 @@ require 'httparty'
     if @age<13 then
       p 'Entered age is < 13'
       # should be replaced by call to userride
-      redirect_to 'http://www.ketsci.com/redirects/status?status=3'
+#      redirect_to 'http://www.ketsci.com/redirects/status?status=3'
+      redirect_to '/users/nosuccess'
     else  
       # Enter the user with the following credentials in our system or find user's record  
       ip_address = request.remote_ip
@@ -249,7 +248,8 @@ require 'httparty'
           if user.country=="7" then
             redirect_to '/users/qq4_IN'
           else
-            redirect_to 'http://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
+ #           redirect_to 'http://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
+             redirect_to '/users/nosuccess'
           end
         end
       end
@@ -452,7 +452,8 @@ require 'httparty'
           end
         else
           if (net.status == "INACTIVE") then
-            redirect_to 'http://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
+#            redirect_to 'http://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
+            redirect_to '/users/nosuccess'
             return
           else
             # MUST BE AN ACTIVE NETWORK or INTTEST -> Continue
@@ -461,7 +462,8 @@ require 'httparty'
       else
         # Bad netid, Network is not known
         p 'TEST NETWORK: BAD NETWOK'
-        redirect_to 'http://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
+#        redirect_to 'http://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
+        redirect_to '/users/nosuccess'
         return
       end
       
@@ -477,7 +479,8 @@ if (Survey.where("CountryLanguageID = ?", @usercountry)).exists? then
   p 'NOT NIL NOT NIL'
 else
   p '******************** USERRIDE: No Surveys with country language found in users_controller'
-  redirect_to 'https://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
+#  redirect_to 'https://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
+  redirect_to '/users/nosuccess'
   return
 #  @NoSurveysForThisCountryLanguage = true
 #  user.QualifiedSurveys == nil
@@ -514,7 +517,7 @@ end
       # End of all surveys in the database that meet the country, age, gender and ZIP criteria
     end
 
-    if user.QualifiedSurveys == [] then
+    if user.QualifiedSurveys.empty? then
       puts 'You did not qualify for a survey so taking you to show FailureLink page'
       userride (session_id)
     else
@@ -646,7 +649,8 @@ end
 
     # If user is blacklisted, then qterm
     if user.black_listed == true then
-      redirect_to 'https://www.ketsci.com/redirects/status?status=5'+'&PID='+@PID
+#      redirect_to 'https://www.ketsci.com/redirects/status?status=5'+'&PID='+@PID
+    redirect_to '/users/nosuccess'
     else
     end
     
@@ -654,7 +658,8 @@ end
     if ((user.QualifiedSurveys.empty?) || (user.SurveysWithMatchingQuota.empty?)) then
 # if ((user.SurveysWithMatchingQuota.empty?)) then
       p '******************** USERRIDE: No Surveys matching quals/quota found in users_controller'
-      redirect_to 'https://www.ketsci.com/redirects/status?status=3'+'&PID='+@PID
+#      redirect_to 'https://www.ketsci.com/redirects/status?status=3'+'&PID='+@PID
+      redirect_to '/users/nosuccess'
       return
     else
     end
@@ -664,7 +669,7 @@ end
       @surveynumber = user.SurveysWithMatchingQuota[i]
       Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey|
 # Change from test to live link
-         user.SupplierLink[i] = survey.SupplierLink["TestLink"]
+         user.SupplierLink[i] = survey.SupplierLink["LiveLink"]
       end
     end
     
@@ -679,24 +684,24 @@ end
 # Append user profile parameters like AGE, GENDER, etc, before sending user to Fulcrum (Does not help since are nagating between the surveys?)
 
 # **** For testing (with PID preset to test in TestLink)
-    p '*******USERRIDE: User will be sent to this survey:', user.SupplierLink[0]
+#    p '*******USERRIDE: User will be sent to this survey:', user.SupplierLink[0]
 #   remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
-    @EntryLink = user.SupplierLink[0]
-    user.SupplierLink = user.SupplierLink.drop(1)
-    user.save
-    redirect_to @EntryLink
+#    @EntryLink = user.SupplierLink[0]
+#    user.SupplierLink = user.SupplierLink.drop(1)
+#    user.save
+#    redirect_to @EntryLink
 # ***** until here
   
 # Alternate hardcoded test link in case navigation fails  
 # redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=8c047e4e-bf66-4014-bbb6-8b3fd6ebc3ac&FIRID=MSDHONI7&SUMSTAT=1&PID=test'
 
 # ****** Uncomment for launch
-#    p 'User will be sent to this survey:', user.SupplierLink[0]+@PID
+    p 'User will be sent to this survey:', user.SupplierLink[0]+@PID
 #   remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
-#    @EntryLink = user.SupplierLink[0]+@PID
-#    user.SupplierLink = user.SupplierLink.drop(1)
-#    user.save
-#    redirect_to @EntryLink
+    @EntryLink = user.SupplierLink[0]+@PID
+    user.SupplierLink = user.SupplierLink.drop(1)
+    user.save
+    redirect_to @EntryLink
 # *** until here
   end
   
@@ -721,14 +726,13 @@ end
   def p3action
     session_id = session.id
     user = User.find_by session_id: session_id
-    @clickid = user.clickid
-    p 'CID=', @clickid
-   # begin
-  #    HTTParty.post('http://www.ketsci.com/networks/netid=@netid?&CLICKID=@clickid')
-   #     rescue HTTParty::Error => e
-    #    puts 'HttParty::Error '+ e.message
-     #   retry
-  #  end while SupplierLink.code != 200
+    p 'CID=', user.clickid
+    begin
+      @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+        rescue HTTParty::Error => e
+        puts 'HttParty::Error '+ e.message
+        retry
+    end while @FyberPostBack.code != 200
     redirect_to '/users/successful'
   end
     
