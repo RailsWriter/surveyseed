@@ -13,13 +13,14 @@ class RedirectsController < ApplicationController
     @Signature = @ParsedUrl[2]
     @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
     p 'Validate 1 =', @validateSHA1hash
-#    @validateSHA1has= @validateSHA1has.gsub(/[+]/, ‘-’).gsub(/[\/]/, ‘_’)
+    @validateSHA1hash = @validateSHA1hash.to_str    
+    @validateSHA1hash= @validateSHA1hash.gsub(/[+]/, ‘-’).gsub(/[\/]/, ‘_’)
     p 'Validate 2 =', @validateSHA1hash
-#    @validateSHA1has= @validateSHA1has.gsub(/[=]/, '')
+    @validateSHA1hash= @validateSHA1hash.gsub(/[=]/, '')
     p 'Validate 3 =', @validateSHA1hash
     
-#    if (@validateSHA1hash != @Signature) then
-if (@validateSHA1hash == @Signature) then
+    if (@validateSHA1hash != @Signature) then
+# if (@validateSHA1hash == @Signature) then
       # invalid response, discard
       redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
       return
@@ -82,7 +83,7 @@ if (@validateSHA1hash == @Signature) then
           # Postback the network about success with users clickid
           if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
             begin
-              @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+              @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                 rescue HTTParty::Error => e
                 puts 'HttParty::Error '+ e.message
                 retry
