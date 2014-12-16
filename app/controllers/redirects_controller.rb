@@ -12,8 +12,7 @@ class RedirectsController < ApplicationController
     @BaseUrl = @ParsedUrl[0]
     @Signature = @ParsedUrl[2]
     @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
-    p 'Validate 1 =', @validateSHA1hash
-#    @validateSHA1hash = @validateSHA1hash.to_str    
+    p 'Validate 1 =', @validateSHA1hash  
     @validateSHA1hash = @validateSHA1hash.gsub '+', '-'
     p 'Validate 2 =', @validateSHA1hash
     @validateSHA1hash = @validateSHA1hash.gsub '/', '_'
@@ -23,8 +22,8 @@ class RedirectsController < ApplicationController
     
     if (@validateSHA1hash != @Signature) then
       # invalid response, discard
-#      redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
-#      return
+      redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
+      return
     else
       # response is authentic, do nothing
     end
@@ -54,7 +53,7 @@ class RedirectsController < ApplicationController
         
         # save attempt info in User and Survey tables
 
-# turn to t'test' be true on launch 
+#       Turn to 'test' be true on launch 
         if params[:PID] == 'test' then
           redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'
         else
@@ -76,13 +75,13 @@ class RedirectsController < ApplicationController
           @user.save
 
           @survey = Survey.find_by SurveyNumber: params[:tsfn]
-          p 'Just completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
+          p 'Successfully completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
           # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
           @survey.CompletedBy[params[:PID]] = [params[:tis], params[:tsfn], @user.clickid, @user.netid]
           @survey.save
 
           # Postback the network about success with users clickid
-          if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+          if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
             begin
               @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                 rescue HTTParty::Error => e
@@ -119,6 +118,7 @@ class RedirectsController < ApplicationController
 #          @user = User.last
 
           # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
+          # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
           if params[:tsfn] != nil then
             @user.SurveysAttempted << params[:tsfn]                   
             @user.save
@@ -143,8 +143,8 @@ class RedirectsController < ApplicationController
           redirect_to 'https://www.ketsci.com/redirects/overquota?&OQ=1'
         else
           # save attempt info in User and Survey tables
-#         @user = User.find_by user_id: params[:PID]
-          @user = User.last
+         @user = User.find_by user_id: params[:PID]
+#          @user = User.last
           
           @user.SurveysAttempted << params[:tsfn]
           @user.save
@@ -167,8 +167,8 @@ class RedirectsController < ApplicationController
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=1'
         else
           # save attempt info in User and Survey tables
-#          @user = User.find_by user_id: params[:PID]
-          @user = User.last
+          @user = User.find_by user_id: params[:PID]
+#          @user = User.last
           
           @user.SurveysAttempted << params[:tsfn]
           @user.black_listed = true
