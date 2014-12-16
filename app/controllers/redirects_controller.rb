@@ -11,8 +11,12 @@ class RedirectsController < ApplicationController
     p 'Url = ', @Url, '@BaseUrl=', @ParsedUrl[0], '@Signature =', @ParsedUrl[2]   
     @BaseUrl = @ParsedUrl[0]
     @Signature = @ParsedUrl[2]
-    @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip.sub(/[+]/, ‘-’).sub(/[\/]/, ‘_’).sub(/[=]/, '')
-    p 'Validate =', @validateSHA1hash
+    @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
+    p 'Validate 1 =', @validateSHA1hash
+    @validateSHA1has= @validateSHA1has.sub(/[+]/, ‘-’).sub(/[\/]/, ‘_’)
+    p 'Validate 2 =', @validateSHA1hash
+    @validateSHA1has= @validateSHA1has.sub(/[=]/, '')
+    p 'Validate 3 =', @validateSHA1hash
     
     if (@validateSHA1hash != @Signature) then
       # invalid response, discard
