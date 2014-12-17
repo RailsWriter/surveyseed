@@ -161,7 +161,7 @@ class RedirectsController < ApplicationController
           @user.save
 
           # Give user chance to take another survey
-          if (@user.SupplierLink) then
+          if (@user.SupplierLink.empty? == false) then
             redirect_to @user.SupplierLink[0]+params[:PID]
           else
             redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
