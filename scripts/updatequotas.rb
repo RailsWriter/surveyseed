@@ -2,11 +2,12 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
 staging_base_url = "http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com"
 
-p "**************************** QUOTA UPDATE: ENV is set to", flag
+print "**************************** QUOTA UPDATE: ENV is set to ", flag
+puts
 
 if flag == 'prod' then
   base_url = prod_base_url
@@ -18,7 +19,8 @@ else
   end
 end
 
-p " ************* QUOTA UPDATE: base url is", base_url
+print " ************* QUOTA UPDATE: base url is", base_url
+puts
 
 
 
@@ -27,15 +29,15 @@ p " ************* QUOTA UPDATE: base url is", base_url
 begin
 
   starttime = Time.now
-  p 'At start at', starttime
+  print 'At start at', starttime
+  puts
   
   begin
     sleep(3)
     yesterday = DateTime.yesterday.strftime('%Y-%m-%d')
-#    yesterday = "2014-11-30"
+#    yesterday = "2014-11-30". Use yesterday to take care of midnight. It does not make it slow because actual updates are every 15 mins.
  
-    p "Updating since DATE YYYY-MM-DD =", yesterday
-  
+    print "Updating since DATE YYYY-MM-DD =", yesterday
     puts 'CONNECTING FOR ALLOCATED SURVEYS WITH QUOTA UPDATES BY DATE'
     
     if flag == 'prod' then
@@ -53,9 +55,11 @@ begin
       retry
     end while SurveyQuotaUpdatesByDate.code != 200
   
-    puts SurveyQuotaUpdatesByDate
+    print 'SurveyQuotaUpdatesByDate', SurveyQuotaUpdatesByDate
+    puts
     totalupdatedsurveys = SurveyQuotaUpdatesByDate["ResultCount"] - 1
-    puts totalupdatedsurveys+1
+    print 'totalupdatedsurveys', totalupdatedsurveys+1
+    puts
   
     (0..totalupdatedsurveys).each do |i|
       @surveynumber = SurveyQuotaUpdatesByDate["SupplierAllocationSurveys"][i]["SurveyNumber"]
@@ -64,7 +68,8 @@ begin
   
       begin
         sleep(3)
-        puts 'CONNECTING FOR NEW QUOTA INFO for surveynumber =', @surveynumber
+        print 'CONNECTING FOR NEW QUOTA INFO for surveynumber =', @surveynumber
+        puts
         
         if flag == 'prod' then
           UpdatedSurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+@surveynumber.to_s+'/5458?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
@@ -85,23 +90,33 @@ begin
       # Save quotas information for each survey
   
       Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey|
-        survey.SurveyStillLive = UpdatedSurveyQuotas["SurveyStillLive"]
-        survey.SurveyStatusCode = UpdatedSurveyQuotas["SurveyStatusCode"]
-        survey.SurveyQuotas = UpdatedSurveyQuotas["SurveyQuotas"]
-        puts 'Saving surveynumber: ', @surveynumber
-        survey.save
+        if (UpdatedSurveyQuotas["SurveyStillLive"]) then
+          survey.SurveyStillLive = UpdatedSurveyQuotas["SurveyStillLive"]
+          survey.SurveyStatusCode = UpdatedSurveyQuotas["SurveyStatusCode"]
+          survey.SurveyQuotas = UpdatedSurveyQuotas["SurveyQuotas"]
+          print 'Updating Surveynumber: ', @surveynumber
+          puts
+          survey.save
+        else
+          puts '**************************** Deleting a closed survey'
+          survey.delete
+        end
       end
-      puts 'Updated survey count i = ', i         
+      print 'Updated survey count i = ', i   
+      puts      
     end
 
     timenow = Time.now
-    p 'Time at end', timenow
-    if (timenow - starttime) > 1800 then 
-      puts 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to repeat immediately'
+    print 'Time at end', timenow
+    puts
+    if (timenow - starttime) > 720 then 
+      print 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to repeat immediately'
+      puts
       timetorepeat = true
     else
-      puts 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to sleep for 30 minutes'
-      sleep (30.minutes)
+      print 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to sleep for 12 minutes'
+      puts
+      sleep (12.minutes)
  #     sleep (1800 - (timenow - starttime)).round
       timetorepeat = true
     end

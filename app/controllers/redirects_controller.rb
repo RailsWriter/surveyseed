@@ -8,30 +8,37 @@ class RedirectsController < ApplicationController
     @SHA1key = 'uhstarvsuio765jalksrWE'
     @Url = request.original_url
     @ParsedUrl = @Url.partition ("oenc=")
-    p 'Url = ', @Url, '@BaseUrl=', @ParsedUrl[0], '@Signature =', @ParsedUrl[2]   
+    print '@BaseUrl=', @ParsedUrl[0]
+    puts 
+    print '@Signature =', @ParsedUrl[2]   
+    puts
     @BaseUrl = @ParsedUrl[0]
     @Signature = @ParsedUrl[2]
     @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
-    p 'Validate 1 =', @validateSHA1hash  
+#    p 'Validate 1 =', @validateSHA1hash  
     @validateSHA1hash = @validateSHA1hash.gsub '+', '-'
-    p 'Validate 2 =', @validateSHA1hash
+#    p 'Validate 2 =', @validateSHA1hash
     @validateSHA1hash = @validateSHA1hash.gsub '/', '_'
-    p 'Validate 3 =', @validateSHA1hash
+#    p 'Validate 3 =', @validateSHA1hash
     @validateSHA1hash= @validateSHA1hash.gsub '=', ''
-    p 'Validate 4 =', @validateSHA1hash
+#    p 'Validate 4 =', @validateSHA1hash
     
     if (@validateSHA1hash != @Signature) then
       # invalid response, discard
+      print 'Validate 4 =', @validateSHA1hash
+      puts
       redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
       return
     else
-      # response is authentic, do nothing
+      p 'Redirects: Signature verified'
     end
     
     case params[:status] 
       
       when "1"
         # DefaultLink: https://www.ketsci.com/redirects/status?status=1&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
+        
+        p 'Redirected to Default'
         
         # User lands up here if anything unclear happens in the ride. Best course seems to be to send the user back to very begining to start over.
         redirect_to 'https://www.ketsci.com/redirects/default'
@@ -48,8 +55,6 @@ class RedirectsController < ApplicationController
 
       when "2"
         # SuccessLink: https://www.ketsci.com/redirects/status?status=2&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]&cost=[%COST%]
-     
-        p 'Suceess'
         
         # save attempt info in User and Survey tables
 
@@ -61,6 +66,9 @@ class RedirectsController < ApplicationController
           
          @user = User.find_by user_id: params[:PID]
 #          @user = User.last
+
+         print 'Suceess for user_id/PID, CID:', params[:PID], @user.clickid
+         puts
 
 #         In case user not found - should not happen since we sent the PID in the first place.
 #          if (User.where("user_id = ?", params[:PID])).exists? then
@@ -75,7 +83,8 @@ class RedirectsController < ApplicationController
           @user.save
 
           @survey = Survey.find_by SurveyNumber: params[:tsfn]
-          p 'Successfully completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
+          print 'Successfully completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
+          puts
           # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
           @survey.CompletedBy[params[:PID]] = [params[:tis], params[:tsfn], @user.clickid, @user.netid]
           @survey.save
@@ -106,8 +115,6 @@ class RedirectsController < ApplicationController
         # FailureLink: https://www.ketsci.com/redirects/status?status=3&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
         # FED uses this link is used when user is under age or they do not qualify for the survey they attempted. However since Ketsci eliminates those users already, this user
         # can be sent to try other surveys. If he/she has not qualified for any survey then take them to failure view.
-        
-        p 'Failure'
 
 # turn to 'test' be true on launch        
         if params[:PID] == 'test' then
@@ -116,6 +123,9 @@ class RedirectsController < ApplicationController
           # save attempt info in User and Survey tables
           @user = User.find_by user_id: params[:PID]          
 #          @user = User.last
+
+          print 'Failure for user_id/PID, CID:', params[:PID], @user.clickid
+          puts
 
           # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
           # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
@@ -135,16 +145,17 @@ class RedirectsController < ApplicationController
         
       when "4"
         # OverQuotaLink: https://www.ketsci.com/redirects/status?status=4&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
-        
-        p 'OQuota'
 
 # turn to t'test' be true on launch 
         if params[:PID] == 'test' then
           redirect_to 'https://www.ketsci.com/redirects/overquota?&OQ=1'
         else
           # save attempt info in User and Survey tables
-         @user = User.find_by user_id: params[:PID]
+          @user = User.find_by user_id: params[:PID]
 #          @user = User.last
+
+          print 'OQuota for user_id/PID, CID:', params[:PID], @user.clickid
+          puts          
           
           @user.SurveysAttempted << params[:tsfn]
           @user.save
@@ -169,6 +180,9 @@ class RedirectsController < ApplicationController
           # save attempt info in User and Survey tables
           @user = User.find_by user_id: params[:PID]
 #          @user = User.last
+          
+          print 'QTerm for user_id/PID, CID:', params[:PID], @user.clickid
+          puts     
           
           @user.SurveysAttempted << params[:tsfn]
           @user.black_listed = true
