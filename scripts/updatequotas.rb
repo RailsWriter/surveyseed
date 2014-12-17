@@ -105,6 +105,14 @@ begin
       print 'Updated survey count i = ', i   
       puts      
     end
+    
+#   This section is there to remove old dead surveys. It can be removed once the update script runs continuouslr
+    
+    Survey.where( "SurveyStillLive = ?", false).each do |survey|
+      print 'DELETING THIS Not Live SURVEY NUMBER ', survey.SurveyNumber
+      puts
+      survey.delete
+    end
 
     timenow = Time.now
     print 'Time at end', timenow
