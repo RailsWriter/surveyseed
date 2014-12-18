@@ -22,11 +22,11 @@
 				<%= form_tag("trap_question_2b", method: "post") do %>
 				<fieldset>
 					<div class="myethnicityinput">
-					<%= check_box_tag 'trap_question_2b_response', 'Should be left alone' %>
+					<%= radio_button_tag 'trap_question_2b_response', 'Should be left alone' %>
 					<%= label_tag(:trap_question_2b_response, "Should be left alone") %><br>
-					<%= check_box_tag 'trap_question_2b_response', 'Needs much to be improved' %>
+					<%= radio_button_tag 'trap_question_2b_response', 'Needs much to be improved' %>
 					<%= label_tag(:trap_question_2b_response, "Needs much to be improved") %><br>
-					<%= check_box_tag 'trap_question_2b_response', 'Doing really well' %>
+					<%= radio_button_tag 'trap_question_2b_response', 'Doing really well' %>
 					<%= label_tag(:trap_question_2b_response, "Doing really well") %><br><br>
 					</div>
 					<div class="myinput">

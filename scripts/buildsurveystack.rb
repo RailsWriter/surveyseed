@@ -4,7 +4,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
 staging_base_url = "http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com"
 
@@ -122,7 +122,9 @@ begin
 	        SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
 	        SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
           print 'PROCESSING i =', i
+          puts
 	        print 'SurveyName, Number, CountryLanguageID:', SurveyName, SurveyNumber, offerwallresponse["Surveys"][i]["CountryLanguageID"]
+          puts
 
           # Get Survey Qualifications Information by SurveyNumber
           begin
@@ -160,31 +162,34 @@ begin
             @survey.QualificationZIPPreCodes = ["ALL"]  
           else
             NumberOfQualificationsQuestions = SurveyQualifications["SurveyQualification"]["Questions"].length-1
-            puts NumberOfQualificationsQuestions+1
+            print 'NumberOfQualificationsQuestions: ', NumberOfQualificationsQuestions+1
+            puts
     
             (0..NumberOfQualificationsQuestions).each do |j|
               # Survey.Questions = SurveyQualifications["SurveyQualification"]["Questions"]
  #             puts SurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
-        
               case SurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
                 when 42
                   if flag == 'stag' then
                     print 'Age:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
                   else
                   end
                   @survey.QualificationAgePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 when 43
                   print 'Gender:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  puts
                   @survey.QualificationGenderPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 when 45
                   if flag == 'stag' then
                     print 'ZIPS:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
                   else
                   end
                   @survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-              end
-            end      
-          end
+              end # case
+            end #do      
+          end # if
     
           # Get Survey Quotas Information by SurveyNumber
           begin
@@ -207,16 +212,21 @@ begin
             end while SurveyQuotas.code != 200
 
             # Save quotas information for each survey
-    
-            @survey.SurveyStillLive = SurveyQuotas["SurveyStillLive"]
-            @survey.SurveyStatusCode = SurveyQuotas["SurveyStatusCode"]
-            @survey.SurveyQuotas = SurveyQuotas["SurveyQuotas"]
+
+#            if SurveyQuotas["SurveyStillLive"] == false then
+#              @survey.delete
+#            else
+              @survey.SurveyStillLive = SurveyQuotas["SurveyStillLive"]
+              @survey.SurveyStatusCode = SurveyQuotas["SurveyStatusCode"]
+              @survey.SurveyQuotas = SurveyQuotas["SurveyQuotas"]
+#            end
         
             # Get Supplierlinks for the survey
     
             begin
               sleep(2)
-              puts 'POSTING WITH REDIRECTS AND TO GET LIVELINK AS SURVEYLINK for SurveyNumber = ', SurveyNumber
+              print 'POSTING WITH REDIRECTS AND TO GET LIVELINK AS SURVEYLINK for SurveyNumber = ', SurveyNumber
+              puts
        
               if flag == 'stag' then
                 SupplierLink = HTTParty.post(base_url+'/Supply/v1/SupplierLinks/Create/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E',
@@ -245,15 +255,16 @@ begin
             retry
             end while SupplierLink.code != 200
 
-            puts SupplierLink["SupplierLink"]
-            puts SupplierLink["SupplierLink"]["LiveLink"]
+            print 'SupplierLink["SupplierLink"]: ', SupplierLink["SupplierLink"]
+            puts
+#            puts SupplierLink["SupplierLink"]["LiveLink"]
             @survey.SupplierLink=SupplierLink["SupplierLink"]   
     
             # Finally save the survey information in the database
             @survey.save
           else
             print 'This survey does not meet the CountryLanguageID, SurveyType, or Bid InterviewLength criteria.'
-            print 'At end i =', i, 'SurveyNumber =', offerwallresponse["Surveys"][i]["SurveyNumber"]
+            print 'At end i =', i, ' SurveyNumber = ', offerwallresponse["Surveys"][i]["SurveyNumber"]
             puts
       
 #      if flag == 'stag' then
@@ -269,8 +280,9 @@ begin
         end
       else
         # End of first if. This (i) survey is already in the database => nothing to do. Update script will take care of quota changes and removal.
+        # BUT this should never happen because once SupplierLink is created the survey is moved from OW to Allocation List
         print 'This survey is already in database:', offerwallresponse["Surveys"][i]["SurveyNumber"]
-        # This should never happen because once SupplierLink is created the survey is moved from OW to Allocation List
+        puts
       end
       # End of totalavailablesurveys (do loop)
     end
