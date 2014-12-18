@@ -366,9 +366,9 @@ begin
     
     # Pause surveys not on the allocation list but are in local database
     
-    (1..Survey.count).each do j
+    (1..Survey.count).each do |j|
       @oldsurvey = Survey.find(id = j)
-      (0..IndexofAllocatedSurveys["ResultCount"]).each do k
+      (0..IndexofAllocatedSurveys["ResultCount"]).each do |k|
         if IndexofAllocatedSurveys["SupplierAllocationSurveys"][k]["SurveyNumber"].include (@oldsurvey.SurveyNumber) then
           SurveyStillLive = true
          else
