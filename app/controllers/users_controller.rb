@@ -248,7 +248,6 @@ require 'httparty'
           if user.country=="7" then
             redirect_to '/users/qq4_IN'
           else
- #           redirect_to 'http://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
              redirect_to '/users/nosuccess'
           end
         end
@@ -454,7 +453,6 @@ require 'httparty'
           end
         else
           if (net.status == "INACTIVE") then
-#            redirect_to 'http://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
             redirect_to '/users/nosuccess'
             return
           else
@@ -464,7 +462,6 @@ require 'httparty'
       else
         # Bad netid, Network is not known
         p 'TEST NETWORK: BAD NETWOK'
-#        redirect_to 'http://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
         redirect_to '/users/nosuccess'
         return
       end
@@ -528,10 +525,13 @@ end
       puts 'You did not qualify for a survey so taking you to show FailureLink page'
       userride (session_id)
     else
+      print 'IN TOTAL USER HAS QUALIFIED FOR the following surveys= ', user.user_id, user.QualifiedSurveys
+      puts
+      
       # delete the empty item from initialization
- #     @tmp = user.QualifiedSurveys.flatten.compact
- #    user.QualifiedSurveys = @tmp
-      print 'IN TOTAL USER HAS QUALIFIED FOR the following surveys=', user.user_id, user.QualifiedSurveys
+  #    user.QualifiedSurveys.reject! { |c| c.empty? }
+      
+      print 'IN TOTAL USER HAS QUALIFIED FOR the following surveys (without Blanks)= ', user.user_id, user.QualifiedSurveys
       puts
 
       # Lets save the surveys user qualifies for in this user's record of database in rank order
@@ -632,6 +632,15 @@ end
       user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
       print 'List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
       puts
+      
+      # removing the blank entry
+#      if user.SurveysWithMatchingQuota !=nil then
+#        user.SurveysWithMatchingQuota.reject(&:empty?)
+#      else
+#      end
+      
+#      print 'List of (unique AND without Blanks) surveys where quota is available: ', user.SurveysWithMatchingQuota
+#      puts
 
 # *********** REMOVE AFTER TESTING      
 #      @tmp_SurveysWithMatchingQuota = []
@@ -685,6 +694,15 @@ end
     end
     
     print 'USER HAS QUOTA FOR SUPPLIERLINKS =', user.SupplierLink
+    puts
+    
+    # removing the blank entry
+    if user.SupplierLink !=nil then
+      user.SupplierLink.reject! { |c| c.empty? }
+    else
+    end
+    
+    print 'USER HAS QUOTA FOR SUPPLIERLINKS (without blanks!) = ', user.SupplierLink
     puts
     
     # Save the list of SupplierLinks in user record
