@@ -154,8 +154,8 @@ begin
 
           # Insert specific qualifications where required
 
-#          if SurveyQualifications["SurveyQualification"]["Questions"] == nil then
-          if SurveyQualifications["SurveyQualification"]["Questions"].empty? then
+          if SurveyQualifications["SurveyQualification"]["Questions"] == nil then
+#          if SurveyQualifications["SurveyQualification"]["Questions"].empty? then
             puts 'SurveyQualifications or Questions is NIL'
             @survey.QualificationAgePreCodes = ["ALL"]
             @survey.QualificationGenderPreCodes = ["ALL"]
