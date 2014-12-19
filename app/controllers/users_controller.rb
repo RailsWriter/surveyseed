@@ -77,8 +77,8 @@ require 'httparty'
         @user.tos = false
         @user.watch_listed=false
         @user.black_listed=false
-#        @user.number_of_attempts_in_last_24hrs=1
-#        @user.attempts_time_stamps_array = [Time.now]
+        @user.number_of_attempts_in_last_24hrs=1
+        @user.attempts_time_stamps_array = [Time.now]
         @user.save
         p @user
         redirect_to '/users/tos'
@@ -108,8 +108,8 @@ require 'httparty'
           user.SupplierLink = []
           user.session_id = session.id
           user.tos = false
-#          user.attempts_time_stamps_array = user.attempts_time_stamps_array + [Time.now]
-#          user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
+          user.attempts_time_stamps_array = user.attempts_time_stamps_array + [Time.now]
+          user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
           user.save
           p user
           redirect_to '/users/tos'
@@ -124,37 +124,38 @@ require 'httparty'
     print 'User found in TOS:', user
     puts
     user.tos=true
-    user.save
-    redirect_to '/users/qq2'
+#    user.save
+#    redirect_to '/users/qq2'
 
     # Update number of attempts in last 24 hrs record of the user
-#    if ( user.number_of_attempts_in_last_24hrs==nil ) then
-#      user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
-#    else
-#    end
+    if ( user.number_of_attempts_in_last_24hrs==nil ) then
+      user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
+    else
+    end
     
-#    user.save
+    user.save
     
     # Address good and bad repeat access behaviour after they have resigned TOS (PP)
-#    if ( user.attempts_time_stamps_array.length==1 ) then
-#      p 'TOS: FIRST TIME USER'
-#      redirect_to '/users/qq2'
-#    else
-#      p 'TOS: A REPEAT USER'
+    if ( user.attempts_time_stamps_array.length==1 ) then
+      p 'TOS: FIRST TIME USER'
+      redirect_to '/users/qq2'
+    else
+      p 'TOS: A REPEAT USER'
       # set 24 hr survey attempts in separate sessions from same device/IP address here
-#      if (user.number_of_attempts_in_last_24hrs < 50) then
+      if (user.number_of_attempts_in_last_24hrs < 50) then
         # skip gender and other demo questions due to responses in last 24 hrs
-#        redirect_to '/users/qq9'
-#      else
-#        # user has made too many attempts to take surveys
-#        redirect_to '/users/24hrsquotaexceeded'
-#      end
-#    end
+        redirect_to '/users/qq9'
+      else
+        # user has made too many attempts to take surveys
+        redirect_to '/users/24hrsquotaexceeded'
+      end
+    end
       
     # set 24 hr survey completes quota here
 #    if (user.SurveysCompleted[count { |x| x > (Time.now-1.day) } == 5) then
 #       p 'Exceeded quota of surveys to fill for today'
 #       redirect_to '/users/24hrsquotaexceeded'
+#       return
 #     else
 #     end
   end
@@ -471,7 +472,8 @@ require 'httparty'
     puts "STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
     # change countrylanguageid setting to match user countryID only
     @usercountry = (user.country).to_i
-    p '*************** RANKSURVEYS FOR USER: User country is =', @usercountry
+    print '*************** RANKSURVEYS FOR USER: User country is =', @usercountry
+    puts
 
 #    Survey.where("CountryLanguageID = 5 OR CountryLanguageID = 9 OR CountryLanguageID = 8").order( "SurveyGrossRank" ).each do |survey|
 
@@ -481,7 +483,6 @@ if (Survey.where("CountryLanguageID = ?", @usercountry)).exists? then
   puts
 else
   p '******************** USERRIDE: No Surveys with country language found in users_controller'
-#  redirect_to 'https://www.ketsci.com/redirects/status?status=3'+'&PID='+user.user_id
   redirect_to '/users/nosuccess'
   return
 #  @NoSurveysForThisCountryLanguage = true

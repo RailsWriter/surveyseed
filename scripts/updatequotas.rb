@@ -370,10 +370,15 @@ begin
       @oldsurvey = Survey.find(id = j)
       (0..IndexofAllocatedSurveys["ResultCount"]).each do |k|
         if IndexofAllocatedSurveys["SupplierAllocationSurveys"][k]["SurveyNumber"].include (@oldsurvey.SurveyNumber) then
-          SurveyStillLive = true
+          # do nothing - these surveys in our database are live surveys in allocation
+#          SurveyStillLive = true
          else
           SurveyStillLive = false
           print 'Marked a survey to be NOT live: ', @oldsurvey.SurveyNumber
+          puts
+          print 'DELETING THIS Not Live SURVEY NUMBER ', @oldsurvey.SurveyNumber
+          puts
+          @oldsurvey.delete          
          end # if
        end # do k
      end # do j
@@ -382,9 +387,6 @@ begin
 #   This section is there to remove old dead surveys. It can be removed once the update script runs continuouslr
     
 #    Survey.where( "SurveyStillLive = ?", false).each do |survey|
-#      print 'DELETING THIS Not Live SURVEY NUMBER ', survey.SurveyNumber
-#      puts
-#      survey.delete
 #    end
 
     timenow = Time.now
