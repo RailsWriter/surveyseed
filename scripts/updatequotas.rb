@@ -56,7 +56,7 @@ begin
   print 'Total allocated surveys', totalavailablesurveys+1
   puts
 
-  (605..totalavailablesurveys).each do |i|
+  (0..totalavailablesurveys).each do |i|
     @surveynumber = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"]
     if (Survey.where("SurveyNumber = ?", @surveynumber)).exists? then 
       Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey|
