@@ -263,7 +263,8 @@ require 'httparty'
     user=User.find_by session_id: session.id
     user.ZIP=params[:zip]
     user.save
-    redirect_to '/users/qq5_US'
+#    redirect_to '/users/qq5_US'
+    ranksurveysforuser(session.id)
   end
   
   def zip_CA
@@ -271,7 +272,8 @@ require 'httparty'
     user=User.find_by session_id: session.id
     user.ZIP=params[:zip]
     user.save
-    redirect_to '/users/qq5_CA'
+#    redirect_to '/users/qq5_CA'
+    ranksurveysforuser(session.id)
   end
   
   def zip_IN
@@ -279,7 +281,8 @@ require 'httparty'
     user=User.find_by session_id: session.id
     user.ZIP=params[:zip]
     user.save
-    redirect_to '/users/qq5_IN'
+#    redirect_to '/users/qq5_IN'
+    ranksurveysforuser(session.id)
   end
   
   def zip_AU
@@ -287,7 +290,8 @@ require 'httparty'
     user=User.find_by session_id: session.id
     user.ZIP=params[:zip]
     user.save
-    redirect_to '/users/qq7_AU'
+#    redirect_to '/users/qq7_AU'
+    ranksurveysforuser(session.id)
   end
   
   def ethnicity_US
