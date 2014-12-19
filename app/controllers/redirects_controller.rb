@@ -55,7 +55,7 @@ class RedirectsController < ApplicationController
 #          redirect_to 'https://www.ketsci.com/redirects/default'
 #        end
 
-      when "5"
+      when "2"
         # SuccessLink: https://www.ketsci.com/redirects/status?status=2&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]&cost=[%COST%]
         
         # save attempt info in User and Survey tables
@@ -170,7 +170,7 @@ class RedirectsController < ApplicationController
           end
         end
     
-      when "2"
+      when "5"
         # QualityTerminationLink: https://www.ketsci.com/redirects/status?status=5&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
         
         p 'QTerm'
