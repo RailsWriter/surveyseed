@@ -66,7 +66,7 @@ require 'httparty'
         @user.netid = netid
         @user.clickid = clickid
 #       @user.payout = should be extracted from advertiser id in call
-        # Initialize user ride related lists. These protect from getting old lists, if the user restarts taking surveys in the same session after a long break. However, these get a blank entry on the list due to save action       
+        # Initialize user ride related lists. These protect from getting old lists, if the user restarts taking surveys in the same session after a long break. However, these get a blank entry on the list due to save action
         @user.QualifiedSurveys = []
         @user.SurveysWithMatchingQuota = []
         @user.SupplierLink = []

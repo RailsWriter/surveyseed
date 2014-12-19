@@ -40,6 +40,10 @@ class RedirectsController < ApplicationController
         
         p 'Redirected to Default'
         
+        # Is there anything to save from the attempt info in User and Survey tables?
+        @user.SurveysAttempted << params[:tsfn]+'1111'
+        @user.save
+        
         # User lands up here if anything unclear happens in the ride. Best course seems to be to send the user back to very begining to start over.
         redirect_to 'https://www.ketsci.com/redirects/default'
 
@@ -50,8 +54,6 @@ class RedirectsController < ApplicationController
 #        else
 #          redirect_to 'https://www.ketsci.com/redirects/default'
 #        end
-        
-        # Is there anything to save from the attempt info in User and Survey tables?
 
       when "2"
         # SuccessLink: https://www.ketsci.com/redirects/status?status=2&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]&cost=[%COST%]
@@ -77,7 +79,7 @@ class RedirectsController < ApplicationController
 #            redirect_to 'https://www.ketsci.com/redirects/contactus'
 #          end
           
-          @user.SurveysAttempted << params[:tsfn]
+          @user.SurveysAttempted << params[:tsfn]+'2222'
           # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
           @user.SurveysCompleted[params[:tsfn]] = [params[:cost], params[:tsfn], @user.clickid, @user.netid]
           @user.save
@@ -130,7 +132,7 @@ class RedirectsController < ApplicationController
           # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
           # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
           if params[:tsfn] != nil then
-            @user.SurveysAttempted << params[:tsfn]                   
+            @user.SurveysAttempted << params[:tsfn]+'3333'                   
             @user.save
           else
           end
@@ -157,7 +159,7 @@ class RedirectsController < ApplicationController
           print 'OQuota for user_id/PID, CID:', params[:PID], @user.clickid
           puts          
           
-          @user.SurveysAttempted << params[:tsfn]
+          @user.SurveysAttempted << params[:tsfn]+'4444'
           @user.save
 
           # Give user chance to take another survey
@@ -183,8 +185,8 @@ class RedirectsController < ApplicationController
           
           print 'QTerm for user_id/PID, CID:', params[:PID], @user.clickid
           puts     
-          
-          @user.SurveysAttempted << params[:tsfn]
+        
+          @user.SurveysAttempted << params[:tsfn]+'5555'
           @user.black_listed = true
           @user.save
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=2'
