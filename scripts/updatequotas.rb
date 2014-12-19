@@ -56,7 +56,7 @@ begin
   print 'Total allocated surveys', totalavailablesurveys+1
   puts
 
-  (0..totalavailablesurveys).each do |i|
+  (605..totalavailablesurveys).each do |i|
     @surveynumber = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"]
     if (Survey.where("SurveyNumber = ?", @surveynumber)).exists? then 
       Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey|
@@ -366,27 +366,53 @@ begin
     
     # Pause surveys not on the allocation list but are in local database
     
-    (1..Survey.count).each do |j|
-      @oldsurvey = Survey.find(id = j)
-      (0..IndexofAllocatedSurveys["ResultCount"]).each do |k|
-        if IndexofAllocatedSurveys["SupplierAllocationSurveys"][k]["SurveyNumber"].include (@oldsurvey.SurveyNumber) then
-          # do nothing - these surveys in our database are live surveys in allocation
-#          SurveyStillLive = true
+    
+    surveysnottobedeleted = Array.new
+    listofsurveynumbers = Array.new
+    surveystobedeleted = Array.new
+    
+    Survey.all.each do |oldsurvey|
+      listofsurveynumbers << oldsurvey.SurveyNumber
+#      print 'Investigating Survey Number from the dbase: ', listofsurveynumbers
+#      puts
+      
+      (0..totalavailablesurveys).each do |k|
+        if IndexofAllocatedSurveys["SupplierAllocationSurveys"][k]["SurveyNumber"] == oldsurvey.SurveyNumber then
+#          print 'Marked a survey to be ALIVE: ', oldsurvey.SurveyNumber
+#          puts     
+          surveysnottobedeleted << oldsurvey.SurveyNumber
          else
-          SurveyStillLive = false
-          print 'Marked a survey to be NOT live: ', @oldsurvey.SurveyNumber
-          puts
-          print 'DELETING THIS Not Live SURVEY NUMBER ', @oldsurvey.SurveyNumber
-          puts
-          @oldsurvey.delete          
+           # do nothing
+#          SurveyStillLive = false
          end # if
+#         print 'looping list of allocationsurveys, count:', k
+#         puts
        end # do k
      end # do j
+     
+     print 'List of all surveys in DB', listofsurveynumbers
+     puts
+     print 'List of surveys not to be deleted', surveysnottobedeleted
+     puts
 
-
-#   This section is there to remove old dead surveys. It can be removed once the update script runs continuouslr
+     #   This section is there to remove old dead surveys.
     
-#    Survey.where( "SurveyStillLive = ?", false).each do |survey|
+     Survey.all.each do |oldsurvey|
+       if surveysnottobedeleted.include? (oldsurvey.SurveyNumber) then
+         # do nothing
+       else
+          surveystobedeleted << oldsurvey.SurveyNumber
+#          print 'DELETING THIS SURVEY NUMBER NOT on Allocation LIST ', oldsurvey.SurveyNumber
+#          puts
+          oldsurvey.delete     
+      end
+    end
+    
+    print 'Surveys to be deleted', surveystobedeleted
+    puts
+    
+    
+#    Survey.where( "SurveyStillLive = ?", false ).each do |survey|
 #    end
 
     timenow = Time.now
