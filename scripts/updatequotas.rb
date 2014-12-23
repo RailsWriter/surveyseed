@@ -156,8 +156,10 @@ begin
 
         end # do @ survey
       else
-        # Survey number does not exist. This is a new entry from allocation, get qualifications, quotas, and supplierlinks for it and create as new
-        
+        # Survey number does not exist. This is a new entry from allocation, get qualifications, quotas, and supplierlinks for it and create as new if the survey meets our biz requirements of countrylanguage, studytype, etc.
+ 
+ if ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 7) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9)) && ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23)) && ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["BidLengthOfInterview"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["BidLengthOfInterview"] < 41)) && ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CPI"] == nil) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CPI"] > 2.15)) && (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"] != 67820) && (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"] != 66091) && (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"] != 65653) && (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"] != 98319) && (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"] != 101766) then 
+         
         @newsurvey = Survey.new
         @newsurvey.SurveyName = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyName"]
         @newsurvey.SurveyNumber = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"]
@@ -349,6 +351,7 @@ begin
             if NewSupplierLink.code != 200 then
               print '**************************************************** SUPPLIERLINKS NOT AVAILABLE'
               puts
+              # Do not save this survey
             else  
               print 'NewSupplierLink["SupplierLink"]: ', NewSupplierLink["SupplierLink"]
               puts
@@ -359,6 +362,10 @@ begin
               # Finally save the new survey information in the database
               @newsurvey.save
             end
+          else
+            print '******************************** This survey does not meet our biz requirements', @surveynumber
+            puts
+          end # download a new survey if the new survey qualifies for being suitable from countrylanguageID, studytypeID, and BidLOI criteria
       end # if @surveynumber exists  
       print 'Updating totalavailablesurveys at count i = ', i   
       puts  
