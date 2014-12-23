@@ -35,8 +35,8 @@ require 'httparty'
     
   # calculate age for COPA eligibility
     @age = age( params[:user][:birth_month], params[:user][:birth_date], params[:user][:birth_year] )  
-    print 'Age works out to be', @age
-    puts
+#    print 'Age works out to be', @age
+#    puts
     if @age<13 then
       p 'Entered age is < 13'
       # should be replaced by call to userride
@@ -121,7 +121,7 @@ require 'httparty'
   def sign_tos
       
     user=User.find_by session_id: session.id
-    print 'User found in TOS:', user
+    print 'TOS: User found in TOS:', user
     puts
     user.tos=true
 #    user.save
@@ -144,7 +144,8 @@ require 'httparty'
       # set 24 hr survey attempts in separate sessions from same device/IP address here
       if (user.number_of_attempts_in_last_24hrs < 50) then
         # skip gender and other demo questions due to responses in last 24 hrs
-        redirect_to '/users/qq9'
+#        redirect_to '/users/qq9'
+        redirect_to '/users/qq2'
       else
         # user has made too many attempts to take surveys
         redirect_to '/users/24hrsquotaexceeded'
@@ -442,12 +443,12 @@ require 'httparty'
       
       # If this is a TEST e.g. with a network provider then route user to run the standard test survey.
       @netid = user.netid
-      print '@netid', @netid
-      puts
+#      print '@netid', @netid
+#      puts
       if Network.where(netid: @netid).exists? then
         net = Network.find_by netid: @netid
-        print 'net =', net
-        puts
+#        print 'net =', net
+#        puts
         if (net.status == "EXTTEST") then
           case (net.testcompletes.length)
             when 0..9
@@ -476,15 +477,15 @@ require 'httparty'
     puts "STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
     # change countrylanguageid setting to match user countryID only
     @usercountry = (user.country).to_i
-    print '*************** RANKSURVEYS FOR USER: User country is =', @usercountry
-    puts
+#    print '*************** RANKSURVEYS FOR USER: User country is =', @usercountry
+#    puts
 
 #    Survey.where("CountryLanguageID = 5 OR CountryLanguageID = 9 OR CountryLanguageID = 8").order( "SurveyGrossRank" ).each do |survey|
 
 if (Survey.where("CountryLanguageID = ?", @usercountry)).exists? then
   # do nothing
-  print 'Surveys with the users LanguageID are available', user.user_id
-  puts
+#  print 'Surveys with the users LanguageID are available', user.user_id
+#  puts
 else
   p '******************** USERRIDE: No Surveys with country language found in users_controller'
   redirect_to '/users/nosuccess'
@@ -507,10 +508,10 @@ end
         ans1 = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
         ans2 = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
         ans3 = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
-        print 'BEGIN: USER QUALIFIED FOR SURVEY NUMBER =', survey.SurveyNumber, 'RANK=', survey.SurveyGrossRank, 'Gender from Survey=', survey.QualificationGenderPreCodes, 'User enetered Gender: ', @GenderPreCode, 'USER ENTERED AGE=', user.age, 'AGE PreCodes from Survey=', survey.QualificationAgePreCodes, 'User Entered ZIP:', user.ZIP, 'ZIP PreCodes from Survey:', survey.QualificationZIPPreCodes
-        puts
-        print 'Ans1 - Gender match:', ans1, 'Ans2 - Age match:', ans2, 'Ans3 - ZIP match:', ans3
-        puts
+#        print 'BEGIN: USER QUALIFIED FOR SURVEY NUMBER =', survey.SurveyNumber, 'RANK=', survey.SurveyGrossRank, 'Gender from Survey=', survey.QualificationGenderPreCodes, 'User enetered Gender: ', @GenderPreCode, 'USER ENTERED AGE=', user.age, 'AGE PreCodes from Survey=', survey.QualificationAgePreCodes, 'User Entered ZIP:', user.ZIP, 'ZIP PreCodes from Survey:', survey.QualificationZIPPreCodes
+#        puts
+#        print 'Ans1 - Gender match:', ans1, 'Ans2 - Age match:', ans2, 'Ans3 - ZIP match:', ans3
+#        puts
         
         user.QualifiedSurveys << survey.SurveyNumber
         
@@ -520,20 +521,20 @@ end
         ans4 = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
         ans5 = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
         ans6 = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
-        print 'END: USER DID NOT QUALIFY FOR THIS SURVEY', survey.SurveyNumber
-        puts
-        print 'Ans4 - Gender match:', ans4, 'Ans5 - Age match:', ans5, 'Ans6 - ZIP match:', ans6
-        puts
+#        print 'END: USER DID NOT QUALIFY FOR THIS SURVEY', survey.SurveyNumber
+#        puts
+#        print 'Ans4 - Gender match:', ans4, 'Ans5 - Age match:', ans5, 'Ans6 - ZIP match:', ans6
+#        puts
       end
       # End of all surveys in the database that meet the country, age, gender and ZIP criteria
     end
 
     if user.QualifiedSurveys.empty? then
-      puts 'You did not qualify for a survey so taking you to show FailureLink page'
+      puts 'User did not qualify for a survey so taking user to show FailureLink page'
       userride (session_id)
     else
-      print 'IN TOTAL USER HAS QUALIFIED FOR the following surveys= ', user.user_id, user.QualifiedSurveys
-      puts
+#      print 'IN TOTAL USER HAS QUALIFIED FOR the following surveys= ', user.user_id, user.QualifiedSurveys
+#      puts
       
       # delete the empty item from initialization
   #    user.QualifiedSurveys.reject! { |c| c.empty? }
@@ -552,16 +553,16 @@ end
         Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey|
 
         @NumberOfQuotas = survey.SurveyQuotas.length-1
-        print 'NumberofQuotas:', @NumberOfQuotas+1
-        puts
+#        print 'NumberofQuotas:', @NumberOfQuotas+1
+#        puts
 
         (0..@NumberOfQuotas).each do |k|
           @NumberOfRespondents = survey.SurveyQuotas[k]["NumberOfRespondents"]
           @SurveyQuotaCPI = survey.SurveyQuotas[k]["QuotaCPI"]
-          print 'NumberofRespondents:', @NumberOfRespondents, 'QuotaCPI:', @SurveyQuotaCPI
-          puts
-          print survey.SurveyQuotas[k]["Questions"]
-          puts
+#          print 'NumberofRespondents:', @NumberOfRespondents, 'QuotaCPI:', @SurveyQuotaCPI
+#          puts
+#          print survey.SurveyQuotas[k]["Questions"]
+#          puts
         
           if (survey.SurveyQuotas[k]["Questions"] == nil ) then
             # Quota is open for all users so add this survey number to user's ride
@@ -576,39 +577,39 @@ end
             @ZIPquotaexists=true
             
             (0..survey.SurveyQuotas[k]["Questions"].length-1).each do |l|
-              print 'Looping through quotas=', l  
-              puts
+#              print 'Looping through quotas=', l  
+#              puts
               case survey.SurveyQuotas[k]["Questions"][l]["QuestionID"]
                 
                 when 42
-                  print 'Age:', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
+#                  print 'Age:', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+#                  puts
                   if ([ user.age ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.age ] ) then
                     agequotaexists=true
-                    puts 'Age question matches'
+ #                   puts 'Age question matches'
                   else
                     agequotaexists=false
-                    puts 'Age question does not match'
+  #                  puts 'Age question does not match'
                   end
                 when 43
-                  puts 'Gender:', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+#                  puts 'Gender:', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
                   if ( @GenderPreCode & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == @GenderPreCode ) then
                     genderquotaexists=true
-                    puts 'Gender question matches'
+#                    puts 'Gender question matches'
                   else
                     genderquotaexists=false
-                    puts 'Gender question does not match'
+#                    puts 'Gender question does not match'
                   end
                   
                 when 45
-                  print 'ZIPS', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
+#                  print 'ZIPS', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+#                  puts
                   if ([ user.ZIP ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.ZIP ] ) then
                     @ZIPquotaexists=true
-                    puts 'ZIP question matches'
+#                    puts 'ZIP question matches'
                   else
                     @ZIPquotaexists=false
-                    puts 'ZIP question does not match'
+#                    puts 'ZIP question does not match'
                   end
                   # End case
                 end
@@ -616,9 +617,9 @@ end
               end  
                   # Quota k exists if qualifications for user profile match
                   if ((agequotaexists == false) || (genderquotaexists == false) || (@ZIPquotaexists == false)) then
-                    puts 'This overall quota did not match the user'
+            #        puts 'This overall quota did not match the user'
                   else
-                    puts 'This overall quota matches what we know about the user'
+             #       puts 'This overall quota matches what we know about the user'
 #                   @tmp << @surveynumber
                     user.SurveysWithMatchingQuota << @surveynumber
                     # End if
@@ -679,12 +680,13 @@ end
     if user.black_listed == true then
 #      redirect_to 'https://www.ketsci.com/redirects/status?status=5'+'&PID='+@PID
     redirect_to '/users/nosuccess'
+    return
     else
     end
     
     # The user does not qualify for any survey in the inventory, from the begining. (Failure/Terminate)
     if ((user.QualifiedSurveys.empty?) || (user.SurveysWithMatchingQuota.empty?)) then
-      p '******************** USERRIDE: No Surveys matching quals/quota found in users_controller'
+      p '******************** USERRIDE: No Surveys matching quals/quota were found in users_controller'
 #      redirect_to 'https://www.ketsci.com/redirects/status?status=3'+'&PID='+@PID
       redirect_to '/users/nosuccess'
       return
@@ -700,8 +702,8 @@ end
       end
     end
     
-    print 'USER HAS QUOTA FOR SUPPLIERLINKS =', user.SupplierLink
-    puts
+#    print 'USER HAS QUOTA FOR SUPPLIERLINKS =', user.SupplierLink
+ #   puts
     
     # removing the blank entry
     if user.SupplierLink !=nil then
