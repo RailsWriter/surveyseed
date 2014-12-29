@@ -19,7 +19,7 @@
 	}
 	
 	h1 {
-		font-weight: 150;
+		font-weight: 100;
 		font-size: 20px;			
 	}
 	
@@ -28,14 +28,14 @@
 		font-size: 15px;
 	}
 
-	#p1 {
+	p1 {
 		font-weight: 100;
 		font-size: 15px;
-		color: black;
+		color: white;
 	}
 	
 	#bigfont {
-		font-weight: 300;
+		font-weight: 400;
 		font-size: 20px;
 		color: black;
 		font-family: Roboto, helvetica, arial, sans-serif;
@@ -45,7 +45,7 @@
 		height: 70px;
 		padding-top: 15px;
 		padding-left:20px;
-		background-color: #ED850E;
+		background-color: #7187a8;
 	}
 	
 	#container1 {
@@ -63,6 +63,20 @@
 /*		background-size: 100% auto; worst because picture resizes to keep full picture in view */
 /*		background-attachment: fixed; worst as it makes the rest of the body rollover hero image */
   	}
+	
+	#aboutus {
+		height: 485px;
+		padding-top: 10px;
+		padding-left:20px;
+		background-color: white;
+		font-weight: 150;
+		font-size: 20px;
+	}
+	
+	p2 {
+		font-weight: 75;
+		font-size: 15px;
+	}
 	
 	#container2 {
 /*	    margin-left: auto; */
@@ -99,7 +113,7 @@
 		border-width: 0em;
 	    border-radius: 0em;
 		width: 260px;
-		font-family: sans-serif;
+		font-family: Roboto, helvetica, arial, sans-serif;
 	}
 	
 	.textarea {
@@ -108,7 +122,7 @@
 		border-width: 0em;
 	    border-radius: 0em;
 		width: 260px;
-		font-family: sans-serif;
+		font-family: Roboto, helvetica, arial, sans-serif;
 	}
 	
 	.button {
@@ -117,13 +131,13 @@
 		border-width: 0em;
 	    border-radius: 0em;
 		width: 260px;
-		font-family: sans-serif;
+		font-family: Roboto, helvetica, arial, sans-serif;
 		color: white;
 		background: #E6253F;
 	}
 	
 	#footer {
-        padding: 6.8em;
+        padding: 4.0em;
         background-color: #4D4235;
 	/*	height: 300px; 
 		background-size: cover; */
@@ -159,11 +173,11 @@
 	
 	@media only screen and (min-width: 601px) and (max-width: 1023px) {
 		h1 {
-			font-weight: 550;
-			font-size: 50px;			
+			font-weight: 200;
+			font-size: 25px;			
 		}
 		
-		p {
+		p1 {
 			font-weight: 100;
 			font-size: 20px;
 		}
@@ -171,6 +185,20 @@
 		#hero {
 			height:400px; /* keep as the desired height of background image */
 			background-size: cover; /* looses cover property even though defined in All */
+		}
+		
+		#aboutus {
+			height: 480px;
+			padding-top: 10px;
+			padding-left:20px;
+			background-color: white;
+			font-weight: 150;
+			font-size: 30px;
+		}
+	
+		p2 {
+			font-weight: 75;
+			font-size: 15px;
 		}
 		
 		#container2 {
@@ -196,12 +224,22 @@
 			font-size: 25px;
 			color: black;
 		}
+		
+		#left_col {
+		   float:left;
+		   width:250px;
+		}
+
+		#right_col {
+		   float:right;
+		   width:150px;
+		}
 	}
 	
 	@media only screen and (min-width: 1024px) and (max-width: 2023px) {	
 		h1 {
-			font-weight: 600;
-			font-size: 60px;			
+			font-weight: 250;
+			font-size: 30px;			
 		}
 
 		p {
@@ -214,13 +252,22 @@
 			background-size: cover;
 	  	}
 		
+		#aboutus {
+			height: 360px;
+			padding-top: 15px;
+			padding-left:20px;
+			background-color: white;
+			font-weight: 150;
+			font-size: 30px;
+		}
+		
 		#container2 {
 			padding-top:10.0em;
 		}
 		
 		#bigfont {
 			font-weight: 500;
-			font-size: 25px;
+			font-size: 30px;
 			color: black;
 			font-family: Roboto, helvetica, arial, sans-serif;
 		}
@@ -244,7 +291,7 @@
 			border-width: 0em;
 		    border-radius: 0em;
 			width: 360px;
-			font-family: sans-serif;
+			font-family: Roboto, helvetica, arial, sans-serif;
 		}
 	
 		.textarea {
@@ -253,7 +300,7 @@
 			border-width: 0em;
 		    border-radius: 0em;
 			width: 360px;
-			font-family: sans-serif;
+			font-family: Roboto, helvetica, arial, sans-serif;
 		}
 	
 		.button {
@@ -262,9 +309,19 @@
 			border-width: 0em;
 		    border-radius: 0em;
 			width: 360px;
-			font-family: sans-serif;
+			font-family: Roboto, helvetica, arial, sans-serif;
 			color: white;
 			background: #229936;
+		}
+		
+		#left_col {
+		   float:left;
+		   width:250px;
+		}
+
+		#right_col {
+		   float:right;
+		   width:150px;
 		}
 	}
 		
@@ -283,6 +340,15 @@
 				height: 400px; /* same as tablet and desktop */
 				width: 1824px;
 		  	}
+			
+			#aboutus {
+				height: 295px;
+				padding-top: 15px;
+				padding-left:50px;
+				background-color: white;
+				font-weight: 100;
+				font-size: 10px;
+			}
 			
 			#container2 {
 				padding-top:20em;
@@ -314,7 +380,7 @@
 			    font-size: 1.5em;
 				border-width: 0;
 			    border-radius: 0em;
-			    font-family: sans-serif;
+			    font-family: Roboto, helvetica, arial, sans-serif;
 			}
 			
 			.input {
@@ -323,7 +389,7 @@
 				border-width: 0em;
 			    border-radius: 0em;
 				width: 460px;
-				font-family: sans-serif;
+				font-family: Roboto, helvetica, arial, sans-serif;
 			}
 	
 			.textarea {
@@ -332,7 +398,7 @@
 				border-width: 0em;
 			    border-radius: 0em;
 				width: 460px;
-				font-family: sans-serif;
+				font-family: Roboto, helvetica, arial, sans-serif;
 			}
 	
 			.button {
@@ -341,7 +407,7 @@
 				border-width: 0em;
 			    border-radius: 0em;
 				width: 460px;
-				font-family: sans-serif;
+				font-family: Roboto, helvetica, arial, sans-serif;
 				color: white;
 				background: #229936;
 			}

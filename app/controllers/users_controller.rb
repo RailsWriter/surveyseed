@@ -2,6 +2,8 @@ class UsersController < ApplicationController
 
 require 'httparty'
 
+require 'mixpanel-ruby'
+
   def new
     
     # Parse incoming click URL e.g. http://localhost:3000/users/new?NID=Aiuy56420xzLL7862rtwsxcAHxsdhjkl&CID=333333
@@ -10,7 +12,7 @@ require 'httparty'
 #    p 'netid=', @netid
 #    p 'clickid', @clickid
     
-    @user = User.new        
+    @user = User.new
   end
 
   def show
@@ -19,12 +21,12 @@ require 'httparty'
         redirect_to '/users/qterm'
       when '3'
         redirect_to '/users/24hrsquotaexceeded'
-      when '4'
-        # for debugging
-        remote_ip = request.remote_ip
-        hdr = env['HTTP_USER_AGENT']
-        sid = session.id
-        render json: 'ip address: '+remote_ip+' UserAgent: '+hdr+' session id: '+sid
+#      when '4'
+#        # for debugging
+#        remote_ip = request.remote_ip
+#        hdr = env['HTTP_USER_AGENT']
+#        sid = session.id
+#        render json: 'ip address: '+remote_ip+' UserAgent: '+hdr+' session id: '+sid
     end
   end
   
@@ -32,6 +34,9 @@ require 'httparty'
   end
 
   def eval_age
+
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+
     
   # calculate age for COPA eligibility
     @age = age( params[:user][:birth_month], params[:user][:birth_date], params[:user][:birth_year] )  
@@ -48,6 +53,8 @@ require 'httparty'
       session_id = session.id
       netid = params[:netid]
       clickid = params[:clickid]
+      
+      tracker.track(@ip_address, 'Age')
       
 # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
       if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
@@ -119,6 +126,8 @@ require 'httparty'
   end
   
   def sign_tos
+
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
       
     user=User.find_by session_id: session.id
     print 'TOS: User found in TOS:', user
@@ -126,6 +135,8 @@ require 'httparty'
     user.tos=true
 #    user.save
 #    redirect_to '/users/qq2'
+
+    tracker.track(user.ip_address, 'Age')
 
     # Update number of attempts in last 24 hrs record of the user
     if ( user.number_of_attempts_in_last_24hrs==nil ) then
