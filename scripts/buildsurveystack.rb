@@ -87,8 +87,10 @@ begin
         SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
         print 'PROCESSING i =', i
         puts
-        print 'SurveyName, Number, CountryLanguageID:', SurveyName, SurveyNumber, offerwallresponse["Surveys"][i]["CountryLanguageID"]
+        print 'SurveyName: ', SurveyName, ' SurveyNumber: ', SurveyNumber, ' CountryLanguageID: ', offerwallresponse["Surveys"][i]["CountryLanguageID"]
         puts
+        
+        
 
    
         # Assign an initial gross rank to the chosen survey
@@ -293,6 +295,7 @@ begin
     
             # Finally save the survey information in the database
             print '**************************************************** SAVING THE SURVEYLINKS IN DATABASE'
+            puts
             @survey.save
           else
             print 'This survey does not meet the CountryLanguageID, SurveyType, or Bid InterviewLength criteria.'
