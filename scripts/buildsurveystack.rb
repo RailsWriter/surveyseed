@@ -112,7 +112,7 @@ begin
         
         if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0 then 
           @survey.SurveyGrossRank = 1
-          print '*******************Effective GlobalEPC is > 0:', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+          print '*******************Effective GlobalEPC is > 0:', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
           puts
         else    
           
