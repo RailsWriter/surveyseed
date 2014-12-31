@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<div class="header">
+			<center>
+				<h1>Congratulations!</h1>
+			</center>
+		</header>
+		
+		<div id="content">
+			<center>
+				<p>Congratulations, you have qualified to take a survey on technology trends. To proceed press continue below.</p><br><br>	
+					<%= form_tag("p1action", method: "post") do %>
+					<div class="agree">
+					<%= submit_tag "Continue" %>
+				</div>
+				</center>
+				<% end %>
+			
+		</content>
+		<br>
+		<br>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('KetsciLogoSm.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>
