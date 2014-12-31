@@ -4,7 +4,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
 staging_base_url = "http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com"
 
@@ -80,51 +80,75 @@ begin
         @survey.OverallCompletes = offerwallresponse["Surveys"][i]["OverallCompletes"]
         @survey.SurveyMobileConversion = offerwallresponse["Surveys"][i]["SurveyMobileConversion"]
       
+
+        # Code for testing
+  
+        SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
+        SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
+        print 'PROCESSING i =', i
+        puts
+        print 'SurveyName, Number, CountryLanguageID:', SurveyName, SurveyNumber, offerwallresponse["Surveys"][i]["CountryLanguageID"]
+        puts
+
    
         # Assign an initial gross rank to the chosen survey
-        # 10 is worst for teh least conversion rate
-    
-        case offerwallresponse["Surveys"][i]["Conversion"]
-          when 0..4
-            puts "Lowest Rank 10"
-            @survey.SurveyGrossRank = 10
-          when 5..9
-            puts "Rank 9"
-            @survey.SurveyGrossRank = 9
-          when 10..14
-            puts "Rank 8"
-            @survey.SurveyGrossRank = 8
-          when 15..19
-            puts "Rank 7"
-            @survey.SurveyGrossRank = 7
-          when 20..24
-            puts "Rank 6"
-            @survey.SurveyGrossRank = 6
-          when 25..29
-            puts "Rank 5"
-            @survey.SurveyGrossRank = 5
-          when 30..34
-            puts "Rank 4"
-            @survey.SurveyGrossRank = 4
-          when 35..39
-            puts "Rank 3"
-            @survey.SurveyGrossRank = 3
-          when 40..44
-            puts "Rank 2"
-            @survey.SurveyGrossRank = 2
-          when 45..100
-            puts "Highest Rank 1"
-            @survey.SurveyGrossRank = 1
-          end
+        # 10 is worst for the lowest conversion rate
 
-          # Code for testing
-    
-	        SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
-	        SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
-          print 'PROCESSING i =', i
+        begin
+          sleep(2)
+          puts '**************************** CONNECTING FOR GLOBAL STATS on NEW survey: ', SurveyNumber
+          if flag == 'prod' then
+            SurveyStatistics = HTTParty.get(base_url+'/Supply/v1/SurveyStatistics/BySurveyNumber/'+SurveyNumber.to_s+'/5458/Global/Trailing?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
+          else
+            if flag == 'stag' then
+              SurveyStatistics = HTTParty.get(base_url+'/Supply/v1/SurveyStatistics/BySurveyNumber/'+SurveyNumber.to_s+'/5411/Global/Trailing?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+            else
+            end
+          end
+            rescue HTTParty::Error => e
+            puts 'HttParty::Error '+ e.message
+            retry
+        end while SurveyStatistics.code != 200
+        
+        if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0 then 
+          @survey.SurveyGrossRank = 1
+          print '*******************Effective GlobalEPC is > 0:', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
           puts
-	        print 'SurveyName, Number, CountryLanguageID:', SurveyName, SurveyNumber, offerwallresponse["Surveys"][i]["CountryLanguageID"]
-          puts
+        else    
+          
+          case offerwallresponse["Surveys"][i]["Conversion"]
+            when 0..4
+              puts "Lowest Rank 10"
+              @survey.SurveyGrossRank = 10
+            when 5..9
+              puts "Rank 9"
+              @survey.SurveyGrossRank = 9
+            when 10..14
+              puts "Rank 8"
+              @survey.SurveyGrossRank = 8
+            when 15..19
+              puts "Rank 7"
+              @survey.SurveyGrossRank = 7
+            when 20..24
+              puts "Rank 6"
+              @survey.SurveyGrossRank = 6
+            when 25..29
+              puts "Rank 5"
+              @survey.SurveyGrossRank = 5
+            when 30..34
+              puts "Rank 4"
+              @survey.SurveyGrossRank = 4
+            when 35..39
+              puts "Rank 3"
+              @survey.SurveyGrossRank = 3
+            when 40..44
+              puts "Rank 2"
+              @survey.SurveyGrossRank = 2
+            when 45..100
+              puts "Highest Rank 1"
+              @survey.SurveyGrossRank = 1
+            end
+          end
 
           # Get Survey Qualifications Information by SurveyNumber
           begin

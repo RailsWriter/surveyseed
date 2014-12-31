@@ -89,6 +89,7 @@ class RedirectsController < ApplicationController
           puts
           # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
           @survey.CompletedBy[params[:PID]] = [params[:tis], params[:tsfn], @user.clickid, @user.netid]
+          @survey.SurveyGrossRank = 1
           @survey.save
 
           # Postback the network about success with users clickid

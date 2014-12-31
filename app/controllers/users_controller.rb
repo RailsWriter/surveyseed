@@ -136,7 +136,7 @@ require 'mixpanel-ruby'
 #    user.save
 #    redirect_to '/users/qq2'
 
-    tracker.track(user.ip_address, 'Age')
+    tracker.track(user.ip_address, 'TOS')
 
     # Update number of attempts in last 24 hrs record of the user
     if ( user.number_of_attempts_in_last_24hrs==nil ) then
@@ -467,6 +467,7 @@ require 'mixpanel-ruby'
               redirect_to '/users/samplesurvey'
               return
             when 10..100000000
+              puts "*************************** More than 10 EXTTEST attempts"
               redirect_to '/users/testattemptsmaxd'
               return
           end
@@ -480,7 +481,7 @@ require 'mixpanel-ruby'
         end
       else
         # Bad netid, Network is not known
-        p 'TEST NETWORK: BAD NETWOK'
+        p '****************************** TEST NETWORK: BAD NETWOK'
         redirect_to '/users/nosuccess'
         return
       end
@@ -509,9 +510,9 @@ end
 
       Survey.where("CountryLanguageID = ?", @usercountry).order( "SurveyGrossRank" ).each do |survey|
 
-      if ((( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode ) && (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || ([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ] ) && ( survey.SurveyStillLive )) then
+      if ((( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode ) && (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || ([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ] ) && ( survey.SurveyStillLive ) && ((survey.CPI == nil) || (survey.CPI > 2.15))) then
         
-# Add condition that survey.CPI > user.payout
+# Add more generic condition that survey.CPI > user.payout by network
         
         #Prints for testing code
           
@@ -615,9 +616,12 @@ end
                 when 45
 #                  print 'ZIPS', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
 #                  puts
-                  if ([ user.ZIP ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.ZIP ] ) then
+ 
+                # Except for Canada, check for zip in other countries
+
+                  if ((user.country == 6) || ( [ user.ZIP ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.ZIP ] )) then
                     @ZIPquotaexists=true
-#                    puts 'ZIP question matches'
+#                   puts 'ZIP question matches'
                   else
                     @ZIPquotaexists=false
 #                    puts 'ZIP question does not match'
@@ -627,10 +631,10 @@ end
                 # End l
               end  
                   # Quota k exists if qualifications for user profile match
-                  if ((agequotaexists == false) || (genderquotaexists == false) || (@ZIPquotaexists == false)) then
+                  if ((survey.SurveyQuotas[k]["NumberOfRespondents"] <= 0 ) || (agequotaexists == false) || (genderquotaexists == false) || (@ZIPquotaexists == false)) then
             #        puts 'This overall quota did not match the user'
                   else
-             #       puts 'This overall quota matches what we know about the user'
+             #       puts 'This overall quota matches what we know about the user and there are completes needed for the quota'
 #                   @tmp << @surveynumber
                     user.SurveysWithMatchingQuota << @surveynumber
                     # End if
@@ -729,7 +733,28 @@ end
     user.save
 
     # Start the ride
-    @PID = user.user_id   
+    @PID = user.user_id
+    
+    if user.country=="9" then 
+      @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP
+    else
+      if user.country=="6" then
+        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP
+      else
+        if user.country=="5" then
+          @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP
+        else
+          if user.country=="7" then
+            @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_IN='+user.ZIP
+          else
+            puts "*************************************** UseRide: Find out why country code is not correctly set"
+            @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender
+            return
+          end
+        end
+      end
+    end
+    
 
 # Append user profile parameters like AGE, GENDER, etc, before sending user to Fulcrum (Does not help since are nagating between the surveys?)
 
@@ -746,12 +771,12 @@ end
 # redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=8c047e4e-bf66-4014-bbb6-8b3fd6ebc3ac&FIRID=MSDHONI7&SUMSTAT=1&PID=test'
 
 # ****** Uncomment for launch
-    print 'User will be sent to this survey:', user.SupplierLink[0]+@PID
-    puts
 #   remove this survey from the list in case the user returns back in the same session after OQ, Failure, to retry in same session
-    @EntryLink = user.SupplierLink[0]+@PID
+    @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
     user.SupplierLink = user.SupplierLink.drop(1)
     user.save
+    print 'User will be sent to this survey:', user.SupplierLink[0]+@PID+@AdditionalValues
+    puts
     redirect_to @EntryLink
 # *** until here
   end
