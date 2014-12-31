@@ -464,7 +464,7 @@ require 'mixpanel-ruby'
           case (net.testcompletes.length)
             when 0..9
               net.testcompletes[user.clickid] = [1]
-              redirect_to '/users/samplesurvey'
+              redirect_to '/users/techtrendssamplesurvey'
               return
             when 10..100000000
               puts "*************************** More than 10 EXTTEST attempts"
@@ -476,7 +476,11 @@ require 'mixpanel-ruby'
             redirect_to '/users/nosuccess'
             return
           else
-            # MUST BE AN ACTIVE NETWORK or INTTEST -> Continue
+            if (net.status == "INTTEST") then
+              @netstatus = "INTTEST"
+            else
+              # MUST BE AN ACTIVE NETWORK -> Continue
+            end
           end
         end
       else
@@ -733,7 +737,11 @@ end
     user.save
 
     # Start the ride
-    @PID = user.user_id
+    if (@netstatus == "INTTEST") then
+      @PID = 'test'
+    else
+      @PID = user.user_id
+    end
     
     if user.country=="9" then 
       @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP
@@ -772,11 +780,11 @@ end
 
 # ****** Uncomment for launch
 #   remove this survey from the list in case the user returns back in the same session after OQ, Failure, to retry in same session
+    print 'User will be sent to this survey:', user.SupplierLink[0]+@PID+@AdditionalValues
+    puts
     @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
     user.SupplierLink = user.SupplierLink.drop(1)
     user.save
-    print 'User will be sent to this survey:', user.SupplierLink[0]+@PID+@AdditionalValues
-    puts
     redirect_to @EntryLink
 # *** until here
   end
@@ -809,6 +817,10 @@ end
         puts 'HttParty::Error '+ e.message
         retry
     end while @FyberPostBack.code != 200
+    
+    user.SurveysCompleted["TESTSURVEY"] = [0, 'TESTSURVEY', user.clickid, user.netid]
+    user.save
+    
     redirect_to '/users/successful'
   end
     
