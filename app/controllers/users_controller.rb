@@ -780,7 +780,7 @@ end
 
 # ****** Uncomment for launch
 #   remove this survey from the list in case the user returns back in the same session after OQ, Failure, to retry in same session
-    print 'User will be sent to this survey:', user.SupplierLink[0]+@PID+@AdditionalValues
+    print 'User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues
     puts
     @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
     user.SupplierLink = user.SupplierLink.drop(1)

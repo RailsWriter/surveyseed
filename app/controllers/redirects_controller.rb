@@ -138,9 +138,40 @@ class RedirectsController < ApplicationController
           else
           end
 
-          # Give user chance to take another survey unless they do not qualify for any (other) survey          
-          if (@user.SupplierLink) then
-            redirect_to @user.SupplierLink[0]+params[:PID]
+          # Give user chance to take another survey unless they do not qualify for any (other) survey   
+                 
+#          if (@user.SupplierLink) then
+#            redirect_to @user.SupplierLink[0]+params[:PID]
+
+          if (@user.SupplierLink.empty? == false) then
+  
+            if @user.country=="9" then 
+              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP
+            else
+              if @user.country=="6" then
+                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP
+              else
+                if @user.country=="5" then
+                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP
+                else
+                  if @user.country=="7" then
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP
+                  else
+                    puts "*************************************** Redirects: Find out why country code is not correctly set"
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender
+                    return
+                  end
+                end
+              end
+            end
+  
+            print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
+            puts
+            @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
+            @user.SupplierLink = @user.SupplierLink.drop(1)
+            @user.save
+            redirect_to @NextEntryLink
+
           else
             redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
           end
@@ -164,8 +195,35 @@ class RedirectsController < ApplicationController
           @user.save
 
           # Give user chance to take another survey
+          
           if (@user.SupplierLink.empty? == false) then
-            redirect_to @user.SupplierLink[0]+params[:PID]
+            
+            if @user.country=="9" then 
+              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP
+            else
+              if @user.country=="6" then
+                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP
+              else
+                if @user.country=="5" then
+                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP
+                else
+                  if @user.country=="7" then
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP
+                  else
+                    puts "*************************************** Redirects: Find out why country code is not correctly set"
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender
+                    return
+                  end
+                end
+              end
+            end
+            
+            print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
+            puts
+            @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
+            @user.SupplierLink = @user.SupplierLink.drop(1)
+            @user.save
+            redirect_to @NextEntryLink
           else
             redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
           end
