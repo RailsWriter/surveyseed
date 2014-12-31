@@ -246,45 +246,52 @@ begin
             retry
         end while NewSurveyStatistics.code != 200
         
-        if NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0 then 
+
+        if NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
           @newsurvey.SurveyGrossRank = 1
-          print '*******************Effective GlobalEPC is > 0: ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+          print '******************* Effective GlobalEPC is > 0.2 = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
           puts
         else
+          if ((0 < NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
+            @newsurvey.SurveyGrossRank = 2
+            print '******************* Effective GlobalEPC is <= 0.2 = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+            puts
+          else
           
-          case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
-            when 0..4
-              puts "Lowest Rank 10"
-              @newsurvey.SurveyGrossRank = 10
-            when 5..9
-              puts "Rank 9"
-              @newsurvey.SurveyGrossRank = 9
-            when 10..14
-              puts "Rank 8"
-              @newsurvey.SurveyGrossRank = 8
-            when 15..19
-              puts "Rank 7"
-              @newsurvey.SurveyGrossRank = 7
-            when 20..24
-              puts "Rank 6"
-              @newsurvey.SurveyGrossRank = 6
-            when 25..29
-              puts "Rank 5"
-              @newsurvey.SurveyGrossRank = 5
-            when 30..34
-              puts "Rank 4"
-              @newsurvey.SurveyGrossRank = 4
-            when 35..39
-              puts "Rank 3"
-              @newsurvey.SurveyGrossRank = 3
-            when 40..44
-              puts "Rank 2"
-              @newsurvey.SurveyGrossRank = 2
-            when 45..100
-              puts "Highest Rank 1"
-              @newsurvey.SurveyGrossRank = 1
+            case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
+              when 0..4
+                puts "Lowest Rank 10"
+                @newsurvey.SurveyGrossRank = 10
+              when 5..9
+                puts "Rank 9"
+                @newsurvey.SurveyGrossRank = 9
+              when 10..14
+                puts "Rank 8"
+                @newsurvey.SurveyGrossRank = 8
+              when 15..19
+                puts "Rank 7"
+                @newsurvey.SurveyGrossRank = 7
+              when 20..24
+                puts "Rank 6"
+                @newsurvey.SurveyGrossRank = 6
+              when 25..29
+                puts "Rank 5"
+                @newsurvey.SurveyGrossRank = 5
+              when 30..34
+                puts "Rank 4"
+                @newsurvey.SurveyGrossRank = 4
+              when 35..39
+                puts "Rank 3"
+                @newsurvey.SurveyGrossRank = 3
+              when 40..44
+                puts "Rank 2"
+                @newsurvey.SurveyGrossRank = 2
+              when 45..100
+                puts "Highest Rank 1"
+                @newsurvey.SurveyGrossRank = 1
             end
           end
+        end
 
 
           # Before getting qualifications, quotas, and supplier links first check if there is any remaining total allocation for this NEW survey
@@ -407,11 +414,11 @@ begin
     
             begin
 #            sleep(2)
-              print 'POSTING TO GET SupplierLinks for the new survey = ', SurveyNumber
+              print 'PUTTING and POSTING TO getting SupplierLinks for the new survey = ', SurveyNumber
               puts
        
               if (flag == 'stag') then
-                NewSupplierLink = HTTParty.post(base_url+'/Supply/v1/SupplierLinks/Create/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E',
+                NewSupplierLink = HTTParty.put(base_url+'/Supply/v1/SupplierLinks/Update/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E',
                 :body => { :SupplierLinkTypeCode => "OWS", 
                   :TrackingTypeCode => "NONE", 
                   :DefaultLink => "https://www.ketsci.com/redirects/status?status=1&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]",
@@ -442,12 +449,12 @@ begin
               puts
               # Do not save this survey
             else  
-              print 'NewSupplierLink["SupplierLink"]: ', NewSupplierLink["SupplierLink"]
+              print '******************* SUPPLIERLINKS ARE AVAILABLE: ', NewSupplierLink["SupplierLink"]
               puts
 #             puts NewSupplierLink["SupplierLink"]["LiveLink"]
-              @newsurvey.SupplierLink=SupplierLink["SupplierLink"]
-              @newsurvey.CPI=SupplierLink["SupplierLink"]["CPI"]   
-              print '**************************************************** SAVING A NEW SURVEY'
+              @newsurvey.SupplierLink = NewSupplierLink["SupplierLink"]
+              @newsurvey.CPI = NewSupplierLink["SupplierLink"]["CPI"]   
+              print '**************************************************** SAVING THE NEW SURVEY IN DATABASE'
               puts
               # Finally save the new survey information in the database
               @newsurvey.save

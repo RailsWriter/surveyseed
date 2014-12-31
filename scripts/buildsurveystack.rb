@@ -110,45 +110,51 @@ begin
             retry
         end while SurveyStatistics.code != 200
         
-        if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0 then 
+        if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
           @survey.SurveyGrossRank = 1
-          print '*******************Effective GlobalEPC is > 0:', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+          print '*******************Effective GlobalEPC is > 0.2 = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
           puts
-        else    
+        else
+          if ((0 < SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
+            @survey.SurveyGrossRank = 2
+            print '*******************Effective GlobalEPC is <= 0.2 = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+            puts
+          else    
           
-          case offerwallresponse["Surveys"][i]["Conversion"]
-            when 0..4
-              puts "Lowest Rank 10"
-              @survey.SurveyGrossRank = 10
-            when 5..9
-              puts "Rank 9"
-              @survey.SurveyGrossRank = 9
-            when 10..14
-              puts "Rank 8"
-              @survey.SurveyGrossRank = 8
-            when 15..19
-              puts "Rank 7"
-              @survey.SurveyGrossRank = 7
-            when 20..24
-              puts "Rank 6"
-              @survey.SurveyGrossRank = 6
-            when 25..29
-              puts "Rank 5"
-              @survey.SurveyGrossRank = 5
-            when 30..34
-              puts "Rank 4"
-              @survey.SurveyGrossRank = 4
-            when 35..39
-              puts "Rank 3"
-              @survey.SurveyGrossRank = 3
-            when 40..44
-              puts "Rank 2"
-              @survey.SurveyGrossRank = 2
-            when 45..100
-              puts "Highest Rank 1"
-              @survey.SurveyGrossRank = 1
+            case offerwallresponse["Surveys"][i]["Conversion"]
+              when 0..4
+                puts "Lowest Rank 10"
+                @survey.SurveyGrossRank = 10
+              when 5..9
+                puts "Rank 9"
+                @survey.SurveyGrossRank = 9
+              when 10..14
+                puts "Rank 8"
+                @survey.SurveyGrossRank = 8
+              when 15..19
+                puts "Rank 7"
+                @survey.SurveyGrossRank = 7
+              when 20..24
+                puts "Rank 6"
+                @survey.SurveyGrossRank = 6
+              when 25..29
+                puts "Rank 5"
+                @survey.SurveyGrossRank = 5
+              when 30..34
+                puts "Rank 4"
+                @survey.SurveyGrossRank = 4
+              when 35..39
+                puts "Rank 3"
+                @survey.SurveyGrossRank = 3
+              when 40..44
+                puts "Rank 2"
+                @survey.SurveyGrossRank = 2
+              when 45..100
+                puts "Highest Rank 1"
+                @survey.SurveyGrossRank = 1
             end
           end
+        end
 
           # Get Survey Qualifications Information by SurveyNumber
           begin
@@ -279,12 +285,14 @@ begin
             retry
             end while SupplierLink.code != 200
 
-            print 'SupplierLink["SupplierLink"]: ', SupplierLink["SupplierLink"]
+            print '******************* SUPPLIERLINKS ARE AVAILABLE: ', SupplierLink["SupplierLink"]
             puts
 #            puts SupplierLink["SupplierLink"]["LiveLink"]
             @survey.SupplierLink=SupplierLink["SupplierLink"]   
+            @survey.CPI = SupplierLink["SupplierLink"]["CPI"]  
     
             # Finally save the survey information in the database
+            print '**************************************************** SAVING THE SURVEYLINKS IN DATABASE'
             @survey.save
           else
             print 'This survey does not meet the CountryLanguageID, SurveyType, or Bid InterviewLength criteria.'
