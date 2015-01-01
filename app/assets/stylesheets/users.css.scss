@@ -11,7 +11,7 @@
     padding: 5px;
 	color: black;
 	font-size: 100%; /* Base font size: 14px */
-	font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	font-family: Roboto, helvetica, arial, sans-serif;
 	background-color:white;
 	}
 	
@@ -174,5 +174,6 @@ fieldset input {
    ====== Media Queries ====== 
    =========================== */
 
-@media only screen and (min-width : 50px) and (max-width : 100px)
+@media only screen and (min-width: 50px) and (max-width: 100px)
 {}
+
