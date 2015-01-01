@@ -16,22 +16,21 @@
 		
 		<div class="content">
 			<center>
-				<p>What is your 5-digit zipcode?:</p>
+				<p>What is your 5-digit zipcode?</p>
 			</center>
 				<%= form_tag("zip_US", method: "post") do %>
 				<fieldset>
-				<div class="myzipinput">
-					<%= text_field_tag 'zip', nil, maxlength: 5 %>
-					<%= label_tag(:Zipcode, '') %><br><br>
-				</div>
-				<div class="myinput">
-				<center>				
-					<%= submit_tag "Next" %>
-				</center>
-				</div>
+					<div class="myzipinput">
+						<%= text_field_tag 'zip', nil, maxlength: 5 %>
+						<%= label_tag(:Zipcode, '') %><br><br>
+					</div>
+					<div class="myinput">
+						<center>				
+							<%= submit_tag "Next" %>
+						</center>
+					</div>
 				</fieldset>
 				<% end %>
-			
 		</content>
 				
 		<footer class="footer">

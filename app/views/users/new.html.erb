@@ -24,32 +24,34 @@
 		<br>
 		<div class="content">
 			<center>
-				<h3>What is the date of your birth?</h3>
-					<h4>MM-DD-YYYY</h4><br><br>
-			
-				<%= form_for (@user), url: {action: "eval_age"}, :html => { :class => "myform"} do |f| %>
-					<%= f.select :birth_month, 1 .. 12 %>
-					<%= f.select :birth_date, 1 .. 31 %>
-					<%= f.select :birth_year, (Time.zone.now.year).downto(Time.zone.now.year-100).to_a %>
+				<p>What is your age?</p>
+			</center>
+				<%= form_tag("/users/eval_age", method: "post") do %>
+					<fieldset>
+						<div class="myyrsinput">
+							<%= text_field_tag 'age', nil, maxlength: 2 %>
+							<%= label_tag(:age, 'yrs.') %><br><br>
+						</div>
 					
-					<%= hidden_field_tag :clickid, params[:CID] %>
-					<%= hidden_field_tag :netid, params[:NID] %>
-					<%= hidden_field_tag :session_id, session.id %>
-					<%= hidden_field_tag :ip_address, request.remote_ip %>
+						<%= hidden_field_tag :clickid, params[:CID] %>
+						<%= hidden_field_tag :netid, params[:NID] %>
+						<%= hidden_field_tag :session_id, session.id %>
+						<%= hidden_field_tag :ip_address, request.remote_ip %>
 					
-					
-					<%= f.submit "Next" %>
-				</center>
+						<div class="myinput">
+							<center>				
+								<%= submit_tag "Next" %>
+							</center>
+						</div>
+					</fieldset>
 				<% end %>
-			
-		</content>
+		</content>		
 		<br>
 		<footer class="footer">
 			<center>
 				<%= image_tag image_path('KetsciLogoSm.png') %>
 			</center>
 		</footer>
-
 	</body>	
-
+	
 </html>

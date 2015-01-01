@@ -80,8 +80,8 @@ a:hover, a:active {
 }
 
 #p1 {
-	font-weight: 350;
-	font-size: 30px;
+	font-weight: 300;
+	font-size: 25px;
 	color: red;
 }
 
@@ -109,6 +109,7 @@ form.myform input {
 }
 
 #content .agree input {
+	/* Styling for the I Agree button on TOS form */
   width: 15%;
   height: 50px;
   font-size:1.25em;
@@ -117,9 +118,20 @@ form.myform input {
 }
 
 .mytags input {
+	/* Styling for the button choices selection field on many forms including gender, colors, etc. */
 	width: 4%;
 	height: 30px;
 	display:inline;
+	margin-left: 45%;
+	color:black;
+	background-color:white;
+}
+
+.myyrsinput input {
+	/* Styling for the age entry field on new user landing page */
+	width: 10%;
+	height: 30px;
+	text-align: center;
 	margin-left: 45%;
 	color:black;
 	background-color:white;
@@ -148,6 +160,7 @@ form.myform input {
 }
 
 fieldset input {
+	/* Next or Submit button styling for all user forms */
   width: 10%;
   height: 30px;
   font-size:0.8em;
@@ -174,6 +187,58 @@ fieldset input {
    ====== Media Queries ====== 
    =========================== */
 
-@media only screen and (min-width: 50px) and (max-width: 100px)
-{}
+@media only screen and (min-width: 50px) and (max-width: 600px)
+{
+	p {font-size: 1.2em}	
+	
+	.myyrsinput input {
+		/* Styling for the age entry field on new user landing page on mobile */
+		width: 100px;
+		height: 40px;
+		text-align: center;
+		margin-left: 35%;
+		color:black;
+		background-color:white;
+	}
+	
+	#content .agree input {
+		/* Styling for the I Agree button on TOS form for mobile devices */
+	  width: 100px;
+	  height: 40px;
+	  font-size:1.2em;
+	  color:black;
+	  background-color:white;
+	}
+	
+	
+	fieldset input {
+		/* Next or Submit button styling for all mobile user forms */
+	  width: 100px;
+	  height: 40px;
+	  font-size:1.0em;
+	  color:black;
+	  background-color:white;
+	}
+	
+	.mytags input {
+		/* Styling for the button choices selection field on mobile */
+		width: 4%;
+		height: 30px;
+		display:inline;
+		margin-left: 38%;
+		color:black;
+		background-color:white;
+	}
+	
+	.myzipinput input {
+		/* Styling for the ZIP entry field on mobile */
+		width: 100px;
+		height: 40px;
+		text-align: center;
+		margin-left: 35%;
+		color:black;
+		background-color:white;
+	}
+	
+}
 

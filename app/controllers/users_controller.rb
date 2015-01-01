@@ -12,22 +12,22 @@ require 'mixpanel-ruby'
 #    p 'netid=', @netid
 #    p 'clickid', @clickid
     
-    @user = User.new
+#    @user = User.new
   end
 
   def show
-    case params[:status]
-      when '2'
-        redirect_to '/users/qterm'
-      when '3'
-        redirect_to '/users/24hrsquotaexceeded'
+#    case params[:status]
+#      when '2'
+#        redirect_to '/users/qterm'
+#      when '3'
+#        redirect_to '/users/24hrsquotaexceeded'
 #      when '4'
 #        # for debugging
 #        remote_ip = request.remote_ip
 #        hdr = env['HTTP_USER_AGENT']
 #        sid = session.id
 #        render json: 'ip address: '+remote_ip+' UserAgent: '+hdr+' session id: '+sid
-    end
+#    end
   end
   
   def create
@@ -39,11 +39,14 @@ require 'mixpanel-ruby'
 
     
   # calculate age for COPA eligibility
-    @age = age( params[:user][:birth_month], params[:user][:birth_date], params[:user][:birth_year] )  
+
+@age=params[:age]
+
+#    @age = age( params[:user][:birth_month], params[:user][:birth_date], params[:user][:birth_year] )  
 #    print 'Age works out to be', @age
 #    puts
-    if @age<13 then
-      p 'Entered age is < 13'
+    if @age.to_i<13 then
+      p '********************* Entered age is < 13'
       # should be replaced by call to userride
 #      redirect_to 'http://www.ketsci.com/redirects/status?status=3'
       redirect_to '/users/nosuccess'
@@ -59,7 +62,7 @@ require 'mixpanel-ruby'
 # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
       if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
         first_time_user=false
-#        p 'EVAL_AGE: USER EXISTS'
+#        p '********* EVAL_AGE: USER EXISTS'
       else
         first_time_user=true
 #        p 'EVAL_AGE: USER DOES NOT EXIST'
@@ -67,9 +70,10 @@ require 'mixpanel-ruby'
 
       if (first_time_user) then
         # Create a new-user record
-        p 'EVAL_AGE: Creating new record for FIRST TIME USER'
-        @user = User.new(user_params)
-        @user.age = @age.to_s
+        p '****************** EVAL_AGE: Creating new record for FIRST TIME USER'
+#        @user = User.new(user_params)
+        @user = User.new
+        @user.age = @age
         @user.netid = netid
         @user.clickid = clickid
 #       @user.payout = should be extracted from advertiser id in call
@@ -102,11 +106,11 @@ require 'mixpanel-ruby'
           userride (session_id)
 #          redirect_to 'http://www.ketsci.com/redirects/qterm'
         else
-          p 'EVAL_AGE: Modifying existing record of REPEAT USER'
-          user.birth_date=params[:user][:birth_date]
-          user.birth_month=params[:user][:birth_month]
-          user.birth_year=params[:user][:birth_year]    
-          user.age = @age.to_s
+          p '******************* EVAL_AGE: Modifying existing record of a REPEAT USER'
+#          user.birth_date=params[:user][:birth_date]
+#          user.birth_month=params[:user][:birth_month]
+#          user.birth_year=params[:user][:birth_year]    
+          user.age = @age
           user.netid = netid
           user.clickid = clickid
           # These get a blank entry on the list due to save action
@@ -130,8 +134,8 @@ require 'mixpanel-ruby'
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
       
     user=User.find_by session_id: session.id
-    print 'TOS: User found in TOS:', user
-    puts
+#    print 'TOS: User found in TOS:', user
+#    puts
     user.tos=true
 #    user.save
 #    redirect_to '/users/qq2'
@@ -175,9 +179,15 @@ require 'mixpanel-ruby'
   def gender
     
     user=User.find_by session_id: session.id
-    user.gender=params[:gender]
-    user.save
-    redirect_to '/users/tq1'
+
+    if params[:gender] != nil
+      user.gender=params[:gender]
+      user.save
+      redirect_to '/users/tq1'
+    else
+      redirect_to '/users/qq2'
+    end
+    
   end
   
   def trap_question_1
@@ -789,12 +799,12 @@ end
 # *** until here
   end
   
-  def age(dob_month, dob_date, dob_year)
-    dob = (dob_date +'-'+ dob_month +'-'+ dob_year).to_date
+#  def age(dob_month, dob_date, dob_year)
+#    dob = (dob_date +'-'+ dob_month +'-'+ dob_year).to_date
 #    p 'dob', dob
-    now = Time.now.utc.to_date
-    now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
-  end
+#    now = Time.now.utc.to_date
+#    now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+#  end
 
   # Sample survey pages control logic (p0 to success)
   
@@ -824,9 +834,10 @@ end
     redirect_to '/users/successful'
   end
     
-  private
-    def user_params
-      params.require(:user).permit(:birth_date, :birth_month, :birth_year)
-    end
+#  private
+#    def user_params
+#      params.require(:user).permit(:age)
+#      params.require(:user).permit(:age, :birth_date, :birth_month, :birth_year)
+#    end
 
 end
