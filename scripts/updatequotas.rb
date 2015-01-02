@@ -35,7 +35,7 @@ begin
   puts
   
   begin
-    sleep(3)
+    sleep(1)
     puts 'CONNECTING FOR index of ALLOCATED SURVEYS' 
  
     if flag == 'prod' then
@@ -70,7 +70,7 @@ begin
         # Check if this exisitng survey has any remaining total allocation on the offerwall.
 
         begin
-          sleep(2)
+          sleep(1)
           puts '**************************** CONNECTING FOR SUPPLIER ALLOCATIONS INFORMATION of an EXISTING survey: ', @surveynumber
           if flag == 'prod' then
             SupplierAllocations = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/BySurveyNumber/'+@surveynumber.to_s+'?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
@@ -92,7 +92,7 @@ begin
 
 
       begin
-        sleep(2)
+        sleep(1)
         puts 'CONNECTING FOR QUALIFICATIONS INFORMATION on existing survey: ', @surveynumber
         if flag == 'prod' then
           SurveyQualifications = HTTParty.get(base_url+'/Supply/v1/SurveyQualifications/BySurveyNumberForOfferwall/'+@surveynumber.to_s+'?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
@@ -150,7 +150,7 @@ begin
  
       # Update Survey Quotas Information by SurveyNumber to current information
       begin
-        sleep(2)
+        sleep(1)
         puts 'CONNECTING FOR QUOTA INFORMATION on existing survey: ', @surveynumber
           
         if flag == 'prod' then
@@ -233,7 +233,7 @@ begin
         # 10 is worst for the lowest conversion rate
         
         begin
-          sleep(2)
+          sleep(1)
           puts '**************************** CONNECTING FOR GLOBAL STATS on NEW survey: ', SurveyNumber
           if flag == 'prod' then
             NewSurveyStatistics = HTTParty.get(base_url+'/Supply/v1/SurveyStatistics/BySurveyNumber/'+SurveyNumber.to_s+'/5458/Global/Trailing?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
@@ -299,7 +299,7 @@ begin
           # Before getting qualifications, quotas, and supplier links first check if there is any remaining total allocation for this NEW survey
         
           begin
-            sleep(2)
+            sleep(1)
             puts '**************************** CONNECTING FOR SUPPLIER ALLOCATIONS INFORMATION on NEW survey: ', SurveyNumber
             if flag == 'prod' then
               NewSupplierAllocations = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/BySurveyNumber/'+SurveyNumber.to_s+'?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
@@ -385,7 +385,7 @@ begin
     
           # Get new Survey Quotas Information by SurveyNumber
           begin
-            sleep(2)
+            sleep(1)
             puts 'CONNECTING FOR QUOTA INFORMATION for new survey: ', SurveyNumber
           
             if flag == 'prod' then
@@ -415,8 +415,8 @@ begin
             # Get Supplierlinks for the survey
     
             begin
-#            sleep(2)
-              print 'PUTTING and POSTING TO getting SupplierLinks for the new survey = ', SurveyNumber
+#            sleep(1)
+              print 'PUTTING tO get SupplierLinks for the new survey = ', SurveyNumber
               puts
        
               if (flag == 'stag') then
@@ -540,14 +540,14 @@ begin
     timenow = Time.now
     print 'Time at end', timenow
     puts
-    if (timenow - starttime) > 720 then 
+    if (timenow - starttime) > 1200 then 
       print 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to repeat immediately'
       puts
       timetorepeat = true
     else
       print 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to sleep for 12 minutes'
       puts
-      sleep (12.minutes)
+      sleep (20.minutes)
  #     sleep (1800 - (timenow - starttime)).round
       timetorepeat = true
     end

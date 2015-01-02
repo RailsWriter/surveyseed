@@ -40,7 +40,9 @@ require 'mixpanel-ruby'
       tracker.track(ip_address, 'Age')
       
       # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
-      if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
+      # if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
+ 
+      if (User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first!=nil)
         first_time_user=false
         # p '********* EVAL_AGE: USER EXISTS'
       else
@@ -89,14 +91,10 @@ require 'mixpanel-ruby'
         # Why do I have to stop at first. Optimizes. But there should be not more than 1 entry.
 
         if user.black_listed==true then
+          p '******************* EVAL_AGE: REPEAT USER is Black listed'
           userride (session_id)
-#          redirect_to 'http://www.ketsci.com/redirects/qterm'
         else
           p '******************* EVAL_AGE: Modifying existing record of a REPEAT USER'
-
-#          user.birth_date=params[:user][:birth_date]
-#          user.birth_month=params[:user][:birth_month]
-#          user.birth_year=params[:user][:birth_year]    
 
           user.age = @age
           user.netid = netid
@@ -230,7 +228,7 @@ require 'mixpanel-ruby'
           user.watch_listed=true
           user.save
           # Flash user to pay attention
-          flash[:alert] = "Please pay more attention to your responses!"
+          flash[:alert] = "Please pay attention to your responses!"
           redirect_to '/users/tq2b'
         end
       else
@@ -687,8 +685,10 @@ require 'mixpanel-ruby'
 
     # If user is blacklisted, then qterm
     if user.black_listed == true then
-    redirect_to '/users/nosuccess'
-    return
+      print '******************** UserID is BLACKLISTED: ', user.user_id
+      puts
+      redirect_to '/users/nosuccess'
+      return
     else
     end
     

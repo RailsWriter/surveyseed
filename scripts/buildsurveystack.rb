@@ -34,7 +34,7 @@ begin
   puts
   
   begin
-    sleep(2)
+    sleep(1)
     puts 'CONNECTING FOR OFFERWALL SURVEYS LIST'
     
     if flag == 'prod' then
@@ -99,7 +99,7 @@ begin
         # 10 is worst for the lowest conversion rate
 
         begin
-          sleep(2)
+          sleep(1)
           puts '**************************** CONNECTING FOR GLOBAL STATS on NEW survey: ', SurveyNumber
           if flag == 'prod' then
             SurveyStatistics = HTTParty.get(base_url+'/Supply/v1/SurveyStatistics/BySurveyNumber/'+SurveyNumber.to_s+'/5458/Global/Trailing?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
@@ -162,7 +162,7 @@ begin
 
           # Get Survey Qualifications Information by SurveyNumber
           begin
-            sleep(2)
+            sleep(1)
             puts 'CONNECTING FOR QUALIFICATIONS INFORMATION'
  
           if flag == 'prod' then
@@ -227,7 +227,7 @@ begin
     
           # Get Survey Quotas Information by SurveyNumber
           begin
-            sleep(2)
+            sleep(1)
             puts 'CONNECTING FOR QUOTA INFORMATION'
           
             if flag == 'prod' then
@@ -258,7 +258,7 @@ begin
             # Get Supplierlinks for the survey
     
             begin
-              sleep(2)
+              sleep(1)
               print 'POSTING WITH REDIRECTS AND TO GET LIVELINK AS SURVEYLINK for SurveyNumber = ', SurveyNumber
               puts
        
@@ -328,14 +328,14 @@ begin
   
       print 'BuildSurveyStack: Time at end', timenow
       puts
-      if (timenow - starttime) > 720 then 
+      if (timenow - starttime) > 1200 then 
         print 'time elapsed since start =', (timenow - starttime), '- going to repeat immediately'
         puts
         timetorepeat = true
       else
-        print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 12 minutes'
+        print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 20 minutes'
         puts
-        sleep (12.minutes)
+        sleep (20.minutes)
 #    sleep (1200 - (timenow - starttime))
         timetorepeat = true
       end
