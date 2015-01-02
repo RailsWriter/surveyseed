@@ -3,6 +3,8 @@ require 'httparty'
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
 flag = 'prod'
+
+
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
 staging_base_url = "http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com"
 

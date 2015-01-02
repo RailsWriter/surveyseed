@@ -25,12 +25,17 @@ class RedirectsController < ApplicationController
     
     if (@validateSHA1hash != @Signature) then
       # invalid response, discard
-      print 'Validate 4 =', @validateSHA1hash
+      print '************ Redirects: Signature NOT verified, Validate 4 =', @validateSHA1hash
       puts
-      redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
-      return
+      if params[:PID] == 'test' then
+        print '***************** PID = TEST found. Staging server does not generate Signatures '
+        puts
+      else
+        redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
+        return
+      end
     else
-      p 'Redirects: Signature verified'
+      p '****************** Redirects: Signature verified'
     end
     
     case params[:status] 
@@ -121,7 +126,7 @@ class RedirectsController < ApplicationController
 
 # turn to 'test' be true on launch        
         if params[:PID] == 'test' then
-          redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
+          redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
         else
           # save attempt info in User and Survey tables
           @user = User.find_by user_id: params[:PID]          
@@ -173,7 +178,7 @@ class RedirectsController < ApplicationController
             redirect_to @NextEntryLink
 
           else
-            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
+            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
           end
         end
         

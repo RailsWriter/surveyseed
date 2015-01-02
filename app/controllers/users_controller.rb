@@ -7,27 +7,10 @@ require 'mixpanel-ruby'
   def new
     
     # Parse incoming click URL e.g. http://localhost:3000/users/new?NID=Aiuy56420xzLL7862rtwsxcAHxsdhjkl&CID=333333
-#   @netid = params[:NID]
-#    @clickid = params[:CID]
-#    p 'netid=', @netid
-#    p 'clickid', @clickid
-    
-#    @user = User.new
+    #    @user = User.new
   end
 
   def show
-#    case params[:status]
-#      when '2'
-#        redirect_to '/users/qterm'
-#      when '3'
-#        redirect_to '/users/24hrsquotaexceeded'
-#      when '4'
-#        # for debugging
-#        remote_ip = request.remote_ip
-#        hdr = env['HTTP_USER_AGENT']
-#        sid = session.id
-#        render json: 'ip address: '+remote_ip+' UserAgent: '+hdr+' session id: '+sid
-#    end
   end
   
   def create
@@ -37,18 +20,15 @@ require 'mixpanel-ruby'
 
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
-    
-  # calculate age for COPA eligibility
-
-@age=params[:age]
+    # Check for COPA eligibility
+    @age=params[:age]
 
 #    @age = age( params[:user][:birth_month], params[:user][:birth_date], params[:user][:birth_year] )  
 #    print 'Age works out to be', @age
 #    puts
+
     if @age.to_i<13 then
       p '********************* Entered age is < 13'
-      # should be replaced by call to userride
-#      redirect_to 'http://www.ketsci.com/redirects/status?status=3'
       redirect_to '/users/nosuccess'
     else  
       # Enter the user with the following credentials in our system or find user's record  
@@ -57,30 +37,35 @@ require 'mixpanel-ruby'
       netid = params[:netid]
       clickid = params[:clickid]
       
-      tracker.track(@ip_address, 'Age')
+      tracker.track(ip_address, 'Age')
       
-# Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
+      # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
       if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
         first_time_user=false
-#        p '********* EVAL_AGE: USER EXISTS'
+        # p '********* EVAL_AGE: USER EXISTS'
       else
         first_time_user=true
-#        p 'EVAL_AGE: USER DOES NOT EXIST'
+        # p 'EVAL_AGE: USER DOES NOT EXIST'
       end
 
       if (first_time_user) then
         # Create a new-user record
         p '****************** EVAL_AGE: Creating new record for FIRST TIME USER'
-#        @user = User.new(user_params)
+        #  @user = User.new(user_params)
         @user = User.new
         @user.age = @age
         @user.netid = netid
         @user.clickid = clickid
 #       @user.payout = should be extracted from advertiser id in call
         # Initialize user ride related lists. These protect from getting old lists, if the user restarts taking surveys in the same session after a long break. However, these get a blank entry on the list due to save action
-        @user.QualifiedSurveys = []
-        @user.SurveysWithMatchingQuota = []
-        @user.SupplierLink = []
+        
+#        @user.QualifiedSurveys = []
+#        @user.SurveysWithMatchingQuota = []
+#        @user.SupplierLink = []
+        @user.QualifiedSurveys = Array.new
+        @user.SurveysWithMatchingQuota = Array.new
+        @user.SupplierLink = Array.new
+        
         @user.user_agent = env['HTTP_USER_AGENT']
         @user.session_id = session_id
         @user.user_id = SecureRandom.urlsafe_base64
@@ -98,23 +83,26 @@ require 'mixpanel-ruby'
     
       if (first_time_user==false) then
         user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
-        # user = User.where( "ip_address = ip_address AND session_id = session.id" )
-
-        #NTS: Why do I have to stop at first. Optimizes. But there should be not more than 1 entry.
         p user
+
+        # user = User.where( "ip_address = ip_address AND session_id = session.id" )
+        # Why do I have to stop at first. Optimizes. But there should be not more than 1 entry.
+
         if user.black_listed==true then
           userride (session_id)
 #          redirect_to 'http://www.ketsci.com/redirects/qterm'
         else
           p '******************* EVAL_AGE: Modifying existing record of a REPEAT USER'
+
 #          user.birth_date=params[:user][:birth_date]
 #          user.birth_month=params[:user][:birth_month]
 #          user.birth_year=params[:user][:birth_year]    
+
           user.age = @age
           user.netid = netid
           user.clickid = clickid
-          # These get a blank entry on the list due to save action
-          user.QualifiedSurveys = []     
+          # These get a blank entry on the list due to save action?
+          user.QualifiedSurveys = []
           user.SurveysWithMatchingQuota = []
           user.SupplierLink = []
           user.session_id = session.id
@@ -134,9 +122,10 @@ require 'mixpanel-ruby'
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
       
     user=User.find_by session_id: session.id
+    user.tos=true
+
 #    print 'TOS: User found in TOS:', user
 #    puts
-    user.tos=true
 #    user.save
 #    redirect_to '/users/qq2'
 
@@ -247,7 +236,7 @@ require 'mixpanel-ruby'
       else
         user.save
         # Flash user to pay attention
-        flash[:alert] = "Please pay more attention to your responses!"
+        flash[:alert] = "Please pay attention to your responses!"
         redirect_to '/users/tq2b'
       end
     else
@@ -463,13 +452,11 @@ require 'mixpanel-ruby'
       # Lets find surveys that user is qualified for.
       
       # If this is a TEST e.g. with a network provider then route user to run the standard test survey.
+
       @netid = user.netid
-#      print '@netid', @netid
-#      puts
       if Network.where(netid: @netid).exists? then
         net = Network.find_by netid: @netid
-#        print 'net =', net
-#        puts
+        user.currentpayout = net.payout
         if (net.status == "EXTTEST") then
           case (net.testcompletes.length)
             when 0..9
@@ -483,6 +470,7 @@ require 'mixpanel-ruby'
           end
         else
           if (net.status == "INACTIVE") then
+            p '****************************** ACCESS FROM AN INACTIVE NETWOK DENIED'
             redirect_to '/users/nosuccess'
             return
           else
@@ -495,7 +483,7 @@ require 'mixpanel-ruby'
         end
       else
         # Bad netid, Network is not known
-        p '****************************** TEST NETWORK: BAD NETWOK'
+        p '****************************** ACCESS FROM AN UNRECOGNIZED NETWOK DENIED'
         redirect_to '/users/nosuccess'
         return
       end
@@ -503,30 +491,24 @@ require 'mixpanel-ruby'
     puts "STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
     # change countrylanguageid setting to match user countryID only
     @usercountry = (user.country).to_i
-#    print '*************** RANKSURVEYS FOR USER: User country is =', @usercountry
-#    puts
 
-#    Survey.where("CountryLanguageID = 5 OR CountryLanguageID = 9 OR CountryLanguageID = 8").order( "SurveyGrossRank" ).each do |survey|
 
-if (Survey.where("CountryLanguageID = ?", @usercountry)).exists? then
-  # do nothing
-#  print 'Surveys with the users LanguageID are available', user.user_id
-#  puts
-else
-  p '******************** USERRIDE: No Surveys with country language found in users_controller'
-  redirect_to '/users/nosuccess'
-  return
-#  @NoSurveysForThisCountryLanguage = true
-#  user.QualifiedSurveys == nil
-#  userride(session_id)
-end
+    if (Survey.where("CountryLanguageID = ?", @usercountry)).exists? then
+      # do nothing
+      #  print 'Surveys with the users LanguageID are available', user.user_id
+      #  puts
+    else
+      p '******************** USERRIDE: No Surveys with country language found in users_controller'
+      redirect_to '/users/nosuccess'
+      return
+    end
 
 
       Survey.where("CountryLanguageID = ?", @usercountry).order( "SurveyGrossRank" ).each do |survey|
 
       if ((( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode ) && (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || ([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ] ) && ( survey.SurveyStillLive ) && ((survey.CPI == nil) || (survey.CPI > 2.15))) then
         
-# Add more generic condition that survey.CPI > user.payout by network
+# Add more generic condition that survey.CPI > user.currentpayout
         
         #Prints for testing code
           
@@ -559,13 +541,11 @@ end
       puts 'User did not qualify for a survey so taking user to show FailureLink page'
       userride (session_id)
     else
-#      print 'IN TOTAL USER HAS QUALIFIED FOR the following surveys= ', user.user_id, user.QualifiedSurveys
-#      puts
       
       # delete the empty item from initialization
   #    user.QualifiedSurveys.reject! { |c| c.empty? }
       
-      print 'IN TOTAL USER HAS QUALIFIED FOR the following surveys (without Blanks)= ', user.user_id, user.QualifiedSurveys
+      print '********** This USER_ID has QUALIFIED for the following surveys: ', user.user_id, user.QualifiedSurveys
       puts
 
       # Lets save the surveys user qualifies for in this user's record of database in rank order
@@ -707,7 +687,6 @@ end
 
     # If user is blacklisted, then qterm
     if user.black_listed == true then
-#      redirect_to 'https://www.ketsci.com/redirects/status?status=5'+'&PID='+@PID
     redirect_to '/users/nosuccess'
     return
     else
@@ -716,7 +695,6 @@ end
     # The user does not qualify for any survey in the inventory, from the begining. (Failure/Terminate)
     if ((user.QualifiedSurveys.empty?) || (user.SurveysWithMatchingQuota.empty?)) then
       p '******************** USERRIDE: No Surveys matching quals/quota were found in users_controller'
-#      redirect_to 'https://www.ketsci.com/redirects/status?status=3'+'&PID='+@PID
       redirect_to '/users/nosuccess'
       return
     else
