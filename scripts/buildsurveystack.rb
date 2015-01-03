@@ -333,7 +333,7 @@ begin
         puts
         timetorepeat = true
       else
-        print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 20 minutes'
+        print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 20 minutes since it typically takes under 10 mins to do a sweep'
         puts
         sleep (20.minutes)
 #    sleep (1200 - (timenow - starttime))

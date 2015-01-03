@@ -540,14 +540,14 @@ begin
     timenow = Time.now
     print 'Time at end', timenow
     puts
-    if (timenow - starttime) > 1200 then 
+    if (timenow - starttime) > 1800 then 
       print 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to repeat immediately'
       puts
       timetorepeat = true
     else
-      print 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to sleep for 12 minutes'
+      print 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to sleep for 10 minutes since it takes about 20 mins to do a sweep.'
       puts
-      sleep (20.minutes)
+      sleep (10.minutes)
  #     sleep (1800 - (timenow - starttime)).round
       timetorepeat = true
     end
