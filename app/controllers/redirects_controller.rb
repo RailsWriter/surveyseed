@@ -38,7 +38,20 @@ class RedirectsController < ApplicationController
       p '****************** Redirects: Signature verified'
     end
     
+    
+    
+    # SurveyExactRank is a counter for failures 3 & 4
+    # SurveyQuotaCalcType is GEEPC value used to determine lowering of rank
+    # SampleTypeID is used to count over quota incidences
+    
+    
+    
+    
+    
+    
     case params[:status] 
+      
+      
       
       when "1"
         # DefaultLink: https://www.ketsci.com/redirects/status?status=1&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
@@ -60,6 +73,8 @@ class RedirectsController < ApplicationController
 #          redirect_to 'https://www.ketsci.com/redirects/default'
 #        end
 
+
+
       when "2"
         # SuccessLink: https://www.ketsci.com/redirects/status?status=2&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]&cost=[%COST%]
         
@@ -74,7 +89,7 @@ class RedirectsController < ApplicationController
          @user = User.find_by user_id: params[:PID]
 #          @user = User.last
 
-         print 'Suceess for user_id/PID, CID:', params[:PID], @user.clickid
+         print 'Suceess for user_id/PID, CID: ', params[:PID], @user.clickid
          puts
 
 #         In case user not found - should not happen since we sent the PID in the first place.
@@ -95,6 +110,7 @@ class RedirectsController < ApplicationController
           # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
           @survey.CompletedBy[params[:PID]] = [params[:tis], params[:tsfn], @user.clickid, @user.netid]
           @survey.SurveyGrossRank = 1
+          puts '********************************* Survey Rank raised to 1 following a complete!'
           @survey.save
 
           # Postback the network about success with users clickid
@@ -119,20 +135,22 @@ class RedirectsController < ApplicationController
           redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'
         end
 
+
+
       when "3"
         # FailureLink: https://www.ketsci.com/redirects/status?status=3&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
         # FED uses this link is used when user is under age or they do not qualify for the survey they attempted. However since Ketsci eliminates those users already, this user
         # can be sent to try other surveys. If he/she has not qualified for any survey then take them to failure view.
 
-# turn to 'test' be true on launch        
+        # turn to '!=' for testing       
         if params[:PID] == 'test' then
+     # @user = User.last  
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
         else
           # save attempt info in User and Survey tables
           @user = User.find_by user_id: params[:PID]          
-#          @user = User.last
-
-          print 'Failure for user_id/PID, CID:', params[:PID], @user.clickid
+          
+          print 'Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
           puts
 
           # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
@@ -140,6 +158,38 @@ class RedirectsController < ApplicationController
           if params[:tsfn] != nil then
             @user.SurveysAttempted << params[:tsfn]+'3333'                   
             @user.save
+            
+            
+            @survey = Survey.find_by SurveyNumber: params[:tsfn]
+            
+            # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
+            @survey.SurveyExactRank = @survey.SurveyExactRank + 1
+            print '********************************* Unsuccessful attempts count raised to 1 following a Failuare for survey number: ', params[:tsfn]
+            puts
+            
+            if (@survey.SurveyExactRank == 20) && (@survey.CompletedBy.length > 0) then
+              @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
+              print '********************************* Reached 20 Unsuccessful attempts, rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
+              puts
+            else
+            end
+            
+            if (@survey.SurveyExactRank >= 30) && (@survey.SurveyExactRank < 40) && (@survey.CompletedBy.length > 0) then
+              @survey.SurveyGrossRank = 10
+              print '********************************* More than 30 Unsuccessful attempts, rank reduced to 10 following a Failuare for survey number: ', params[:tsfn]
+              puts 
+            else
+            end
+            
+            if (@survey.SurveyExactRank >= 40) && (@survey.CompletedBy.length > 0) then
+              @survey.SurveyGrossRank = 15
+              print '********************************* More than 40 Unsuccessful attempts, rank reduced to 10 following a Failuare for survey number: ', params[:tsfn]
+              puts 
+            else
+            end
+            
+            @survey.save
+            
           else
           end
 
@@ -151,19 +201,19 @@ class RedirectsController < ApplicationController
           if (@user.SupplierLink.empty? == false) then
   
             if @user.country=="9" then 
-              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP
+              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.education+'&STANDARD_HHI_US='+@user.householdincome
             else
               if @user.country=="6" then
-                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP
+                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.education+'&STANDARD_HHI_INT='+@user.householdincome
               else
                 if @user.country=="5" then
-                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP
+                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.education+'&STANDARD_HHI_INT='+@user.householdincome
                 else
                   if @user.country=="7" then
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.education+'&STANDARD_HHI_INT='+@user.householdincome
                   else
                     puts "*************************************** Redirects: Find out why country code is not correctly set"
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.education+'&STANDARD_HHI_INT='+@user.householdincome
                     return
                   end
                 end
@@ -182,41 +232,79 @@ class RedirectsController < ApplicationController
           end
         end
         
+        
+        
       when "4"
         # OverQuotaLink: https://www.ketsci.com/redirects/status?status=4&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
 
 # turn to t'test' be true on launch 
         if params[:PID] == 'test' then
+  #          @user = User.last
           redirect_to 'https://www.ketsci.com/redirects/overquota?&OQ=1'
         else
           # save attempt info in User and Survey tables
           @user = User.find_by user_id: params[:PID]
-#          @user = User.last
 
-          print 'OQuota for user_id/PID, CID:', params[:PID], @user.clickid
+
+          print 'OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
           puts          
           
           @user.SurveysAttempted << params[:tsfn]+'4444'
           @user.save
+          
+          
+          @survey = Survey.find_by SurveyNumber: params[:tsfn]
+          
+          # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
+
+          @survey.SampleTypeID = @survey.SampleTypeID + 1 # counting number of OQ incidents for a survey
+
+          @survey.SurveyExactRank = @survey.SurveyExactRank + 1
+          print '********************************* Unsuccessful attempts count raised to 1 following a Failuare for survey number: ', params[:tsfn]
+          puts
+          
+          if (@survey.SurveyExactRank == 20) && (@survey.CompletedBy.length > 0) then
+            @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
+            print '********************************* Reached 20 Unsuccessful attempts, rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
+            puts
+          else
+          end
+          
+          if (@survey.SurveyExactRank >= 30) && (@survey.SurveyExactRank < 40) && (@survey.CompletedBy.length > 0) then
+            @survey.SurveyGrossRank = 10
+            print '********************************* More than 30 Unsuccessful attempts, rank reduced to 10 following a Failuare for survey number: ', params[:tsfn]
+            puts 
+          else
+          end
+          
+          if (@survey.SurveyExactRank >= 40) && (@survey.CompletedBy.length > 0) then
+            @survey.SurveyGrossRank = 15
+            print '********************************* More than 40 Unsuccessful attempts, rank reduced to 10 following a Failuare for survey number: ', params[:tsfn]
+            puts 
+          else
+          end
+          
+          @survey.save
+          
 
           # Give user chance to take another survey
           
           if (@user.SupplierLink.empty? == false) then
             
             if @user.country=="9" then 
-              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP
+              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.education+'&STANDARD_HHI_US='+@user.householdincome
             else
               if @user.country=="6" then
-                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP
+                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.education+'&STANDARD_HHI_INT='+@user.householdincome
               else
                 if @user.country=="5" then
-                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP
+                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.education+'&STANDARD_HHI_INT='+@user.householdincome
                 else
                   if @user.country=="7" then
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.education+'&STANDARD_HHI_INT='+@user.householdincome
                   else
                     puts "*************************************** Redirects: Find out why country code is not correctly set"
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.education+'&STANDARD_HHI_INT='+@user.householdincome
                     return
                   end
                 end
@@ -233,6 +321,8 @@ class RedirectsController < ApplicationController
             redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
           end
         end
+        
+        
     
       when "5"
         # QualityTerminationLink: https://www.ketsci.com/redirects/status?status=5&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
@@ -241,11 +331,11 @@ class RedirectsController < ApplicationController
 
 # turn to t'test' be true on launch 
         if params[:PID] == 'test' then
+  #          @user = User.last
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=1'
         else
           # save attempt info in User and Survey tables
           @user = User.find_by user_id: params[:PID]
-#          @user = User.last
           
           print 'QTerm for user_id/PID, CID:', params[:PID], @user.clickid
           puts     

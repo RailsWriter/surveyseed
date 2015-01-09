@@ -4,13 +4,19 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
+
+
+@initialrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
 
 
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
 staging_base_url = "http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com"
 
-p "****************************ENV is set to", flag
+print "**************************** ENV is set to ", flag
+puts
+print "**************************** Ranking approach is set to: ", @initialrankingapproach
+puts
 
 if flag == 'prod' then
   base_url = prod_base_url
@@ -22,7 +28,8 @@ else
   end
 end
 
-p " ************* base url is", base_url
+print " ************* base url is", base_url
+puts
 
 # Get any new offerwall surveys from Federated Sample
 
@@ -114,51 +121,168 @@ begin
             retry
         end while SurveyStatistics.code != 200
         
+        
+        # For the NEW survey - Store GEEPC in SurveyQuotaCalcTypeID as an integer. Also set SurveyExactRank and SampleTypeID to keep track of unsuccessful attempts and OQ instances respectively.
+        
+        @survey.SurveyExactRank = 0
+        @survey.SampleTypeID = 0
+        
         if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
-          @survey.SurveyGrossRank = 1
-          print '*******************Effective GlobalEPC is > 0.2 = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
-          puts
-        else
+          @survey.SurveyQuotaCalcTypeID = 1 # best kind
+        else 
           if ((0 < SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
-            @survey.SurveyGrossRank = 2
-            print '*******************Effective GlobalEPC is <= 0.2 = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
-            puts
-          else    
-          
-            case offerwallresponse["Surveys"][i]["Conversion"]
-              when 0..4
-                puts "Lowest Rank 10"
-                @survey.SurveyGrossRank = 10
-              when 5..9
-                puts "Rank 9"
-                @survey.SurveyGrossRank = 9
-              when 10..14
-                puts "Rank 8"
-                @survey.SurveyGrossRank = 8
-              when 15..19
-                puts "Rank 7"
-                @survey.SurveyGrossRank = 7
-              when 20..24
-                puts "Rank 6"
-                @survey.SurveyGrossRank = 6
-              when 25..29
-                puts "Rank 5"
-                @survey.SurveyGrossRank = 5
-              when 30..34
-                puts "Rank 4"
-                @survey.SurveyGrossRank = 4
-              when 35..39
-                puts "Rank 3"
-                @survey.SurveyGrossRank = 3
-              when 40..44
-                puts "Rank 2"
-                @survey.SurveyGrossRank = 2
-              when 45..100
-                puts "Highest Rank 1"
-                @survey.SurveyGrossRank = 1
-            end
+            @survey.SurveyQuotaCalcTypeID = 2 # second best kind
+          else
+            @survey.SurveyQuotaCalcTypeID = 5 # worst kind by GEEPC data
           end
         end
+        
+          
+        
+        if @initialrankingapproach == 'EEPCFirst' then
+          if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
+            @survey.SurveyGrossRank = 1
+            print '*******************Effective GlobalEPC is > 0.2 = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+            puts
+          else
+            if ((0 < SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
+              @survey.SurveyGrossRank = 5
+              print '*******************Effective GlobalEPC is <= 0.2 = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+              puts
+            else    
+          
+              case offerwallresponse["Surveys"][i]["Conversion"]
+                when 0..5
+                  puts "Lowest Rank 20"
+                  @survey.SurveyGrossRank = 20
+                when 6..10
+                  puts "Rank 19"
+                  @survey.SurveyGrossRank = 19
+                when 11..15
+                  puts "Rank 18"
+                  @survey.SurveyGrossRank = 18
+                when 16..20
+                  puts "Rank 17"
+                  @survey.SurveyGrossRank = 17
+                when 21..25
+                  puts "Rank 16"
+                  @survey.SurveyGrossRank = 16
+                when 26..30
+                  puts "Rank 15"
+                  @survey.SurveyGrossRank = 15
+                when 31..35
+                  puts "Rank 14"
+                  @survey.SurveyGrossRank = 14
+                when 36..40
+                  puts "Rank 13"
+                  @survey.SurveyGrossRank = 13
+                when 41..45
+                  puts "Rank 12"
+                  @survey.SurveyGrossRank = 12
+                when 46..50
+                  puts "Rank 11"
+                  @survey.SurveyGrossRank = 11
+                when 51..55
+                  puts "Rank 10"
+                  @survey.SurveyGrossRank = 10
+                when 56..60
+                  puts "Rank 9"
+                  @survey.SurveyGrossRank = 9
+                when 61..65
+                  puts "Rank 8"
+                  @survey.SurveyGrossRank = 8
+                when 66..70
+                  puts "Rank 7"
+                  @survey.SurveyGrossRank = 7
+                when 71..75
+                  puts "Rank 6"
+                  @survey.SurveyGrossRank = 6
+                when 76..80
+                  puts "Rank 5"
+                  @survey.SurveyGrossRank = 5
+                when 81..85
+                  puts "Rank 4"
+                  @survey.SurveyGrossRank = 4
+                when 86..90
+                  puts "Rank 3"
+                  @survey.SurveyGrossRank = 3
+                when 91..95
+                  puts "Rank 2"
+                  @survey.SurveyGrossRank = 2
+                when 96..100
+                  puts "Highest Rank 1"
+                  @survey.SurveyGrossRank = 1           
+              end # end case
+              
+            end # end of if EEPC is between 0 and 0.2
+          end # end of, if EEPC is more than 0.2
+          
+        else # for 'ConversionFirst' approach
+
+          case offerwallresponse["Surveys"][i]["Conversion"]
+          when 0..5
+            puts "Lowest Rank 20"
+            @survey.SurveyGrossRank = 20
+          when 6..10
+            puts "Rank 19"
+            @survey.SurveyGrossRank = 19
+          when 11..15
+            puts "Rank 18"
+            @survey.SurveyGrossRank = 18
+          when 16..20
+            puts "Rank 17"
+            @survey.SurveyGrossRank = 17
+          when 21..25
+            puts "Rank 16"
+            @survey.SurveyGrossRank = 16
+          when 26..30
+            puts "Rank 15"
+            @survey.SurveyGrossRank = 15
+          when 31..35
+            puts "Rank 14"
+            @survey.SurveyGrossRank = 14
+          when 36..40
+            puts "Rank 13"
+            @survey.SurveyGrossRank = 13
+          when 41..45
+            puts "Rank 12"
+            @survey.SurveyGrossRank = 12
+          when 46..50
+            puts "Rank 11"
+            @survey.SurveyGrossRank = 11
+          when 51..55
+            puts "Rank 10"
+            @survey.SurveyGrossRank = 10
+          when 56..60
+            puts "Rank 9"
+            @survey.SurveyGrossRank = 9
+          when 61..65
+            puts "Rank 8"
+            @survey.SurveyGrossRank = 8
+          when 66..70
+            puts "Rank 7"
+            @survey.SurveyGrossRank = 7
+          when 71..75
+            puts "Rank 6"
+            @survey.SurveyGrossRank = 6
+          when 76..80
+            puts "Rank 5"
+            @survey.SurveyGrossRank = 5
+          when 81..85
+            puts "Rank 4"
+            @survey.SurveyGrossRank = 4
+          when 86..90
+            puts "Rank 3"
+            @survey.SurveyGrossRank = 3
+          when 91..95
+            puts "Rank 2"
+            @survey.SurveyGrossRank = 2
+          when 96..100
+            puts "Highest Rank 1"
+            @survey.SurveyGrossRank = 1 
+          end # end of case            
+          
+        end # end of rankingapproach switch
 
           # Get Survey Qualifications Information by SurveyNumber
           begin
@@ -185,15 +309,28 @@ begin
           @survey.QualificationAgePreCodes = ["ALL"]
           @survey.QualificationGenderPreCodes = ["ALL"]
           @survey.QualificationZIPPreCodes = ["ALL"] 
+          
+          @survey.QualificationRacePreCodes = ["ALL"]
+          @survey.QualificationEthnicityPreCodes = ["ALL"]  
+          @survey.QualificationEducationPreCodes = ["ALL"]  
+          @survey.QualificationHHIPreCodes = ["ALL"]
+          
 
           # Insert specific qualifications where required
 
           if SurveyQualifications["SurveyQualification"]["Questions"] == nil then
 #          if SurveyQualifications["SurveyQualification"]["Questions"].empty? then
-            puts 'SurveyQualifications or Questions is NIL'
+            puts '******************** SurveyQualifications or Questions is NIL'
             @survey.QualificationAgePreCodes = ["ALL"]
             @survey.QualificationGenderPreCodes = ["ALL"]
             @survey.QualificationZIPPreCodes = ["ALL"]  
+            
+            @survey.QualificationRacePreCodes = ["ALL"]
+            @survey.QualificationEthnicityPreCodes = ["ALL"]  
+            @survey.QualificationEducationPreCodes = ["ALL"]  
+            @survey.QualificationHHIPreCodes = ["ALL"]  
+            
+            
           else
             NumberOfQualificationsQuestions = SurveyQualifications["SurveyQualification"]["Questions"].length-1
             print 'NumberOfQualificationsQuestions: ', NumberOfQualificationsQuestions+1
@@ -205,23 +342,61 @@ begin
               case SurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
                 when 42
                   if flag == 'stag' then
-                    print 'Age:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print 'AGE: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
                   @survey.QualificationAgePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 when 43
-                  print 'Gender:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  print 'GENDER: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                   puts
                   @survey.QualificationGenderPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 when 45
                   if flag == 'stag' then
-                    print 'ZIPS:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print 'ZIP: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
                   @survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                when 47
+                  if flag == 'stag' then
+                    print 'HISPANIC->Ethnicity: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  # Note: FED calls our Ethnicity definition as HISPANIC. Adhering to our definition.
+                  @survey.QualificationEthnicityPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                when 113
+                  if flag == 'stag' then
+                    print 'ETHNICITY->Race: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  # Note: FED calls our Race definition as ETNICITY. Adhering to our definition.
+                  @survey.QualificationRacePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                when 633
+                  if flag == 'stag' then
+                    print 'STANDARD_EDUCATION: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @survey.QualificationEducationPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                when 14785
+                  if flag == 'stag' then
+                    print 'STANDARD_HHI_US: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
+                when 14887
+                  if flag == 'stag' then
+                    print 'STANDARD_HHI_INT: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")                  
               end # case
+              
             end #do      
           end # if
     
@@ -231,28 +406,28 @@ begin
             puts 'CONNECTING FOR QUOTA INFORMATION'
           
             if flag == 'prod' then
-              SurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+SurveyNumber.to_s+'/5458?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
+              @SurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+SurveyNumber.to_s+'/5458?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
             else
               if flag == 'stag' then
-                SurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+                @SurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
               else
               end
             end
           
-#           SurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+#           @SurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
               rescue HTTParty::Error => e
               puts 'HttParty::Error '+ e.message
               retry
-            end while SurveyQuotas.code != 200
+            end while @SurveyQuotas.code != 200
 
             # Save quotas information for each survey
 
-#            if SurveyQuotas["SurveyStillLive"] == false then
+#            if @SurveyQuotas["SurveyStillLive"] == false then
 #              @survey.delete
 #            else
-              @survey.SurveyStillLive = SurveyQuotas["SurveyStillLive"]
-              @survey.SurveyStatusCode = SurveyQuotas["SurveyStatusCode"]
-              @survey.SurveyQuotas = SurveyQuotas["SurveyQuotas"]
+              @survey.SurveyStillLive = @SurveyQuotas["SurveyStillLive"]
+              @survey.SurveyStatusCode = @SurveyQuotas["SurveyStatusCode"]
+              @survey.SurveyQuotas = @SurveyQuotas["SurveyQuotas"]
 #            end
         
             # Get Supplierlinks for the survey

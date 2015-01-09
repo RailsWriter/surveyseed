@@ -2,7 +2,9 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
+
+@updatesrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
 
 
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
@@ -71,29 +73,33 @@ begin
 
         begin
           sleep(1)
-          puts '**************************** CONNECTING FOR SUPPLIER ALLOCATIONS INFORMATION of an EXISTING survey: ', @surveynumber
+          print '**************************** CONNECTING FOR SUPPLIER ALLOCATIONS INFORMATION of an EXISTING survey: ', @surveynumber
+          puts
+          
           if flag == 'prod' then
-            SupplierAllocations = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/BySurveyNumber/'+@surveynumber.to_s+'?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
+            @SupplierAllocations = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/BySurveyNumber/'+@surveynumber.to_s+'?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
           else
             if flag == 'stag' then
-              SupplierAllocations = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/BySurveyNumber/'+@surveynumber.to_s+'?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+              @SupplierAllocations = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/BySurveyNumber/'+@surveynumber.to_s+'?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
             else
             end
           end
             rescue HTTParty::Error => e
             puts 'HttParty::Error '+ e.message
             retry
-        end while SupplierAllocations.code != 200
+        end while @SupplierAllocations.code != 200
 
-        if SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0 then
+        if @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0 then
           
-          print "********************* There is total remaining allocation for this EXISTING survey number: ", @surveynumber, ' in the amount of: ', SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
+          print "********************* There is total remaining allocation for this EXISTING survey number: ", @surveynumber, ' in the amount of: ', @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
           puts
 
 
       begin
         sleep(1)
-        puts 'CONNECTING FOR QUALIFICATIONS INFORMATION on existing survey: ', @surveynumber
+        print 'CONNECTING FOR QUALIFICATIONS INFORMATION on existing survey: ', @surveynumber
+        puts
+        
         if flag == 'prod' then
           SurveyQualifications = HTTParty.get(base_url+'/Supply/v1/SurveyQualifications/BySurveyNumberForOfferwall/'+@surveynumber.to_s+'?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
         else
@@ -107,43 +113,101 @@ begin
           retry
       end while SurveyQualifications.code != 200
           
-      # Update specific qualifications to current information
 
-        if SurveyQualifications["SurveyQualification"]["Questions"] == nil then
+      # By default all users are qualified
+
+      survey.QualificationAgePreCodes = ["ALL"]
+      survey.QualificationGenderPreCodes = ["ALL"]
+      survey.QualificationZIPPreCodes = ["ALL"] 
+      
+      survey.QualificationRacePreCodes = ["ALL"]
+      survey.QualificationEthnicityPreCodes = ["ALL"]  
+      survey.QualificationEducationPreCodes = ["ALL"]  
+      survey.QualificationHHIPreCodes = ["ALL"]
+
+
+      # Update specific qualifications to be current information
+
+      if SurveyQualifications["SurveyQualification"]["Questions"] == nil then
 #      if SurveyQualifications["SurveyQualification"]["Questions"].empty? then
         puts 'SurveyQualifications or Questions is NIL'
         survey.QualificationAgePreCodes = ["ALL"]
         survey.QualificationGenderPreCodes = ["ALL"]
         survey.QualificationZIPPreCodes = ["ALL"]  
+        
+        
+        survey.QualificationRacePreCodes = ["ALL"]
+        survey.QualificationEthnicityPreCodes = ["ALL"]  
+        survey.QualificationEducationPreCodes = ["ALL"]  
+        survey.QualificationHHIPreCodes = ["ALL"]  
+       
       else
-        NumberOfQualificationsQuestions = SurveyQualifications["SurveyQualification"]["Questions"].length-1
-        print 'NumberOfQualificationsQuestions: ', NumberOfQualificationsQuestions+1
+        @NumberOfQualificationsQuestions = SurveyQualifications["SurveyQualification"]["Questions"].length-1
+        print '************** @NumberOfQualificationsQuestions: ', @NumberOfQualificationsQuestions+1
         puts
             
-        (0..NumberOfQualificationsQuestions).each do |j|
+        (0..@NumberOfQualificationsQuestions).each do |j|
           # Survey.Questions = SurveyQualifications["SurveyQualification"]["Questions"]
  #        puts SurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
         
           case SurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
             when 42
               if flag == 'stag' then
-                print 'Age:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                print 'AGE: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 puts
               else
               end
               survey.QualificationAgePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
             when 43
-              print 'Gender:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+              print 'GENDER: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
               puts
               survey.QualificationGenderPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
             when 45
               if flag == 'stag' then
-#                print 'ZIPS:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+#                print 'ZIP:', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
 #                puts
               else
               end
               survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+            when 47
+              if flag == 'stag' then
+                print 'HISPANIC->Ethnicity: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              # Note: FED calls our Ethnicity definition as HISPANIC. Adhering to our definition.
+              survey.QualificationEthnicityPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+            when 113
+              if flag == 'stag' then
+                print 'ETHNICITY->Race: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              # Note: FED calls our Race definition as ETHNICITY. Adhering to our definition.
+              survey.QualificationRacePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+            when 633
+              if flag == 'stag' then
+                print 'STANDARD_EDUCATION: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              survey.QualificationEducationPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+            when 14785
+              if flag == 'stag' then
+                print 'STANDARD_HHI_US: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
+            when 14887
+              if flag == 'stag' then
+                print 'STANDARD_HHI_INT: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")               
           end # case
+          
         end #do j     
       end # if on Questions
  
@@ -151,13 +215,14 @@ begin
       # Update Survey Quotas Information by SurveyNumber to current information
       begin
         sleep(1)
-        puts 'CONNECTING FOR QUOTA INFORMATION on existing survey: ', @surveynumber
+        print 'CONNECTING FOR QUOTA INFORMATION on existing survey: ', @surveynumber
+        puts
           
         if flag == 'prod' then
-          SurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+@surveynumber.to_s+'/5458?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
+          @SurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+@surveynumber.to_s+'/5458?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
         else
           if flag == 'stag' then
-            SurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+@surveynumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+            @SurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+@surveynumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
           else
           end
         end
@@ -165,17 +230,17 @@ begin
           rescue HTTParty::Error => e
           puts 'HttParty::Error '+ e.message
           retry
-        end while SurveyQuotas.code != 200
+        end while @SurveyQuotas.code != 200
 
         # Save quotas information for each survey
   
-#       if SurveyQuotas["SurveyStillLive"] == false then
+#       if @SurveyQuotas["SurveyStillLive"] == false then
 #          puts '**************************** Deleting a closed survey'
 #          survey.delete
 #        else
-          survey.SurveyStillLive = SurveyQuotas["SurveyStillLive"]
-          survey.SurveyStatusCode = SurveyQuotas["SurveyStatusCode"]
-          survey.SurveyQuotas = SurveyQuotas["SurveyQuotas"]
+          survey.SurveyStillLive = @SurveyQuotas["SurveyStillLive"]
+          survey.SurveyStatusCode = @SurveyQuotas["SurveyStatusCode"]
+          survey.SurveyQuotas = @SurveyQuotas["SurveyQuotas"]
 #        end
          
       # Get new quota info by surveynumber and overwrite in Survey table
@@ -222,11 +287,11 @@ begin
    
         # Code for testing
   
-        SurveyName = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyName"]
+        @SurveyName = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyName"]
         SurveyNumber = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"]
         print 'PROCESSING i =', i
         puts
-        print 'SurveyName: ', SurveyName, ' SurveyNumber: ', SurveyNumber, ' CountryLanguageID: ', IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"]
+        print 'SurveyName: ', @SurveyName, ' SurveyNumber: ', SurveyNumber, ' CountryLanguageID: ', IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"]
         puts
    
         # Assign an initial gross rank to the NEW survey
@@ -234,7 +299,9 @@ begin
         
         begin
           sleep(1)
-          puts '**************************** CONNECTING FOR GLOBAL STATS on NEW survey: ', SurveyNumber
+          print '**************************** CONNECTING FOR GLOBAL STATS on NEW survey: ', SurveyNumber
+          puts
+          
           if flag == 'prod' then
             NewSurveyStatistics = HTTParty.get(base_url+'/Supply/v1/SurveyStatistics/BySurveyNumber/'+SurveyNumber.to_s+'/5458/Global/Trailing?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
           else
@@ -249,52 +316,169 @@ begin
         end while NewSurveyStatistics.code != 200
         
 
+        # For the NEW survey - Store GEEPC in SurveyQuotaCalcTypeID as an integer. Also set SurveyExactRank and SampleTypeID to keep track of unsuccessful and OQ attempts respectively.
+        
+        @newsurvey.SurveyExactRank = 0
+        @newsurvey.SampleTypeID = 0
+        
+        print '******************* Effective GlobalEPC is = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+        puts
+        
         if NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
-          @newsurvey.SurveyGrossRank = 1
-          print '******************* Effective GlobalEPC is > 0.2 = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
-          puts
-        else
+          @newsurvey.SurveyQuotaCalcTypeID = 1 # best kind
+        else 
           if ((0 < NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
-            @newsurvey.SurveyGrossRank = 2
-            print '******************* Effective GlobalEPC is <= 0.2 = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
-            puts
+            @newsurvey.SurveyQuotaCalcTypeID = 2 # second best kind
           else
-          
-            case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
-              when 0..4
-                puts "Lowest Rank 10"
-                @newsurvey.SurveyGrossRank = 10
-              when 5..9
-                puts "Rank 9"
-                @newsurvey.SurveyGrossRank = 9
-              when 10..14
-                puts "Rank 8"
-                @newsurvey.SurveyGrossRank = 8
-              when 15..19
-                puts "Rank 7"
-                @newsurvey.SurveyGrossRank = 7
-              when 20..24
-                puts "Rank 6"
-                @newsurvey.SurveyGrossRank = 6
-              when 25..29
-                puts "Rank 5"
-                @newsurvey.SurveyGrossRank = 5
-              when 30..34
-                puts "Rank 4"
-                @newsurvey.SurveyGrossRank = 4
-              when 35..39
-                puts "Rank 3"
-                @newsurvey.SurveyGrossRank = 3
-              when 40..44
-                puts "Rank 2"
-                @newsurvey.SurveyGrossRank = 2
-              when 45..100
-                puts "Highest Rank 1"
-                @newsurvey.SurveyGrossRank = 1
-            end
+            @newsurvey.SurveyQuotaCalcTypeID = 5 # worst kind by GEEPC data
           end
         end
 
+
+        
+        if @updatesrankingapproach == 'EEPCFirst' then
+          if NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
+            @newsurvey.SurveyGrossRank = 1
+            print '******************* Effective GlobalEPC is > 0.2 = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+            puts
+          else
+            if ((0 < NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
+              @newsurvey.SurveyGrossRank = 5
+              print '******************* Effective GlobalEPC is <= 0.2 = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+              puts
+            else
+              case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
+              when 0..5
+                puts "Lowest Rank 20"
+                @newsurvey.SurveyGrossRank = 20
+              when 6..10
+                puts "Rank 19"
+                @newsurvey.SurveyGrossRank = 19
+              when 11..15
+                puts "Rank 18"
+                @newsurvey.SurveyGrossRank = 18
+              when 16..20
+                puts "Rank 17"
+                @newsurvey.SurveyGrossRank = 17
+              when 21..25
+                puts "Rank 16"
+                @newsurvey.SurveyGrossRank = 16
+              when 26..30
+                puts "Rank 15"
+                @newsurvey.SurveyGrossRank = 15
+              when 31..35
+                puts "Rank 14"
+                @newsurvey.SurveyGrossRank = 14
+              when 36..40
+                puts "Rank 13"
+                @newsurvey.SurveyGrossRank = 13
+              when 41..45
+                puts "Rank 12"
+                @newsurvey.SurveyGrossRank = 12
+              when 46..50
+                puts "Rank 11"
+                @newsurvey.SurveyGrossRank = 11
+              when 51..55
+                puts "Rank 10"
+                @newsurvey.SurveyGrossRank = 10
+              when 56..60
+                puts "Rank 9"
+                @newsurvey.SurveyGrossRank = 9
+              when 61..65
+                puts "Rank 8"
+                @newsurvey.SurveyGrossRank = 8
+              when 66..70
+                puts "Rank 7"
+                @newsurvey.SurveyGrossRank = 7
+              when 71..75
+                puts "Rank 6"
+                @newsurvey.SurveyGrossRank = 6
+              when 76..80
+                puts "Rank 5"
+                @newsurvey.SurveyGrossRank = 5
+              when 81..85
+                puts "Rank 4"
+                @newsurvey.SurveyGrossRank = 4
+              when 86..90
+                puts "Rank 3"
+                @newsurvey.SurveyGrossRank = 3
+              when 91..95
+                puts "Rank 2"
+                @newsurvey.SurveyGrossRank = 2
+              when 96..100
+                puts "Highest Rank 1"
+                @newsurvey.SurveyGrossRank = 1
+              end # end case
+              
+            end # end of if EEPC is between 0 and 0.2
+          end # end of, if EEPC is more than 0.2
+          
+        else # for 'ConversionFirst' approach
+          
+          case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
+            when 0..5
+              puts "Lowest Rank 20"
+              @newsurvey.SurveyGrossRank = 20
+            when 6..10
+              puts "Rank 19"
+              @newsurvey.SurveyGrossRank = 19
+            when 11..15
+              puts "Rank 18"
+              @newsurvey.SurveyGrossRank = 18
+            when 16..20
+              puts "Rank 17"
+              @newsurvey.SurveyGrossRank = 17
+            when 21..25
+              puts "Rank 16"
+              @newsurvey.SurveyGrossRank = 16
+            when 26..30
+              puts "Rank 15"
+              @newsurvey.SurveyGrossRank = 15
+            when 31..35
+              puts "Rank 14"
+              @newsurvey.SurveyGrossRank = 14
+            when 36..40
+              puts "Rank 13"
+              @newsurvey.SurveyGrossRank = 13
+            when 41..45
+              puts "Rank 12"
+              @newsurvey.SurveyGrossRank = 12
+            when 46..50
+              puts "Rank 11"
+              @newsurvey.SurveyGrossRank = 11
+            when 51..55
+              puts "Rank 10"
+              @newsurvey.SurveyGrossRank = 10
+            when 56..60
+              puts "Rank 9"
+              @newsurvey.SurveyGrossRank = 9
+            when 61..65
+              puts "Rank 8"
+              @newsurvey.SurveyGrossRank = 8
+            when 66..70
+              puts "Rank 7"
+              @newsurvey.SurveyGrossRank = 7
+            when 71..75
+              puts "Rank 6"
+              @newsurvey.SurveyGrossRank = 6
+            when 76..80
+              puts "Rank 5"
+              @newsurvey.SurveyGrossRank = 5
+            when 81..85
+              puts "Rank 4"
+              @newsurvey.SurveyGrossRank = 4
+            when 86..90
+              puts "Rank 3"
+              @newsurvey.SurveyGrossRank = 3
+            when 91..95
+              puts "Rank 2"
+              @newsurvey.SurveyGrossRank = 2
+            when 96..100
+              puts "Highest Rank 1"
+              @newsurvey.SurveyGrossRank = 1
+          end # end case
+      
+        end # end of rankingapproach switch
 
           # Before getting qualifications, quotas, and supplier links first check if there is any remaining total allocation for this NEW survey
         
@@ -302,21 +486,21 @@ begin
             sleep(1)
             puts '**************************** CONNECTING FOR SUPPLIER ALLOCATIONS INFORMATION on NEW survey: ', SurveyNumber
             if flag == 'prod' then
-              NewSupplierAllocations = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/BySurveyNumber/'+SurveyNumber.to_s+'?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
+              @NewSupplierAllocations = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/BySurveyNumber/'+SurveyNumber.to_s+'?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
             else
               if flag == 'stag' then
-                NewSupplierAllocations = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/BySurveyNumber/'+SurveyNumber.to_s+'?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+                @NewSupplierAllocations = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/BySurveyNumber/'+SurveyNumber.to_s+'?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
               else
               end
             end
               rescue HTTParty::Error => e
               puts 'HttParty::Error '+ e.message
               retry
-          end while NewSupplierAllocations.code != 200
+          end while @NewSupplierAllocations.code != 200
 
-          if NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0 then
+          if @NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0 then
           
-            print '********************* There is total remaining allocation for this NEW survey number: ', SurveyNumber, ' in the amount of: ', NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
+            print '********************* There is total remaining allocation for this NEW survey number: ', SurveyNumber, ' in the amount of: ', @NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
             puts
 
           # Get Survey Qualifications Information by SurveyNumber
@@ -343,56 +527,109 @@ begin
           @newsurvey.QualificationAgePreCodes = ["ALL"]
           @newsurvey.QualificationGenderPreCodes = ["ALL"]
           @newsurvey.QualificationZIPPreCodes = ["ALL"] 
+          
+          
+          @newsurvey.QualificationRacePreCodes = ["ALL"]
+          @newsurvey.QualificationEthnicityPreCodes = ["ALL"]  
+          @newsurvey.QualificationEducationPreCodes = ["ALL"]  
+          @newsurvey.QualificationHHIPreCodes = ["ALL"]  
+          
+          
 
           # Insert specific qualifications where required
 
           if NewSurveyQualifications["SurveyQualification"]["Questions"] == nil then
 #          if NewSurveyQualifications["SurveyQualification"]["Questions"].empty? then
-            puts 'SurveyQualifications or Questions is NIL'
+            puts '***************** SurveyQualifications or Questions is NIL'
             @newsurvey.QualificationAgePreCodes = ["ALL"]
             @newsurvey.QualificationGenderPreCodes = ["ALL"]
             @newsurvey.QualificationZIPPreCodes = ["ALL"]  
+            
+            @newsurvey.QualificationRacePreCodes = ["ALL"]
+            @newsurvey.QualificationEthnicityPreCodes = ["ALL"]  
+            @newsurvey.QualificationEducationPreCodes = ["ALL"]  
+            @newsurvey.QualificationHHIPreCodes = ["ALL"]  
+            
           else
-            NumberOfQualificationsQuestions = NewSurveyQualifications["SurveyQualification"]["Questions"].length-1
-            print 'NumberOfQualificationsQuestions: ', NumberOfQualificationsQuestions+1
+            @NumberOfQualificationsQuestions = NewSurveyQualifications["SurveyQualification"]["Questions"].length-1
+            print '@NumberOfQualificationsQuestions: ', @NumberOfQualificationsQuestions+1
             puts
     
-            (0..NumberOfQualificationsQuestions).each do |j|
+            (0..@NumberOfQualificationsQuestions).each do |j|
               # Survey.Questions = NewSurveyQualifications["SurveyQualification"]["Questions"]
  #             puts NewSurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
               case NewSurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
                 when 42
                   if flag == 'stag' then
-                    print 'Age:', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print 'AGE: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
                   @newsurvey.QualificationAgePreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 when 43
-                  print 'Gender:', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  print 'GENDER: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                   puts
                   @newsurvey.QualificationGenderPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 when 45
                   if flag == 'stag' then
-#                    print 'ZIPS:', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+#                    print 'ZIP: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
 #                    puts
                   else
                   end
                   @newsurvey.QualificationZIPPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                when 47
+                  if flag == 'stag' then
+                    print 'HISPANIC->Ethnicity: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  # Note: FED calls our Ethnicity definition as HISPANIC. Adhering to our definition.
+                  @newsurvey.QualificationEthnicityPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                when 113
+                  if flag == 'stag' then
+                    print 'ETHNICITY->Race: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  # Note: FED calls our Race definition as ETHNICITY. Adhering to our definition.
+                  @newsurvey.QualificationRacePreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                when 633
+                  if flag == 'stag' then
+                    print 'STANDARD_EDUCATION: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @newsurvey.QualificationEducationPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                when 14785
+                  if flag == 'stag' then
+                    print 'STANDARD_HHI_US: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @newsurvey.QualificationHHIPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
+                when 14887
+                  if flag == 'stag' then
+                    print 'STANDARD_HHI_INT: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @newsurvey.QualificationHHIPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")     
               end # case
+
             end #do      
           end # if
     
           # Get new Survey Quotas Information by SurveyNumber
           begin
             sleep(1)
-            puts 'CONNECTING FOR QUOTA INFORMATION for new survey: ', SurveyNumber
+            print 'CONNECTING FOR QUOTA INFORMATION for new survey: ', SurveyNumber
+            puts
           
             if flag == 'prod' then
-              NewSurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+SurveyNumber.to_s+'/5458?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
+              @NewSurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+SurveyNumber.to_s+'/5458?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
             else
               if flag == 'stag' then
-                NewSurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+                @NewSurveyQuotas = HTTParty.get(base_url+'/Supply/v1/SurveyQuotas/BySurveyNumber/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
               else
               end
             end
@@ -400,16 +637,16 @@ begin
               rescue HTTParty::Error => e
               puts 'HttParty::Error '+ e.message
               retry
-            end while NewSurveyQuotas.code != 200
+            end while @NewSurveyQuotas.code != 200
 
             # Save quotas information for each survey
 
-#           if NewSurveyQuotas["SurveyStillLive"] == false then
+#           if @NewSurveyQuotas["SurveyStillLive"] == false then
 #              @survey.delete
 #            else
-              @newsurvey.SurveyStillLive = NewSurveyQuotas["SurveyStillLive"]
-              @newsurvey.SurveyStatusCode = NewSurveyQuotas["SurveyStatusCode"]
-              @newsurvey.SurveyQuotas = NewSurveyQuotas["SurveyQuotas"]
+              @newsurvey.SurveyStillLive = @NewSurveyQuotas["SurveyStillLive"]
+              @newsurvey.SurveyStatusCode = @NewSurveyQuotas["SurveyStatusCode"]
+              @newsurvey.SurveyQuotas = @NewSurveyQuotas["SurveyQuotas"]
 #            end
         
             # Get Supplierlinks for the survey
@@ -463,6 +700,7 @@ begin
               @newsurvey.CPI = NewSupplierLink["SupplierLink"]["CPI"]   
               print '**************************************************** SAVING THE NEW SURVEY IN DATABASE'
               puts
+              
               # Finally save the new survey information in the database
               @newsurvey.save
             end
@@ -476,7 +714,7 @@ begin
           end
           
           else
-            print '******************************** This survey does not meet our biz requirements', IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"]
+            print '******************************** This survey does not meet our biz requirements: ', IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"]
             puts
           end # download a new survey if the new survey qualifies for being suitable from countrylanguageID, studytypeID, and BidLOI criteria
 
