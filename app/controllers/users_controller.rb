@@ -20,12 +20,18 @@ require 'mixpanel-ruby'
 
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
-    # Check for COPA eligibility
-    @age=params[:age]
+    if params[:age].empty? == false
+      @age = params[:age]
+    else
+      redirect_to '/users/new'
+      return
+    end
 
-#    @age = age( params[:user][:birth_month], params[:user][:birth_date], params[:user][:birth_year] )  
 #    print 'Age works out to be', @age
 #    puts
+
+
+     # Check for COPA eligibility
 
     if @age.to_i<13 then
       p '********************* Entered age is < 13'
@@ -276,11 +282,16 @@ require 'mixpanel-ruby'
           if user.country=="7" then
             redirect_to '/users/qq4_IN'
           else
+            if user.country=="0" then
              redirect_to '/users/nosuccess'
+            else
+             redirect_to '/users/qq3'
+            end
           end
         end
       end
     end
+  
   end
   
   def zip_US
@@ -292,10 +303,18 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'Zip')
     
-    user.ZIP=params[:zip]
-    user.save
-    redirect_to '/users/qq7_US'
-#    ranksurveysforuser(session.id)
+#    user.ZIP=params[:zip]
+#    user.save
+#    redirect_to '/users/qq7_US'
+
+    if params[:zip].empty? == false
+      user.ZIP=params[:zip]
+      user.save
+      redirect_to '/users/qq7_US'
+    else
+      redirect_to '/users/qq4_US'
+    end
+
   end
   
   def zip_CA
@@ -307,9 +326,18 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'CA_Zip')
     
-    user.ZIP=params[:zip]
-    user.save
-    redirect_to '/users/qq7_CA'
+#    user.ZIP=params[:zip]
+#    user.save
+#    redirect_to '/users/qq7_CA'
+    
+    if params[:zip].empty? == false
+      user.ZIP=params[:zip]
+      user.save
+      redirect_to '/users/qq7_CA'
+    else
+      redirect_to '/users/qq4_CA'
+    end
+    
   end
   
   def zip_IN
@@ -321,9 +349,19 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'IN_PIN')
     
-    user.ZIP=params[:zip]
-    user.save
-    redirect_to '/users/qq7_IN'
+ #   user.ZIP=params[:zip]
+#    user.save
+ #   redirect_to '/users/qq7_IN'
+    
+    
+    if params[:zip].empty? == false
+      user.ZIP=params[:zip]
+      user.save
+      redirect_to '/users/qq7_IN'
+    else
+      redirect_to '/users/qq4_IN'
+    end  
+    
   end
   
   def zip_AU
@@ -333,9 +371,19 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'AU_Zip')
     
-    user.ZIP=params[:zip]
-    user.save
-    redirect_to '/users/qq7_AU'
+#    user.ZIP=params[:zip]
+#    user.save
+#    redirect_to '/users/qq7_AU'
+    
+    
+    if params[:zip].empty? == false
+      user.ZIP=params[:zip]
+      user.save
+      redirect_to '/users/qq7_AU'
+    else
+      redirect_to '/users/qq4_AU'
+    end
+    
   end
   
   def ethnicity_US
@@ -346,34 +394,57 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'ethnicity_US')
     
-    user.ethnicity=params[:ethnicity]
-    user.save
-    redirect_to '/users/qq6_US'
+#    user.ethnicity=params[:ethnicity]
+#    user.save
+#    redirect_to '/users/qq6_US'
+    
+    if params[:ethnicity] != nil
+      user.ethnicity=params[:ethnicity]
+      user.save
+      redirect_to '/users/qq6_US'
+    else
+      redirect_to '/users/qq5_US'
+    end
+    
+    
   end
   
   def ethnicity_CA
 
     user=User.find_by session_id: session.id
-    user.ethnicity=params[:ethnicity]
-    user.save
-    redirect_to '/users/tq2a_CA'
+
+#    user.ethnicity=params[:ethnicity]
+#    user.save
+#    redirect_to '/users/tq2a_CA'
+    
+    if params[:ethnicity] != nil
+      user.ethnicity=params[:ethnicity]
+      user.save
+      redirect_to '/users/qq6_CA'
+    else
+      redirect_to '/users/qq5_CA'
+    end
+    
   end
   
   def ethnicity_IN
 
     user=User.find_by session_id: session.id
-    user.ethnicity=params[:ethnicity]
-    user.save
-    redirect_to '/users/tq2a_IN'
+    
+#    user.ethnicity=params[:ethnicity]
+#    user.save
+#    redirect_to '/users/tq2a_IN'
+    
+    if params[:ethnicity] != nil
+      user.ethnicity=params[:ethnicity]
+      user.save
+      redirect_to '/users/qq6_IN'
+    else
+      redirect_to '/users/qq5_IN'
+    end  
+    
   end
   
-#  def householdincome
-
-#    user=User.find_by session_id: session.id
-#    user.householdincome=params[:hhi]
-#    user.save
-#    redirect_to '/users/show'
-#  end
   
   def race_US
     
@@ -383,9 +454,18 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'race_US')
     
-    user.race=params[:race]
-    user.save
-    ranksurveysforuser(session.id)
+#    user.race=params[:race]
+#    user.save
+#    ranksurveysforuser(session.id)
+    
+    if params[:race] != nil
+      user.ethnicity=params[:race]
+      user.save
+      ranksurveysforuser(session.id)
+    else
+      redirect_to '/users/qq6_US'
+    end  
+    
   end
   
   def race_CA
@@ -418,9 +498,18 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'education_US')
     
-    user.eduation=params[:education]
-    user.save
-    redirect_to '/users/qq8_US'
+ #   user.eduation=params[:education]
+#    user.save
+ #   redirect_to '/users/qq8_US'
+    
+    if params[:education] != nil
+      user.eduation=params[:education]
+      user.save
+      redirect_to '/users/qq8_US'
+    else
+      redirect_to '/users/qq7_US'
+    end
+    
   end
   
   def education_CA
@@ -432,9 +521,19 @@ require 'mixpanel-ruby'
     
      tracker.track(user.ip_address, 'education_CA')
     
-    user.eduation=params[:education]
-    user.save
-    redirect_to '/users/qq8_CA'
+#    user.eduation=params[:education]
+#    user.save
+#    redirect_to '/users/qq8_CA'
+    
+    if params[:education] != nil
+      user.eduation=params[:education]
+      user.save
+      redirect_to '/users/qq8_CA'
+    else
+      redirect_to '/users/qq7_CA'
+    end
+    
+    
   end
   
   def education_IN
@@ -446,9 +545,19 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'education_IN')
     
-    user.eduation=params[:education]
-    user.save
-    redirect_to '/users/qq8_IN'
+#    user.eduation=params[:education]
+#    user.save
+#    redirect_to '/users/qq8_IN'
+    
+    
+    if params[:education] != nil
+      user.eduation=params[:education]
+      user.save
+      redirect_to '/users/qq8_IN'
+    else
+      redirect_to '/users/qq7_IN'
+    end
+    
   end
   
   def education_AU
@@ -460,9 +569,18 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'education_AU')
     
-    user.eduation=params[:education]
-    user.save
-    redirect_to '/users/qq8_AU'
+#    user.eduation=params[:education]
+#    user.save
+#    redirect_to '/users/qq8_AU'
+    
+    if params[:education] != nil
+      user.eduation=params[:education]
+      user.save
+      redirect_to '/users/qq8_AU'
+    else
+      redirect_to '/users/qq7_AU'
+    end
+    
   end
 
   def householdincome_US  
@@ -473,10 +591,20 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'hhi_US')
     
-    user.householdincome=params[:hhi]
-    user.save
-#    redirect_to '/users/tq2b'
-    redirect_to '/users/qq5_US'
+#    user.householdincome=params[:hhi]
+#    user.save
+#####    redirect_to '/users/tq2b'
+#    redirect_to '/users/qq5_US'
+    
+    
+    if params[:hhi] != nil
+      user.householdincome=params[:hhi]
+      user.save
+      redirect_to '/users/qq5_US'
+    else
+      redirect_to '/users/qq8_US'
+    end
+    
   end
 
   def householdincome_CA
@@ -487,10 +615,19 @@ require 'mixpanel-ruby'
     
      tracker.track(user.ip_address, 'hhi_CA')
     
-    user.householdincome=params[:hhi]
-    user.save
-#    redirect_to '/users/tq2b'
-    ranksurveysforuser(session.id)
+#    user.householdincome=params[:hhi]
+#    user.save
+###    redirect_to '/users/tq2b'
+#    ranksurveysforuser(session.id)
+    
+    if params[:hhi] != nil
+      user.householdincome=params[:hhi]
+      user.save
+      ranksurveysforuser(session.id)
+    else
+      redirect_to '/users/qq8_CA'
+    end
+    
   end
 
   def householdincome_IN  
@@ -501,10 +638,19 @@ require 'mixpanel-ruby'
     
      tracker.track(user.ip_address, 'hhi_IN')
     
-    user.householdincome=params[:hhi]
-    user.save
-#    redirect_to '/users/tq2b'
-    ranksurveysforuser(session.id)
+#    user.householdincome=params[:hhi]
+#    user.save
+###    redirect_to '/users/tq2b'
+#    ranksurveysforuser(session.id)
+
+    if params[:hhi] != nil
+      user.householdincome=params[:hhi]
+      user.save
+      ranksurveysforuser(session.id)
+    else
+      redirect_to '/users/qq8_IN'
+    end
+
   end
   
   def householdincome_AU  
@@ -515,10 +661,20 @@ require 'mixpanel-ruby'
     
      tracker.track(user.ip_address, 'hhi_AU')
     
-    user.householdincome=params[:hhi]
-    user.save
-#    redirect_to '/users/qq9'
-    ranksurveysforuser(session.id)
+#    user.householdincome=params[:hhi]
+#    user.save
+###    redirect_to '/users/qq9'
+#    ranksurveysforuser(session.id)
+    
+    
+    if params[:hhi] != nil
+      user.householdincome=params[:hhi]
+      user.save
+      ranksurveysforuser(session.id)
+    else
+      redirect_to '/users/qq8_AU'
+    end
+    
   end
   
   def householdcomp  
@@ -1093,7 +1249,7 @@ require 'mixpanel-ruby'
                         puts '************it must have been true before => so do nothing'
                         
                       else
-                        puts '************* it is already on the unmatched list => so do nothing'
+                        puts '************* it is already on the unmatched and all nested quotas list => so do nothing'
                       end
                     else
                       puts '*************** this nested question has not ocurred before => so it should be added to the unmatched list and the list of nestedquota names.'

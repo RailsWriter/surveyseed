@@ -167,23 +167,23 @@ class RedirectsController < ApplicationController
             print '********************************* Unsuccessful attempts count raised to 1 following a Failuare for survey number: ', params[:tsfn]
             puts
             
-            if (@survey.SurveyExactRank == 20) && (@survey.CompletedBy.length > 0) then
+            if (@survey.SurveyExactRank == 20) && (@survey.CompletedBy.length < 1) then
               @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
-              print '********************************* Reached 20 Unsuccessful attempts, rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
+              print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
               puts
             else
             end
             
-            if (@survey.SurveyExactRank >= 30) && (@survey.SurveyExactRank < 40) && (@survey.CompletedBy.length > 0) then
-              @survey.SurveyGrossRank = 10
-              print '********************************* More than 30 Unsuccessful attempts, rank reduced to 10 following a Failuare for survey number: ', params[:tsfn]
+            if ((@survey.SurveyExactRank >= 30) && (@survey.SurveyExactRank < 40)) && (@survey.CompletedBy.length < 1) then
+              @survey.SurveyGrossRank = 12
+              print '********************************* More than 30 Unsuccessful attempts, and no completes - rank reduced to 12 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
             end
             
-            if (@survey.SurveyExactRank >= 40) && (@survey.CompletedBy.length > 0) then
-              @survey.SurveyGrossRank = 15
-              print '********************************* More than 40 Unsuccessful attempts, rank reduced to 10 following a Failuare for survey number: ', params[:tsfn]
+            if (@survey.SurveyExactRank >= 40) && (@survey.CompletedBy.length < 1) then
+              @survey.SurveyGrossRank = 17
+              print '********************************* More than 40 Unsuccessful attempts, and no completes - rank reduced to 16 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
             end
@@ -257,29 +257,29 @@ class RedirectsController < ApplicationController
           
           # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
 
-          @survey.SampleTypeID = @survey.SampleTypeID + 1 # counting number of OQ incidents for a survey
+          @survey.SampleTypeID = @survey.SampleTypeID + 1 # counts number of OQ incidents for a survey
 
           @survey.SurveyExactRank = @survey.SurveyExactRank + 1
           print '********************************* Unsuccessful attempts count raised to 1 following a Failuare for survey number: ', params[:tsfn]
           puts
           
-          if (@survey.SurveyExactRank == 20) && (@survey.CompletedBy.length > 0) then
+          if (@survey.SurveyExactRank == 20) && (@survey.CompletedBy.length < 1) then
             @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
-            print '********************************* Reached 20 Unsuccessful attempts, rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
+            print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
             puts
           else
           end
           
-          if (@survey.SurveyExactRank >= 30) && (@survey.SurveyExactRank < 40) && (@survey.CompletedBy.length > 0) then
-            @survey.SurveyGrossRank = 10
-            print '********************************* More than 30 Unsuccessful attempts, rank reduced to 10 following a Failuare for survey number: ', params[:tsfn]
+          if ((@survey.SurveyExactRank >= 30) && (@survey.SurveyExactRank < 40)) && (@survey.CompletedBy.length < 1) then
+            @survey.SurveyGrossRank = 12
+            print '********************************* More than 30 Unsuccessful attempts, and no completes - rank reduced to 12 following a Failuare for survey number: ', params[:tsfn]
             puts 
           else
           end
           
-          if (@survey.SurveyExactRank >= 40) && (@survey.CompletedBy.length > 0) then
-            @survey.SurveyGrossRank = 15
-            print '********************************* More than 40 Unsuccessful attempts, rank reduced to 10 following a Failuare for survey number: ', params[:tsfn]
+          if (@survey.SurveyExactRank >= 40) && (@survey.CompletedBy.length < 1) then
+            @survey.SurveyGrossRank = 17
+            print '********************************* More than 40 Unsuccessful attempts, and no completes - rank reduced to 16 following a Failuare for survey number: ', params[:tsfn]
             puts 
           else
           end

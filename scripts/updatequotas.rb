@@ -2,7 +2,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 
 @updatesrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
 
@@ -88,12 +88,84 @@ begin
             puts 'HttParty::Error '+ e.message
             retry
         end while @SupplierAllocations.code != 200
+        
+        
 
         if @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0 then
           
           print "********************* There is total remaining allocation for this EXISTING survey number: ", @surveynumber, ' in the amount of: ', @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
           puts
 
+
+          # Update the rank of the survey if Conversion value has changed since originally downloaded. However, make no change if own data exists i.e. we have seen 20 or more responsdents fail the survey or we have recorded one or more completes and raised the rank to 1.
+          
+          if (survey.SurveyExactRank > 20) || (survey.CompletedBy.length > 0) then # if # 20
+            # do nothing
+          else # If # 20
+            # update Rank with new Conversion data
+            case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
+              when 0..5
+                puts "Lowest Rank 20"
+                survey.SurveyGrossRank = 20
+              when 6..10
+                puts "Rank 19"
+                survey.SurveyGrossRank = 19
+              when 11..15
+                puts "Rank 18"
+                survey.SurveyGrossRank = 18
+              when 16..20
+                puts "Rank 17"
+                survey.SurveyGrossRank = 17
+              when 21..25
+                puts "Rank 16"
+                survey.SurveyGrossRank = 16
+              when 26..30
+                puts "Rank 15"
+                survey.SurveyGrossRank = 15
+              when 31..35
+                puts "Rank 14"
+                survey.SurveyGrossRank = 14
+              when 36..40
+                puts "Rank 13"
+                survey.SurveyGrossRank = 13
+              when 41..45
+                puts "Rank 12"
+                survey.SurveyGrossRank = 12
+              when 46..50
+                puts "Rank 11"
+                survey.SurveyGrossRank = 11
+              when 51..55
+                puts "Rank 10"
+                survey.SurveyGrossRank = 10
+              when 56..60
+                puts "Rank 9"
+                survey.SurveyGrossRank = 9
+              when 61..65
+                puts "Rank 8"
+                survey.SurveyGrossRank = 8
+              when 66..70
+                puts "Rank 7"
+                survey.SurveyGrossRank = 7
+              when 71..75
+                puts "Rank 6"
+                survey.SurveyGrossRank = 6
+              when 76..80
+                puts "Rank 5"
+                survey.SurveyGrossRank = 5
+              when 81..85
+                puts "Rank 4"
+                survey.SurveyGrossRank = 4
+              when 86..90
+                puts "Rank 3"
+                survey.SurveyGrossRank = 3
+              when 91..95
+                puts "Rank 2"
+                survey.SurveyGrossRank = 2
+              when 96..100
+                puts "Highest Rank 1"
+                survey.SurveyGrossRank = 1
+            end # end case
+          end # if # 20
 
       begin
         sleep(1)
@@ -118,8 +190,7 @@ begin
 
       survey.QualificationAgePreCodes = ["ALL"]
       survey.QualificationGenderPreCodes = ["ALL"]
-      survey.QualificationZIPPreCodes = ["ALL"] 
-      
+      survey.QualificationZIPPreCodes = ["ALL"]      
       survey.QualificationRacePreCodes = ["ALL"]
       survey.QualificationEthnicityPreCodes = ["ALL"]  
       survey.QualificationEducationPreCodes = ["ALL"]  
@@ -133,9 +204,7 @@ begin
         puts 'SurveyQualifications or Questions is NIL'
         survey.QualificationAgePreCodes = ["ALL"]
         survey.QualificationGenderPreCodes = ["ALL"]
-        survey.QualificationZIPPreCodes = ["ALL"]  
-        
-        
+        survey.QualificationZIPPreCodes = ["ALL"]    
         survey.QualificationRacePreCodes = ["ALL"]
         survey.QualificationEthnicityPreCodes = ["ALL"]  
         survey.QualificationEducationPreCodes = ["ALL"]  
@@ -526,9 +595,7 @@ begin
     
           @newsurvey.QualificationAgePreCodes = ["ALL"]
           @newsurvey.QualificationGenderPreCodes = ["ALL"]
-          @newsurvey.QualificationZIPPreCodes = ["ALL"] 
-          
-          
+          @newsurvey.QualificationZIPPreCodes = ["ALL"]
           @newsurvey.QualificationRacePreCodes = ["ALL"]
           @newsurvey.QualificationEthnicityPreCodes = ["ALL"]  
           @newsurvey.QualificationEducationPreCodes = ["ALL"]  
@@ -543,8 +610,7 @@ begin
             puts '***************** SurveyQualifications or Questions is NIL'
             @newsurvey.QualificationAgePreCodes = ["ALL"]
             @newsurvey.QualificationGenderPreCodes = ["ALL"]
-            @newsurvey.QualificationZIPPreCodes = ["ALL"]  
-            
+            @newsurvey.QualificationZIPPreCodes = ["ALL"]            
             @newsurvey.QualificationRacePreCodes = ["ALL"]
             @newsurvey.QualificationEthnicityPreCodes = ["ALL"]  
             @newsurvey.QualificationEducationPreCodes = ["ALL"]  

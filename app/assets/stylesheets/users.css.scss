@@ -155,6 +155,17 @@ form.myform input {
 	background-color:white;
 }
 
+
+.mybiglistinput input {
+	width: 4%;
+	height: 30px;
+	text-align: center;
+	margin-left: 30%;
+	color:black;
+	background-color:white;
+}
+
+
 .myinput {
 	margin-top: 3%;
 }
@@ -236,6 +247,17 @@ fieldset input {
 		height: 40px;
 		text-align: center;
 		margin-left: 35%;
+		color:black;
+		background-color:white;
+	}
+	
+	
+	.mybiglistinput input {
+		width: 4%;
+		height: 30px;
+		font-size: 0.2em;
+		text-align: center;
+		margin-left: 2%;
 		color:black;
 		background-color:white;
 	}

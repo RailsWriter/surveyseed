@@ -4,7 +4,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 
 
 @initialrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
@@ -308,8 +308,7 @@ begin
     
           @survey.QualificationAgePreCodes = ["ALL"]
           @survey.QualificationGenderPreCodes = ["ALL"]
-          @survey.QualificationZIPPreCodes = ["ALL"] 
-          
+          @survey.QualificationZIPPreCodes = ["ALL"]          
           @survey.QualificationRacePreCodes = ["ALL"]
           @survey.QualificationEthnicityPreCodes = ["ALL"]  
           @survey.QualificationEducationPreCodes = ["ALL"]  
@@ -323,8 +322,7 @@ begin
             puts '******************** SurveyQualifications or Questions is NIL'
             @survey.QualificationAgePreCodes = ["ALL"]
             @survey.QualificationGenderPreCodes = ["ALL"]
-            @survey.QualificationZIPPreCodes = ["ALL"]  
-            
+            @survey.QualificationZIPPreCodes = ["ALL"]            
             @survey.QualificationRacePreCodes = ["ALL"]
             @survey.QualificationEthnicityPreCodes = ["ALL"]  
             @survey.QualificationEducationPreCodes = ["ALL"]  
