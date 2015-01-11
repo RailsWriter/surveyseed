@@ -460,7 +460,7 @@ require 'mixpanel-ruby'
     
     if params[:race] != nil
       user.race=params[:race]
-      user.saveUser
+      user.save
       ranksurveysforuser(session.id)
     else
       redirect_to '/users/qq6_US'
