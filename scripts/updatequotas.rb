@@ -99,9 +99,11 @@ begin
 
           # Update the rank of the survey if Conversion value has changed since originally downloaded. However, make no change if own data exists i.e. we have seen 20 or more responsdents fail the survey or we have recorded one or more completes and raised the rank to 1.
           
-          if (survey.SurveyExactRank > 20) || (survey.CompletedBy.length > 0) then # if # 20
+          survey.Conversion = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
+          
+          if (survey.SurveyExactRank > 20) || (survey.CompletedBy.length > 0) then # if 20
             # do nothing
-          else # If # 20
+          else # If 20
             # update Rank with new Conversion data
             case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
               when 0..5
@@ -165,7 +167,7 @@ begin
                 puts "Highest Rank 1"
                 survey.SurveyGrossRank = 1
             end # end case
-          end # if # 20
+          end # if 20
 
       begin
         sleep(1)
