@@ -167,7 +167,7 @@ class RedirectsController < ApplicationController
             print '********************************* Unsuccessful attempts count raised to 1 following a Failuare for survey number: ', params[:tsfn]
             puts
             
-            if (@survey.SurveyExactRank == 20) && (@survey.CompletedBy.length < 1) then
+            if (@survey.SurveyExactRank == 8) && (@survey.CompletedBy.length < 1) then
               @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
               print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
               puts
@@ -263,7 +263,7 @@ class RedirectsController < ApplicationController
           print '********************************* Unsuccessful attempts count raised to 1 following a Failuare for survey number: ', params[:tsfn]
           puts
           
-          if (@survey.SurveyExactRank == 20) && (@survey.CompletedBy.length < 1) then
+          if (@survey.SurveyExactRank == 8) && (@survey.CompletedBy.length < 1) then
             @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
             print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
             puts
