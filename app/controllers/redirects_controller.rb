@@ -175,18 +175,28 @@ class RedirectsController < ApplicationController
             end
             
             if ( @survey.SurveyExactRank == 30 ) && (@survey.CompletedBy.length < 1) then
-              @survey.SurveyGrossRank = 12
+              @survey.SurveyGrossRank = 15
               print '********************************* Reached 30 Unsuccessful attempts, and no completes - rank reduced to 12 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
             end
             
-            if ( @survey.SurveyExactRank == 40 ) && (@survey.CompletedBy.length < 1) then
+            if ( @survey.SurveyExactRank == 50 ) && (@survey.CompletedBy.length < 1) then
               @survey.SurveyGrossRank = 17
               print '********************************* Reached 40 Unsuccessful attempts, and no completes - rank reduced to 17 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
             end
+            
+            
+            if ( @survey.SurveyExactRank == 100 ) && (survey.CompletedBy.length == 1) then
+              @survey.SurveyGrossRank = 15
+              print '********************************* Reached 100 Unsuccessful attempts, with only 1 complete - rank reduced to 15 following a Failuare for survey number: ', params[:tsfn]
+              puts 
+            else
+            end
+            
+            
             
             @survey.save
             
@@ -271,8 +281,8 @@ class RedirectsController < ApplicationController
           end
           
           if ( @survey.SurveyExactRank == 30 ) && (@survey.CompletedBy.length < 1) then
-            @survey.SurveyGrossRank = 12
-            print '********************************* Reached 30 Unsuccessful attempts, and no completes - rank reduced to 12 following a OQ for survey number: ', params[:tsfn]
+            @survey.SurveyGrossRank = 15
+            print '********************************* Reached 30 Unsuccessful attempts, and no completes - rank reduced to 15 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
@@ -283,6 +293,17 @@ class RedirectsController < ApplicationController
             puts 
           else
           end
+          
+          
+          if ( @survey.SurveyExactRank == 100 ) && (survey.CompletedBy.length == 1) then
+            @survey.SurveyGrossRank = 15
+            print '********************************* Reached 100 Unsuccessful attempts, with only 1 complete - rank reduced to 15 following a OQ for survey number: ', params[:tsfn]
+            puts 
+          else
+          end
+          
+          
+          
           
           @survey.save
           
