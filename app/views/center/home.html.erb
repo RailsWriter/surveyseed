@@ -1,17 +1,17 @@
 <h1>Center#home</h1>
 
 
-<h6> Watch for high number of terminations or OQ's to lower a survey's grossrank, if it does not happen automatically.
+<h6> Watch for high number of terminations to lower a survey's grossrank, if it does not happen automatically.
 
 <h6> Total number of surveys in Ketsci inventory: 
 <%= @surveys.count%></h6>
 	
-<h5>SuveyNumber --- SurveyId --- CountryLangID --- Conversion --- GrossRank ---- GEEPC ------ Failed+OQ ------- OQs -------- Completes</h5>
+<h5>SuveyNumber --- SurveyId --- CountryLangID --- Remaining --- Conversion ---- GrossRank ---- GEEPC ------ Failed+OQ ------- OQs -------- Completes</h5>
 
 
 <ul id="contacts">
     <% @surveys.each do |c| %>
     <li>
-       <%= link_to c.SurveyNumber.to_s + '---------------' + c.id.to_s + '-------------------' + c.CountryLanguageID.to_s + '-------------------' + c.Conversion.to_s + '-------------------' + c.SurveyGrossRank.to_s + '--------------------' + c.SurveyQuotaCalcTypeID.to_s + '--------------------' + c.SurveyExactRank.to_s + '--------------------' + c.SampleTypeID.to_s + '--------------------' + c.CompletedBy.length.to_s, :action =>'show', :id =>c.id  -%>
+       <%= link_to c.SurveyNumber.to_s + '---------------' + c.id.to_s + '-------------------' + c.CountryLanguageID.to_s + '-------------------' + c.TotalRemaining.to_s + '-------------------' + c.Conversion.to_s + '-------------------' + c.SurveyGrossRank.to_s + '--------------------' + c.SurveyQuotaCalcTypeID.to_s + '--------------------' + c.SurveyExactRank.to_s + '--------------------' + c.SampleTypeID.to_s + '--------------------' + c.CompletedBy.length.to_s, :action =>'show', :id =>c.id  -%>
     </li>
     <% end %>

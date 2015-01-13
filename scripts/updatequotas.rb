@@ -90,12 +90,15 @@ begin
         end while @SupplierAllocations.code != 200
         
         
+        # First check if there are any completes needed.
+        
+        survey.TotalRemaining = @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
 
         if @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0 then
           
           print "********************* There is total remaining allocation for this EXISTING survey number: ", @surveynumber, ' in the amount of: ', @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
           puts
-
+          
 
           # Update the rank of the survey if Conversion value has changed since originally downloaded. However, make no change if own data exists i.e. we have seen 20 or more responsdents fail the survey or we have recorded one or more completes and raised the rank to 1.
           
