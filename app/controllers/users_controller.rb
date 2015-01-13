@@ -829,6 +829,7 @@ require 'mixpanel-ruby'
     if user.QualifiedSurveys.empty? then  #0
       puts '************* User did not qualify for a survey so taking user to show FailureLink page'
       redirect_to '/users/nosuccess'
+      return
 #      userride (session_id)
     else #0
       
@@ -1429,6 +1430,7 @@ require 'mixpanel-ruby'
       
       if (user.SurveysWithMatchingQuota.empty?) then
         redirect_to '/users/nosuccess'
+        return
       else       
         user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
         print 'List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
