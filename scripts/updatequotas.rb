@@ -576,6 +576,8 @@ begin
           
             print '********************* There is total remaining allocation for this NEW survey number: ', SurveyNumber, ' in the amount of: ', @NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
             puts
+            
+            @newsurvey.TotalRemaining = @NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
 
           # Get Survey Qualifications Information by SurveyNumber
           begin
