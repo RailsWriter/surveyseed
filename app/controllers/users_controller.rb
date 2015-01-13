@@ -828,7 +828,8 @@ require 'mixpanel-ruby'
 
     if user.QualifiedSurveys.empty? then  #0
       puts '************* User did not qualify for a survey so taking user to show FailureLink page'
-      userride (session_id)
+      redirect_to '/users/nosuccess'
+#      userride (session_id)
     else #0
       
       # delete the empty item from initialization
@@ -1426,18 +1427,13 @@ require 'mixpanel-ruby'
     
       # Lets save the survey numbers that the user meets the quota requirements for in this user's record of database in rank order
       
-      user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
-      print 'List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
-      puts
-      
-      # removing the blank entry
-#      if user.SurveysWithMatchingQuota !=nil then
-#        user.SurveysWithMatchingQuota.reject(&:empty?)
-#      else
-#      end
-      
-#      print 'List of (unique AND without Blanks) surveys where quota is available: ', user.SurveysWithMatchingQuota
-#      puts
+      if (user.SurveysWithMatchingQuota.empty?) then
+        redirect_to '/users/nosuccess'
+      else       
+        user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
+        print 'List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
+        puts
+      end
       
       user.save
       
@@ -1462,12 +1458,12 @@ require 'mixpanel-ruby'
     end
     
     # The user does not qualify for any survey in the inventory, from the begining. (Failure/Terminate)
-    if ((user.QualifiedSurveys.empty?) || (user.SurveysWithMatchingQuota.empty?)) then
-      p '******************** USERRIDE: No Surveys matching quals/quota were found in users_controller'
-      redirect_to '/users/nosuccess'
+#    if ((user.QualifiedSurveys.empty?) || (user.SurveysWithMatchingQuota.empty?)) then
+#      p '******************** USERRIDE: No Surveys matching quals/quota were found in users_controller'
+#      redirect_to '/users/nosuccess'
 #      return -> causes it to go back up to end of did not qualify and show the list of unique matching quotas which is nil
-    else
-    end
+#    else
+#    end
     
      # If the user qualifies for one or more survey, redirect to the top ranked survey and repeat until success/failure/OT/QT
     (0..user.SurveysWithMatchingQuota.length-1).each do |i|
