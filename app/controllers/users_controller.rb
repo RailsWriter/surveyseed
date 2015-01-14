@@ -1429,6 +1429,7 @@ require 'mixpanel-ruby'
       # Lets save the survey numbers that the user meets the quota requirements for in this user's record of database in rank order
       
       if (user.SurveysWithMatchingQuota.empty?) then
+        p '******************** USERRIDE: No Surveys matching quota were found in users_controller'
         redirect_to '/users/nosuccess'
         return
       else       
