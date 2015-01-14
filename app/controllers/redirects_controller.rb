@@ -167,30 +167,30 @@ class RedirectsController < ApplicationController
             print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn]
             puts
             
-            if (@survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
+            if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
               @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
               print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
               puts
             else
             end
             
-            if ( @survey.SurveyExactRank == 30 ) && (@survey.CompletedBy.length < 1) then
+            if ( @survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
               @survey.SurveyGrossRank = 15
               print '********************************* Reached 30 Unsuccessful attempts, and no completes - rank reduced to 12 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
             end
             
-            if ( @survey.SurveyExactRank == 50 ) && (@survey.CompletedBy.length < 1) then
-              @survey.SurveyGrossRank = 17
+            if ( @survey.SurveyExactRank == 30 ) && (@survey.CompletedBy.length < 1) then
+              @survey.SurveyGrossRank = 20
               print '********************************* Reached 40 Unsuccessful attempts, and no completes - rank reduced to 17 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
             end
             
             
-            if ( @survey.SurveyExactRank == 100 ) && (survey.CompletedBy.length == 1) then
-              @survey.SurveyGrossRank = 15
+            if ( @survey.SurveyExactRank == 50 ) && (survey.CompletedBy.length == 1) then
+              @survey.SurveyGrossRank = 20
               print '********************************* Reached 100 Unsuccessful attempts, with only 1 complete - rank reduced to 15 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
@@ -273,30 +273,30 @@ class RedirectsController < ApplicationController
           print '********************************* Unsuccessful attempts count raised by 1 following an OQ for survey number: ', params[:tsfn]
           puts
           
-          if (@survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
+          if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
             @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
             print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a OQ for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
             puts
           else
           end
           
-          if ( @survey.SurveyExactRank == 30 ) && (@survey.CompletedBy.length < 1) then
+          if ( @survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
             @survey.SurveyGrossRank = 15
             print '********************************* Reached 30 Unsuccessful attempts, and no completes - rank reduced to 15 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
           
-          if ( @survey.SurveyExactRank == 40 ) && (@survey.CompletedBy.length < 1) then
-            @survey.SurveyGrossRank = 17
+          if ( @survey.SurveyExactRank == 30 ) && (@survey.CompletedBy.length < 1) then
+            @survey.SurveyGrossRank = 20
             print '********************************* Reached 40 Unsuccessful attempts, and no completes - rank reduced to 17 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
           
           
-          if ( @survey.SurveyExactRank == 100 ) && (survey.CompletedBy.length == 1) then
-            @survey.SurveyGrossRank = 15
+          if ( @survey.SurveyExactRank == 50 ) && (survey.CompletedBy.length == 1) then
+            @survey.SurveyGrossRank = 20
             print '********************************* Reached 100 Unsuccessful attempts, with only 1 complete - rank reduced to 15 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
