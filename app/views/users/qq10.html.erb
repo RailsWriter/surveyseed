@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">		
+		<div class="header">
+			<center>
+				<h1>Employment</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<center>
+				<p>What is your current employment status?</p>
+			</center>
+				<%= form_tag("employment", method: "post") do %>
+				<fieldset>
+					<div class="mybiglistinput">
+					<%= radio_button_tag 'employment', '1' %>
+					<%= label_tag(:employment, "Employed full-time") %><br>
+					<%= radio_button_tag 'employment', '2' %>
+					<%= label_tag(:employment, "Employed part-time") %><br>
+					<%= radio_button_tag 'employment', '3' %>
+					<%= label_tag(:employment, "Self-employed full-time") %><br>
+					<%= radio_button_tag 'employment', '4' %>
+					<%= label_tag(:employment, "Self-employed part-time") %><br>
+					<%= radio_button_tag 'employment', '5' %>
+					<%= label_tag(:employment, "Active military") %><br>
+					<%= radio_button_tag 'employment', '6' %>
+					<%= label_tag(:employment, "Inactive military/Veteran") %><br>					
+					<%= radio_button_tag 'employment', '7' %>
+					<%= label_tag(:employment, "Temporarily unemployed") %><br>
+					<%= radio_button_tag 'employment', '8' %>
+					<%= label_tag(:employment, "Full-time homemaker") %><br>
+					<%= radio_button_tag 'employment', '9' %>
+					<%= label_tag(:employment, "Retired") %><br>
+					<%= radio_button_tag 'employment', '10' %>
+					<%= label_tag(:employment, "Student") %><br>
+					<%= radio_button_tag 'employment', '11' %>
+					<%= label_tag(:employment, "Disabled") %><br>
+					<%= radio_button_tag 'employment', '12' %>
+					<%= label_tag(:employment, "Prefer not to answer") %><br><br>
+					</div>
+					<div class="myinput">
+					<center>
+					<%= submit_tag "Next" %>
+					</center>
+					</div>
+				</fieldset>
+				<% end %>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('KetsciLogoSm.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

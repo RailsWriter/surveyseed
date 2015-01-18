@@ -454,14 +454,10 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'race_US')
     
-#    user.race=params[:race]
-#    user.save
-#    ranksurveysforuser(session.id)
-    
     if params[:race] != nil
       user.race=params[:race]
       user.save
-      ranksurveysforuser(session.id)
+      redirect_to '/users/qq10'
     else
       redirect_to '/users/qq6_US'
     end  
@@ -623,7 +619,7 @@ require 'mixpanel-ruby'
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
       user.save
-      ranksurveysforuser(session.id)
+      redirect_to '/users/qq10'
     else
       redirect_to '/users/qq8_CA'
     end
@@ -646,7 +642,7 @@ require 'mixpanel-ruby'
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
       user.save
-      ranksurveysforuser(session.id)
+      redirect_to '/users/qq10'
     else
       redirect_to '/users/qq8_IN'
     end
@@ -670,22 +666,44 @@ require 'mixpanel-ruby'
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
       user.save
-      ranksurveysforuser(session.id)
+      redirect_to '/users/qq10'
     else
       redirect_to '/users/qq8_AU'
     end
     
   end
   
-  def householdcomp  
+#  def householdcomp  
+
+#    user=User.find_by session_id: session.id
+###    user.householdcomp=params[:householdcomp][:range]
+#    user.householdcomp=params[:householdcomp]
+#    user.save
+#    ranksurveysforuser(session.id)
+#  end
+  
+  
+  def employment  
+    
+    # Rename 'householdcomp' User records field to Employment
+    
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
-#    user.householdcomp=params[:householdcomp][:range]
-    user.householdcomp=params[:householdcomp]
-    user.save
-    ranksurveysforuser(session.id)
-#    redirect_to '/users/show'
+    
+    tracker.track(user.ip_address, 'employment')    
+    
+    if params[:employment] != nil
+      user.householdcomp=params[:employment]
+      user.save
+      ranksurveysforuser(session.id)
+    else
+      redirect_to '/users/qq10'
+    end
+    
   end
+  
+  
 
   def ranksurveysforuser (session_id)
 
@@ -758,17 +776,18 @@ require 'mixpanel-ruby'
 
       Survey.where("CountryLanguageID = ?", @usercountry).order( "SurveyGrossRank" ).each do |survey|
 
-      if ((( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
+      if (( survey.SurveyStillLive ) && 
+        (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
         (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
         (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
         (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ])) &&
         (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ])) &&
         (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ])) &&
         (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ])) &&
-        ( survey.SurveyStillLive ) && 
-        ((survey.CPI == nil) || (survey.CPI > 2.15))) then
+        (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ user.householdcomp ] & survey.QualificationHHCPreCodes.flatten) == [ user.householdcomp ])) &&
+        ((survey.CPI == nil) || (survey.CPI > 0.99))) then
         
-        # Add more generic condition that survey.CPI > user.currentpayout
+        # Add a more generic condition that survey.CPI > user.currentpayout
         
         #Prints for testing code
           
@@ -780,13 +799,14 @@ require 'mixpanel-ruby'
         @_ethnicity= (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ]))
         @_education= (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ]))
         @_HHI= (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ]))
+        @_employment = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ user.householdcomp ] & survey.QualificationHHCPreCodes.flatten) == [ user.householdcomp ]))
         
         
-        print '************ User QUALIFIED for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ', survey.QualificationZIPPreCodes, ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, 'SurveyStillAlive: ', survey.SurveyStillLive
+        print '************ User QUALIFIED for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ', survey.QualificationZIPPreCodes, ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.householdcomp, ' Std_Employment PreCode from survey: ', survey.QualificationHHCPreCodes, 'SurveyStillAlive: ', survey.SurveyStillLive
          
         puts
         
-        print 'Gender match: ', @_gender, ' Age match: ', @_age, ' ZIP match: ', @_ZIP, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI
+        print 'Gender match: ', @_gender, ' Age match: ', @_age, ' ZIP match: ', @_ZIP, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment
         puts
         
         user.QualifiedSurveys << survey.SurveyNumber
@@ -802,25 +822,15 @@ require 'mixpanel-ruby'
         @_ethnicity = (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ]))
         @_education = (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ]))
         @_HHI= (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ]))
+        @_employment = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ user.householdcomp ] & survey.QualificationHHCPreCodes.flatten) == [ user.householdcomp ]))
         
         
-        print '************ User DID NOT QUALIFY for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ', survey.QualificationZIPPreCodes, ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, 'SurveyStillAlive: ', survey.SurveyStillLive
+        print '************ User DID NOT QUALIFY for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ', survey.QualificationZIPPreCodes, ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.householdcomp, ' Std_Employment PreCode from survey: ', survey.QualificationHHCPreCodes, 'SurveyStillAlive: ', survey.SurveyStillLive
          
         puts
         
-        print 'Gender match:', @_gender, ' Age match: ', @_age, ' ZIP match: ', @_ZIP, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI
+        print 'Gender match:', @_gender, ' Age match: ', @_age, ' ZIP match: ', @_ZIP, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment
         puts
-        
-        
-        
-#        ans4 = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
-#        ans5 = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
-#        ans6 = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
-#        print 'END: USER DID NOT QUALIFY FOR THIS SURVEY', survey.SurveyNumber
-#        puts
-#        print 'Ans4 - Gender match:', ans4, 'Ans5 - Age match:', ans5, 'Ans6 - ZIP match:', ans6
-#        puts
-
 
       end
       # End of all surveys in the database that meet the country, age, gender and ZIP criteria
@@ -922,20 +932,7 @@ require 'mixpanel-ruby'
             print 'Number of respondents =, in this quota ID index k=: ', @NumberOfRespondents, ' ', k
             puts
             print '***** Questions in this quota: ', survey.SurveyQuotas[k]["Questions"]
-            puts
-            
-            
-#           @SurveyQuotaCPI = survey.SurveyQuotas[k]["QuotaCPI"]
-#           print 'NumberofRespondents:', @NumberOfRespondents, 'QuotaCPI:', @SurveyQuotaCPI
-#           puts
-            
-        
-#            if (survey.SurveyQuotas[k]["Questions"] == nil ) then
-#            # Assuming that quota is open for all users so add this survey number to user's ride
-#            puts '************* Assuming that quota is open for ALL users'
-#            user.SurveysWithMatchingQuota << @surveynumber
-#          else
-            
+            puts            
 
             
           if survey.SurveyQuotas[k]["NumberOfRespondents"] > 0 then #7
@@ -1500,19 +1497,19 @@ require 'mixpanel-ruby'
     end
     
     if user.country=="9" then 
-      @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP+'&HISPANIC='+user.ethnicity+'&ETHNICITY='+user.race+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_US='+user.householdincome
+      @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP+'&HISPANIC='+user.ethnicity+'&ETHNICITY='+user.race+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_US='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp
     else
       if user.country=="6" then
-        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome
+        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp
       else
         if user.country=="5" then
-          @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome
+          @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp
         else
           if user.country=="7" then
-            @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_IN='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome
+            @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_IN='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp
           else
             puts "*************************************** UseRide: Find out why country code is not correctly set"
-            @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome
+            @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp
             return
           end
         end

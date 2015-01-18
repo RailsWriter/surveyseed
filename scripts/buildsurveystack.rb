@@ -4,7 +4,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 
 
 @initialrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
@@ -63,14 +63,15 @@ begin
   print 'Total surveys', totalavailablesurveys+1
   puts
   
-# **************** Remove the last few && about survey number - was a duplicate in staging
+  
 # With a $2.15 CPI from FED, a $1.50 max payout can be made
+# Consider removing the CPI condition from builder and updater and only keep it in the user controller.
 
   (0..totalavailablesurveys).each do |i|
     
     if (Survey.where("SurveyNumber = ?", offerwallresponse["Surveys"][i]["SurveyNumber"])).exists? == false then
     
-      if ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 5) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 6) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 7) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9)) && ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 17) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 19) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && ((offerwallresponse["Surveys"][i]["BidLengthOfInterview"] == nil ) || (offerwallresponse["Surveys"][i]["BidLengthOfInterview"] < 41)) && ((offerwallresponse["Surveys"][i]["CPI"] == nil) || (offerwallresponse["Surveys"][i]["CPI"] > 1.99)) && (offerwallresponse["Surveys"][i]["SurveyNumber"] != 67820) && (offerwallresponse["Surveys"][i]["SurveyNumber"] != 66091) && (offerwallresponse["Surveys"][i]["SurveyNumber"] != 65653) && (offerwallresponse["Surveys"][i]["SurveyNumber"] != 98319) && (offerwallresponse["Surveys"][i]["SurveyNumber"] != 101766) then
+      if ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 5) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 6) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 7) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9)) && ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 17) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 19) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && ((offerwallresponse["Surveys"][i]["CPI"] == nil) || (offerwallresponse["Surveys"][i]["CPI"] > 0.99)) then
 
         # Save key offerwall data for each survey
     
@@ -127,10 +128,10 @@ begin
         @survey.SurveyExactRank = 0
         @survey.SampleTypeID = 0
         
-        if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
+        if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.3 then
           @survey.SurveyQuotaCalcTypeID = 1 # best kind
         else 
-          if ((0 < SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
+          if ((0.1 < SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.3)) then
             @survey.SurveyQuotaCalcTypeID = 2 # second best kind
           else
             @survey.SurveyQuotaCalcTypeID = 5 # worst kind by GEEPC data
@@ -287,7 +288,7 @@ begin
           # Get Survey Qualifications Information by SurveyNumber
           begin
             sleep(1)
-            puts 'CONNECTING FOR QUALIFICATIONS INFORMATION'
+            puts '****************************** CONNECTING FOR QUALIFICATIONS INFORMATION'
  
           if flag == 'prod' then
             SurveyQualifications = HTTParty.get(base_url+'/Supply/v1/SurveyQualifications/BySurveyNumberForOfferwall/'+SurveyNumber.to_s+'?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
@@ -305,6 +306,10 @@ begin
           end while SurveyQualifications.code != 200
 
           # By default all users are qualified
+          
+          
+          # Change HHC to Employment
+          
     
           @survey.QualificationAgePreCodes = ["ALL"]
           @survey.QualificationGenderPreCodes = ["ALL"]
@@ -313,9 +318,14 @@ begin
           @survey.QualificationEthnicityPreCodes = ["ALL"]  
           @survey.QualificationEducationPreCodes = ["ALL"]  
           @survey.QualificationHHIPreCodes = ["ALL"]
+          @survey.QualificationHHCPreCodes = ["ALL"]
           
 
           # Insert specific qualifications where required
+          
+          
+           # Change HHC to Employment
+          
 
           if SurveyQualifications["SurveyQualification"]["Questions"] == nil then
 #          if SurveyQualifications["SurveyQualification"]["Questions"].empty? then
@@ -326,12 +336,13 @@ begin
             @survey.QualificationRacePreCodes = ["ALL"]
             @survey.QualificationEthnicityPreCodes = ["ALL"]  
             @survey.QualificationEducationPreCodes = ["ALL"]  
-            @survey.QualificationHHIPreCodes = ["ALL"]  
+            @survey.QualificationHHIPreCodes = ["ALL"]
+            @survey.QualificationHHCPreCodes = ["ALL"]
             
             
           else
             NumberOfQualificationsQuestions = SurveyQualifications["SurveyQualification"]["Questions"].length-1
-            print 'NumberOfQualificationsQuestions: ', NumberOfQualificationsQuestions+1
+            print '*********************** NumberOfQualificationsQuestions: ', NumberOfQualificationsQuestions+1
             puts
     
             (0..NumberOfQualificationsQuestions).each do |j|
@@ -392,7 +403,38 @@ begin
                     puts
                   else
                   end
-                  @survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")                  
+                  @survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")     
+                when 7064
+                  if flag == 'stag' then
+                    print '------------------------------------------------------------------->> Parental_Status_Standard: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                when 1249
+                  if flag == 'stag' then
+                    print '----------------------------------------------------------------->> Age_and_Gender_of_Child: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  
+                  
+                when 2189
+                  if flag == 'stag' then
+                    print '------------------------------------------------------------>> STANDARD_EMPLOYMENT: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  p '------------------------------------------------------------>> Rename HHComp to STANDARD_EMPLOYMENT: '
+                  @survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
+             
+             
+             
+                when 643
+                  if flag == 'stag' then
+                    print '------------------------------------------------------------->> STANDARD_INDUSTRY: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end    
               end # case
               
             end #do      
@@ -477,14 +519,6 @@ begin
             print 'At end i =', i, ' SurveyNumber = ', offerwallresponse["Surveys"][i]["SurveyNumber"]
             puts
       
-#      if flag == 'stag' then
-#      ans1 = ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 6) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 7) ||          (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9))
-#      ans2 = ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 8) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 9) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 10) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 12) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23))
- #     ans3 = ((offerwallresponse["Surveys"][i]["BidIncidence"] == nil ) || (offerwallresponse["Surveys"][i]["BidIncidence"] > 10 ))
-#      ans4 = ((offerwallresponse["Surveys"][i]["BidLengthOfInterview"] == nil ) || (offerwallresponse["Surveys"][i]["BidLengthOfInterview"] < 41))
- #     puts 'Ans1', ans1, 'Ans2', ans2, 'Ans3', ans3, 'Ans4', ans4
- #     else
-#      end
      
           #End of second if. Going through all (i)
         end

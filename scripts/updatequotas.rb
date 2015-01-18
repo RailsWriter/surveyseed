@@ -2,7 +2,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 
 @updatesrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
 
@@ -100,11 +100,11 @@ begin
           puts
           
 
-          # Update the rank of the survey if Conversion value has changed since originally downloaded. However, make no change if own data exists i.e. we have seen 20 or more responsdents fail the survey or we have recorded one or more completes and raised the rank to 1.
+          # Update the rank of the existing survey if Conversion value has changed since originally downloaded. However, make no change if own data exists i.e. we have seen 10 or more responsdents fail the survey or we have recorded one or more completes and raised the rank to 1.
           
           survey.Conversion = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
           
-          if (survey.SurveyExactRank > 20) || (survey.CompletedBy.length > 0) then # if 20
+          if (survey.SurveyExactRank > 10) || (survey.CompletedBy.length > 0) then # if 20
             # do nothing
           else # If 20
             # update Rank with new Conversion data
@@ -192,6 +192,10 @@ begin
           
 
       # By default all users are qualified
+      
+      # Change HHC to Employment
+      
+      
 
       survey.QualificationAgePreCodes = ["ALL"]
       survey.QualificationGenderPreCodes = ["ALL"]
@@ -200,9 +204,14 @@ begin
       survey.QualificationEthnicityPreCodes = ["ALL"]  
       survey.QualificationEducationPreCodes = ["ALL"]  
       survey.QualificationHHIPreCodes = ["ALL"]
+      survey.QualificationHHCPreCodes = ["ALL"]
 
 
       # Update specific qualifications to be current information
+      
+      # Change HHC to Employment
+      
+      
 
       if SurveyQualifications["SurveyQualification"]["Questions"] == nil then
 #      if SurveyQualifications["SurveyQualification"]["Questions"].empty? then
@@ -213,7 +222,8 @@ begin
         survey.QualificationRacePreCodes = ["ALL"]
         survey.QualificationEthnicityPreCodes = ["ALL"]  
         survey.QualificationEducationPreCodes = ["ALL"]  
-        survey.QualificationHHIPreCodes = ["ALL"]  
+        survey.QualificationHHIPreCodes = ["ALL"]
+        survey.QualificationHHCPreCodes = ["ALL"]
        
       else
         @NumberOfQualificationsQuestions = SurveyQualifications["SurveyQualification"]["Questions"].length-1
@@ -279,7 +289,44 @@ begin
                 puts
               else
               end
-              survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")               
+              survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+              
+              
+              
+              
+            when 7064
+              if flag == 'stag' then
+                print '------------------------------------------------------------------->> Parental_Status_Standard: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+            when 1249
+              if flag == 'stag' then
+                print '----------------------------------------------------------------->> Age_and_Gender_of_Child: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+
+
+            when 2189
+              if flag == 'stag' then
+                print '------------------------------------------------------------>> STANDARD_EMPLOYMENT: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              p '------------------------------------------------------------>> Rename HHComp to STANDARD_EMPLOYMENT: '
+              survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
+
+
+            when 643
+              if flag == 'stag' then
+                print '------------------------------------------------------------->> STANDARD_INDUSTRY: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              
+    
+                         
           end # case
           
         end #do j     
@@ -341,9 +388,8 @@ begin
 
  
  if ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 7) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9)) && ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 11)
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23)) && ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["BidLengthOfInterview"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["BidLengthOfInterview"] < 41)) &&
-((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CPI"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CPI"] > 1.99)) &&
-(IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"] != 67820) && (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"] != 66091) && (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"] != 65653) && (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"] != 98319) && (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"] != 101766) then 
+   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23)) &&
+((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CPI"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CPI"] > 0.99)) then 
          
         @newsurvey = Survey.new
         @newsurvey.SurveyName = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyName"]
@@ -401,10 +447,10 @@ begin
         print '******************* Effective GlobalEPC is = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
         puts
         
-        if NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
+        if NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.3 then
           @newsurvey.SurveyQuotaCalcTypeID = 1 # best kind
         else 
-          if ((0 < NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
+          if ((0.1 < NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.3)) then
             @newsurvey.SurveyQuotaCalcTypeID = 2 # second best kind
           else
             @newsurvey.SurveyQuotaCalcTypeID = 5 # worst kind by GEEPC data
@@ -602,6 +648,10 @@ begin
           end while NewSurveyQualifications.code != 200
 
           # By default all users are qualified
+          
+         
+          # Change HHC to Employment
+    
     
           @newsurvey.QualificationAgePreCodes = ["ALL"]
           @newsurvey.QualificationGenderPreCodes = ["ALL"]
@@ -609,11 +659,16 @@ begin
           @newsurvey.QualificationRacePreCodes = ["ALL"]
           @newsurvey.QualificationEthnicityPreCodes = ["ALL"]  
           @newsurvey.QualificationEducationPreCodes = ["ALL"]  
-          @newsurvey.QualificationHHIPreCodes = ["ALL"]  
-          
-          
+          @newsurvey.QualificationHHIPreCodes = ["ALL"]
+          @newsurvey.QualificationHHCPreCodes = ["ALL"]
 
+          
           # Insert specific qualifications where required
+          
+          
+          # Change HHC to Employment
+          
+          
 
           if NewSurveyQualifications["SurveyQualification"]["Questions"] == nil then
 #          if NewSurveyQualifications["SurveyQualification"]["Questions"].empty? then
@@ -624,7 +679,8 @@ begin
             @newsurvey.QualificationRacePreCodes = ["ALL"]
             @newsurvey.QualificationEthnicityPreCodes = ["ALL"]  
             @newsurvey.QualificationEducationPreCodes = ["ALL"]  
-            @newsurvey.QualificationHHIPreCodes = ["ALL"]  
+            @newsurvey.QualificationHHIPreCodes = ["ALL"]
+            @newsurvey.QualificationHHCPreCodes = ["ALL"]
             
           else
             @NumberOfQualificationsQuestions = NewSurveyQualifications["SurveyQualification"]["Questions"].length-1
@@ -690,6 +746,40 @@ begin
                   else
                   end
                   @newsurvey.QualificationHHIPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")     
+                  
+                  
+                  
+                  
+                when 7064
+                  if flag == 'stag' then
+                    print '------------------------------------------------------------------->> Parental_Status_Standard: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                when 1249
+                  if flag == 'stag' then
+                    print '----------------------------------------------------------------->> Age_and_Gender_of_Child: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                when 2189
+                  if flag == 'stag' then
+                    print '------------------------------------------------------------>> STANDARD_EMPLOYMENT: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  p '------------------------------------------------------------>> Rename HHComp to STANDARD_EMPLOYMENT: '
+                  @newsurvey.QualificationHHCPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
+                when 643
+                  if flag == 'stag' then
+                    print '------------------------------------------------------------->> STANDARD_INDUSTRY: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end     
+                  
+                  
+               
+                  
               end # case
 
             end #do      

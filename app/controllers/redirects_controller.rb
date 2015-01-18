@@ -39,14 +39,10 @@ class RedirectsController < ApplicationController
     end
     
     
-    
-    # SurveyExactRank is a counter for failures 3 & 4
     # SurveyQuotaCalcType is GEEPC value used to determine lowering of rank
-    # SampleTypeID is used to count over quota incidences
-    
-    
-    
-    
+    # SurveyExactRank is a counter for failures+OQ
+    # SampleTypeID is used to count OQ incidences
+  
     
     
     case params[:status] 
@@ -169,33 +165,53 @@ class RedirectsController < ApplicationController
             
             if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
               @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
-              print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
+              print '********************************* Reached 10 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
               puts
             else
             end
             
             if ( @survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
-              @survey.SurveyGrossRank = 15
-              print '********************************* Reached 30 Unsuccessful attempts, and no completes - rank reduced to 12 following a Failuare for survey number: ', params[:tsfn]
+              @survey.SurveyGrossRank = 21
+              print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
             end
             
-            if ( @survey.SurveyExactRank == 30 ) && (@survey.CompletedBy.length < 1) then
-              @survey.SurveyGrossRank = 20
-              print '********************************* Reached 40 Unsuccessful attempts, and no completes - rank reduced to 17 following a Failuare for survey number: ', params[:tsfn]
+#            if ( @survey.SurveyExactRank == 30 ) && (@survey.CompletedBy.length < 1) then
+#              @survey.SurveyGrossRank = 20
+#              print '********************************* Reached 30 Unsuccessful attempts, and no completes - rank reduced to 17 following a Failuare for survey number: ', params[:tsfn]
+#              puts 
+#            else
+#            end
+            
+            
+            if ( @survey.SurveyExactRank == 40 ) && (survey.CompletedBy.length == 1) then
+              @survey.SurveyGrossRank = 21
+              print '********************************* Reached 100 Unsuccessful attempts, with only 1 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
             end
             
-            
-            if ( @survey.SurveyExactRank == 50 ) && (survey.CompletedBy.length == 1) then
-              @survey.SurveyGrossRank = 20
-              print '********************************* Reached 100 Unsuccessful attempts, with only 1 complete - rank reduced to 15 following a Failuare for survey number: ', params[:tsfn]
+            if ( @survey.SurveyExactRank == 60 ) && (survey.CompletedBy.length == 2) then
+              @survey.SurveyGrossRank = 21
+              print '********************************* Reached 60 Unsuccessful attempts, with only 2 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
             end
             
+            if ( @survey.SurveyExactRank == 80 ) && (survey.CompletedBy.length == 3) then
+              @survey.SurveyGrossRank = 21
+              print '********************************* Reached 80 Unsuccessful attempts, with only 3 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
+              puts 
+            else
+            end
+            
+            if ( @survey.SurveyExactRank == 100 ) && (survey.CompletedBy.length == 4) then
+              @survey.SurveyGrossRank = 21
+              print '********************************* Reached 100 Unsuccessful attempts, with only 4 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
+              puts 
+            else
+            end
             
             
             @survey.save
@@ -211,19 +227,19 @@ class RedirectsController < ApplicationController
           if (@user.SupplierLink.empty? == false) then
   
             if @user.country=="9" then 
-              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome
+              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp
             else
               if @user.country=="6" then
-                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome
+                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp
               else
                 if @user.country=="5" then
-                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome
+                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp
                 else
                   if @user.country=="7" then
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp
                   else
                     puts "*************************************** Redirects: Find out why country code is not correctly set"
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp
                     return
                   end
                 end
@@ -275,29 +291,43 @@ class RedirectsController < ApplicationController
           
           if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
             @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
-            print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a OQ for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
+            print '********************************* Reached 10 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a OQ for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
             puts
           else
           end
           
           if ( @survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
-            @survey.SurveyGrossRank = 15
-            print '********************************* Reached 30 Unsuccessful attempts, and no completes - rank reduced to 15 following a OQ for survey number: ', params[:tsfn]
+            @survey.SurveyGrossRank = 21
+            print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
           
-          if ( @survey.SurveyExactRank == 30 ) && (@survey.CompletedBy.length < 1) then
-            @survey.SurveyGrossRank = 20
-            print '********************************* Reached 40 Unsuccessful attempts, and no completes - rank reduced to 17 following a OQ for survey number: ', params[:tsfn]
+          if ( @survey.SurveyExactRank == 40 ) && (@survey.CompletedBy.length == 1) then
+            @survey.SurveyGrossRank = 21
+            print '********************************* Reached 40 Unsuccessful attempts, and 0nly 1 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
           
           
-          if ( @survey.SurveyExactRank == 50 ) && (survey.CompletedBy.length == 1) then
+          if ( @survey.SurveyExactRank == 60 ) && (survey.CompletedBy.length == 2) then
             @survey.SurveyGrossRank = 20
-            print '********************************* Reached 100 Unsuccessful attempts, with only 1 complete - rank reduced to 15 following a OQ for survey number: ', params[:tsfn]
+            print '********************************* Reached 60 Unsuccessful attempts, with only 2 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
+            puts 
+          else
+          end
+          
+          if ( @survey.SurveyExactRank == 80 ) && (survey.CompletedBy.length == 3) then
+            @survey.SurveyGrossRank = 21
+            print '********************************* Reached 80 Unsuccessful attempts, with only 3 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
+            puts 
+          else
+          end
+          
+          if ( @survey.SurveyExactRank == 100 ) && (survey.CompletedBy.length == 4) then
+            @survey.SurveyGrossRank = 21
+            print '********************************* Reached 100 Unsuccessful attempts, with only 4 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
@@ -313,19 +343,19 @@ class RedirectsController < ApplicationController
           if (@user.SupplierLink.empty? == false) then
             
             if @user.country=="9" then 
-              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome
+              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp
             else
               if @user.country=="6" then
-                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome
+                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp
               else
                 if @user.country=="5" then
-                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome
+                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp
                 else
                   if @user.country=="7" then
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp
                   else
                     puts "*************************************** Redirects: Find out why country code is not correctly set"
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp
                     return
                   end
                 end
