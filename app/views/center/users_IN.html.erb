@@ -7,6 +7,6 @@
 
 	    <% @users.each do |c| %>
 	    <li>
-	       <%= link_to c.id.to_s + '----------' + c.age.to_s + '-------------' + c.gender.to_s + '--------------' + c.country.to_s + '--------------' + c.ZIP.to_s + '-------------' + c.ethnicity.to_s + '----------------' + c.race.to_s + '---------------' + c.eduation.to_s + '---------------' + c.householdincome.to_s + '---------------' + c.SurveysAttempted.length.to_s + '--------------------' + c.SurveysCompleted.length.to_s,  :action =>'show_users_IN', :id =>c.id  -%>
+	       <%= link_to c.id.to_s + '----------' + c.age.to_s + '-------------' + c.gender.to_s + '--------------' + c.country.to_s + '--------------' + c.ZIP.to_s + '-------------' + c.ethnicity.to_s + '----------------' + c.race.to_s + '---------------' + c.eduation.to_s + '---------------' + c.householdincome.to_s + '---------------' + c.SurveysAttempted.to_s + '--------------------' + c.SurveysCompleted.to_s,  :action =>'show_users_IN', :id =>c.id  -%>
 	    </li>
 	    <% end %>
