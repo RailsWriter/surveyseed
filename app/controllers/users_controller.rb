@@ -1492,10 +1492,10 @@ require 'mixpanel-ruby'
     
     
     # removing the blank entry
-#    if user.SupplierLink !=nil then
-#      user.SupplierLink.reject! { |c| c.empty? }
-#    else
-#    end
+    if user.SupplierLink !=nil then
+      user.SupplierLink.reject! { |c| c.empty? }
+    else
+    end
 
     
     # Save the list of SupplierLinks in user record
