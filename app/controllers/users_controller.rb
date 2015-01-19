@@ -846,7 +846,7 @@ require 'mixpanel-ruby'
       # delete the empty item from initialization
   #    user.QualifiedSurveys.reject! { |c| c.empty? }
       
-      print '********** This USER_ID has QUALIFIED for the following surveys: ', user.user_id, user.QualifiedSurveys
+      print '********** This USER_ID has QUALIFIED for the following surveys: ', user.user_id, ' ', user.QualifiedSurveys
       puts
 
       # Lets save the surveys user qualifies for in this user's record of database in rank order
@@ -1431,7 +1431,7 @@ require 'mixpanel-ruby'
         return
       else       
         user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
-        print 'List of (unique) surveys where quota is available:', user.SurveysWithMatchingQuota
+        print 'List of surveys where quota is available:', user.SurveysWithMatchingQuota
         puts
       end
       
@@ -1466,25 +1466,37 @@ require 'mixpanel-ruby'
 #    end
     
      # If the user qualifies for one or more survey, redirect to the top ranked survey and repeat until success/failure/OT/QT
-    (0..user.SurveysWithMatchingQuota.length-1).each do |i|
+     @InferiorSupplierLink = Array.new
+    (0..user.SurveysWithMatchingQuota.length-1).each do |i| #do14
       @surveynumber = user.SurveysWithMatchingQuota[i]
-      Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey|
-        # Change from test to live link
-        user.SupplierLink[i] = survey.SupplierLink["LiveLink"]
-      end
-    end
+      Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey| # do15
+
+        # Eliminate surveys with EPC < 0.1
+        if survey.SurveyQuotaCalcTypeID != 5 then
+          user.SupplierLink[i] = survey.SupplierLink["LiveLink"]
+        else        
+          # Store the link in a separate container
+          @InferiorSupplierLink << survey.SupplierLink["LiveLink"]
+          print "Skipping survey number: ", @surveynumber, 'since its EPC: is < 0.1: ', survey.SurveyQuotaCalcTypeID
+          puts
+        end
+      
+      end #do15
+    end #do14
     
-#    print 'USER HAS QUOTA FOR SUPPLIERLINKS =', user.SupplierLink
- #   puts
+    #Prevent a problem with userride if EPC < 0.1 eliminates ALL surveys
+
+    user.SupplierLink = user.SupplierLink + @InferiorSupplierLink
+    print '*********** USER HAS QUOTA FOR this list of surveys with EPC <0.1 moved to the end of the list:', user.SupplierLink
+    puts
+    
     
     # removing the blank entry
-    if user.SupplierLink !=nil then
-      user.SupplierLink.reject! { |c| c.empty? }
-    else
-    end
-    
-    print 'USER HAS QUOTA FOR SUPPLIERLINKS (without blanks!) = ', user.SupplierLink
-    puts
+#    if user.SupplierLink !=nil then
+#      user.SupplierLink.reject! { |c| c.empty? }
+#    else
+#    end
+
     
     # Save the list of SupplierLinks in user record
     user.save
@@ -1533,6 +1545,8 @@ require 'mixpanel-ruby'
 
 # ****** Uncomment for launch
 #   remove this survey from the list in case the user returns back in the same session after OQ, Failure, to retry in same session
+
+
     print 'User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues
     puts
     @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues

@@ -39,7 +39,7 @@ class RedirectsController < ApplicationController
     end
     
     
-    # SurveyQuotaCalcType is GEEPC value used to determine lowering of rank
+    # SurveyQuotaCalcTypeID is GEEPC value used to determine lowering of rank
     # SurveyExactRank is a counter for failures+OQ
     # SampleTypeID is used to count OQ incidences
   
