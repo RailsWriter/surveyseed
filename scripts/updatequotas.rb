@@ -198,7 +198,7 @@ begin
             # For the Existing survey - update GEEPC in SurveyQuotaCalcTypeID as an integer.
             
         
-            print '******************* Effective GlobalEPC is updated to = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+            print '******************* Effective GlobalEPC is = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
             puts
         
             if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.3 then
@@ -212,7 +212,8 @@ begin
             end
             
             
-            
+            print '******************* Effective GlobalEPC is updated to = ', survey.SurveyQuotaCalcTypeID
+            puts
             
             
             
