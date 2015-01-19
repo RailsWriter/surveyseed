@@ -1493,7 +1493,8 @@ require 'mixpanel-ruby'
     
     # removing the blank entry
     if user.SupplierLink !=nil then
-      user.SupplierLink.reject! { |c| c.empty? }
+#      user.SupplierLink.reject! { |c| c.empty? }
+user.SupplierLink.reject! { |c| c == nil}
     else
     end
 
