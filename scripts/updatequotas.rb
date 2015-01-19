@@ -170,6 +170,62 @@ begin
                 puts "Highest Rank 1"
                 survey.SurveyGrossRank = 1
             end # end case
+            
+            
+            # Update GEEPC information
+            
+            
+            
+            begin
+              sleep(1)
+              print '**************************** CONNECTING FOR GLOBAL STATS on EXISTING survey: ', @surveynumber
+              puts
+          
+              if flag == 'prod' then
+                SurveyStatistics = HTTParty.get(base_url+'/Supply/v1/SurveyStatistics/BySurveyNumber/'+@surveynumber.to_s+'/5458/Global/Trailing?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
+              else
+                if flag == 'stag' then
+                  SurveyStatistics = HTTParty.get(base_url+'/Supply/v1/SurveyStatistics/BySurveyNumber/'+@surveynumber.to_s+'/5411/Global/Trailing?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
+                else
+                end
+              end
+                rescue HTTParty::Error => e
+                puts 'HttParty::Error '+ e.message
+                retry
+            end while SurveyStatistics.code != 200
+        
+
+            # For the Existing survey - update GEEPC in SurveyQuotaCalcTypeID as an integer.
+            
+        
+            print '******************* Effective GlobalEPC is updated to = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+            puts
+        
+            if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.3 then
+              survey.SurveyQuotaCalcTypeID = 1 # best kind
+            else 
+              if ((0.1 < SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.3)) then
+                survey.SurveyQuotaCalcTypeID = 2 # second best kind
+              else
+                survey.SurveyQuotaCalcTypeID = 5 # worst kind by GEEPC data
+              end
+            end
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
           end # if 20
 
       begin
@@ -418,7 +474,7 @@ begin
         puts
    
         # Assign an initial gross rank to the NEW survey
-        # 10 is worst for the lowest conversion rate
+        # 20 is worst for the lowest conversion rate
         
         begin
           sleep(1)
