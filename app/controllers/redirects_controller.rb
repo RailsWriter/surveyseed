@@ -8,10 +8,10 @@ class RedirectsController < ApplicationController
     @SHA1key = 'uhstarvsuio765jalksrWE'
     @Url = request.original_url
     @ParsedUrl = @Url.partition ("oenc=")
-    print '@BaseUrl=', @ParsedUrl[0]
-    puts 
-    print '@Signature =', @ParsedUrl[2]   
-    puts
+#    print '@BaseUrl=', @ParsedUrl[0]
+#    puts 
+#    print '@Signature =', @ParsedUrl[2]   
+#    puts
     @BaseUrl = @ParsedUrl[0]
     @Signature = @ParsedUrl[2]
     @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
@@ -35,7 +35,7 @@ class RedirectsController < ApplicationController
         return
       end
     else
-      p '****************** Redirects: Signature verified'
+      p '****************** Redirects: Signature verified **********************'
     end
     
     
@@ -390,7 +390,7 @@ class RedirectsController < ApplicationController
           # save attempt info in User and Survey tables
           @user = User.find_by user_id: params[:PID]
           
-          print 'QTerm for user_id/PID, CID:', params[:PID], @user.clickid
+          print '*********************** QTerm for user_id/PID, CID:', params[:PID], @user.clickid
           puts     
         
           @user.SurveysAttempted << params[:tsfn]+'5555'
