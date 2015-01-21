@@ -449,6 +449,15 @@ begin
    
 #   &&
 # ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CPI"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CPI"] > 0.99)) then 
+      
+print '---------------------> CountryLanguageID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 7) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9))
+puts
+
+print '---------------------> StudyTypeID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 11)
+   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23))
+  
+   puts
+      
          
         @newsurvey = Survey.new
         @newsurvey.SurveyName = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyName"]
@@ -746,7 +755,7 @@ begin
             print '@NumberOfQualificationsQuestions: ', @NumberOfQualificationsQuestions+1
             puts
     
-            (0..@NumberOfQualificationsQuestions).each do |j|
+            (0..@NumberOfQualificationsQuestions).each do |j|                                     #do15
               # Survey.Questions = NewSurveyQualifications["SurveyQualification"]["Questions"]
  #             puts NewSurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
               case NewSurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
@@ -841,8 +850,8 @@ begin
                   
               end # case
 
-            end #do      
-          end # if
+            end #do15 for j      
+          end # if SurveyQuals == nil
     
           # Get new Survey Quotas Information by SurveyNumber
           begin
