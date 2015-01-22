@@ -2,11 +2,11 @@
 
 <h6> Showing last <%= @users.count%> respondents from AU.
 	
-	<h5> --- Id ------- Age ----- Gender ----- Country ----- Zip ----- Ethnicity ------ Race ------ Education ----- HHI ---- Attempted --------------------------- Completed</h5>
+	<h5> --- Id ----- Age ---- Gender ---- Country ---- Zip ---- Education ----- HHI --- Employment --- Attempted --------------------------- Completed</h5>
 
 
 	    <% @users.each do |c| %>
 	    <li>
-	       <%= link_to c.id.to_s + '----------' + c.age.to_s + '-------------' + c.gender.to_s + '--------------' + c.country.to_s + '--------------' + c.ZIP.to_s + '-------------' + c.ethnicity.to_s + '----------------' + c.race.to_s + '---------------' + c.eduation.to_s + '---------------' + c.householdincome.to_s + '---------------' + c.SurveysAttempted.to_s + '--------------------' + c.SurveysCompleted.to_s,  :action =>'show_users_AU', :id =>c.id  -%>
+	       <%= link_to c.id.to_s + '----------' + c.age.to_s + '-------------' + c.gender.to_s + '--------------' + c.country.to_s + '--------------' + c.ZIP.to_s + '-------------' + c.eduation.to_s + '---------------' + c.householdincome.to_s + '---------------' + c.householdcomp.to_s + '---------------' + c.SurveysAttempted.to_s + '--------------------' + c.SurveysCompleted.to_s,  :action =>'show_users_AU', :id =>c.id  -%>
 	    </li>
 	    <% end %>
