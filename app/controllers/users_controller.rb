@@ -665,16 +665,8 @@ require 'mixpanel-ruby'
     
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
-      
-      
-#      redirect_to '/users/qq10' ---> AU did not like employment question and dropped rapidly on it
-# lets give them a benefit of doubt to be full time employed and assign pre-code 1. This helps not having to change processing of additional variables passed to FED and with std_employment quota matching.
-
-user.householdcomp=1
-
-      user.save
-
-      ranksurveysforuser(session.id)
+      user.save      
+      redirect_to '/users/qq10'
     else
       redirect_to '/users/qq8_AU'
     end
