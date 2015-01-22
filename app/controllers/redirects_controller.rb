@@ -160,7 +160,7 @@ class RedirectsController < ApplicationController
             
             # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
             @survey.SurveyExactRank = @survey.SurveyExactRank + 1
-            print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn]
+            print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn], 'new ExactRank/Failure count: ', @survey.SurveyExactRank
             puts
             
             if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
@@ -185,28 +185,28 @@ class RedirectsController < ApplicationController
 #            end
             
             
-            if ( @survey.SurveyExactRank == 40 ) && (survey.CompletedBy.length == 1) then
+            if ( @survey.SurveyExactRank == 40 ) && (@survey.CompletedBy.length == 1) then
               @survey.SurveyGrossRank = 21
               print '********************************* Reached 100 Unsuccessful attempts, with only 1 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
             end
             
-            if ( @survey.SurveyExactRank == 60 ) && (survey.CompletedBy.length == 2) then
+            if ( @survey.SurveyExactRank == 60 ) && (@survey.CompletedBy.length == 2) then
               @survey.SurveyGrossRank = 21
               print '********************************* Reached 60 Unsuccessful attempts, with only 2 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
             end
             
-            if ( @survey.SurveyExactRank == 80 ) && (survey.CompletedBy.length == 3) then
+            if ( @survey.SurveyExactRank == 80 ) && (@survey.CompletedBy.length == 3) then
               @survey.SurveyGrossRank = 21
               print '********************************* Reached 80 Unsuccessful attempts, with only 3 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
               puts 
             else
             end
             
-            if ( @survey.SurveyExactRank == 100 ) && (survey.CompletedBy.length == 4) then
+            if ( @survey.SurveyExactRank == 100 ) && (@survey.CompletedBy.length == 4) then
               @survey.SurveyGrossRank = 21
               print '********************************* Reached 100 Unsuccessful attempts, with only 4 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
               puts 
@@ -311,21 +311,21 @@ class RedirectsController < ApplicationController
           end
           
           
-          if ( @survey.SurveyExactRank == 60 ) && (survey.CompletedBy.length == 2) then
+          if ( @survey.SurveyExactRank == 60 ) && (@survey.CompletedBy.length == 2) then
             @survey.SurveyGrossRank = 20
             print '********************************* Reached 60 Unsuccessful attempts, with only 2 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
           
-          if ( @survey.SurveyExactRank == 80 ) && (survey.CompletedBy.length == 3) then
+          if ( @survey.SurveyExactRank == 80 ) && (@survey.CompletedBy.length == 3) then
             @survey.SurveyGrossRank = 21
             print '********************************* Reached 80 Unsuccessful attempts, with only 3 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
           
-          if ( @survey.SurveyExactRank == 100 ) && (survey.CompletedBy.length == 4) then
+          if ( @survey.SurveyExactRank == 100 ) && (@survey.CompletedBy.length == 4) then
             @survey.SurveyGrossRank = 21
             print '********************************* Reached 100 Unsuccessful attempts, with only 4 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
             puts 
