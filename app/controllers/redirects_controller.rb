@@ -206,7 +206,7 @@ class RedirectsController < ApplicationController
             end
             
 
-            if (( @survey.SurveyExactRank => 120 ) && (( @survey.SurveyExactRank / @survey.CompletedBy.length ) > 10 ))
+            if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / @survey.CompletedBy.length ) > 10 ))
               @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
               print '********************************* Reached 120+ Unsuccessful attempts, and less than 10% completes - rank reduced proportionate to EPC following a Failuare for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
               puts 
@@ -330,7 +330,7 @@ class RedirectsController < ApplicationController
           
           
           
-          if (( @survey.SurveyExactRank => 120 ) && (( @survey.SurveyExactRank / @survey.CompletedBy.length ) > 10 ))
+          if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / @survey.CompletedBy.length ) > 10 ))
             @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
             print '********************************* Reached 120+ Unsuccessful attempts, and less than 10% completes - rank reduced proportionate to EPC following a OQ for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
             puts 
