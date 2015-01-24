@@ -67,9 +67,6 @@ require 'mixpanel-ruby'
 #       @user.payout = should be extracted from advertiser id in call
         # Initialize user ride related lists. These protect from getting old lists, if the user restarts taking surveys in the same session after a long break. However, these get a blank entry on the list due to save action
         
-#        @user.QualifiedSurveys = []
-#        @user.SurveysWithMatchingQuota = []
-#        @user.SupplierLink = []
         @user.QualifiedSurveys = Array.new
         @user.SurveysWithMatchingQuota = Array.new
         @user.SupplierLink = Array.new
@@ -128,11 +125,6 @@ require 'mixpanel-ruby'
     user=User.find_by session_id: session.id
     user.tos=true
 
-#    print 'TOS: User found in TOS:', user
-#    puts
-#    user.save
-#    redirect_to '/users/qq2'
-
     tracker.track(user.ip_address, 'TOS')
 
     # Update number of attempts in last 24 hrs record of the user
@@ -171,11 +163,11 @@ require 'mixpanel-ruby'
   
   def gender
     
-  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+#  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
   
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'Gender')
+#    tracker.track(user.ip_address, 'Gender')
 
     if params[:gender] != nil
       user.gender=params[:gender]
@@ -262,11 +254,11 @@ require 'mixpanel-ruby'
   
   def country
     
-   tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+#   tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
     
     user=User.find_by session_id: session.id
     
-     tracker.track(user.ip_address, 'Country')
+#     tracker.track(user.ip_address, 'Country')
     
     user.country=params[:country]
     user.save
@@ -303,10 +295,6 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'Zip')
     
-#    user.ZIP=params[:zip]
-#    user.save
-#    redirect_to '/users/qq7_US'
-
     if params[:zip].empty? == false
       user.ZIP=params[:zip]
       user.save
@@ -326,9 +314,6 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'CA_Zip')
     
-#    user.ZIP=params[:zip]
-#    user.save
-#    redirect_to '/users/qq7_CA'
     
     if params[:zip].empty? == false
       user.ZIP=params[:zip]
@@ -348,11 +333,7 @@ require 'mixpanel-ruby'
     user=User.find_by session_id: session.id
     
     tracker.track(user.ip_address, 'IN_PIN')
-    
- #   user.ZIP=params[:zip]
-#    user.save
- #   redirect_to '/users/qq7_IN'
-    
+ 
     
     if params[:zip].empty? == false
       user.ZIP=params[:zip]
@@ -371,11 +352,7 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'AU_Zip')
     
-#    user.ZIP=params[:zip]
-#    user.save
-#    redirect_to '/users/qq7_AU'
-    
-    
+
     if params[:zip].empty? == false
       user.ZIP=params[:zip]
       user.save
@@ -394,10 +371,6 @@ require 'mixpanel-ruby'
     
     tracker.track(user.ip_address, 'ethnicity_US')
     
-#    user.ethnicity=params[:ethnicity]
-#    user.save
-#    redirect_to '/users/qq6_US'
-    
     if params[:ethnicity] != nil
       user.ethnicity=params[:ethnicity]
       user.save
@@ -412,10 +385,6 @@ require 'mixpanel-ruby'
   def ethnicity_CA
 
     user=User.find_by session_id: session.id
-
-#    user.ethnicity=params[:ethnicity]
-#    user.save
-#    redirect_to '/users/tq2a_CA'
     
     if params[:ethnicity] != nil
       user.ethnicity=params[:ethnicity]
@@ -431,10 +400,6 @@ require 'mixpanel-ruby'
 
     user=User.find_by session_id: session.id
     
-#    user.ethnicity=params[:ethnicity]
-#    user.save
-#    redirect_to '/users/tq2a_IN'
-    
     if params[:ethnicity] != nil
       user.ethnicity=params[:ethnicity]
       user.save
@@ -448,11 +413,11 @@ require 'mixpanel-ruby'
   
   def race_US
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'race_US')
+#    tracker.track(user.ip_address, 'race_US')
     
     if params[:race] != nil
       user.race=params[:race]
@@ -488,15 +453,11 @@ require 'mixpanel-ruby'
     
     # Note: typo in user.eduation
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'education_US')
-    
- #   user.eduation=params[:education]
-#    user.save
- #   redirect_to '/users/qq8_US'
+#    tracker.track(user.ip_address, 'education_US')
     
     if params[:education] != nil
       user.eduation=params[:education]
@@ -511,15 +472,11 @@ require 'mixpanel-ruby'
   def education_CA
     # Note: typo in user.eduation
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-     tracker.track(user.ip_address, 'education_CA')
-    
-#    user.eduation=params[:education]
-#    user.save
-#    redirect_to '/users/qq8_CA'
+#     tracker.track(user.ip_address, 'education_CA')
     
     if params[:education] != nil
       user.eduation=params[:education]
@@ -535,16 +492,11 @@ require 'mixpanel-ruby'
   def education_IN
     # Note: typo in user.eduation
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'education_IN')
-    
-#    user.eduation=params[:education]
-#    user.save
-#    redirect_to '/users/qq8_IN'
-    
+#    tracker.track(user.ip_address, 'education_IN')
     
     if params[:education] != nil
       user.eduation=params[:education]
@@ -559,15 +511,11 @@ require 'mixpanel-ruby'
   def education_AU
     # Note: typo in user.eduation
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'education_AU')
-    
-#    user.eduation=params[:education]
-#    user.save
-#    redirect_to '/users/qq8_AU'
+#    tracker.track(user.ip_address, 'education_AU')
     
     if params[:education] != nil
       user.eduation=params[:education]
@@ -581,17 +529,11 @@ require 'mixpanel-ruby'
 
   def householdincome_US  
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'hhi_US')
-    
-#    user.householdincome=params[:hhi]
-#    user.save
-#####    redirect_to '/users/tq2b'
-#    redirect_to '/users/qq5_US'
-    
+#    tracker.track(user.ip_address, 'hhi_US')
     
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
@@ -605,16 +547,11 @@ require 'mixpanel-ruby'
 
   def householdincome_CA
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-     tracker.track(user.ip_address, 'hhi_CA')
-    
-#    user.householdincome=params[:hhi]
-#    user.save
-###    redirect_to '/users/tq2b'
-#    ranksurveysforuser(session.id)
+#     tracker.track(user.ip_address, 'hhi_CA')
     
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
@@ -628,17 +565,12 @@ require 'mixpanel-ruby'
 
   def householdincome_IN  
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-     tracker.track(user.ip_address, 'hhi_IN')
+#     tracker.track(user.ip_address, 'hhi_IN')
     
-#    user.householdincome=params[:hhi]
-#    user.save
-###    redirect_to '/users/tq2b'
-#    ranksurveysforuser(session.id)
-
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
       user.save
@@ -651,17 +583,11 @@ require 'mixpanel-ruby'
   
   def householdincome_AU  
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-     tracker.track(user.ip_address, 'hhi_AU')
-    
-#    user.householdincome=params[:hhi]
-#    user.save
-###    redirect_to '/users/qq9'
-#    ranksurveysforuser(session.id)
-    
+#     tracker.track(user.ip_address, 'hhi_AU')
     
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
@@ -1530,23 +1456,6 @@ user.SupplierLink.reject! { |c| c == nil}
     end
     
 
-# Append user profile parameters like AGE, GENDER, etc, before sending user to Fulcrum (Does not help since are nagating between the surveys?)
-
-# **** For testing (with PID preset to test in TestLink)
-#    p '*******USERRIDE: User will be sent to this survey:', user.SupplierLink[0]
-#   remove this survey from the list in case the user returns back in the same session after OQ, Failure, or after claiming reward to retry
-#    @EntryLink = user.SupplierLink[0]
-#    user.SupplierLink = user.SupplierLink.drop(1)
-#    user.save
-#    redirect_to @EntryLink
-# ***** until here
-  
-# Alternate hardcoded test link in case navigation fails  
-# redirect_to 'http://staging.samplicio.us/router/default.aspx?SID=8c047e4e-bf66-4014-bbb6-8b3fd6ebc3ac&FIRID=MSDHONI7&SUMSTAT=1&PID=test'
-
-# ****** Uncomment for launch
-#   remove this survey from the list in case the user returns back in the same session after OQ, Failure, to retry in same session
-
 
     print 'User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues
     puts
@@ -1554,15 +1463,8 @@ user.SupplierLink.reject! { |c| c == nil}
     user.SupplierLink = user.SupplierLink.drop(1)
     user.save
     redirect_to @EntryLink
-# *** until here
   end
   
-#  def age(dob_month, dob_date, dob_year)
-#    dob = (dob_date +'-'+ dob_month +'-'+ dob_year).to_date
-#    p 'dob', dob
-#    now = Time.now.utc.to_date
-#    now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
-#  end
 
   # Sample survey pages control logic (p0 to success)
   
