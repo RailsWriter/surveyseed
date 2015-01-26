@@ -2,7 +2,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 
 @updatesrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
 
@@ -989,7 +989,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
 
     end # do loop of totalavailablesurveys (i)
     
-    # Pause surveys not on the allocation list but are in local database
+    # Delete surveys which are neither custom entered nor on the allocation list but are in local database
     
     
     surveysnottobedeleted = Array.new
@@ -1026,19 +1026,20 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
        if surveysnottobedeleted.include? (oldsurvey.SurveyNumber) then
          # do nothing
        else
+         if oldsurvey.SurveySID == "CUSTOM" then
+           # do nothing
+         else
           surveystobedeleted << oldsurvey.SurveyNumber
-#          print 'DELETING THIS SURVEY NUMBER NOT on Allocation LIST ', oldsurvey.SurveyNumber
-#          puts
-          oldsurvey.delete 
+          print 'DELETING THIS SURVEY NUMBER NOT on Allocation LIST nor CUSTOM ', oldsurvey.SurveyNumber
+          puts
+          oldsurvey.delete
+        end
       end
     end # do21 oldsurvey
     
-    print 'Surveys to be deleted', surveystobedeleted
+    print 'Surveys deleted: ', surveystobedeleted
     puts
     
-    
-#    Survey.where( "SurveyStillLive = ?", false ).each do |survey|
-#    end
 
     timenow = Time.now
     print 'Time at end', timenow
