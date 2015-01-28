@@ -412,14 +412,9 @@ begin
 
         # Save quotas information for each survey
   
-#       if @SurveyQuotas["SurveyStillLive"] == false then
-#          puts '**************************** Deleting a closed survey'
-#          survey.delete
-#        else
           survey.SurveyStillLive = @SurveyQuotas["SurveyStillLive"]
           survey.SurveyStatusCode = @SurveyQuotas["SurveyStatusCode"]
           survey.SurveyQuotas = @SurveyQuotas["SurveyQuotas"]
-#        end
          
       # Get new quota info by surveynumber and overwrite in Survey table
   
@@ -461,8 +456,6 @@ begin
    (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || 
    (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23))) then
    
-#   &&
-# ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CPI"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CPI"] > 0.99)) then 
       
 print '---------------------> Matches: CountryLanguageID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 7) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9))
 puts
@@ -894,13 +887,9 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
 
             # Save quotas information for each survey
 
-#           if @NewSurveyQuotas["SurveyStillLive"] == false then
-#              @survey.delete
-#            else
               @newsurvey.SurveyStillLive = @NewSurveyQuotas["SurveyStillLive"]
               @newsurvey.SurveyStatusCode = @NewSurveyQuotas["SurveyStatusCode"]
               @newsurvey.SurveyQuotas = @NewSurveyQuotas["SurveyQuotas"]
-#            end
         
             # Get Supplierlinks for the survey
     
@@ -1008,7 +997,6 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           surveysnottobedeleted << oldsurvey.SurveyNumber
          else
            # do nothing
-#          SurveyStillLive = false
          end # if
 #         print 'looping list of allocationsurveys, count:', k
 #         puts
@@ -1049,10 +1037,9 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
       puts
       timetorepeat = true
     else
-      print 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to sleep for 10 minutes since it takes about 20 mins to do a sweep.'
+      print 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to sleep for 5 minutes since it takes about 20 mins to do a sweep.'
       puts
-      sleep (10.minutes)
- #     sleep (1800 - (timenow - starttime)).round
+      sleep (5.minutes)
       timetorepeat = true
     end
 

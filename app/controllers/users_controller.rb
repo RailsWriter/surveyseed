@@ -1473,6 +1473,14 @@ user.SupplierLink.reject! { |c| c == nil}
   end
   
   def p2action
+    redirect_to '/users/p25'
+  end
+  
+  def p25action
+    redirect_to '/users/p26'
+  end
+  
+  def p26action
     redirect_to '/users/p3'
   end
   

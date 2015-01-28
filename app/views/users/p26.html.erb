@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">		
+		<div class="header">
+			<center>
+				<h1>Genome Sequencing</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<center>
+				<p>In how many years do you think we will see mass use of human genome sequencing technology?</p>
+			</center>
+				<%= form_tag("p26action", method: "post") do %>
+				<fieldset>
+					<div class="mytags">
+					<%= radio_button_tag 'ans2', '1' %>
+					<%= label_tag(:country, "3-5 yrs.") %><br>
+					<%= radio_button_tag 'ans2', '2' %>
+					<%= label_tag(:country, "8-10 yrs.") %><br>
+					<%= radio_button_tag 'ans2', '3' %>
+					<%= label_tag(:country, "11-20 yrs.") %><br>
+					<%= radio_button_tag 'ans2', '4' %>
+					<%= label_tag(:country, "Who knows!") %><br><br>
+					</div>
+					<div class="myinput">
+					<center>
+					<%= submit_tag "Next" %>
+					</center>
+					</div>
+				</fieldset>
+				<% end %>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('KetsciLogoSm.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>
