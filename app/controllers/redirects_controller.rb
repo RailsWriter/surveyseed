@@ -242,9 +242,33 @@ class RedirectsController < ApplicationController
               end
             end
   
-            print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
+
+
+
+            @redirects_parsed_user_agent = UserAgent.parse(@user.user_agent)
+    
+            print "*************************************** UseRide: User platform is: ", @redirects_parsed_user_agent.platform
             puts
-            @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
+    
+            if @redirects_parsed_user_agent.platform == 'iPhone' then
+      
+              @MS_is_mobile = '&MS_is_mobile=true'
+              p "*************************************** UseRide: MS_is_mobile is set TRUE"
+      
+            else
+              @MS_is_mobile = '&MS_is_mobile=false'
+              p "*************************************** UseRide: MS_is_mobile is set FALSE"
+      
+            end
+
+
+
+
+
+
+            print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
+            puts
+            @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
             @user.SupplierLink = @user.SupplierLink.drop(1)
             @user.save
             redirect_to @NextEntryLink
@@ -366,10 +390,34 @@ class RedirectsController < ApplicationController
                 end
               end
             end
-            
-            print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
+
+
+
+            @redirects_parsed_user_agent = UserAgent.parse(@user.user_agent)
+    
+            print "*************************************** UseRide: User platform is: ", @redirects_parsed_user_agent.platform
             puts
-            @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
+    
+            if @redirects_parsed_user_agent.platform == 'iPhone' then
+      
+              @MS_is_mobile = '&MS_is_mobile=true'
+              p "*************************************** UseRide: MS_is_mobile is set TRUE"
+      
+            else
+              @MS_is_mobile = '&MS_is_mobile=false'
+              p "*************************************** UseRide: MS_is_mobile is set FALSE"
+      
+            end
+
+
+
+
+
+
+            
+            print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
+            puts
+            @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
             @user.SupplierLink = @user.SupplierLink.drop(1)
             @user.save
             redirect_to @NextEntryLink
