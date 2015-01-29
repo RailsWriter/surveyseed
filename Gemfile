@@ -37,9 +37,10 @@ gem 'httparty'
 
 gem 'mixpanel-ruby'
 gem 'ruby-hmac'
+gem 'useragent', '0.10.0'
 
 group :development, :test do
-gem 'sqlite3',     '1.3.9'
+  gem 'sqlite3',     '1.3.9'
 
   # Call 'debugger' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'

@@ -1455,11 +1455,29 @@ user.SupplierLink.reject! { |c| c == nil}
       end
     end
     
-
-
-    print 'User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues
+    
+    
+    @parsed_user_agent = UserAgent.parse(user.user_agent)
+    
+    print "*************************************** UseRide: User platform is: ", @parsed_user_agent.platform
     puts
-    @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
+    
+    if @parsed_user_agent.platform == 'iPhone' then
+      
+      @MS_is_mobile = '&MS_is_mobile=true'
+      p "*************************************** UseRide: MS_is_mobile is set TRUE"
+      
+    else
+      @MS_is_mobile = '&MS_is_mobile=false'
+      p "*************************************** UseRide: MS_is_mobile is set FALSE"
+      
+    end
+    
+
+
+    print 'User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile
+    puts
+    @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile
     user.SupplierLink = user.SupplierLink.drop(1)
     user.save
     redirect_to @EntryLink
