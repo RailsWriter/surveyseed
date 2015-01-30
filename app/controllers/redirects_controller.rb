@@ -54,10 +54,20 @@ class RedirectsController < ApplicationController
         
         p 'Redirected to Default'
         
+        # turn to '!=' for testing       
+        if params[:PID] == 'test' then 
+          redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
+        else
+          # save attempt info in User and Survey tables
+          @user = User.find_by user_id: params[:PID]          
+          
+          print '*********** In *Default* for user_id: ', params[:PID], ' CID: ', @user.clickid
+          puts
+        
         # Is there anything to save from the attempt info in User and Survey tables?
         # params[:tsfn] was being returned empty in one run period.
         
-        @user.SurveysAttempted << 'Default1111'
+        @user.SurveysAttempted << params[:tsfn]+'1111'
         @user.save
         
         # User lands up here if anything unclear happens in the ride. Best course seems to be to send the user back to very begining to start over.
@@ -71,7 +81,7 @@ class RedirectsController < ApplicationController
 #          redirect_to 'https://www.ketsci.com/redirects/default'
 #        end
 
-
+        end
 
       when "2"
         # SuccessLink: https://www.ketsci.com/redirects/status?status=2&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]&cost=[%COST%]
@@ -428,7 +438,7 @@ class RedirectsController < ApplicationController
             @user.save
             redirect_to @NextEntryLink
           else
-            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
+            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=4'
           end
         end
         
@@ -457,6 +467,7 @@ class RedirectsController < ApplicationController
           @user.save
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=2'
         end
-    end
-  end
-end
+        
+    end # case
+  end # status
+end # class
