@@ -55,7 +55,9 @@ class RedirectsController < ApplicationController
         p 'Redirected to Default'
         
         # Is there anything to save from the attempt info in User and Survey tables?
-        @user.SurveysAttempted << params[:tsfn]+'1111'
+        # params[:tsfn] was being returned empty in one run period.
+        
+        @user.SurveysAttempted << 'Default1111'
         @user.save
         
         # User lands up here if anything unclear happens in the ride. Best course seems to be to send the user back to very begining to start over.
@@ -206,7 +208,9 @@ class RedirectsController < ApplicationController
             end
             
 
-            if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / @survey.CompletedBy.length ) > 10 ))
+            if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / (@survey.CompletedBy.length+0.1) ) > 10 ))
+              # 0.1 is arbitrarily added to avoid division by 0
+              
               @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
               print '********************************* Reached 120+ Unsuccessful attempts, and less than 10% completes - rank reduced proportionate to EPC following a Failuare for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
               puts 
@@ -354,7 +358,9 @@ class RedirectsController < ApplicationController
           
           
           
-          if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / @survey.CompletedBy.length ) > 10 ))
+          if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / (@survey.CompletedBy.length+0.1) ) > 10 ))
+             # 0.1 is arbitrarily added to avoid division by 0
+            
             @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
             print '********************************* Reached 120+ Unsuccessful attempts, and less than 10% completes - rank reduced proportionate to EPC following a OQ for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
             puts 
