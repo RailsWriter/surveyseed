@@ -215,18 +215,6 @@ begin
             print '******************* Effective GlobalEPC is updated to = ', survey.SurveyQuotaCalcTypeID
             puts
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
           end # if 20
 
       begin
@@ -271,8 +259,8 @@ begin
       
 
       if SurveyQualifications["SurveyQualification"]["Questions"] == nil then
-#      if SurveyQualifications["SurveyQualification"]["Questions"].empty? then
-        puts 'SurveyQualifications or Questions is NIL'
+        
+        puts '****************** SurveyQualifications or Questions is NIL'
         survey.QualificationAgePreCodes = ["ALL"]
         survey.QualificationGenderPreCodes = ["ALL"]
         survey.QualificationZIPPreCodes = ["ALL"]    
@@ -288,8 +276,6 @@ begin
         puts
             
         (0..@NumberOfQualificationsQuestions).each do |j|
-          # Survey.Questions = SurveyQualifications["SurveyQualification"]["Questions"]
- #        puts SurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
         
           case SurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
             when 42
@@ -346,10 +332,7 @@ begin
                 puts
               else
               end
-              survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-              
-              
-              
+              survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")          
               
             when 7064
               if flag == 'stag' then
@@ -479,8 +462,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         @newsurvey.CountryLanguageID = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"]
         @newsurvey.BidIncidence = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["BidIncidence"]
         @newsurvey.LengthOfInterview = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["LengthOfInterview"]
-        @newsurvey.BidLengthOfInterview = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["BidLengthOfInterview"]
-#   @newsurvey.CPI = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CPI"]        
+        @newsurvey.BidLengthOfInterview = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["BidLengthOfInterview"]      
         @newsurvey.Conversion = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
         @newsurvey.TotalRemaining = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["TotalRemaining"]
         @newsurvey.OverallCompletes = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["OverallCompletes"]
@@ -728,10 +710,8 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           end while NewSurveyQualifications.code != 200
 
           # By default all users are qualified
-          
-         
+               
           # Change HHC to Employment
-    
     
           @newsurvey.QualificationAgePreCodes = ["ALL"]
           @newsurvey.QualificationGenderPreCodes = ["ALL"]
@@ -741,17 +721,12 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           @newsurvey.QualificationEducationPreCodes = ["ALL"]  
           @newsurvey.QualificationHHIPreCodes = ["ALL"]
           @newsurvey.QualificationHHCPreCodes = ["ALL"]
-
           
           # Insert specific qualifications where required
           
-          
           # Change HHC to Employment
-          
-          
 
           if NewSurveyQualifications["SurveyQualification"]["Questions"] == nil then
-#          if NewSurveyQualifications["SurveyQualification"]["Questions"].empty? then
             puts '***************** SurveyQualifications or Questions is NIL'
             @newsurvey.QualificationAgePreCodes = ["ALL"]
             @newsurvey.QualificationGenderPreCodes = ["ALL"]
@@ -768,8 +743,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             puts
     
             (0..@NumberOfQualificationsQuestions).each do |j|                                     #do15
-              # Survey.Questions = NewSurveyQualifications["SurveyQualification"]["Questions"]
- #             puts NewSurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
+
               case NewSurveyQualifications["SurveyQualification"]["Questions"][j]["QuestionID"]
                 when 42
                   if flag == 'stag' then
@@ -826,10 +800,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
                   else
                   end
                   @newsurvey.QualificationHHIPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")     
-                  
-                  
-                  
-                  
+                                
                 when 7064
                   if flag == 'stag' then
                     print '------------------------------------------------------------------->> Parental_Status_Standard: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
@@ -857,9 +828,6 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
                   else
                   end     
                   
-                  
-               
-                  
               end # case
 
             end #do15 for j      
@@ -883,7 +851,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               rescue HTTParty::Error => e
               puts 'HttParty::Error '+ e.message
               retry
-            end while @NewSurveyQuotas.code != 200
+          end while @NewSurveyQuotas.code != 200
 
             # Save quotas information for each survey
 
@@ -922,12 +890,12 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
                   }.to_json,
                   :headers => { 'Content-Type' => 'application/json' })
                 else
+                end
               end
-            end
             
-            rescue HTTParty::Error => e
-            puts 'HttParty::Error '+ e.message
-#            retry
+              rescue HTTParty::Error => e
+                puts 'HttParty::Error '+ e.message
+#             retry
             end while NewSupplierLink.code < 0
 
             if NewSupplierLink.code != 200 then
@@ -973,7 +941,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           end # download a new survey if the new survey qualifies for being suitable from countrylanguageID, studytypeID, and BidLOI criteria
 
       end # if @surveynumber exists  
-      print 'Updating totalavailablesurveys at count i = ', i   
+      print '******************* Updating totalavailablesurveys at count i = ', i   
       puts  
 
     end # do loop of totalavailablesurveys (i)
@@ -1003,9 +971,9 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
        end # do k
      end # do j
      
-     print 'List of all surveys in DB', listofsurveynumbers
+     print '******************** List of all surveys in DB', listofsurveynumbers
      puts
-     print 'List of surveys not to be deleted', surveysnottobedeleted
+     print '****************** List of surveys not to be deleted', surveysnottobedeleted
      puts
 
      #   This section is there to remove old dead surveys.
@@ -1014,11 +982,11 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
        if surveysnottobedeleted.include? (oldsurvey.SurveyNumber) then
          # do nothing
        else
-         if oldsurvey.SurveySID == "CUSTOM" then
+         if oldsurvey.SurveySID == "DONOTDELETE" then
            # do nothing
          else
           surveystobedeleted << oldsurvey.SurveyNumber
-          print 'DELETING THIS SURVEY NUMBER NOT on Allocation LIST nor CUSTOM ', oldsurvey.SurveyNumber
+          print '******************** DELETING THIS SURVEY NUMBER NOT on Allocation LIST nor marked DONOTDELETE ', oldsurvey.SurveyNumber
           puts
           oldsurvey.delete
         end

@@ -5,8 +5,6 @@ require 'httparty'
 require 'mixpanel-ruby'
 
   def new
-    
-    # Parse incoming click URL e.g. http://localhost:3000/users/new?NID=Aiuy56420xzLL7862rtwsxcAHxsdhjkl&CID=333333
     #    @user = User.new
   end
 
@@ -26,10 +24,6 @@ require 'mixpanel-ruby'
       redirect_to '/users/new'
       return
     end
-
-#    print 'Age works out to be', @age
-#    puts
-
 
      # Check for COPA eligibility
 
@@ -97,7 +91,7 @@ require 'mixpanel-ruby'
           p '******************* EVAL_AGE: REPEAT USER is Black listed'
           userride (session_id)
         else
-          p '******************* EVAL_AGE: Modifying existing record of a REPEAT USER'
+          p '******************* EVAL_AGE: Modifying existing user record of a REPEAT USER'
 
           user.age = @age
           user.netid = netid
@@ -193,11 +187,10 @@ require 'mixpanel-ruby'
       user.save
       redirect_to '/users/qq3'
     else
-#      redirect_to '/users/show'
       user.watch_listed=true
       user.save
       # Flash user to pay attention
-      flash[:alert] = "Please pay more attention to your responses!"
+      flash[:alert] = "Please pay attention to your responses!"
       redirect_to '/users/tq1'
     end
   end
@@ -716,8 +709,7 @@ require 'mixpanel-ruby'
         # Add a more generic condition that survey.CPI > user.currentpayout
         
         #Prints for testing code
-          
- #       ans0 = ( survey.try(:QualificationGenderPreCodes) )
+
         @_gender = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
         @_age = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
         @_ZIP = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
@@ -781,16 +773,16 @@ require 'mixpanel-ruby'
       # Look through surveys this user is qualified for to check if there is quota available. Quota numbers can be read as Maximum or upper limit allowed for a qualification e.g. ages 20-24 quota of 30 and ages 25-30 quota of 50 is the upper limit on both of the groups. The code should first find if the number of respondents in the quota teh respondent falls in has need for more respondents. When a quota is split into parts then respondent must fall into at least one of them.
       
       
-      puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified"
+      puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after first 40 top ranked surveys with quota are found to reduce unnecessarily matching for too long. 40 is a guess to have 10 surveys with GEEPC > 0.1 (5)"
       
-        
+      @foundtopsurveyswithquota = false
+      
       (0..user.QualifiedSurveys.length-1).each do |j| #1
-        
-        
-        @surveynumber = user.QualifiedSurveys[j]
- #      survey = Survey.where( "SurveyNumber = ?", @surveynumber )
-        Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey| #2
+          
+        if @foundtop10surveyswithquota == false then       #3 if @foundtop10surveyswithquota = false
 
+          @surveynumber = user.QualifiedSurveys[j]
+          Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey| #2
 
         @NumberOfQuotas = survey.SurveyQuotas.length-1
         print '************ The Number of Quota IDs in this survey are more than 1: ', @NumberOfQuotas+1
@@ -820,6 +812,13 @@ require 'mixpanel-ruby'
           print '************* No Total quota ID found. Assuming that quota is open for ALL users. Might want to change this to refuse this survey based on experience. This should typically NOT happen.'
           puts
           user.SurveysWithMatchingQuota << @surveynumber
+          
+          if user.SurveysWithMatchingQuota.uniq.length >= 40 then
+            @foundtopsurveyswithquota = true
+          else
+            #do nothing
+          end
+          
         end #3
           
 
@@ -1159,7 +1158,6 @@ require 'mixpanel-ruby'
                   
                 # Keep a list of all nested quota names
                 @nestedquotaname = @NestedQuestionID.uniq.sort.join
-            #      @NestedQuestionIDstringArray << @nestedquotaname
                   print 'New nested questionID string formed: ', @nestedquotaname
                   puts
                   print 'Items in the list of nested quotas array BEFORE: ', @NestedQuestionIDstringArray
@@ -1320,7 +1318,13 @@ require 'mixpanel-ruby'
           if (@listofunmatchednestedquestionIDs.empty?) && (unnestedquotasexist) then
             # Everytime (Quota ID set of l quetions) a quota matches, capture the surveynumber. Delete duplicates later
             puts '****************** Adding the survey to the list of eligible surveys due to quota match'
-            user.SurveysWithMatchingQuota << @surveynumber    
+            user.SurveysWithMatchingQuota << @surveynumber
+            
+            if user.SurveysWithMatchingQuota.uniq.length >= 40 then
+              @foundtopsurveyswithquota = true
+            else
+              #do nothing
+            end
 
           else
             print 'Quota in survey number = is not open for this user: ', @surveynumber
@@ -1337,11 +1341,21 @@ require 'mixpanel-ruby'
             # The survey is open to All, provided there is need for respondents specified in Total
             puts '************* Adding survey to list of eligible quotas even though no quotas specified but Totalquotaexists.'
             user.SurveysWithMatchingQuota << @surveynumber
+            
+            if user.SurveysWithMatchingQuota.uniq.length >= 40 then
+              @foundtopsurveyswithquota = true
+            else
+              #do nothing
+            end
+            
           end  
         end #5 if there is quota specified in k = 0 (total) or more (other IDs)
           
           
         end  #2 End reviewing quotas of a |survey|
+      
+      else
+      end #3 if @foundtop10surveyswithquota = false
        
       end  #1 End j - going through the list of qualified surveys
         

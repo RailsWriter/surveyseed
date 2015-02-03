@@ -1,13 +1,12 @@
 <h1>US Surveys</h1>
 
-<p> Watch for high number of terminations to lower a survey's grossrank, if it does not happen automatically.</p>
+
 <p>Showing <%= @surveys.count%> US surveys:</p>
 	
-<h5>SuveyNumber --- SurveyId --- CountryLangID ------- CPI ------- Remaining ------ Conversion ------ GrossRank ----- GEEPC ------ Failed+OQ ------- OQs -------- Completes</h5>
+<h5>SuveyNumber --- SurveyId ------- CountryLangID --------- CPI ----------- Remaining -------- Conversion ------ GrossRank ------- GEEPC --------- Failed+OQ --------- OQs ---------- Completes</h5>
 
-<ul id="contacts">
-    <% @surveys.each do |c| %>
+<% @surveys.each do |c| %>
     <li>
        <%= link_to c.SurveyNumber.to_s + '---------------' + c.id.to_s + '-------------------' + c.CountryLanguageID.to_s + '-------------------' + c.CPI.to_s + '-------------------' + c.TotalRemaining.to_s + '-------------------' + c.Conversion.to_s + '-------------------' + c.SurveyGrossRank.to_s + '--------------------' + c.SurveyQuotaCalcTypeID.to_s + '--------------------' + c.SurveyExactRank.to_s + '--------------------' + c.SampleTypeID.to_s + '--------------------' + c.CompletedBy.length.to_s, :action =>'show_surveys_US', :id =>c.id  -%>
     </li>
-    <% end %>
+<% end %>

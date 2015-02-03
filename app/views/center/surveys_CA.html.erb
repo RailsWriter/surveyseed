@@ -1,10 +1,9 @@
 <h1>CANADA Surveys</h1>
 
 
-<p> Watch for high number of terminations to lower a survey's grossrank, if it does not happen automatically.</p>
 <p>Showing <%= @surveys.count%> CA surveys:</p>
 	
-<h5>SuveyNumber --- SurveyId --- CountryLangID ------- CPI ------- Remaining ------ Conversion ------ GrossRank ----- GEEPC ------ Failed+OQ ------- OQs -------- Completes</h5>
+<h5>SuveyNumber --- SurveyId --- CountryLangID --------- CPI --------- Remaining -------- Conversion ------ GrossRank ----- GEEPC ------ Failed+OQ --------- OQs ----------- Completes</h5>
 
     <% @surveys.each do |c| %>
     <li>
