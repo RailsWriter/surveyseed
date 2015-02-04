@@ -775,11 +775,11 @@ require 'hmac-md5'
       
       puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after first 40 top ranked surveys with quota are found to reduce unnecessarily matching for too long. 40 is a guess to have 10 surveys with GEEPC > 0.1 (5)"
       
-      @foundtopsurveyswithquota = true
+      @foundtopsurveyswithquota = false   # false means not finished finding top surveys
       
       (0..user.QualifiedSurveys.length-1).each do |j| #1
           
-        if @foundtopsurveyswithquota == false then       #3 if @foundtopsurveyswithquota = false
+        if @foundtopsurveyswithquota == false then       #3 false means not finished finding top surveys
 
           @surveynumber = user.QualifiedSurveys[j]
           Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey| #2
