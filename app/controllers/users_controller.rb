@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
 
 require 'httparty'
-
 require 'mixpanel-ruby'
+require 'hmac-md5'
 
   def new
     #    @user = User.new
@@ -775,11 +775,11 @@ require 'mixpanel-ruby'
       
       puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after first 40 top ranked surveys with quota are found to reduce unnecessarily matching for too long. 40 is a guess to have 10 surveys with GEEPC > 0.1 (5)"
       
-      @foundtopsurveyswithquota = false
+      @foundtopsurveyswithquota = true
       
       (0..user.QualifiedSurveys.length-1).each do |j| #1
           
-        if @foundtop10surveyswithquota == false then       #3 if @foundtop10surveyswithquota = false
+        if @foundtopsurveyswithquota == false then       #3 if @foundtopsurveyswithquota = false
 
           @surveynumber = user.QualifiedSurveys[j]
           Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey| #2
@@ -1355,7 +1355,7 @@ require 'mixpanel-ruby'
         end  #2 End reviewing quotas of a |survey|
       
       else
-      end #3 if @foundtop10surveyswithquota = false
+      end #3 if @foundtopsurveyswithquota = false
        
       end  #1 End j - going through the list of qualified surveys
         
@@ -1366,12 +1366,12 @@ require 'mixpanel-ruby'
       # Lets save the survey numbers that the user meets the quota requirements for in this user's record of database in rank order
       
       if (user.SurveysWithMatchingQuota.empty?) then
-        p '******************** USERRIDE: No Surveys matching quota were found in users_controller'
-        redirect_to '/users/nosuccess'
-        return
+        p '******************** USERRIDE: No Surveys matching quota were found in Fulcrum'
+#        redirect_to '/users/nosuccess'
+#        return
       else       
         user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
-        print 'List of surveys where quota is available:', user.SurveysWithMatchingQuota
+        print '*************** List of Fulcrum surveys where quota is available:', user.SurveysWithMatchingQuota
         puts
       end
       
@@ -1397,13 +1397,6 @@ require 'mixpanel-ruby'
     else
     end
     
-    # The user does not qualify for any survey in the inventory, from the begining. (Failure/Terminate)
-#    if ((user.QualifiedSurveys.empty?) || (user.SurveysWithMatchingQuota.empty?)) then
-#      p '******************** USERRIDE: No Surveys matching quals/quota were found in users_controller'
-#      redirect_to '/users/nosuccess'
-#      return -> causes it to go back up to end of did not qualify and show the list of unique matching quotas which is nil
-#    else
-#    end
     
      # If the user qualifies for one or more survey, redirect to the top ranked survey and repeat until success/failure/OT/QT
      @InferiorSupplierLink = Array.new
@@ -1427,17 +1420,71 @@ require 'mixpanel-ruby'
     #Prevent a problem with userride if EPC < 0.1 eliminates ALL surveys
 
     user.SupplierLink = user.SupplierLink + @InferiorSupplierLink
-    print '*********** USER HAS QUOTA FOR this list of surveys with EPC <0.1 moved to the end of the list:', user.SupplierLink
+    print '*********** USER HAS QUOTA FOR this list of Fulcrum surveys with EPC <0.1 moved to the end of the list:', user.SupplierLink
     puts
     
     
     # removing the blank entry
     if user.SupplierLink !=nil then
-#      user.SupplierLink.reject! { |c| c.empty? }
-user.SupplierLink.reject! { |c| c == nil}
+      user.SupplierLink.reject! { |c| c == nil}
     else
     end
 
+
+    # Queue up additional surveys from P2S. First calculate teh additional values to be attached.
+    
+    @client = Network.find_by name: "P2S"
+    if @client.status = "ACTIVE" then
+      @SUBID = @client.netid+user.user_id
+    
+      print "**************** P2S @SUID = ", @SUBID
+      puts
+
+      if user.gender = 1 then
+        @p2s_gender = "m"
+      else
+        @p2s_gender = "f"
+      end
+      
+      # p2s additional values
+
+      if user.country=="9" then 
+        @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP
+      else
+        if user.country=="6" then
+          @p2s_AdditionalValues = 'age='+user.age+'&gender='+user.gender+'&ZIP_Canada='+user.ZIP
+        else
+          if user.country=="5" then
+            @p2s_AdditionalValues = 'age='+user.age+'&gender='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP
+          else
+            if user.country=="7" then
+              @p2s_AdditionalValues = 'age='+user.age+'&gender='+user.gender+'&Fulcrum_ZIP_IN='+user.ZIP
+            else
+              puts "*************************************** P2S: Find out why country code is not correctly set"
+              @p2s_AdditionalValues = 'age='+user.age+'&gender='+user.gender
+              return
+            end
+          end
+        end
+      end  
+      
+      #p2s hmac(md5) calculation
+      
+      p2ssecretkey = '9df95db5396d180e786c707415203b95'      
+      @hmac = HMAC::MD5.new(p2ssecretkey).update(@p2s_AdditionalValues).hexdigest
+
+      #p2s supplier link
+      
+      @p2sSupplierLink = 'http://www.your-surveys.com/?si=55&ssi='+@SUBID+'&'+@p2s_AdditionalValues+'&hmac='+@hmac
+      
+      print "**************P2S SupplierLink = ", @p2sSupplierLink
+      puts
+      
+      user.SupplierLink << @p2sSupplierLink
+
+    else
+      # do nothing for P2S
+    end
     
     # Save the list of SupplierLinks in user record
     user.save
@@ -1467,9 +1514,7 @@ user.SupplierLink.reject! { |c| c == nil}
           end
         end
       end
-    end
-    
-    
+    end    
     
     @parsed_user_agent = UserAgent.parse(user.user_agent)
     
@@ -1486,15 +1531,30 @@ user.SupplierLink.reject! { |c| c == nil}
       p "*************************************** UseRide: MS_is_mobile is set FALSE"
       
     end
+
+
+    if user.SupplierLink[0] == @p2sSupplierLink then
+      
+      print 'User will be sent to P2S router as no other surveys are availabe: ', user.SupplierLink[0]
+      puts
+      
+      @EntryLink = user.SupplierLink[0]
+      user.SupplierLink = user.SupplierLink.drop(1)
+      user.save
+      redirect_to @EntryLink
+      
+    else
+      
+      print 'User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile
+      puts
     
-
-
-    print 'User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile
-    puts
-    @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile
-    user.SupplierLink = user.SupplierLink.drop(1)
-    user.save
-    redirect_to @EntryLink
+      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile    
+      user.SupplierLink = user.SupplierLink.drop(1)
+      user.save
+      redirect_to @EntryLink
+      
+    end # if user.SupplierLink[0] == @p2sSupplierLink then
+    
   end
   
 

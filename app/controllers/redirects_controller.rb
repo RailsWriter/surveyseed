@@ -23,6 +23,8 @@ class RedirectsController < ApplicationController
     @validateSHA1hash= @validateSHA1hash.gsub '=', ''
 #    p 'Validate 4 =', @validateSHA1hash
     
+    @p2s_redirect = false # set false to as a flag to set true if it is a P2S redirect
+    
     if (@validateSHA1hash != @Signature) then
       # invalid response, discard
       print '************ Redirects: Signature NOT verified, Validate 4 =', @validateSHA1hash
@@ -31,8 +33,18 @@ class RedirectsController < ApplicationController
         print '***************** PID = TEST found. Staging server does not generate Signatures '
         puts
       else
-        redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
-        return
+        if params[:PID][0..3] == "2215" then
+          params[:PID] = params[:PID].sub "2215", ''
+          
+          print "********************* Extracted userid from P2S PID to be = ", params[:PID]
+          puts
+          
+          @p2s_redirect = true
+          
+        else
+          redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=0'
+          return
+        end
       end
     else
       p '****************** Redirects: Signature verified **********************'
@@ -42,19 +54,15 @@ class RedirectsController < ApplicationController
     # SurveyQuotaCalcTypeID is GEEPC value used to determine lowering of rank
     # SurveyExactRank is a counter for failures+OQ
     # SampleTypeID is used to count OQ incidences
-  
     
     
     case params[:status] 
-      
-      
-      
+          
       when "1"
         # DefaultLink: https://www.ketsci.com/redirects/status?status=1&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
         
         p 'Redirected to Default'
         
-        # turn to '!=' for testing       
         if params[:PID] == 'test' then 
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
         else
@@ -83,87 +91,116 @@ class RedirectsController < ApplicationController
 
         end
 
+
       when "2"
         # SuccessLink: https://www.ketsci.com/redirects/status?status=2&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]&cost=[%COST%]
         
         # save attempt info in User and Survey tables
 
-#       Turn to 'test' be true on launch 
         if params[:PID] == 'test' then
           redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'
-        else
-          # save attempt info in User and Survey tables
+        else  
+          if @p2s_redirect then
+            
+            # save attempt info in User and Survey tables
           
-         @user = User.find_by user_id: params[:PID]
-#          @user = User.last
+            @user = User.find_by user_id: params[:PID]
 
-         print 'Suceess for user_id/PID, CID: ', params[:PID], @user.clickid
-         puts
+            print 'Suceess in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
+            puts
 
-#         In case user not found - should not happen since we sent the PID in the first place.
-#          if (User.where("user_id = ?", params[:PID])).exists? then
-#            @user = User.find_by user_id: params[:PID]
-#          else
-#            redirect_to 'https://www.ketsci.com/redirects/contactus'
-#          end
-          
-          @user.SurveysAttempted << params[:tsfn]+'2222'
-          # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
-          @user.SurveysCompleted[params[:tsfn]] = [params[:cost], params[:tsfn], @user.clickid, @user.netid]
-          @user.save
-
-          @survey = Survey.find_by SurveyNumber: params[:tsfn]
-          print 'Successfully completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
-          puts
-          # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
-          @survey.CompletedBy[params[:PID]] = [params[:tis], params[:tsfn], @user.clickid, @user.netid]
-          @survey.SurveyGrossRank = 1
-          puts '********************************* Survey Rank raised to 1 following a complete!'
-          @survey.save
-
-          # Postback the network about success with users clickid
-          if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
-            begin
-              @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                rescue HTTParty::Error => e
-                puts 'HttParty::Error '+ e.message
-                retry
-            end while @FyberPostBack.code != 200
+            @user.SurveysAttempted << 'P2S'+'2222'
+            # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
+            @user.SurveysCompleted['P2S'] = ['$1.25', 'P2S', @user.clickid, @user.netid]
+            @user.save
+              
+            # Postback the network about success with users clickid
+            if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+                begin
+                  @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    rescue HTTParty::Error => e
+                    puts 'HttParty::Error '+ e.message
+                    retry
+                end while @FyberPostBack.code != 200
+            else
+            end
+              
+            # Happy ending
+            redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'    
           else
+          
+            # save attempt info in User and Survey tables
+          
+            @user = User.find_by user_id: params[:PID]
+
+            print 'Suceess for user_id/PID, CID: ', params[:PID], @user.clickid
+            puts
+          
+            @user.SurveysAttempted << params[:tsfn]+'2222'
+            # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
+            @user.SurveysCompleted[params[:tsfn]] = [params[:cost], params[:tsfn], @user.clickid, @user.netid]
+            @user.save
+
+            @survey = Survey.find_by SurveyNumber: params[:tsfn]
+            print 'Successfully completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
+            puts
+            # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
+            @survey.CompletedBy[params[:PID]] = [params[:tis], params[:tsfn], @user.clickid, @user.netid]
+            @survey.SurveyGrossRank = 1
+            puts '********************************* Survey Rank raised to 1 following a complete!'
+            @survey.save
+
+            # Postback the network about success with users clickid
+            if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+              begin
+                @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  rescue HTTParty::Error => e
+                    puts 'HttParty::Error '+ e.message
+                    retry
+              end while @FyberPostBack.code != 200
+            else
+            end
+
+            # Happy ending
+            redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'
           end
-
-# Give user a chance to take another survey
-#         if (@user.SupplierLink) then
-#          redirect_to @user.SupplierLink[0]+params[:PID]
-#          else
-#            redirect_to 'https://www.ketsci.com/redirects/failure?&SUCCESS=2'
-#          end
-
-          # Happy ending
-          redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'
         end
-
 
 
       when "3"
         # FailureLink: https://www.ketsci.com/redirects/status?status=3&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
         # FED uses this link is used when user is under age or they do not qualify for the survey they attempted. However since Ketsci eliminates those users already, this user
         # can be sent to try other surveys. If he/she has not qualified for any survey then take them to failure view.
-
-        # turn to '!=' for testing       
-        if params[:PID] == 'test' then
-     # @user = User.last  
+      
+        if params[:PID] == 'test' then 
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
         else
-          # save attempt info in User and Survey tables
-          @user = User.find_by user_id: params[:PID]          
           
-          print 'Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
-          puts
+          if @p2s_redirect then
+            
+            # save attempt info in User and Survey tables
+          
+            @user = User.find_by user_id: params[:PID]
 
-          # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
-          # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
-          if params[:tsfn] != nil then
+            print 'Failure in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
+            puts
+
+            @user.SurveysAttempted << 'P2S'+'3333'
+            @user.save        
+            
+            #Tell user that they were not matched in P2S due to Failure
+            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=5'
+            
+          else
+            # save attempt info in User and Survey tables
+            @user = User.find_by user_id: params[:PID]          
+          
+            print 'Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
+            puts
+
+            # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
+            # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
+            if params[:tsfn] != nil then
             @user.SurveysAttempted << params[:tsfn]+'3333'                   
             @user.save
             
@@ -232,9 +269,9 @@ class RedirectsController < ApplicationController
           else
           end
 
-          # Give user chance to take another survey unless they do not qualify for any (other) survey
+            # Give user chance to take another survey unless they do not qualify for any (other) survey
 
-          if (@user.SupplierLink.empty? == false) then
+            if (@user.SupplierLink.empty? == false) then
   
             if @user.country=="9" then 
               @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
@@ -256,28 +293,21 @@ class RedirectsController < ApplicationController
               end
             end
   
-
-
-
             @redirects_parsed_user_agent = UserAgent.parse(@user.user_agent)
     
-            print "*************************************** UseRide: User platform is: ", @redirects_parsed_user_agent.platform
+            print "*************************************** Redirects: User platform is: ", @redirects_parsed_user_agent.platform
             puts
     
             if @redirects_parsed_user_agent.platform == 'iPhone' then
       
               @MS_is_mobile = '&MS_is_mobile=true'
-              p "*************************************** UseRide: MS_is_mobile is set TRUE"
+              p "*************************************** Redirects: MS_is_mobile is set TRUE"
       
             else
               @MS_is_mobile = '&MS_is_mobile=false'
-              p "*************************************** UseRide: MS_is_mobile is set FALSE"
+              p "*************************************** Redirects: MS_is_mobile is set FALSE"
       
             end
-
-
-
-
 
 
             print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
@@ -290,85 +320,100 @@ class RedirectsController < ApplicationController
           else
             redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
           end
+          end    
         end
-        
-        
-        
+                
+
       when "4"
         # OverQuotaLink: https://www.ketsci.com/redirects/status?status=4&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
 
-# turn to t'test' be true on launch 
+        # turn to t'test' be true on launch 
         if params[:PID] == 'test' then
   #          @user = User.last
           redirect_to 'https://www.ketsci.com/redirects/overquota?&OQ=1'
+
         else
-          # save attempt info in User and Survey tables
-          @user = User.find_by user_id: params[:PID]
+          
+          if @p2s_redirect then
+            
+            # save attempt info in User and Survey tables
+          
+            @user = User.find_by user_id: params[:PID]
+
+            print 'OQ in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
+            puts
+
+            @user.SurveysAttempted << 'P2S'+'4444'
+            @user.save  
+            
+            #Tell user that they were not matched due to OQ in P2S
+            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
+
+          else
+            # save attempt info in User and Survey tables
+            @user = User.find_by user_id: params[:PID]
 
 
-          print 'OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
-          puts          
+            print 'OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
+            puts          
           
-          @user.SurveysAttempted << params[:tsfn]+'4444'
-          @user.save
+            @user.SurveysAttempted << params[:tsfn]+'4444'
+            @user.save
           
           
-          @survey = Survey.find_by SurveyNumber: params[:tsfn]
+            @survey = Survey.find_by SurveyNumber: params[:tsfn]
           
-          # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
+            # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
 
-          @survey.SampleTypeID = @survey.SampleTypeID + 1 # counts number of OQ incidents for a survey
+            @survey.SampleTypeID = @survey.SampleTypeID + 1 # counts number of OQ incidents for a survey
 
-          @survey.SurveyExactRank = @survey.SurveyExactRank + 1
-          print '********************************* Unsuccessful attempts count raised by 1 following an OQ for survey number: ', params[:tsfn]
-          puts
+            @survey.SurveyExactRank = @survey.SurveyExactRank + 1
+            print '********************************* Unsuccessful attempts count raised by 1 following an OQ for survey number: ', params[:tsfn]
+            puts
           
-          if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
+            if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
             @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
             print '********************************* Reached 10 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a OQ for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
             puts
           else
           end
           
-          if ( @survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
+            if ( @survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
             @survey.SurveyGrossRank = 21
             print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
           
-          if ( @survey.SurveyExactRank == 40 ) && (@survey.CompletedBy.length == 1) then
+            if ( @survey.SurveyExactRank == 40 ) && (@survey.CompletedBy.length == 1) then
             @survey.SurveyGrossRank = 21
             print '********************************* Reached 40 Unsuccessful attempts, and 0nly 1 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
           
-          
-          if ( @survey.SurveyExactRank == 60 ) && (@survey.CompletedBy.length == 2) then
+            if ( @survey.SurveyExactRank == 60 ) && (@survey.CompletedBy.length == 2) then
             @survey.SurveyGrossRank = 20
             print '********************************* Reached 60 Unsuccessful attempts, with only 2 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
           
-          if ( @survey.SurveyExactRank == 80 ) && (@survey.CompletedBy.length == 3) then
+            if ( @survey.SurveyExactRank == 80 ) && (@survey.CompletedBy.length == 3) then
             @survey.SurveyGrossRank = 21
             print '********************************* Reached 80 Unsuccessful attempts, with only 3 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
           
-          if ( @survey.SurveyExactRank == 100 ) && (@survey.CompletedBy.length == 4) then
+            if ( @survey.SurveyExactRank == 100 ) && (@survey.CompletedBy.length == 4) then
             @survey.SurveyGrossRank = 21
             print '********************************* Reached 100 Unsuccessful attempts, with only 4 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
             puts 
           else
           end
-          
-          
-          
-          if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / (@survey.CompletedBy.length+0.1) ) > 10 ))
+                   
+            if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / (@survey.CompletedBy.length+0.1) ) > 10 ))
              # 0.1 is arbitrarily added to avoid division by 0
             
             @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
@@ -376,16 +421,13 @@ class RedirectsController < ApplicationController
             puts 
           else
           end
-          
-          
-          
-          
-          @survey.save
+                  
+            @survey.save
           
 
-          # Give user chance to take another survey
+            # Give user chance to take another survey
           
-          if (@user.SupplierLink.empty? == false) then
+            if (@user.SupplierLink.empty? == false) then
             
             if @user.country=="9" then 
               @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
@@ -440,22 +482,20 @@ class RedirectsController < ApplicationController
           else
             redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=4'
           end
+          end
         end
-        
-        
-    
+              
+
       when "5"
         # QualityTerminationLink: https://www.ketsci.com/redirects/status?status=5&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
         
         p 'QTerm'
-
-# turn to t'test' be true on launch 
+ 
         if params[:PID] == 'test' then
   #          @user = User.last
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=1'
         else
-          
-         
+                  
           # save attempt info in User and Survey tables
           @user = User.find_by user_id: params[:PID]
           
