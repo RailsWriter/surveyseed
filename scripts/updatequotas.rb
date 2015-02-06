@@ -1143,7 +1143,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           else
           end
     
-          if 0.01 <= toberankedsurvey.KEPC < 0.02 then    
+          if (0.01 <= toberankedsurvey.KEPC) &&  (toberankedsurvey.KEPC < 0.02) then    
     
             if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
               p "Found a toberankedsurvey with Conversion = 0"
@@ -1156,7 +1156,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             puts
           end
     
-          if 0 <= toberankedsurvey.KEPC < 0.01 then    
+          if (0 <= toberankedsurvey.KEPC) &&  (toberankedsurvey.KEPC < 0.01) then  
     
             if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
               p "Found a toberankedsurvey with Conversion = 0"
@@ -1255,8 +1255,8 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         
             else
             end
-      
-            if 0.01 <= toberankedsurvey.KEPC < 0.02 then    
+          
+            if (0.01 <= toberankedsurvey.KEPC) &&  (toberankedsurvey.KEPC < 0.02) then
     
               if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                 p "Found a toberankedsurvey with Conversion = 0"
@@ -1269,7 +1269,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               puts
             end
       
-            if 0 <= toberankedsurvey.KEPC < 0.01 then    
+            if (0 <= toberankedsurvey.KEPC) &&  (toberankedsurvey.KEPC < 0.01) then    
     
               if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                 p "Found a toberankedsurvey with Conversion = 0"
@@ -1348,7 +1348,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             else
             end
       
-            if 0.01 <= toberankedsurvey.KEPC < 0.02 then    
+            if (0.01 <= toberankedsurvey.KEPC) &&  (toberankedsurvey.KEPC < 0.02) then    
     
               if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                 p "Found a toberankedsurvey with Conversion = 0"
@@ -1360,8 +1360,8 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               print "Assigned existing GEPC=5 toberankedsurvey a Try More tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               puts
             end
-      
-            if 0 <= toberankedsurvey.KEPC < 0.01 then    
+       
+            if (0 <= toberankedsurvey.KEPC) &&  (toberankedsurvey.KEPC < 0.01) then   
     
               if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                 p "Found a toberankedsurvey with Conversion = 0"
@@ -1487,7 +1487,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             else
             end
       
-            if 0.01 <= toberankedsurvey.KEPC < 0.02 then    
+            if (0.01 <= toberankedsurvey.KEPC) &&  (toberankedsurvey.KEPC < 0.02) then    
     
               if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                 p "Found a toberankedsurvey with Conversion = 0"
@@ -1500,7 +1500,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               puts
             end
       
-            if 0 <= toberankedsurvey.KEPC < 0.01 then    
+            if (0 <= toberankedsurvey.KEPC) &&  (toberankedsurvey.KEPC < 0.01) then    
     
               if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                 p "Found a toberankedsurvey with Conversion = 0"
@@ -1542,7 +1542,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             else
             end
       
-            if 0.01 <= toberankedsurvey.KEPC < 0.02 then    
+            if (0.01 <= toberankedsurvey.KEPC) &&  (toberankedsurvey.KEPC < 0.02) then    
     
               if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                 p "Found a toberankedsurvey with Conversion = 0"
@@ -1555,7 +1555,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               puts
             end
       
-            if 0 <= toberankedsurvey.KEPC < 0.01 then    
+            if (0 <= toberankedsurvey.KEPC) &&  (toberankedsurvey.KEPC < 0.01) then    
     
               if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                 p "Found a toberankedsurvey with Conversion = 0"
