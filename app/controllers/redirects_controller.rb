@@ -23,7 +23,7 @@ class RedirectsController < ApplicationController
     @validateSHA1hash= @validateSHA1hash.gsub '=', ''
 #    p 'Validate 4 =', @validateSHA1hash
     
-    @p2s_redirect = false # set false to as a flag to set true if it is a P2S redirect
+    @p2s_redirect = false # set to false as a flag. changes to true if it is a P2S redirect
     
     if (@validateSHA1hash != @Signature) then
       # invalid response, discard
@@ -106,13 +106,17 @@ class RedirectsController < ApplicationController
           
             @user = User.find_by user_id: params[:PID]
 
-            print 'Suceess in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
+            print '******************* Suceess in P2S router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
             puts
 
             @user.SurveysAttempted << 'P2S'+'2222'
             # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
-            @user.SurveysCompleted['P2S'] = ['$1.25', 'P2S', @user.clickid, @user.netid]
+            
+            @user.SurveysCompleted[Time.now] = ['$1.25', 'P2S', @user.clickid, @user.netid]
             @user.save
+            
+            print "*************** User.netid is FYBER: ", @user.netid
+            puts
               
             # Postback the network about success with users clickid
             if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
@@ -133,12 +137,12 @@ class RedirectsController < ApplicationController
           
             @user = User.find_by user_id: params[:PID]
 
-            print 'Suceess for user_id/PID, CID: ', params[:PID], @user.clickid
+            print 'Suceess for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
             puts
           
             @user.SurveysAttempted << params[:tsfn]+'2222'
             # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
-            @user.SurveysCompleted[params[:tsfn]] = [params[:cost], params[:tsfn], @user.clickid, @user.netid]
+            @user.SurveysCompleted[params[Time.now]] = [params[:cost], params[:tsfn], @user.clickid, @user.netid]
             @user.save
 
             @survey = Survey.find_by SurveyNumber: params[:tsfn]
@@ -146,8 +150,8 @@ class RedirectsController < ApplicationController
             puts
             # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
             @survey.CompletedBy[params[:PID]] = [params[:tis], params[:tsfn], @user.clickid, @user.netid]
-            @survey.SurveyGrossRank = 1
-            puts '********************************* Survey Rank raised to 1 following a complete!'
+#            @survey.SurveyGrossRank = 1
+#            puts '********************************* Survey Rank raised to 1 following a complete!'
             @survey.save
 
             # Postback the network about success with users clickid
@@ -174,7 +178,8 @@ class RedirectsController < ApplicationController
       
         if params[:PID] == 'test' then 
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
-        else
+ 
+        else # if test
           
           if @p2s_redirect then
             
@@ -191,7 +196,8 @@ class RedirectsController < ApplicationController
             #Tell user that they were not matched in P2S due to Failure
             redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=5'
             
-          else
+          else # p2s redirect
+            
             # save attempt info in User and Survey tables
             @user = User.find_by user_id: params[:PID]          
           
@@ -201,127 +207,133 @@ class RedirectsController < ApplicationController
             # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
             # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
             if params[:tsfn] != nil then
-            @user.SurveysAttempted << params[:tsfn]+'3333'                   
-            @user.save
+              @user.SurveysAttempted << params[:tsfn]+'3333'                   
+              @user.save
             
             
-            @survey = Survey.find_by SurveyNumber: params[:tsfn]
+              @survey = Survey.find_by SurveyNumber: params[:tsfn]
             
-            # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
-            @survey.SurveyExactRank = @survey.SurveyExactRank + 1
-            print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn], 'new ExactRank/Failure count: ', @survey.SurveyExactRank
-            puts
-            
-            if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
-              @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
-              print '********************************* Reached 10 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
+              # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
+              @survey.SurveyExactRank = @survey.SurveyExactRank + 1
+              @survey.FailureCount = @survey.FailureCount + 1
+              print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn], 'new ExactRank/Failure count: ', @survey.SurveyExactRank
               puts
-            else
-            end
-            
-            if ( @survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
-              @survey.SurveyGrossRank = 21
-              print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
-              puts 
-            else
-            end            
-            
-            if ( @survey.SurveyExactRank == 40 ) && (@survey.CompletedBy.length == 1) then
-              @survey.SurveyGrossRank = 21
-              print '********************************* Reached 100 Unsuccessful attempts, with only 1 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
-              puts 
-            else
-            end
-            
-            if ( @survey.SurveyExactRank == 60 ) && (@survey.CompletedBy.length == 2) then
-              @survey.SurveyGrossRank = 21
-              print '********************************* Reached 60 Unsuccessful attempts, with only 2 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
-              puts 
-            else
-            end
-            
-            if ( @survey.SurveyExactRank == 80 ) && (@survey.CompletedBy.length == 3) then
-              @survey.SurveyGrossRank = 21
-              print '********************************* Reached 80 Unsuccessful attempts, with only 3 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
-              puts 
-            else
-            end
-            
-            if ( @survey.SurveyExactRank == 100 ) && (@survey.CompletedBy.length == 4) then
-              @survey.SurveyGrossRank = 21
-              print '********************************* Reached 100 Unsuccessful attempts, with only 4 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
-              puts 
-            else
-            end
-            
-
-            if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / (@survey.CompletedBy.length+0.1) ) > 10 ))
-              # 0.1 is arbitrarily added to avoid division by 0
               
-              @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
-              print '********************************* Reached 120+ Unsuccessful attempts, and less than 10% completes - rank reduced proportionate to EPC following a Failuare for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
-              puts 
-            else
-            end
-              
-            @survey.save
+              @survey.save
             
-          else
-          end
-
+            else # if params[tsfn] != nil
+            end # if params[tsfn] != nil
+            
             # Give user chance to take another survey unless they do not qualify for any (other) survey
 
             if (@user.SupplierLink.empty? == false) then
   
-            if @user.country=="9" then 
-              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
-            else
-              if @user.country=="6" then
-                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
+              if @user.country=="9" then 
+                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
               else
-                if @user.country=="5" then
-                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
+                if @user.country=="6" then
+                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
                 else
-                  if @user.country=="7" then
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
+                  if @user.country=="5" then
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
                   else
-                    puts "*************************************** Redirects: Find out why country code is not correctly set"
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
-                    return
+                    if @user.country=="7" then
+                      @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
+                    else
+                      puts "*************************************** Redirects: Find out why country code is not correctly set"
+                      @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
+                      return
+                    end
                   end
                 end
               end
-            end
   
-            @redirects_parsed_user_agent = UserAgent.parse(@user.user_agent)
+              @redirects_parsed_user_agent = UserAgent.parse(@user.user_agent)
     
-            print "*************************************** Redirects: User platform is: ", @redirects_parsed_user_agent.platform
-            puts
+              print "*************************************** Redirects: User platform is: ", @redirects_parsed_user_agent.platform
+              puts
     
-            if @redirects_parsed_user_agent.platform == 'iPhone' then
+              if @redirects_parsed_user_agent.platform == 'iPhone' then
       
-              @MS_is_mobile = '&MS_is_mobile=true'
-              p "*************************************** Redirects: MS_is_mobile is set TRUE"
+                @MS_is_mobile = '&MS_is_mobile=true'
+                p "*************************************** Redirects: MS_is_mobile is set TRUE"
       
-            else
-              @MS_is_mobile = '&MS_is_mobile=false'
-              p "*************************************** Redirects: MS_is_mobile is set FALSE"
+              else
+                @MS_is_mobile = '&MS_is_mobile=false'
+                p "*************************************** Redirects: MS_is_mobile is set FALSE"
       
-            end
+              end
 
 
-            print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-            puts
-            @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-            @user.SupplierLink = @user.SupplierLink.drop(1)
-            @user.save
-            redirect_to @NextEntryLink
+              print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
+              puts
+              @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
+              @user.SupplierLink = @user.SupplierLink.drop(1)
+              @user.save
+              redirect_to @NextEntryLink
 
-          else
-            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
-          end
-          end    
-        end
+            else # if SupplierLink empty?
+              
+              redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
+              
+            end # if SupplierLink empty?
+              
+            
+#            if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
+#              @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
+#              print '********************************* Reached 10 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
+#              puts
+#            else
+#            end
+            
+#            if ( @survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
+#              @survey.SurveyGrossRank = 21
+#              print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
+#              puts 
+#            else
+#            end            
+            
+#            if ( @survey.SurveyExactRank == 40 ) && (@survey.CompletedBy.length == 1) then
+#              @survey.SurveyGrossRank = 21
+#              print '********************************* Reached 100 Unsuccessful attempts, with only 1 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
+#              puts 
+#            else
+#            end
+            
+#            if ( @survey.SurveyExactRank == 60 ) && (@survey.CompletedBy.length == 2) then
+#              @survey.SurveyGrossRank = 21
+#              print '********************************* Reached 60 Unsuccessful attempts, with only 2 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
+#              puts 
+#            else
+#            end
+            
+#            if ( @survey.SurveyExactRank == 80 ) && (@survey.CompletedBy.length == 3) then
+#              @survey.SurveyGrossRank = 21
+#              print '********************************* Reached 80 Unsuccessful attempts, with only 3 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
+#              puts 
+#            else
+#            end
+            
+#            if ( @survey.SurveyExactRank == 100 ) && (@survey.CompletedBy.length == 4) then
+#              @survey.SurveyGrossRank = 21
+#              print '********************************* Reached 100 Unsuccessful attempts, with only 4 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
+#              puts 
+#            else
+#            end
+            
+
+#            if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / (@survey.CompletedBy.length+0.1) ) > 10 ))
+              # 0.1 is arbitrarily added to avoid division by 0
+              
+#              @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
+#              print '********************************* Reached 120+ Unsuccessful attempts, and less than 10% completes - rank reduced proportionate to EPC following a Failuare for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
+#              puts 
+#            else
+#            end
+              
+          
+          end # p2s redirect   
+        end # if test
                 
 
       when "4"
@@ -329,10 +341,9 @@ class RedirectsController < ApplicationController
 
         # turn to t'test' be true on launch 
         if params[:PID] == 'test' then
-  #          @user = User.last
           redirect_to 'https://www.ketsci.com/redirects/overquota?&OQ=1'
 
-        else
+        else # if test
           
           if @p2s_redirect then
             
@@ -349,7 +360,8 @@ class RedirectsController < ApplicationController
             #Tell user that they were not matched due to OQ in P2S
             redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
 
-          else
+          else # p2sredirect
+            
             # save attempt info in User and Survey tables
             @user = User.find_by user_id: params[:PID]
 
@@ -366,68 +378,74 @@ class RedirectsController < ApplicationController
             # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
 
             @survey.SampleTypeID = @survey.SampleTypeID + 1 # counts number of OQ incidents for a survey
+            @survey.OverQuotaCount = @survey.OverQuotaCount + 1
 
             @survey.SurveyExactRank = @survey.SurveyExactRank + 1
             print '********************************* Unsuccessful attempts count raised by 1 following an OQ for survey number: ', params[:tsfn]
             puts
+            
+            @survey.save
+            
+            
+            
           
-            if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
-            @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
-            print '********************************* Reached 10 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a OQ for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
-            puts
-          else
-          end
+#            if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
+#            @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
+#            print '********************************* Reached 10 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a OQ for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
+#            puts
+#          else
+#          end
           
-            if ( @survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
-            @survey.SurveyGrossRank = 21
-            print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
-            puts 
-          else
-          end
+#            if ( @survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
+#            @survey.SurveyGrossRank = 21
+#            print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
+#            puts 
+#          else
+#          end
           
-            if ( @survey.SurveyExactRank == 40 ) && (@survey.CompletedBy.length == 1) then
-            @survey.SurveyGrossRank = 21
-            print '********************************* Reached 40 Unsuccessful attempts, and 0nly 1 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
-            puts 
-          else
-          end
+#            if ( @survey.SurveyExactRank == 40 ) && (@survey.CompletedBy.length == 1) then
+#            @survey.SurveyGrossRank = 21
+#            print '********************************* Reached 40 Unsuccessful attempts, and 0nly 1 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
+#            puts 
+#          else
+#          end
           
-            if ( @survey.SurveyExactRank == 60 ) && (@survey.CompletedBy.length == 2) then
-            @survey.SurveyGrossRank = 20
-            print '********************************* Reached 60 Unsuccessful attempts, with only 2 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
-            puts 
-          else
-          end
+#            if ( @survey.SurveyExactRank == 60 ) && (@survey.CompletedBy.length == 2) then
+#            @survey.SurveyGrossRank = 20
+#            print '********************************* Reached 60 Unsuccessful attempts, with only 2 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
+#            puts 
+#          else
+#          end
           
-            if ( @survey.SurveyExactRank == 80 ) && (@survey.CompletedBy.length == 3) then
-            @survey.SurveyGrossRank = 21
-            print '********************************* Reached 80 Unsuccessful attempts, with only 3 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
-            puts 
-          else
-          end
+#            if ( @survey.SurveyExactRank == 80 ) && (@survey.CompletedBy.length == 3) then
+#            @survey.SurveyGrossRank = 21
+#            print '********************************* Reached 80 Unsuccessful attempts, with only 3 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
+#            puts 
+#          else
+#          end
           
-            if ( @survey.SurveyExactRank == 100 ) && (@survey.CompletedBy.length == 4) then
-            @survey.SurveyGrossRank = 21
-            print '********************************* Reached 100 Unsuccessful attempts, with only 4 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
-            puts 
-          else
-          end
+#            if ( @survey.SurveyExactRank == 100 ) && (@survey.CompletedBy.length == 4) then
+#            @survey.SurveyGrossRank = 21
+#            print '********************************* Reached 100 Unsuccessful attempts, with only 4 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
+#            puts 
+#          else
+#          end
                    
-            if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / (@survey.CompletedBy.length+0.1) ) > 10 ))
+#            if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / (@survey.CompletedBy.length+0.1) ) > 10 ))
              # 0.1 is arbitrarily added to avoid division by 0
             
-            @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
-            print '********************************* Reached 120+ Unsuccessful attempts, and less than 10% completes - rank reduced proportionate to EPC following a OQ for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
-            puts 
-          else
-          end
+#            @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
+#            print '********************************* Reached 120+ Unsuccessful attempts, and less than 10% completes - rank reduced proportionate to EPC following a OQ for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
+#            puts 
+#          else
+#          end
                   
-            @survey.save
+            
           
 
-            # Give user chance to take another survey
+          # Give user chance to take another survey
           
-            if (@user.SupplierLink.empty? == false) then
+          if (@user.SupplierLink.empty? == false) then
             
             if @user.country=="9" then 
               @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
@@ -467,23 +485,22 @@ class RedirectsController < ApplicationController
       
             end
 
-
-
-
-
-
-            
+        
             print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
             puts
             @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
             @user.SupplierLink = @user.SupplierLink.drop(1)
             @user.save
             redirect_to @NextEntryLink
-          else
+            
+          else # if SupplierLink empty
+            
             redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=4'
-          end
-          end
-        end
+            
+          end # if SupplierLink empty
+          
+          end # p2sredirect
+        end # if test
               
 
       when "5"

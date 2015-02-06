@@ -7,7 +7,7 @@ require 'httparty'
 flag = 'stag'
 
 
-@initialrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
+# @initialrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
 
 
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
@@ -42,7 +42,7 @@ begin
   
   begin
     sleep(1)
-    puts 'CONNECTING FOR OFFERWALL SURVEYS LIST'
+    puts '*************** CONNECTING TO OFFERWALL for ALL SURVEYS LIST'
     
     if flag == 'prod' then
       offerwallresponse = HTTParty.get(base_url+'/Supply/v1/Surveys/AllOfferwall/5458?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
@@ -73,7 +73,7 @@ begin
     
       if ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 5) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 6) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 7) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9)) && ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 17) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 19) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && ((offerwallresponse["Surveys"][i]["CPI"] == nil) || (offerwallresponse["Surveys"][i]["CPI"] > 0.99)) then
 
-        # Save key offerwall data for each survey
+        # Save key offerwall data for the NEW survey i
     
         @survey = Survey.new
         @survey.SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
@@ -89,6 +89,9 @@ begin
         @survey.TotalRemaining = offerwallresponse["Surveys"][i]["TotalRemaining"]
         @survey.OverallCompletes = offerwallresponse["Surveys"][i]["OverallCompletes"]
         @survey.SurveyMobileConversion = offerwallresponse["Surveys"][i]["SurveyMobileConversion"]
+        @survey.FailureCount = 0
+        @survey.OverQuotaCount = 0
+        @survey.KEPC = 0
       
 
         # Code for testing
@@ -97,18 +100,28 @@ begin
         SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
         print 'PROCESSING i =', i
         puts
-        print 'SurveyName: ', SurveyName, ' SurveyNumber: ', SurveyNumber, ' CountryLanguageID: ', offerwallresponse["Surveys"][i]["CountryLanguageID"]
+        print '************************ SurveyName: ', SurveyName, ' SurveyNumber: ', SurveyNumber, ' CountryLanguageID: ', offerwallresponse["Surveys"][i]["CountryLanguageID"]
         puts
         
         
 
    
-        # Assign an initial gross rank to the chosen survey
-        # 10 is worst for the lowest conversion rate
+        # Assign an initial gross ranks to the chosen survey
+        # KEPC = 0 until no conversion else = no. of completes/no. of total attempts (failure+success) * cpi
+        
+        # Top: 1 is the best and 100 is the worst rank for EXISTING surveys that have converted and have a 0.02 =< KEPC
+        
+        # New: 101 is the best and 200 is the worst rank for a lowest conversion rate (0 or 1) for a NEW survey with GEPC 1 or 2. (initial KEPC = 0)
+        # Try More: 201 is the best and 300 is the worst rank for a lowest conversion rate (0 or 1) for an EXISTING survey with GEPC 1 or 2 or 0.01 =< KEPC < 0.02
+        # GEPC=5: 301 is the best and 400 is the worst rank for a lowest conversion rate (0 or 1) for an NEW or EXISTING survey with GEPC 5. (initial KEPC = 0)
+        
+        # Bad: 401 is the best and 500 is the worst rank for EXISTING surveys that have converted and have a 0 < KEPC < 0.01
+        # Horrible: 501 is the best and 600 is the worst rank for EXISTING surveys that did not convert after MAX (20) attempts and have KEPC = 0
+        
 
         begin
           sleep(1)
-          puts '**************************** CONNECTING FOR GLOBAL STATS on NEW survey: ', SurveyNumber
+          puts '**************************** CONNECTING FOR GLOBAL STATS (GEPC) on NEW survey: ', SurveyNumber
           if flag == 'prod' then
             SurveyStatistics = HTTParty.get(base_url+'/Supply/v1/SurveyStatistics/BySurveyNumber/'+SurveyNumber.to_s+'/5458/Global/Trailing?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
           else
@@ -128,162 +141,204 @@ begin
         @survey.SurveyExactRank = 0
         @survey.SampleTypeID = 0
         
+        
+        
         if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.3 then
           @survey.SurveyQuotaCalcTypeID = 1 # best kind
+          
+          if @survey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+            p "Found a survey with Conversion = 0"
+            @survey.Conversion = 1
+          else
+          end
+          
+          @survey.SurveyGrossRank = 101+(100-@survey.Conversion) 
+          print "Assigned NEW survey rank: ", @survey.SurveyGrossRank, " GEPC = ", SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] 
+          puts
+          
+          
         else 
           if ((0.1 < SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.3)) then
             @survey.SurveyQuotaCalcTypeID = 2 # second best kind
+            
+            
+            if @survey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+              p "Found a survey with Conversion = 0"
+              @survey.Conversion = 1
+            else
+            end
+            
+            @survey.SurveyGrossRank = 101+(100-@survey.Conversion)    
+            print "Assigned NEW survey rank: ", @survey.SurveyGrossRank, " GEPC = ", SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] 
+            puts        
+            
+            
           else
             @survey.SurveyQuotaCalcTypeID = 5 # worst kind by GEEPC data
+            
+            if @survey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+              p "Found a survey with Conversion = 0"
+              @survey.Conversion = 1
+            else
+            end
+            
+            @survey.SurveyGrossRank = 301+(100-@survey.Conversion)
+            print "Assigned NEW survey rank: ", @survey.SurveyGrossRank, " GEPC = ", SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] 
+            puts
+                                   
           end
         end
-        
-          
-        
-        if @initialrankingapproach == 'EEPCFirst' then
-          if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
-            @survey.SurveyGrossRank = 1
-            print '*******************Effective GlobalEPC is > 0.2 = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
-            puts
-          else
-            if ((0 < SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
-              @survey.SurveyGrossRank = 5
-              print '*******************Effective GlobalEPC is <= 0.2 = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
-              puts
-            else    
-          
-              case offerwallresponse["Surveys"][i]["Conversion"]
-                when 0..5
-                  puts "Lowest Rank 20"
-                  @survey.SurveyGrossRank = 20
-                when 6..10
-                  puts "Rank 19"
-                  @survey.SurveyGrossRank = 19
-                when 11..15
-                  puts "Rank 18"
-                  @survey.SurveyGrossRank = 18
-                when 16..20
-                  puts "Rank 17"
-                  @survey.SurveyGrossRank = 17
-                when 21..25
-                  puts "Rank 16"
-                  @survey.SurveyGrossRank = 16
-                when 26..30
-                  puts "Rank 15"
-                  @survey.SurveyGrossRank = 15
-                when 31..35
-                  puts "Rank 14"
-                  @survey.SurveyGrossRank = 14
-                when 36..40
-                  puts "Rank 13"
-                  @survey.SurveyGrossRank = 13
-                when 41..45
-                  puts "Rank 12"
-                  @survey.SurveyGrossRank = 12
-                when 46..50
-                  puts "Rank 11"
-                  @survey.SurveyGrossRank = 11
-                when 51..55
-                  puts "Rank 10"
-                  @survey.SurveyGrossRank = 10
-                when 56..60
-                  puts "Rank 9"
-                  @survey.SurveyGrossRank = 9
-                when 61..65
-                  puts "Rank 8"
-                  @survey.SurveyGrossRank = 8
-                when 66..70
-                  puts "Rank 7"
-                  @survey.SurveyGrossRank = 7
-                when 71..75
-                  puts "Rank 6"
-                  @survey.SurveyGrossRank = 6
-                when 76..80
-                  puts "Rank 5"
-                  @survey.SurveyGrossRank = 5
-                when 81..85
-                  puts "Rank 4"
-                  @survey.SurveyGrossRank = 4
-                when 86..90
-                  puts "Rank 3"
-                  @survey.SurveyGrossRank = 3
-                when 91..95
-                  puts "Rank 2"
-                  @survey.SurveyGrossRank = 2
-                when 96..100
-                  puts "Highest Rank 1"
-                  @survey.SurveyGrossRank = 1           
-              end # end case
-              
-            end # end of if EEPC is between 0 and 0.2
-          end # end of, if EEPC is more than 0.2
-          
-        else # for 'ConversionFirst' approach
 
-          case offerwallresponse["Surveys"][i]["Conversion"]
-          when 0..5
-            puts "Lowest Rank 20"
-            @survey.SurveyGrossRank = 20
-          when 6..10
-            puts "Rank 19"
-            @survey.SurveyGrossRank = 19
-          when 11..15
-            puts "Rank 18"
-            @survey.SurveyGrossRank = 18
-          when 16..20
-            puts "Rank 17"
-            @survey.SurveyGrossRank = 17
-          when 21..25
-            puts "Rank 16"
-            @survey.SurveyGrossRank = 16
-          when 26..30
-            puts "Rank 15"
-            @survey.SurveyGrossRank = 15
-          when 31..35
-            puts "Rank 14"
-            @survey.SurveyGrossRank = 14
-          when 36..40
-            puts "Rank 13"
-            @survey.SurveyGrossRank = 13
-          when 41..45
-            puts "Rank 12"
-            @survey.SurveyGrossRank = 12
-          when 46..50
-            puts "Rank 11"
-            @survey.SurveyGrossRank = 11
-          when 51..55
-            puts "Rank 10"
-            @survey.SurveyGrossRank = 10
-          when 56..60
-            puts "Rank 9"
-            @survey.SurveyGrossRank = 9
-          when 61..65
-            puts "Rank 8"
-            @survey.SurveyGrossRank = 8
-          when 66..70
-            puts "Rank 7"
-            @survey.SurveyGrossRank = 7
-          when 71..75
-            puts "Rank 6"
-            @survey.SurveyGrossRank = 6
-          when 76..80
-            puts "Rank 5"
-            @survey.SurveyGrossRank = 5
-          when 81..85
-            puts "Rank 4"
-            @survey.SurveyGrossRank = 4
-          when 86..90
-            puts "Rank 3"
-            @survey.SurveyGrossRank = 3
-          when 91..95
-            puts "Rank 2"
-            @survey.SurveyGrossRank = 2
-          when 96..100
-            puts "Highest Rank 1"
-            @survey.SurveyGrossRank = 1 
-          end # end of case            
+        
           
-        end # end of rankingapproach switch
+        
+#        if @initialrankingapproach == 'EEPCFirst' then
+#          if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
+#            @survey.SurveyGrossRank = 1
+#            print '*******************Effective GlobalEPC is > 0.2 = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+#            puts
+#          else
+#            if ((0 < SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
+#              @survey.SurveyGrossRank = 5
+#              print '*******************Effective GlobalEPC is <= 0.2 = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+#              puts
+#            else    
+          
+#              case offerwallresponse["Surveys"][i]["Conversion"]
+#                when 0..5
+#                  puts "Lowest Rank 20"
+#                  @survey.SurveyGrossRank = 20
+#                when 6..10
+#                  puts "Rank 19"
+#                  @survey.SurveyGrossRank = 19
+#                when 11..15
+#                  puts "Rank 18"
+#                  @survey.SurveyGrossRank = 18
+#                when 16..20
+#                  puts "Rank 17"
+#                  @survey.SurveyGrossRank = 17
+#                when 21..25
+#                  puts "Rank 16"
+#                  @survey.SurveyGrossRank = 16
+#                when 26..30
+#                  puts "Rank 15"
+#                  @survey.SurveyGrossRank = 15
+#                when 31..35
+#                  puts "Rank 14"
+#                  @survey.SurveyGrossRank = 14
+#                when 36..40
+#                  puts "Rank 13"
+#                  @survey.SurveyGrossRank = 13
+#                when 41..45
+#                  puts "Rank 12"
+#                  @survey.SurveyGrossRank = 12
+#                when 46..50
+#                  puts "Rank 11"
+#                  @survey.SurveyGrossRank = 11
+#                when 51..55
+#                  puts "Rank 10"
+#                  @survey.SurveyGrossRank = 10
+#                when 56..60
+#                  puts "Rank 9"
+#                  @survey.SurveyGrossRank = 9
+#                when 61..65
+#                  puts "Rank 8"
+#                  @survey.SurveyGrossRank = 8
+#                when 66..70
+#                  puts "Rank 7"
+#                  @survey.SurveyGrossRank = 7
+#                when 71..75
+#                  puts "Rank 6"
+#                  @survey.SurveyGrossRank = 6
+#                when 76..80
+#                  puts "Rank 5"
+#                  @survey.SurveyGrossRank = 5
+#                when 81..85
+#                  puts "Rank 4"
+#                  @survey.SurveyGrossRank = 4
+#                when 86..90
+#                  puts "Rank 3"
+#                  @survey.SurveyGrossRank = 3
+#                when 91..95
+#                  puts "Rank 2"
+#                  @survey.SurveyGrossRank = 2
+#                when 96..100
+#                  puts "Highest Rank 1"
+#                  @survey.SurveyGrossRank = 1           
+#              end # end case
+              
+#            end # end of if EEPC is between 0 and 0.2
+#          end # end of, if EEPC is more than 0.2
+          
+#        else # for 'ConversionFirst' approach
+
+#          case offerwallresponse["Surveys"][i]["Conversion"]
+#          when 0..5
+#            puts "Lowest Rank 20"
+#            @survey.SurveyGrossRank = 20
+#          when 6..10
+#           puts "Rank 19"
+#            @survey.SurveyGrossRank = 19
+#          when 11..15
+#            puts "Rank 18"
+#            @survey.SurveyGrossRank = 18
+#          when 16..20
+#            puts "Rank 17"
+#            @survey.SurveyGrossRank = 17
+#          when 21..25
+#            puts "Rank 16"
+#            @survey.SurveyGrossRank = 16
+#          when 26..30
+#            puts "Rank 15"
+#            @survey.SurveyGrossRank = 15
+#          when 31..35
+#            puts "Rank 14"
+#            @survey.SurveyGrossRank = 14
+#          when 36..40
+#            puts "Rank 13"
+#            @survey.SurveyGrossRank = 13
+#          when 41..45
+#            puts "Rank 12"
+#            @survey.SurveyGrossRank = 12
+#          when 46..50
+#            puts "Rank 11"
+#            @survey.SurveyGrossRank = 11
+#          when 51..55
+#            puts "Rank 10"
+#            @survey.SurveyGrossRank = 10
+#          when 56..60
+#            puts "Rank 9"
+#            @survey.SurveyGrossRank = 9
+#          when 61..65
+#            puts "Rank 8"
+#            @survey.SurveyGrossRank = 8
+#          when 66..70
+#            puts "Rank 7"
+#            @survey.SurveyGrossRank = 7
+#          when 71..75
+#            puts "Rank 6"
+#            @survey.SurveyGrossRank = 6
+#          when 76..80
+#            puts "Rank 5"
+#            @survey.SurveyGrossRank = 5
+#          when 81..85
+#            puts "Rank 4"
+#            @survey.SurveyGrossRank = 4
+#          when 86..90
+#            puts "Rank 3"
+#            @survey.SurveyGrossRank = 3
+#          when 91..95
+#            puts "Rank 2"
+#            @survey.SurveyGrossRank = 2
+#          when 96..100
+#            puts "Highest Rank 1"
+#            @survey.SurveyGrossRank = 1 
+#          end # end of case            
+          
+#        end # end of rankingapproach switch
+
+
+
 
           # Get Survey Qualifications Information by SurveyNumber
           begin
@@ -299,11 +354,11 @@ begin
             end
           end
  
-#         SurveyQualifications = HTTParty.get(base_url+'/Supply/v1/SurveyQualifications/BySurveyNumberForOfferwall/'+SurveyNumber.to_s+'?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
             rescue HTTParty::Error => e
             puts 'HttParty::Error '+ e.message
             retry
           end while SurveyQualifications.code != 200
+
 
           # By default all users are qualified
           
@@ -474,7 +529,7 @@ begin
     
             begin
               sleep(1)
-              print 'POSTING WITH REDIRECTS AND TO GET LIVELINK AS SURVEYLINK for SurveyNumber = ', SurveyNumber
+              print '********************** POST WITH REDIRECTS AND TO GET SUPPLIERLINKS for SurveyNumber = ', SurveyNumber
               puts
        
               if flag == 'stag' then
@@ -504,18 +559,18 @@ begin
             retry
             end while SupplierLink.code != 200
 
-            print '******************* SUPPLIERLINKS ARE AVAILABLE: ', SupplierLink["SupplierLink"]
+            print '******************* SUPPLIERLINKS ARE AVAILABLE for the NEW Survey: ', SupplierLink["SupplierLink"]
             puts
 #            puts SupplierLink["SupplierLink"]["LiveLink"]
             @survey.SupplierLink=SupplierLink["SupplierLink"]   
             @survey.CPI = SupplierLink["SupplierLink"]["CPI"]  
     
             # Finally save the survey information in the database
-            print '**************************************************** SAVING THE SURVEYLINKS IN DATABASE'
+            print '**************************************************** SAVING THE SURVEYLINKS and all other SURVEY DATA IN DATABASE'
             puts
             @survey.save
           else
-            print 'This survey does not meet the CountryLanguageID, SurveyType, or Bid InterviewLength criteria.'
+            print 'This survey does not meet the CountryLanguageID, SurveyType, or CPI criteria.'
             print 'At end i =', i, ' SurveyNumber = ', offerwallresponse["Surveys"][i]["SurveyNumber"]
             puts
       

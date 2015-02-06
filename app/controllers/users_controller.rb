@@ -773,9 +773,9 @@ require 'hmac-md5'
       # Look through surveys this user is qualified for to check if there is quota available. Quota numbers can be read as Maximum or upper limit allowed for a qualification e.g. ages 20-24 quota of 30 and ages 25-30 quota of 50 is the upper limit on both of the groups. The code should first find if the number of respondents in the quota teh respondent falls in has need for more respondents. When a quota is split into parts then respondent must fall into at least one of them.
       
       
-      puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after first 40 top ranked surveys with quota are found to reduce unnecessarily matching for too long. 40 is a guess to have 10 surveys with GEEPC > 0.1 (5)"
+      puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after first 10 top ranked surveys with quota are found"
       
-      @foundtopsurveyswithquota = false   # false means not finished finding top surveys
+      @foundtopsurveyswithquota = true   # false means not finished finding top surveys (turn to true if testing p2s)
       
       (0..user.QualifiedSurveys.length-1).each do |j| #1
           
@@ -813,7 +813,7 @@ require 'hmac-md5'
           puts
           user.SurveysWithMatchingQuota << @surveynumber
           
-          if user.SurveysWithMatchingQuota.uniq.length >= 40 then
+          if user.SurveysWithMatchingQuota.uniq.length >= 10 then
             @foundtopsurveyswithquota = true
           else
             #do nothing
@@ -1320,7 +1320,7 @@ require 'hmac-md5'
             puts '****************** Adding the survey to the list of eligible surveys due to quota match'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if user.SurveysWithMatchingQuota.uniq.length >= 40 then
+            if user.SurveysWithMatchingQuota.uniq.length >= 10 then
               @foundtopsurveyswithquota = true
             else
               #do nothing
@@ -1342,7 +1342,7 @@ require 'hmac-md5'
             puts '************* Adding survey to list of eligible quotas even though no quotas specified but Totalquotaexists.'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if user.SurveysWithMatchingQuota.uniq.length >= 40 then
+            if user.SurveysWithMatchingQuota.uniq.length >= 10 then
               @foundtopsurveyswithquota = true
             else
               #do nothing
@@ -1398,7 +1398,7 @@ require 'hmac-md5'
     end
     
     
-     # If the user qualifies for one or more survey, redirect to the top ranked survey and repeat until success/failure/OT/QT
+     # If the user qualifies for one or more survey, send user to the top ranked survey first and repeat until success/failure/OT/QT
      @InferiorSupplierLink = Array.new
     (0..user.SurveysWithMatchingQuota.length-1).each do |i| #do14
       @surveynumber = user.SurveysWithMatchingQuota[i]

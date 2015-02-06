@@ -2,9 +2,9 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 
-@updatesrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
+# @updatesrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
 
 
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
@@ -27,6 +27,9 @@ print " ************* QUOTA UPDATE: base url is", base_url
 puts
 
 
+# Initialize timer outside of the repeat cycle to maintain ranking frequency
+@lastrankingtime = Time.now
+
 
 # Download the full allocations index
 
@@ -38,7 +41,7 @@ begin
   
   begin
     sleep(1)
-    puts 'CONNECTING FOR index of ALLOCATED SURVEYS' 
+    puts 'CONNECTING FOR index of ALL ALLOCATED SURVEYS' 
  
     if flag == 'prod' then
      IndexofAllocatedSurveys = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/All/5458?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
@@ -61,7 +64,7 @@ begin
   puts
 
 
-  # Check if any survey has allocation remaining, current qualifications, quota remaining and current quota.
+  # Check if any survey has allocation remaining, and get current qualifications, quota remaining and current quota.
 
 
   (0..totalavailablesurveys).each do |i|
@@ -69,8 +72,9 @@ begin
     if (Survey.where("SurveyNumber = ?", @surveynumber)).exists? then 
       Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey|
 
+        
         # Check if this exisitng survey has any remaining total allocation on the offerwall.
-
+        
         begin
           sleep(1)
           print '**************************** CONNECTING FOR SUPPLIER ALLOCATIONS INFORMATION of an EXISTING survey: ', @surveynumber
@@ -100,123 +104,219 @@ begin
           puts
           
 
-          # Update the rank of the existing survey if Conversion value has changed since originally downloaded. However, make no change if own data exists i.e. we have seen 10 or more responsdents fail the survey or we have recorded one or more completes and raised the rank to 1.
+          # Update GEPC and the rank of the existing survey if Conversion value has changed since originally downloaded. However, make no change if survey KEPC >= 0.02 i.e. Rank < 100.
           
-          survey.Conversion = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
-          
-          if (survey.SurveyExactRank > 10) || (survey.CompletedBy.length > 0) then # if 20
-            # do nothing
-          else # If 20
-            # update Rank with new Conversion data
-            case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
-              when 0..5
-                puts "Lowest Rank 20"
-                survey.SurveyGrossRank = 20
-              when 6..10
-                puts "Rank 19"
-                survey.SurveyGrossRank = 19
-              when 11..15
-                puts "Rank 18"
-                survey.SurveyGrossRank = 18
-              when 16..20
-                puts "Rank 17"
-                survey.SurveyGrossRank = 17
-              when 21..25
-                puts "Rank 16"
-                survey.SurveyGrossRank = 16
-              when 26..30
-                puts "Rank 15"
-                survey.SurveyGrossRank = 15
-              when 31..35
-                puts "Rank 14"
-                survey.SurveyGrossRank = 14
-              when 36..40
-                puts "Rank 13"
-                survey.SurveyGrossRank = 13
-              when 41..45
-                puts "Rank 12"
-                survey.SurveyGrossRank = 12
-              when 46..50
-                puts "Rank 11"
-                survey.SurveyGrossRank = 11
-              when 51..55
-                puts "Rank 10"
-                survey.SurveyGrossRank = 10
-              when 56..60
-                puts "Rank 9"
-                survey.SurveyGrossRank = 9
-              when 61..65
-                puts "Rank 8"
-                survey.SurveyGrossRank = 8
-              when 66..70
-                puts "Rank 7"
-                survey.SurveyGrossRank = 7
-              when 71..75
-                puts "Rank 6"
-                survey.SurveyGrossRank = 6
-              when 76..80
-                puts "Rank 5"
-                survey.SurveyGrossRank = 5
-              when 81..85
-                puts "Rank 4"
-                survey.SurveyGrossRank = 4
-              when 86..90
-                puts "Rank 3"
-                survey.SurveyGrossRank = 3
-              when 91..95
-                puts "Rank 2"
-                survey.SurveyGrossRank = 2
-              when 96..100
-                puts "Highest Rank 1"
-                survey.SurveyGrossRank = 1
-            end # end case
-            
-            
-            # Update GEEPC information
-            
-            
-            
-            begin
-              sleep(1)
-              print '**************************** CONNECTING FOR GLOBAL STATS on EXISTING survey: ', @surveynumber
-              puts
-          
-              if flag == 'prod' then
-                SurveyStatistics = HTTParty.get(base_url+'/Supply/v1/SurveyStatistics/BySurveyNumber/'+@surveynumber.to_s+'/5458/Global/Trailing?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
-              else
-                if flag == 'stag' then
-                  SurveyStatistics = HTTParty.get(base_url+'/Supply/v1/SurveyStatistics/BySurveyNumber/'+@surveynumber.to_s+'/5411/Global/Trailing?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
-                else
-                end
-              end
-                rescue HTTParty::Error => e
-                puts 'HttParty::Error '+ e.message
-                retry
-            end while SurveyStatistics.code != 200
-        
 
-            # For the Existing survey - update GEEPC in SurveyQuotaCalcTypeID as an integer.
-            
-        
-            print '******************* Effective GlobalEPC is = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+          # First Update GEEPC information of the existing survey          
+          
+          
+          begin
+            sleep(1)
+            print '**************************** CONNECTING FOR GLOBAL STATS (GEPC) on EXISTING survey: ', @surveynumber
             puts
         
-            if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.3 then
-              survey.SurveyQuotaCalcTypeID = 1 # best kind
-            else 
-              if ((0.1 < SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.3)) then
-                survey.SurveyQuotaCalcTypeID = 2 # second best kind
+            if flag == 'prod' then
+              SurveyStatistics = HTTParty.get(base_url+'/Supply/v1/SurveyStatistics/BySurveyNumber/'+@surveynumber.to_s+'/5458/Global/Trailing?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
+            else
+              if flag == 'stag' then
+                SurveyStatistics = HTTParty.get(base_url+'/Supply/v1/SurveyStatistics/BySurveyNumber/'+@surveynumber.to_s+'/5411/Global/Trailing?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E')
               else
-                survey.SurveyQuotaCalcTypeID = 5 # worst kind by GEEPC data
               end
             end
-            
-            
-            print '******************* Effective GlobalEPC is updated to = ', survey.SurveyQuotaCalcTypeID
-            puts
-            
-          end # if 20
+              rescue HTTParty::Error => e
+              puts 'HttParty::Error '+ e.message
+              retry
+          end while SurveyStatistics.code != 200
+      
 
+          # For the Existing survey - update GEEPC in SurveyQuotaCalcTypeID as an integer.
+          
+      
+          print '******************* Effective GlobalEPC is = ', SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+          puts
+
+          survey.GEPC = SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+          
+          if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.3 then
+            survey.SurveyQuotaCalcTypeID = 1 # best kind
+          else 
+            if ((0.1 < SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.3)) then
+              survey.SurveyQuotaCalcTypeID = 2 # second best kind
+            else
+              survey.SurveyQuotaCalcTypeID = 5 # worst kind by GEEPC data
+            end
+          end
+          
+          
+          print '******************* Effective GlobalEPC is updated to = ', survey.SurveyQuotaCalcTypeID
+          puts
+
+
+          # Update conversion and rank based on updated information. Make no rank changes based on conversion to surveys with KEPC > 0.02 i.e. rank < 100
+
+
+          survey.Conversion = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
+          
+          
+          #Re-order rank within the category of existing surveys in ranks 101-600
+            
+
+          if (100 < survey.SurveyGrossRank) && (survey.SurveyGrossRank <= 200) then
+            # Reorder by conversion values
+              
+            if survey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+              p "Found a survey with Conversion = 0"
+              survey.Conversion = 1
+            else
+            end
+            
+            survey.SurveyGrossRank = 101+(100-survey.Conversion)
+            print "Updated existing survey rank to: ", survey.SurveyGrossRank
+            puts
+          else
+          end
+
+
+
+          if (200 < survey.SurveyGrossRank) && (survey.SurveyGrossRank <= 300) then
+            # Reorder by conversion values
+              
+            if survey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+              p "Found a survey with Conversion = 0"
+              survey.Conversion = 1
+            else
+            end
+            
+            survey.SurveyGrossRank = 201+(100-survey.Conversion)
+            print "Updated existing survey rank to: ", survey.SurveyGrossRank
+            puts
+          else
+          end
+            
+            
+          if (300 < survey.SurveyGrossRank) && (survey.SurveyGrossRank <= 400) then
+            # Reorder by conversion values
+              
+            if survey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+              p "Found a survey with Conversion = 0"
+              survey.Conversion = 1
+            else
+            end
+            
+            survey.SurveyGrossRank = 301+(100-survey.Conversion)
+            print "Updated existing survey rank to: ", survey.SurveyGrossRank
+            puts
+          else
+          end
+            
+            
+          if (400 < survey.SurveyGrossRank) && (survey.SurveyGrossRank <= 500) then
+            # Reorder by conversion values
+              
+            if survey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+              p "Found a survey with Conversion = 0"
+              survey.Conversion = 1
+            else
+            end
+            
+            survey.SurveyGrossRank = 401+(100-survey.Conversion)
+            print "Updated existing survey rank to: ", survey.SurveyGrossRank
+            puts
+          else
+          end
+            
+            
+          if (500 < survey.SurveyGrossRank) && (survey.SurveyGrossRank <= 600) then
+            # Reorder by conversion values
+            
+            if survey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+              p "Found a survey with Conversion = 0"
+              survey.Conversion = 1
+            else
+            end
+            
+            survey.SurveyGrossRank = 501+(100-survey.Conversion)
+            print "Updated existing survey rank to: ", survey.SurveyGrossRank
+            puts
+          else
+          end
+          
+          
+          
+#          if (survey.SurveyExactRank > 10) || (survey.CompletedBy.length > 0) then # if 20
+            # do nothing
+#          else # If 20
+            # update Rank with new Conversion data
+#            case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
+#              when 0..5
+#                puts "Lowest Rank 20"
+#                survey.SurveyGrossRank = 20
+#              when 6..10
+#                puts "Rank 19"
+#                survey.SurveyGrossRank = 19
+#              when 11..15
+#                puts "Rank 18"
+#                survey.SurveyGrossRank = 18
+#              when 16..20
+#                puts "Rank 17"
+#                survey.SurveyGrossRank = 17
+#              when 21..25
+#                puts "Rank 16"
+#                survey.SurveyGrossRank = 16
+#              when 26..30
+#                puts "Rank 15"
+#                survey.SurveyGrossRank = 15
+#              when 31..35
+#                puts "Rank 14"
+#                survey.SurveyGrossRank = 14
+#              when 36..40
+#                puts "Rank 13"
+#                survey.SurveyGrossRank = 13
+#              when 41..45
+#                puts "Rank 12"
+#                survey.SurveyGrossRank = 12
+#              when 46..50
+#                puts "Rank 11"
+#                survey.SurveyGrossRank = 11
+#              when 51..55
+#                puts "Rank 10"
+#                survey.SurveyGrossRank = 10
+#              when 56..60
+#                puts "Rank 9"
+#                survey.SurveyGrossRank = 9
+#              when 61..65
+#                puts "Rank 8"
+#                survey.SurveyGrossRank = 8
+#              when 66..70
+#                puts "Rank 7"
+#                survey.SurveyGrossRank = 7
+#              when 71..75
+#                puts "Rank 6"
+#                survey.SurveyGrossRank = 6
+#              when 76..80
+#                puts "Rank 5"
+#                survey.SurveyGrossRank = 5
+#              when 81..85
+#                puts "Rank 4"
+#                survey.SurveyGrossRank = 4
+#              when 86..90
+#                puts "Rank 3"
+#                survey.SurveyGrossRank = 3
+#              when 91..95
+#                puts "Rank 2"
+#                survey.SurveyGrossRank = 2
+#              when 96..100
+#                puts "Highest Rank 1"
+#                survey.SurveyGrossRank = 1
+#            end # end case
+            
+            
+#          end # if 20 'if (survey.SurveyExactRank > 10) || (survey.CompletedBy.length > 0) then'
+
+ 
+ 
+ 
+ 
       begin
         sleep(1)
         print 'CONNECTING FOR QUALIFICATIONS INFORMATION on existing survey: ', @surveynumber
@@ -404,12 +504,12 @@ begin
       # Save quotas information for each survey
           print '******************************** Updating quals and quota for existing Surveynumber: ', @surveynumber
           puts
-          survey.save
-
-      else
+          survey.save!
+ 
+       else
         # This survey has no remaining allocation. It should be marked as if this survey is not alive
         survey.SurveyStillLive = false   
-        survey.save     
+        survey.save!     
         
         print "********************* There is NO remaining allocation for this EXISTING survey number: ", @surveynumber
         puts
@@ -467,6 +567,9 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         @newsurvey.TotalRemaining = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["TotalRemaining"]
         @newsurvey.OverallCompletes = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["OverallCompletes"]
         @newsurvey.SurveyMobileConversion = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyMobileConversion"]
+        @newsurvey.FailureCount = 0
+        @newsurvey.OverQuotaCount = 0
+        @newsurvey.KEPC = 0
       
    
    
@@ -506,164 +609,211 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         @newsurvey.SurveyExactRank = 0
         @newsurvey.SampleTypeID = 0
         
-        print '******************* Effective GlobalEPC is = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+        
+        print '******************* Effective GlobalEPC for this new survey is = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
         puts
+        
+        @newsurvey.GEPC = NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
         
         if NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.3 then
           @newsurvey.SurveyQuotaCalcTypeID = 1 # best kind
+          
+          
+          if @newsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+            p "Found a survey with Conversion = 0"
+            @newsurvey.Conversion = 1
+          else
+          end
+          
+          @newsurvey.SurveyGrossRank = 101+(100-@newsurvey.Conversion) 
+          print "Assigned NEW survey rank; ", @newsurvey.SurveyGrossRank, " GEPC = ", NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+          puts
+          
+          
+          
+          
         else 
           if ((0.1 < NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.3)) then
             @newsurvey.SurveyQuotaCalcTypeID = 2 # second best kind
+            
+            
+            if @newsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+              p "Found a survey with Conversion = 0"
+              @newsurvey.Conversion = 1
+            else
+            end
+          
+            @newsurvey.SurveyGrossRank = 101+(100-@newsurvey.Conversion) 
+            print "Assigned NEW survey rank; ", @newsurvey.SurveyGrossRank, " GEPC = ", NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+            puts
+            
+            
+            
           else
             @newsurvey.SurveyQuotaCalcTypeID = 5 # worst kind by GEEPC data
+            
+            
+            if @newsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+              p "Found a survey with Conversion = 0"
+              @newsurvey.Conversion = 1
+            else
+            end
+          
+            @newsurvey.SurveyGrossRank = 301+(100-@newsurvey.Conversion) 
+            print "Assigned NEW survey rank; ", @newsurvey.SurveyGrossRank, " GEPC = ", NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+            puts
+            
+            
           end
         end
 
 
         
-        if @updatesrankingapproach == 'EEPCFirst' then
-          if NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
-            @newsurvey.SurveyGrossRank = 1
-            print '******************* Effective GlobalEPC is > 0.2 = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
-            puts
-          else
-            if ((0 < NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
-              @newsurvey.SurveyGrossRank = 5
-              print '******************* Effective GlobalEPC is <= 0.2 = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
-              puts
-            else
-              case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
-              when 0..5
-                puts "Lowest Rank 20"
-                @newsurvey.SurveyGrossRank = 20
-              when 6..10
-                puts "Rank 19"
-                @newsurvey.SurveyGrossRank = 19
-              when 11..15
-                puts "Rank 18"
-                @newsurvey.SurveyGrossRank = 18
-              when 16..20
-                puts "Rank 17"
-                @newsurvey.SurveyGrossRank = 17
-              when 21..25
-                puts "Rank 16"
-                @newsurvey.SurveyGrossRank = 16
-              when 26..30
-                puts "Rank 15"
-                @newsurvey.SurveyGrossRank = 15
-              when 31..35
-                puts "Rank 14"
-                @newsurvey.SurveyGrossRank = 14
-              when 36..40
-                puts "Rank 13"
-                @newsurvey.SurveyGrossRank = 13
-              when 41..45
-                puts "Rank 12"
-                @newsurvey.SurveyGrossRank = 12
-              when 46..50
-                puts "Rank 11"
-                @newsurvey.SurveyGrossRank = 11
-              when 51..55
-                puts "Rank 10"
-                @newsurvey.SurveyGrossRank = 10
-              when 56..60
-                puts "Rank 9"
-                @newsurvey.SurveyGrossRank = 9
-              when 61..65
-                puts "Rank 8"
-                @newsurvey.SurveyGrossRank = 8
-              when 66..70
-                puts "Rank 7"
-                @newsurvey.SurveyGrossRank = 7
-              when 71..75
-                puts "Rank 6"
-                @newsurvey.SurveyGrossRank = 6
-              when 76..80
-                puts "Rank 5"
-                @newsurvey.SurveyGrossRank = 5
-              when 81..85
-                puts "Rank 4"
-                @newsurvey.SurveyGrossRank = 4
-              when 86..90
-                puts "Rank 3"
-                @newsurvey.SurveyGrossRank = 3
-              when 91..95
-                puts "Rank 2"
-                @newsurvey.SurveyGrossRank = 2
-              when 96..100
-                puts "Highest Rank 1"
-                @newsurvey.SurveyGrossRank = 1
-              end # end case
+#        if @updatesrankingapproach == 'EEPCFirst' then
+#          if NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
+#            @newsurvey.SurveyGrossRank = 1
+#            print '******************* Effective GlobalEPC is > 0.2 = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+#            puts
+#          else
+#            if ((0 < NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
+#              @newsurvey.SurveyGrossRank = 5
+#              print '******************* Effective GlobalEPC is <= 0.2 = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+#              puts
+#            else
+#              case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
+#              when 0..5
+#                puts "Lowest Rank 20"
+#                @newsurvey.SurveyGrossRank = 20
+#              when 6..10
+#                puts "Rank 19"
+#                @newsurvey.SurveyGrossRank = 19
+#              when 11..15
+#                puts "Rank 18"
+#                @newsurvey.SurveyGrossRank = 18
+#              when 16..20
+#                puts "Rank 17"
+#                @newsurvey.SurveyGrossRank = 17
+#              when 21..25
+#                puts "Rank 16"
+#                @newsurvey.SurveyGrossRank = 16
+#              when 26..30
+#                puts "Rank 15"
+#                @newsurvey.SurveyGrossRank = 15
+#              when 31..35
+#                puts "Rank 14"
+#                @newsurvey.SurveyGrossRank = 14
+#              when 36..40
+#                puts "Rank 13"
+#                @newsurvey.SurveyGrossRank = 13
+#              when 41..45
+#                puts "Rank 12"
+#                @newsurvey.SurveyGrossRank = 12
+#              when 46..50
+#                puts "Rank 11"
+#                @newsurvey.SurveyGrossRank = 11
+#              when 51..55
+#                puts "Rank 10"
+#                @newsurvey.SurveyGrossRank = 10
+#              when 56..60
+#                puts "Rank 9"
+#                @newsurvey.SurveyGrossRank = 9
+#              when 61..65
+#                puts "Rank 8"
+#                @newsurvey.SurveyGrossRank = 8
+#              when 66..70
+#                puts "Rank 7"
+#                @newsurvey.SurveyGrossRank = 7
+#              when 71..75
+#                puts "Rank 6"
+#                @newsurvey.SurveyGrossRank = 6
+#              when 76..80
+#                puts "Rank 5"
+#                @newsurvey.SurveyGrossRank = 5
+#              when 81..85
+#                puts "Rank 4"
+#                @newsurvey.SurveyGrossRank = 4
+#              when 86..90
+#                puts "Rank 3"
+#                @newsurvey.SurveyGrossRank = 3
+#              when 91..95
+#                puts "Rank 2"
+#                @newsurvey.SurveyGrossRank = 2
+#              when 96..100
+#                puts "Highest Rank 1"
+#                @newsurvey.SurveyGrossRank = 1
+#              end # end case
               
-            end # end of if EEPC is between 0 and 0.2
-          end # end of, if EEPC is more than 0.2
+#            end # end of if EEPC is between 0 and 0.2
+#          end # end of, if EEPC is more than 0.2
           
-        else # for 'ConversionFirst' approach
+#        else # for 'ConversionFirst' approach
           
-          case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
-            when 0..5
-              puts "Lowest Rank 20"
-              @newsurvey.SurveyGrossRank = 20
-            when 6..10
-              puts "Rank 19"
-              @newsurvey.SurveyGrossRank = 19
-            when 11..15
-              puts "Rank 18"
-              @newsurvey.SurveyGrossRank = 18
-            when 16..20
-              puts "Rank 17"
-              @newsurvey.SurveyGrossRank = 17
-            when 21..25
-              puts "Rank 16"
-              @newsurvey.SurveyGrossRank = 16
-            when 26..30
-              puts "Rank 15"
-              @newsurvey.SurveyGrossRank = 15
-            when 31..35
-              puts "Rank 14"
-              @newsurvey.SurveyGrossRank = 14
-            when 36..40
-              puts "Rank 13"
-              @newsurvey.SurveyGrossRank = 13
-            when 41..45
-              puts "Rank 12"
-              @newsurvey.SurveyGrossRank = 12
-            when 46..50
-              puts "Rank 11"
-              @newsurvey.SurveyGrossRank = 11
-            when 51..55
-              puts "Rank 10"
-              @newsurvey.SurveyGrossRank = 10
-            when 56..60
-              puts "Rank 9"
-              @newsurvey.SurveyGrossRank = 9
-            when 61..65
-              puts "Rank 8"
-              @newsurvey.SurveyGrossRank = 8
-            when 66..70
-              puts "Rank 7"
-              @newsurvey.SurveyGrossRank = 7
-            when 71..75
-              puts "Rank 6"
-              @newsurvey.SurveyGrossRank = 6
-            when 76..80
-              puts "Rank 5"
-              @newsurvey.SurveyGrossRank = 5
-            when 81..85
-              puts "Rank 4"
-              @newsurvey.SurveyGrossRank = 4
-            when 86..90
-              puts "Rank 3"
-              @newsurvey.SurveyGrossRank = 3
-            when 91..95
-              puts "Rank 2"
-              @newsurvey.SurveyGrossRank = 2
-            when 96..100
-              puts "Highest Rank 1"
-              @newsurvey.SurveyGrossRank = 1
-          end # end case
+#          case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
+#            when 0..5
+#              puts "Lowest Rank 20"
+#              @newsurvey.SurveyGrossRank = 20
+#            when 6..10
+#              puts "Rank 19"
+#              @newsurvey.SurveyGrossRank = 19
+#            when 11..15
+#              puts "Rank 18"
+#              @newsurvey.SurveyGrossRank = 18
+#            when 16..20
+#              puts "Rank 17"
+#              @newsurvey.SurveyGrossRank = 17
+#            when 21..25
+#              puts "Rank 16"
+#              @newsurvey.SurveyGrossRank = 16
+#            when 26..30
+#              puts "Rank 15"
+#              @newsurvey.SurveyGrossRank = 15
+#            when 31..35
+#              puts "Rank 14"
+#              @newsurvey.SurveyGrossRank = 14
+#            when 36..40
+#              puts "Rank 13"
+#              @newsurvey.SurveyGrossRank = 13
+#            when 41..45
+#              puts "Rank 12"
+#              @newsurvey.SurveyGrossRank = 12
+#            when 46..50
+#              puts "Rank 11"
+#              @newsurvey.SurveyGrossRank = 11
+#            when 51..55
+#              puts "Rank 10"
+#              @newsurvey.SurveyGrossRank = 10
+#            when 56..60
+#              puts "Rank 9"
+#              @newsurvey.SurveyGrossRank = 9
+#            when 61..65
+#              puts "Rank 8"
+#              @newsurvey.SurveyGrossRank = 8
+#            when 66..70
+#              puts "Rank 7"
+#              @newsurvey.SurveyGrossRank = 7
+#            when 71..75
+#              puts "Rank 6"
+#              @newsurvey.SurveyGrossRank = 6
+#            when 76..80
+#              puts "Rank 5"
+#              @newsurvey.SurveyGrossRank = 5
+#            when 81..85
+#              puts "Rank 4"
+#              @newsurvey.SurveyGrossRank = 4
+#            when 86..90
+#              puts "Rank 3"
+#              @newsurvey.SurveyGrossRank = 3
+#            when 91..95
+#              puts "Rank 2"
+#              @newsurvey.SurveyGrossRank = 2
+#            when 96..100
+#              puts "Highest Rank 1"
+#              @newsurvey.SurveyGrossRank = 1
+#          end # end case
       
-        end # end of rankingapproach switch
+#        end # end of rankingapproach switch
+
+
 
           # Before getting qualifications, quotas, and supplier links first check if there is any remaining total allocation for this NEW survey
         
@@ -912,7 +1062,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               puts
               
               # Finally save the new survey information in the database
-              @newsurvey.save
+              @newsurvey.save!
             end
  
           else
@@ -943,6 +1093,526 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
       end # if @surveynumber exists  
       print '******************* Updating totalavailablesurveys at count i = ', i   
       puts  
+      
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      # RANK the stack after every 20 updates!    
+           
+      
+      if (i == 1) || ((Time.now - @lastrankingtime) >= 1200) then    
+          
+        @lastrankingtime = Time.now
+        
+        print "******************** Last ranking time: ", @lastrankingtime
+        puts
+        
+        
+        Survey.all.each do |toberankedsurvey|
+    
+        # Tops
+        if (0 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 100) then
+    
+          toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))
+    
+          if 0.02 <= toberankedsurvey.KEPC then   
+      
+            # Unless KEPC > 1 the others are ordered by KEPC value. It will always be above 98
+            if toberankedsurvey.KEPC * 100 >= 100 then
+              toberankedsurvey.SurveyGrossRank = 1
+              print "Assigned Top toberankedsurvey to Top tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            else
+              toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.KEPC * 100)
+              print "Assigned Top toberankedsurvey to Top tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            end
+      
+          else
+          end
+    
+          if 0.01 <= toberankedsurvey.KEPC < 0.02 then    
+    
+            if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+              p "Found a toberankedsurvey with Conversion = 0"
+              toberankedsurvey.Conversion = 1
+            else
+            end
+      
+            toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
+            print "YM Updated existing 1-100 ranked toberankedsurvey to: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            puts
+          end
+    
+          if 0 <= toberankedsurvey.KEPC < 0.01 then    
+    
+            if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+              p "Found a toberankedsurvey with Conversion = 0"
+              toberankedsurvey.Conversion = 1
+            else
+            end
+      
+            toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
+            print "YM Updated existing 1-100 ranked toberankedsurvey to: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            puts
+          end
+    
+        else # not in rank range
+        end # not in rank range
+  
+        # New
+        if (100 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 200) then
+    
+          if toberankedsurvey.CompletedBy.length > 0 then
+      
+            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))
+      
+            # Unless KEPC > 1 it will be ordered by KEPC value in Top tier. It will always be above 98
+            if toberankedsurvey.KEPC * 100 >= 100 then
+              toberankedsurvey.SurveyGrossRank = 1
+              print "Assigned NEW toberankedsurvey rank to Top tier: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            else
+              toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.KEPC * 100)
+              print "Assigned NEW toberankedsurvey rank to Top tier: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            end   
+      
+          else # for number of completes
+      
+            if toberankedsurvey.SurveyQuotaCalcTypeID == 5 then
+        
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                p "Found a toberankedsurvey with Conversion = 0"
+                toberankedsurvey.Conversion = 1
+              else
+              end
+      
+              toberankedsurvey.SurveyGrossRank = 301+(100-toberankedsurvey.Conversion)
+              print "Assigned NEW toberankedsurvey a GEPC=5 tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+        
+            else # GEPC = 5
+      
+              if toberankedsurvey.SurveyExactRank <= 10 then # No. of hits
+        
+                # do nothing - let it get few more hits
+        
+              else # No. of hits > 10
+        
+                # does not look like a fast converter - move it to 'Try More' group
+        
+                if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                  p "Found a toberankedsurvey with Conversion = 0"
+                  toberankedsurvey.Conversion = 1
+                else
+                end
+      
+                toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
+                print "Assigned NEW toberankedsurvey rank in Try More tier: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts   
+          
+              end # No. of hits
+        
+            end # GEPC = 5
+      
+          end # end for number of completes
+    
+        else # not in rank range
+        end # not in rank range
+    
+        # Try More  
+        if (200 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 300) then
+    
+          if toberankedsurvey.CompletedBy.length > 0 then
+      
+            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))     
+      
+            if 0.02 <= toberankedsurvey.KEPC then   
+        
+              # Unless KEPC > 1 it will be ordered by KEPC value in Top tier. It will always be above 98
+              if toberankedsurvey.KEPC * 100 >= 100 then
+                toberankedsurvey.SurveyGrossRank = 1
+                print "Assigned Try More toberankedsurvey rank to Top tier: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts
+              else
+                toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.KEPC * 100)
+                print "Assigned Try More toberankedsurvey rank to Top tier: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts
+              end   
+        
+            else
+            end
+      
+            if 0.01 <= toberankedsurvey.KEPC < 0.02 then    
+    
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                p "Found a toberankedsurvey with Conversion = 0"
+                toberankedsurvey.Conversion = 1
+              else
+              end
+      
+              toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
+              print "Assigned existing Try More toberankedsurvey a Try More tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            end
+      
+            if 0 <= toberankedsurvey.KEPC < 0.01 then    
+    
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                p "Found a toberankedsurvey with Conversion = 0"
+                toberankedsurvey.Conversion = 1
+              else
+              end
+      
+              toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
+              print "Assigned existing Try More toberankedsurvey a Bad Converter tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            end 
+      
+          else # for number of completes
+      
+            if toberankedsurvey.SurveyQuotaCalcTypeID == 5 then
+        
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                p "Found a toberankedsurvey with Conversion = 0"
+                toberankedsurvey.Conversion = 1
+              else
+              end
+      
+              toberankedsurvey.SurveyGrossRank = 301+(100-toberankedsurvey.Conversion)
+              print "Assigned existing Try More toberankedsurvey a GEPC=5 tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+        
+            else # GEPC = 5
+      
+              if toberankedsurvey.SurveyExactRank <= 20 then # No. of hits
+        
+                # do nothing - let it get few more hits
+        
+              else # No. of hits > 20
+        
+                # is a bad converter - move it to 'Try More' group
+        
+                if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                  p "Found a toberankedsurvey with Conversion = 0"
+                  toberankedsurvey.Conversion = 1
+                else
+                end
+      
+                toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
+                print "Assigned a Try More toberankedsurvey a Bad Converter tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts   
+          
+              end # No. of hits
+        
+            end # GEPC = 5
+      
+          end # end for number of completes
+    
+        else # not in rank range
+        end # not in rank range
+  
+        # GEPC=5
+        if (300 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 400) then
+    
+          if toberankedsurvey.CompletedBy.length > 0 then
+      
+            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))     
+      
+            if 0.02 <= toberankedsurvey.KEPC then   
+        
+              # Unless KEPC > 1 the others are ordered by KEPC value. It will always be above 98
+              if toberankedsurvey.KEPC * 100 >= 100 then
+                toberankedsurvey.SurveyGrossRank = 1
+                print "Assigned GEPC=5 toberankedsurvey to Top tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts
+              else
+                toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.KEPC * 100)
+                print "Assigned GEPC=5 toberankedsurvey to Top tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts
+              end
+        
+            else
+            end
+      
+            if 0.01 <= toberankedsurvey.KEPC < 0.02 then    
+    
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                p "Found a toberankedsurvey with Conversion = 0"
+                toberankedsurvey.Conversion = 1
+              else
+              end
+      
+              toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
+              print "Assigned existing GEPC=5 toberankedsurvey a Try More tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            end
+      
+            if 0 <= toberankedsurvey.KEPC < 0.01 then    
+    
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                p "Found a toberankedsurvey with Conversion = 0"
+                toberankedsurvey.Conversion = 1
+              else
+              end
+      
+              toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
+              print "Assigned existing GEPC=5 toberankedsurvey a Bad Converter tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            end 
+      
+          else # for number of completes
+      
+            if toberankedsurvey.SurveyQuotaCalcTypeID == 5 then
+        
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                p "Found a toberankedsurvey with Conversion = 0"
+                toberankedsurvey.Conversion = 1
+              else
+              end
+      
+              toberankedsurvey.SurveyGrossRank = 301+(100-toberankedsurvey.Conversion)
+              print "Assigned existing GEPC=5 toberankedsurvey a GEPC=5 tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+        
+            else # GEPC = 1 or 2 
+      
+              if toberankedsurvey.SurveyExactRank == 0 then # No. of hits
+        
+                if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                  p "Found a toberankedsurvey with Conversion = 0"
+                  toberankedsurvey.Conversion = 1
+                else
+                end
+      
+                toberankedsurvey.SurveyGrossRank = 101+(100-toberankedsurvey.Conversion)
+                print "Assigned existing GEPC=5 toberankedsurvey a New Survey tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts
+        
+              else # No. of hits = 0
+              end
+          
+              if (0 < toberankedsurvey.SurveyExactRank) &&  (toberankedsurvey.SurveyExactRank <= 10) then # No. of hits 1-10
+        
+                if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                  p "Found a toberankedsurvey with Conversion = 0"
+                  toberankedsurvey.Conversion = 1
+                else
+                end
+      
+                toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
+                print "Assigned existing GEPC=5 toberankedsurvey a Try More Survey tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts
+            
+              else # No. of hits is 1-10
+              end
+        
+        
+              if (10 < toberankedsurvey.SurveyExactRank) &&  (toberankedsurvey.SurveyExactRank <= 20) then # No. of hits 11-20
+        
+                # is a bad converter - move it to 'Try More' group
+        
+                if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                  p "Found a toberankedsurvey with Conversion = 0"
+                  toberankedsurvey.Conversion = 1
+                else
+                end
+      
+                toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
+                print "Assigned a GEPC=5 toberankedsurvey a Bad Converter tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts   
+          
+              else # No. of hits is 11-20
+              end
+          
+        
+              if (20 < toberankedsurvey.SurveyExactRank) then # No. of hits 11-20
+        
+                # is a horrible converter - move it to Horrible group
+        
+                if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                  p "Found a toberankedsurvey with Conversion = 0"
+                  toberankedsurvey.Conversion = 1
+                else
+                end
+      
+                toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
+                print "Assigned a GEPC=5 toberankedsurvey a Horrible tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts   
+          
+              else # No. of hits is 20+
+              end
+        
+        
+            end # GEPC = 5
+      
+          end # end for number of completes
+    
+        else # not in rank range
+        end # not in rank range
+  
+        # The Bad
+        if (400 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 500) then
+    
+          if toberankedsurvey.CompletedBy.length > 0 then
+      
+            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))     
+      
+            if 0.02 <= toberankedsurvey.KEPC then   
+        
+              # Unless KEPC > 1 the others are ordered by KEPC value. It will always be above 98
+              if toberankedsurvey.KEPC * 100 >= 100 then
+                toberankedsurvey.SurveyGrossRank = 1
+                print "Assigned Bad toberankedsurvey to Top tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts
+              else
+                toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.KEPC * 100)
+                print "Assigned Bad toberankedsurvey to Top tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts
+              end
+        
+            else
+            end
+      
+            if 0.01 <= toberankedsurvey.KEPC < 0.02 then    
+    
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                p "Found a toberankedsurvey with Conversion = 0"
+                toberankedsurvey.Conversion = 1
+              else
+              end
+      
+              toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
+              print "Assigned existing Bad toberankedsurvey a Try More tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            end
+      
+            if 0 <= toberankedsurvey.KEPC < 0.01 then    
+    
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                p "Found a toberankedsurvey with Conversion = 0"
+                toberankedsurvey.Conversion = 1
+              else
+              end
+      
+              toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
+              print "Assigned existing Bad toberankedsurvey a Bad Converter tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            end 
+      
+          else # for number of completes      
+          end # end for number of completes
+    
+        else # not in rank range
+        end # not in rank range
+  
+        # Horrible
+        if (500 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 600) then
+    
+          if toberankedsurvey.CompletedBy.length > 0 then
+      
+            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))     
+      
+            if 0.02 <= toberankedsurvey.KEPC then   
+        
+              # Unless KEPC > 1 the others are ordered by KEPC value. It will always be above 98
+              if toberankedsurvey.KEPC * 100 >= 100 then
+                toberankedsurvey.SurveyGrossRank = 1
+                print "Assigned Horrible toberankedsurvey to Top tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts
+              else
+                toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.KEPC * 100)
+                print "Assigned Horrible toberankedsurvey to Top tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts
+              end
+        
+            else
+            end
+      
+            if 0.01 <= toberankedsurvey.KEPC < 0.02 then    
+    
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                p "Found a toberankedsurvey with Conversion = 0"
+                toberankedsurvey.Conversion = 1
+              else
+              end
+      
+              toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
+              print "Assigned existing Horrible toberankedsurvey a Try More tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            end
+      
+            if 0 <= toberankedsurvey.KEPC < 0.01 then    
+    
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                p "Found a toberankedsurvey with Conversion = 0"
+                toberankedsurvey.Conversion = 1
+              else
+              end
+      
+              toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
+              print "Assigned existing Horrible toberankedsurvey a Bad Converter tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            end 
+      
+          else # for number of completes    
+      
+            if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+              p "Found a toberankedsurvey with Conversion = 0"
+              toberankedsurvey.Conversion = 1
+            else
+            end
+    
+            toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
+            print "Assigned existing Horrible toberankedsurvey a Horrible tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            puts      
+        
+          end # end for number of completes
+    
+        else # not in rank range
+        end # not in rank range
+    
+        
+        toberankedsurvey.save!
+
+        end # for all toberankedsurvey 
+        
+        
+      else
+        # i is not 1 and it has not been 20 mins since last ranking, so do nothing
+      end
+
+        
+        
+        
+        
+        
+        
+        
+        
+         
+      
+      
+      
+      
+      print "******************** Last ranking time: ", @lastrankingtime
+      puts
+      
+      
+      
 
     end # do loop of totalavailablesurveys (i)
     
