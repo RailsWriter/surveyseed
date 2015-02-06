@@ -2,7 +2,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 
 # @updatesrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
 
@@ -1125,7 +1125,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         # Tops
         if (0 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 100) then
     
-          toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))
+          toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length.to_f/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))
     
           if 0.02 <= toberankedsurvey.KEPC then   
       
@@ -1177,7 +1177,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
     
           if toberankedsurvey.CompletedBy.length > 0 then
       
-            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))
+            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length.to_f/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))
       
             # Unless KEPC > 1 it will be ordered by KEPC value in Top tier. It will always be above 98
             if toberankedsurvey.KEPC * 100 >= 100 then
@@ -1190,7 +1190,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               puts
             end   
       
-          else # for number of completes
+          else # for 0 number of completes
       
             if toberankedsurvey.SurveyQuotaCalcTypeID == 5 then
         
@@ -1204,7 +1204,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               print "Assigned NEW toberankedsurvey a GEPC=5 tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               puts
         
-            else # GEPC = 5
+            else # GEPC = 1 or 2
       
               if toberankedsurvey.SurveyExactRank <= 10 then # No. of hits
         
@@ -1221,7 +1221,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
                 end
       
                 toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
-                print "Assigned NEW toberankedsurvey rank in Try More tier: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                print "Assigned NEW toberankedsurvey rank to Try More tier: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 puts   
           
               end # No. of hits
@@ -1232,13 +1232,15 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
     
         else # not in rank range
         end # not in rank range
+        
+        
     
         # Try More  
         if (200 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 300) then
     
           if toberankedsurvey.CompletedBy.length > 0 then
       
-            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))     
+            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length.to_f/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))     
       
             if 0.02 <= toberankedsurvey.KEPC then   
         
@@ -1330,7 +1332,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
     
           if toberankedsurvey.CompletedBy.length > 0 then
       
-            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))     
+            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length.to_f/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))     
       
             if 0.02 <= toberankedsurvey.KEPC then   
         
@@ -1469,7 +1471,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
     
           if toberankedsurvey.CompletedBy.length > 0 then
       
-            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))     
+            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length.to_f/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))     
       
             if 0.02 <= toberankedsurvey.KEPC then   
         
@@ -1524,7 +1526,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
     
           if toberankedsurvey.CompletedBy.length > 0 then
       
-            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))     
+            toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length.to_f/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))     
       
             if 0.02 <= toberankedsurvey.KEPC then   
         
