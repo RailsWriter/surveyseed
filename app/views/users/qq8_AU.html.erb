@@ -22,49 +22,86 @@
 				<%= form_tag("householdincome_AU", method: "post") do %>
 				<fieldset>
 				<div class="mybiglistinput">
-					<%= radio_button_tag 'hhi', '1' %>
-					<%= label_tag(:hhi, "Less than A$15,000") %><br>
-					<%= radio_button_tag 'hhi', '2' %>
-					<%= label_tag(:hhi, "A$15,000 to A$19,999") %><br>
-					<%= radio_button_tag 'hhi', '3' %>
-					<%= label_tag(:hhi, "A$20,000 to A$24,999") %><br>
-					<%= radio_button_tag 'hhi', '4' %>
-					<%= label_tag(:hhi, "A$25,000 to A$29,999") %><br>
-					<%= radio_button_tag 'hhi', '5' %>
-					<%= label_tag(:hhi, "A$30,000 to A$34,999") %><br>
-					<%= radio_button_tag 'hhi', '6' %>
-					<%= label_tag(:hhi, "A$35,000 to A$39,999") %><br>
-					<%= radio_button_tag 'hhi', '7' %>
-					<%= label_tag(:hhi, "A$40,000 to A$44,999") %><br>
-					<%= radio_button_tag 'hhi', '8' %>
-					<%= label_tag(:hhi, "A$45,000 to A$49,999") %><br>
-					<%= radio_button_tag 'hhi', '9' %>
-					<%= label_tag(:hhi, "A$50,000 to A$59,999") %><br>
-					<%= radio_button_tag 'hhi', '10' %>
-					<%= label_tag(:hhi, "A$60,000 to A$74,999") %><br>
-					<%= radio_button_tag 'hhi', '11' %>
-					<%= label_tag(:hhi, "A$75,000 to A$84,999") %><br>
-					<%= radio_button_tag 'hhi', '12' %>
-					<%= label_tag(:hhi, "A$85,000 to A$99,999") %><br>
-					<%= radio_button_tag 'hhi', '13' %>
-					<%= label_tag(:hhi, "A$100,000 to A$124,999") %><br>
-					<%= radio_button_tag 'hhi', '14' %>
-					<%= label_tag(:hhi, "A$125,000 to A$149,999") %><br>
-					<%= radio_button_tag 'hhi', '15' %>
-					<%= label_tag(:hhi, "A$150,000 to A$174,999") %><br>
-					<%= radio_button_tag 'hhi', '16' %>
-					<%= label_tag(:hhi, "A$175,000 to A$199,999") %><br>
-					<%= radio_button_tag 'hhi', '17' %>
-					<%= label_tag(:hhi, "A$200,000 and above") %><br>
-					<%= radio_button_tag 'hhi', '18' %>
-					<%= label_tag(:hhi, "Prefer not to answer") %><br><br>	
+								
+						<label>
+						<%= radio_button_tag 'hhi', '1' %>
+					  		Less than A$15,000
+						</label><br>
+						<label>
+						<%= radio_button_tag 'hhi', '2' %>
+					  		A$15,000 to A$19,999
+						</label><br>
+						<label>
+						<%= radio_button_tag 'hhi', '3' %>
+					  		A$20,000 to A$24,999
+						</label><br>
+						<label>						
+						<%= radio_button_tag 'hhi', '4' %>
+					  		A$25,000 to A$29,999
+						</label><br>
+						<label>						
+						<%= radio_button_tag 'hhi', '5' %>
+					  		A$30,000 to A$34,999
+						</label><br>
+						<label>
+						<%= radio_button_tag 'hhi', '6' %>
+					  		A$35,000 to A$39,999
+						</label><br>
+						<label>
+						<%= radio_button_tag 'hhi', '7' %>
+					  		A$40,000 to A$44,999
+						</label><br>
+						<label>
+						<%= radio_button_tag 'hhi', '8' %>
+					  		A$45,000 to A$49,999
+						</label><br>
+						<label>
+						<%= radio_button_tag 'hhi', '9' %>
+					  		A$50,000 to A$59,999
+						</label><br>
+						<label>						
+						<%= radio_button_tag 'hhi', '10' %>
+					  		A$60,000 to A$74,999
+						</label><br>
+						<label>						
+						<%= radio_button_tag 'hhi', '11' %>
+					  		A$75,000 to A$84,999
+						</label><br>					
+						<label>
+						<%= radio_button_tag 'hhi', '12' %>
+					  		A$85,000 to A$99,999
+						</label><br>
+						<label>
+						<%= radio_button_tag 'hhi', '13' %>
+					  		A$100,000 to A$124,999
+						</label><br>
+						<label>						
+						<%= radio_button_tag 'hhi', '14' %>
+					  		A$125,000 to A$149,999
+						</label><br>
+						<label>
+						<%= radio_button_tag 'hhi', '15' %>
+					  		A$150,000 to A$174,999
+						</label><br>
+						<label>						
+						<%= radio_button_tag 'hhi', '16' %>
+					  		A$175,000 to A$199,999
+						</label><br>
+						<label>						
+						<%= radio_button_tag 'hhi', '17' %>
+					  		A$200,000 and above
+						</label><br>
+						<label>						
+						<%= radio_button_tag 'hhi', '18' %>
+					  		Prefer not to answer
+						</label><br><br>					
 					</div>
 					<div class="myinput">
-					<center>
-					<%= submit_tag "Next" %>
-					</center>
+						<center>
+							<%= submit_tag "Next" %>
+						</center>
 					</div>
-					</fieldset>
+				</fieldset>
 				<% end %>
 		</content>
 				

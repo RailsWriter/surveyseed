@@ -21,39 +21,64 @@
 				<%= form_tag("education_AU", method: "post") do %>
 				<fieldset>
 				<div class="mybiglistinput">
+					
+					<label>
 					<%= radio_button_tag 'education', '1' %>
-					<%= label_tag(:education, "Elementary School > 3rd Grade") %><br>
+				  		Elementary School - 3rd Grade
+					</label><br>
+					<label>
 					<%= radio_button_tag 'education', '2' %>
-					<%= label_tag(:education, "Middle School 4th Grade – 12th Grade") %><br>
+				  		Middle School 4th Grade – 12th Grade
+					</label><br>
+					<label>
 					<%= radio_button_tag 'education', '3' %>
-					<%= label_tag(:education, "Completed some high school") %><br>
+				  		Completed some high school
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'education', '4' %>
-					<%= label_tag(:education, "Secondary graduate") %><br>
+				  		Secondary graduate
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'education', '5' %>
-					<%= label_tag(:education, "Other post secondary vocational training") %><br>
+				  		Other post secondary vocational training
+					</label><br>
+					<label>
 					<%= radio_button_tag 'education', '6' %>
-					<%= label_tag(:education, "Completed some college") %><br>
+				  		Completed some college
+					</label><br>
+					<label>
 					<%= radio_button_tag 'education', '7' %>
-					<%= label_tag(:education, "Associate Degree") %><br>
+				  		Associate Degree
+					</label><br>
+					<label>
 					<%= radio_button_tag 'education', '8' %>
-					<%= label_tag(:education, "College Degree") %><br>
+				  		College Degree
+					</label><br>
+					<label>
 					<%= radio_button_tag 'education', '9' %>
-					<%= label_tag(:education, "Completed some postgraduate") %><br>	
+				  		Completed some postgraduate
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'education', '10' %>
-					<%= label_tag(:education, "Masters degree") %><br>
+				  		Masters degree
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'education', '11' %>
-					<%= label_tag(:education, "Doctorate degree") %><br>
+				  		Doctorate degree
+					</label><br>					
+					<label>
 					<%= radio_button_tag 'education', '12' %>
-					<%= label_tag(:education, "None of the above") %><br><br>
-					</div>
-					<div class="myinput">
+				  		None of the above
+					</label><br><br>
+							
+				</div>
+				<div class="myinput">
 					<center>
 					<%= submit_tag "Next" %>
 					</center>
-					</div>
-					</fieldset>
-				<% end %>
+				</div>
 			</fieldset>
+			<% end %>
 		</content>
 				
 		<footer class="footer">

@@ -20,24 +20,36 @@
 			</center>
 				<%= form_tag("country", method: "post") do %>
 				<fieldset>
-					<div class="mytags">
-					<%= radio_button_tag 'country', '9' %>
-					<%= label_tag(:country, "USA") %><br>
-					<%= radio_button_tag 'country', '6' %>
-					<%= label_tag(:country, "Canada") %><br>
-					<%= radio_button_tag 'country', '7' %>
-					<%= label_tag(:country, "India") %><br>
-					<%= radio_button_tag 'country', '5' %>
-					<%= label_tag(:country, "Australia") %><br>
-					<%= radio_button_tag 'country', '0' %>
-					<%= label_tag(:country, "None of the above") %><br><br>
-					</div>
-					<div class="myinput">
+				<div class="mytags">
+					<label>
+						<%= radio_button_tag 'country', '5' %>
+				  		Australia
+					</label><br>
+					<label>
+						<%= radio_button_tag 'country', '6' %>
+				  		Canada
+					</label><br>
+					<label>
+						<%= radio_button_tag 'country', '7' %>
+				  		India
+					</label><br>
+					<label>						
+						<%= radio_button_tag 'country', '9' %>
+				  		USA
+					</label><br>
+					<label>						
+						<%= radio_button_tag 'country', '0' %>
+				  		None of the above
+					</label><br><br>
+				</div>
+
+				<div class="myinput">
 					<center>
-					<%= submit_tag "Next" %>
+						<%= submit_tag "Next" %>
 					</center>
-					</div>
-				</fieldset>
+				</div>
+				
+			</fieldset>
 				<% end %>
 		</content>
 				

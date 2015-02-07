@@ -20,47 +20,81 @@
 			</center>
 				<%= form_tag("race_US", method: "post") do %>
 				<fieldset>
-				<div class="mybiglistinput">
+				<div class="mybiglistinput">		
+					
+					<label>			
 					<%= radio_button_tag 'race', '1' %>
-					<%= label_tag(:race, "White") %><br>
+				  		White
+					</label><br>
+					<label>
 					<%= radio_button_tag 'race', '2' %>
-					<%= label_tag(:race, "Black or African American") %><br>
+				  		Black or African American
+					</label><br>
+					<label>
 					<%= radio_button_tag 'race', '3' %>
-					<%= label_tag(:race, "American Indian or Alaska Native") %><br>
+				  		American Indian or Alaska Native
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'race', '4' %>
-					<%= label_tag(:race, "Asian - Asian Indian") %><br>
+				  		Asian - Asian Indian
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'race', '5' %>
-					<%= label_tag(:race, "Asian - Chinese") %><br>
+				  		Asian - Chinese
+					</label><br>
+					<label>
 					<%= radio_button_tag 'race', '6' %>
-					<%= label_tag(:race, "Asian - Filipino") %><br>
+				  		Asian - Filipino
+					</label><br>
+					<label>
 					<%= radio_button_tag 'race', '7' %>
-					<%= label_tag(:race, "Asian - Japanese") %><br>
+				  		Asian - Japanese
+					</label><br>
+					<label>
 					<%= radio_button_tag 'race', '8' %>
-					<%= label_tag(:race, "Asian - Korean") %><br>
+				  		Asian - Korean
+					</label><br>
+					<label>
 					<%= radio_button_tag 'race', '9' %>
-					<%= label_tag(:race, "Asian - Vietnamese") %><br>
+				  		Asian - Vietnamese
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'race', '10' %>
-					<%= label_tag(:race, "Asian - Other") %><br>
+				  		Asian - Other
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'race', '11' %>
-					<%= label_tag(:race, "Pacific Islander - Native Hawaiian") %><br>
+				  		Pacific Islander - Native Hawaiian"
+					</label><br>					
+					<label>
 					<%= radio_button_tag 'race', '12' %>
-					<%= label_tag(:race, "Pacific Islander - Gaumanian") %><br>
+				  		Pacific Islander - Gaumanian
+					</label><br>
+					<label>
 					<%= radio_button_tag 'race', '13' %>
-					<%= label_tag(:race, "Pacific Islander - Samoan") %><br>
+				  		Pacific Islander - Samoan
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'race', '14' %>
-					<%= label_tag(:race, "Pacific Islander - Other Pacific Islander") %><br>
+				  		Pacific Islander - Other Pacific Islander
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'race', '15' %>
-					<%= label_tag(:race, "Some other race") %><br>
+				  		Some other race
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'race', '16' %>
-					<%= label_tag(:race, "Prefer not to answer") %><br><br>	
-					</div>
-					<div class="myinput">
+				  		Prefer not to answer
+					</label><br><br>
+					
+				</div>
+				<div class="myinput">
 					<center>
 					<%= submit_tag "Next" %>
 					</center>
-					</div>
-					</fieldset>
-				<% end %>
+				</div>
+			</fieldset>
+			<% end %>
 		</content>
 				
 		<footer class="footer">

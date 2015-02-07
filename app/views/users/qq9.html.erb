@@ -35,11 +35,45 @@
 					<%= label_tag(:householdcomp, "More than 5 persons") %><br>
 					<%= radio_button_tag 'householdcomp', '7' %>
 					<%= label_tag(:householdcomp, "Prefer not to answer") %><br><br>
-					</div>
+					
+					
+					
+					<label>
+					<%= radio_button_tag 'householdcomp', '1' %>
+				  		1 person
+					</label><br>
+					<label>
+					<%= radio_button_tag 'householdcomp', '2' %>
+				  		2 persons
+					</label><br>
+					<label>
+					<%= radio_button_tag 'householdcomp', '3' %>
+				  		3 persons
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'householdcomp', '4' %>
+				  		4 persons
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'householdcomp', '5' %>
+				  		5 persons
+					</label><br>
+					<label>
+					<%= radio_button_tag 'householdcomp', '6' %>
+				  		More than 5 persons
+					</label><br>
+					<label>
+					<%= radio_button_tag 'householdcomp', '7' %>
+				  		Prefer not to answer
+					</label><br><br>
+					
+					
+					
+				</div>
 					<div class="myinput">
-					<center>
-					<%= submit_tag "Next" %>
-					</center>
+						<center>
+							<%= submit_tag "Next" %>
+						</center>
 					</div>
 				</fieldset>
 				<% end %>

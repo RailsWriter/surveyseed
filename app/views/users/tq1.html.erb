@@ -22,22 +22,31 @@
 				<%= form_tag("trap_question_1", method: "post") do %>
 				<fieldset>
 					<div class="mytags">
+				
+					<label>
 					<%= radio_button_tag 'color', 'Red' %>
-					<%= label_tag(:color, "Red") %><br>
+				  		Red
+					</label><br>
+					<label>
 					<%= radio_button_tag 'color', 'Green' %>
-					<%= label_tag(:color, "Green") %><br>
+				  		Green
+					</label><br>
+					<label>
 					<%= radio_button_tag 'color', 'Purple' %>
-					<%= label_tag(:color, "Purple") %><br>
+				  		Purple
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'color', 'Blue' %>
-					<%= label_tag(:color, "Blue") %><br><br>
-					</div>
+				  		Blue
+					</label><br><br>
+				</div>
 					<div class="myinput">
-					<center>
-					<%= submit_tag "Next" %>
-					</center>
+						<center>
+							<%= submit_tag "Next" %>
+						</center>
 					</div>
-				</fieldset>
-				<% end %>
+			</fieldset>
+			<% end %>
 			
 		</content>
 				

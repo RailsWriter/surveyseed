@@ -775,7 +775,7 @@ require 'hmac-md5'
       
       puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after first 10 top ranked surveys with quota are found"
       
-      @foundtopsurveyswithquota = true   # false means not finished finding top surveys (turn to true if testing p2s)
+      @foundtopsurveyswithquota = false   # false means not finished finding top surveys (set it to true if testing p2s)
       
       (0..user.QualifiedSurveys.length-1).each do |j| #1
           
@@ -813,10 +813,14 @@ require 'hmac-md5'
           puts
           user.SurveysWithMatchingQuota << @surveynumber
           
-          if user.SurveysWithMatchingQuota.uniq.length >= 10 then
+          if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 8) then
             @foundtopsurveyswithquota = true
           else
-            #do nothing
+            if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 5)
+              @foundtopsurveyswithquota = true
+            else
+              #do nothing
+            end
           end
           
         end #3
@@ -1320,10 +1324,14 @@ require 'hmac-md5'
             puts '****************** Adding the survey to the list of eligible surveys due to quota match'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if user.SurveysWithMatchingQuota.uniq.length >= 10 then
+            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 8) then
               @foundtopsurveyswithquota = true
             else
-              #do nothing
+              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 5)
+                @foundtopsurveyswithquota = true
+              else
+                #do nothing
+              end
             end
 
           else
@@ -1342,10 +1350,14 @@ require 'hmac-md5'
             puts '************* Adding survey to list of eligible quotas even though no quotas specified but Totalquotaexists.'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if user.SurveysWithMatchingQuota.uniq.length >= 10 then
+            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 8) then
               @foundtopsurveyswithquota = true
             else
-              #do nothing
+              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 5)
+                @foundtopsurveyswithquota = true
+              else
+                #do nothing
+              end
             end
             
           end  
@@ -1431,7 +1443,7 @@ require 'hmac-md5'
     end
 
 
-    # Queue up additional surveys from P2S. First calculate teh additional values to be attached.
+    # Queue up additional surveys from P2S or others. First calculate teh additional values to be attached.
     
     @client = Network.find_by name: "P2S"
     if @client.status = "ACTIVE" then
@@ -1440,7 +1452,7 @@ require 'hmac-md5'
       print "**************** P2S @SUID = ", @SUBID
       puts
 
-      if user.gender = 1 then
+      if user.gender == '1' then
         @p2s_gender = "m"
       else
         @p2s_gender = "f"
@@ -1452,16 +1464,16 @@ require 'hmac-md5'
         @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP
       else
         if user.country=="6" then
-          @p2s_AdditionalValues = 'age='+user.age+'&gender='+user.gender+'&ZIP_Canada='+user.ZIP
+          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP
         else
           if user.country=="5" then
-            @p2s_AdditionalValues = 'age='+user.age+'&gender='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP
+            @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP
           else
             if user.country=="7" then
-              @p2s_AdditionalValues = 'age='+user.age+'&gender='+user.gender+'&Fulcrum_ZIP_IN='+user.ZIP
+              @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP
             else
               puts "*************************************** P2S: Find out why country code is not correctly set"
-              @p2s_AdditionalValues = 'age='+user.age+'&gender='+user.gender
+              @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP
               return
             end
           end
