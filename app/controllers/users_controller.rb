@@ -1547,7 +1547,7 @@ require 'hmac-md5'
 
     if user.SupplierLink[0] == @p2sSupplierLink then
       
-      print 'User will be sent to P2S router as no other surveys are availabe: ', user.SupplierLink[0]
+      print '*************** User will be sent to P2S router as no other surveys are availabe: ', user.SupplierLink[0]
       puts
       
       @EntryLink = user.SupplierLink[0]
@@ -1557,7 +1557,7 @@ require 'hmac-md5'
       
     else
       
-      print 'User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile
+      print '***************** User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile
       puts
     
       @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile    
@@ -1605,11 +1605,5 @@ require 'hmac-md5'
     
     redirect_to '/users/successful'
   end
-    
-#  private
-#    def user_params
-#      params.require(:user).permit(:age)
-#      params.require(:user).permit(:age, :birth_date, :birth_month, :birth_year)
-#    end
 
 end

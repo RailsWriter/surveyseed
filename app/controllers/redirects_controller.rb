@@ -142,14 +142,14 @@ class RedirectsController < ApplicationController
           
             @user.SurveysAttempted << params[:tsfn]+'2222'
             # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
-            @user.SurveysCompleted[params[Time.now]] = [params[:cost], params[:tsfn], @user.clickid, @user.netid]
+            @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], @user.clickid, @user.netid]
             @user.save
 
             @survey = Survey.find_by SurveyNumber: params[:tsfn]
             print 'Successfully completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
             puts
             # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
-            @survey.CompletedBy[params[:PID]] = [params[:tis], params[:tsfn], @user.clickid, @user.netid]
+            @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @user.netid]
 #            @survey.SurveyGrossRank = 1
 #            puts '********************************* Survey Rank raised to 1 following a complete!'
             @survey.save

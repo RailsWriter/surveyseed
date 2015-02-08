@@ -115,6 +115,7 @@ GEM
     multi_json (1.10.1)
     multi_xml (0.5.5)
     mysql2 (0.3.17)
+    newrelic_rpm (3.9.9.275)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
     pry (0.10.1)
@@ -226,6 +227,7 @@ DEPENDENCIES
   minitest-reporters (= 1.0.5)
   mixpanel-ruby
   mysql2 (~> 0.3.16)
+  newrelic_rpm
   rails (= 4.2.0.beta2)
   rails_12factor (= 0.0.2)
   ruby-hmac
