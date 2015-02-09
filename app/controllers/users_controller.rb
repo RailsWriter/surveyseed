@@ -1411,32 +1411,32 @@ require 'hmac-md5'
     
     
      # If the user qualifies for one or more survey, send user to the top ranked survey first and repeat until success/failure/OT/QT
-     @InferiorSupplierLink = Array.new
+#     @InferiorSupplierLink = Array.new
     (0..user.SurveysWithMatchingQuota.length-1).each do |i| #do14
       @surveynumber = user.SurveysWithMatchingQuota[i]
       Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey| # do15
 
         # Eliminate surveys with EPC < 0.1
-        if survey.SurveyQuotaCalcTypeID != 5 then
+#        if survey.SurveyQuotaCalcTypeID != 5 then
           user.SupplierLink[i] = survey.SupplierLink["LiveLink"]
-        else        
+#        else        
           # Store the link in a separate container
-          @InferiorSupplierLink << survey.SupplierLink["LiveLink"]
-          print "Skipping survey number: ", @surveynumber, 'since its EPC: is < 0.1: ', survey.SurveyQuotaCalcTypeID
-          puts
-        end
+#          @InferiorSupplierLink << survey.SupplierLink["LiveLink"]
+#          print "Skipping survey number: ", @surveynumber, 'since its EPC: is < 0.1: ', survey.SurveyQuotaCalcTypeID
+#          puts
+#        end
       
       end #do15
     end #do14
     
     #Prevent a problem with userride if EPC < 0.1 eliminates ALL surveys
 
-    user.SupplierLink = user.SupplierLink + @InferiorSupplierLink
-    print '*********** USER HAS QUOTA FOR this list of Fulcrum surveys with EPC <0.1 moved to the end of the list:', user.SupplierLink
-    puts
+#    user.SupplierLink = user.SupplierLink + @InferiorSupplierLink
+#    print '*********** USER HAS QUOTA FOR this list of Fulcrum surveys with EPC <0.1 moved to the end of the list:', user.SupplierLink
+#    puts
     
     
-    # removing the blank entry
+    # removing any blank entries
     if user.SupplierLink !=nil then
       user.SupplierLink.reject! { |c| c == nil}
     else

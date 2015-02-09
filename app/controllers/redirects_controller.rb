@@ -42,8 +42,19 @@ class RedirectsController < ApplicationController
           @p2s_redirect = true
           
         else
-          redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=0'
-          return
+          if params[:PID][0..3] == "1111" then
+            @partial = params[:PID].sub "1111", ''
+            params[:tsfn] = @partial[0..3]
+            params[:PID] = @partial.sub params[:tsfn], ''
+            params[:tis] = '20'
+            
+            print "********************* Extracted userid from KETSCI ADHOC survey to be = ", params[:PID], ' for Survey Number= ', params[:tsfn]
+            puts
+
+          else
+            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=0'
+            return
+          end
         end
       end
     else
