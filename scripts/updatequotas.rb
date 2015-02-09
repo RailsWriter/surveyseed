@@ -1152,7 +1152,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             end
       
             toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
-            print "YM Updated existing 1-100 ranked toberankedsurvey to: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            print "Updated existing 1-100 ranked toberankedsurvey to: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
             puts
           end
     
@@ -1165,7 +1165,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             end
       
             toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
-            print "YM Updated existing 1-100 ranked toberankedsurvey to: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            print "Updated existing 1-100 ranked toberankedsurvey to: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
             puts
           end
     
@@ -1231,9 +1231,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           end # end for number of completes
     
         else # not in rank range
-        end # not in rank range
-        
-        
+        end # not in rank range        
     
         # Try More  
         if (200 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 300) then
@@ -1380,15 +1378,16 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
       
             if toberankedsurvey.SurveyQuotaCalcTypeID == 5 then
         
-              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-                p "Found a toberankedsurvey with Conversion = 0"
-                toberankedsurvey.Conversion = 1
-              else
-              end
+#              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+#                p "Found a toberankedsurvey with Conversion = 0"
+#                toberankedsurvey.Conversion = 1
+#              else
+#             end
       
-              toberankedsurvey.SurveyGrossRank = 301+(100-toberankedsurvey.Conversion)
-              print "Assigned existing GEPC=5 toberankedsurvey a GEPC=5 tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-              puts
+#              print "Assigned existing GEPC=5 toberankedsurvey from rank= ", toberankedsurvey.SurveyGrossRank
+#              toberankedsurvey.SurveyGrossRank = 301+(100-toberankedsurvey.Conversion)
+#              print "a new GEPC=5 tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+#              puts
         
             else # GEPC = 1 or 2 
       
@@ -1590,7 +1589,10 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         
         toberankedsurvey.save!
 
-        end # for all toberankedsurvey 
+        print "Ranking survey number = ", toberankedsurvey.SurveyNumber
+        puts
+        
+        end # do for all toberankedsurvey 
         
         
       else
