@@ -1600,7 +1600,7 @@ require 'hmac-md5'
         retry
     end while @FyberPostBack.code != 200
     
-    user.SurveysCompleted["TESTSURVEY"] = [0, 'TESTSURVEY', user.clickid, user.netid]
+    user.SurveysCompleted["TESTSURVEY"] = [0, Time.now, user.clickid, user.netid]
     user.save
     
     redirect_to '/users/successful'

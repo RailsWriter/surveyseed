@@ -21,22 +21,32 @@
 				<%= form_tag("p25action", method: "post") do %>
 				<fieldset>
 					<div class="mytags">
+				
+					<label>
 					<%= radio_button_tag 'ans2', '1' %>
-					<%= label_tag(:country, "3-5 yrs.") %><br>
+				  		3-5 yrs.
+					</label><br>
+					<label>
 					<%= radio_button_tag 'ans2', '2' %>
-					<%= label_tag(:country, "8-10 yrs.") %><br>
+				  		8-10 yrs.
+					</label><br>
+					<label>
 					<%= radio_button_tag 'ans2', '3' %>
-					<%= label_tag(:country, "11-20 yrs.") %><br>
+				  		11-20 yrs.
+					</label><br>
+					<label>						
 					<%= radio_button_tag 'ans2', '4' %>
-					<%= label_tag(:country, "Who knows!") %><br><br>
+				  		Who knows!
+					</label><br><br>
+												
 					</div>
-					<div class="myinput">
+				<div class="myinput">
 					<center>
-					<%= submit_tag "Next" %>
+						<%= submit_tag "Next" %>
 					</center>
-					</div>
-				</fieldset>
-				<% end %>
+				</div>
+			</fieldset>
+			<% end %>
 		</content>
 				
 		<footer class="footer">
