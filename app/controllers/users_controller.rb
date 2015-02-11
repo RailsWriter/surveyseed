@@ -1591,14 +1591,32 @@ require 'hmac-md5'
   def p3action
     session_id = session.id
     user = User.find_by session_id: session_id
-    print 'CID=', user.clickid
+    print '****************************** CID= ', user.clickid, ' NetId= ', user.netid
     puts
+    
+  if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+
     begin
       @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
         rescue HTTParty::Error => e
         puts 'HttParty::Error '+ e.message
         retry
     end while @FyberPostBack.code != 200
+    
+  else
+  end
+    
+  if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+       
+    begin
+      @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+        rescue HTTParty::Error => e
+        puts 'HttParty::Error '+ e.message
+        retry
+    end while @SupersonicPostBack.code != 200
+    
+  else
+  end
     
     user.SurveysCompleted["TESTSURVEY"] = [0, Time.now, user.clickid, user.netid]
     user.save
