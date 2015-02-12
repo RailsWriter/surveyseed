@@ -643,6 +643,8 @@ require 'hmac-md5'
       # If this is a TEST e.g. with a network provider then route user to run the standard test survey.
 
       @netid = user.netid
+      @poorconversion=false
+      
       if Network.where(netid: @netid).exists? then
         net = Network.find_by netid: @netid
         user.currentpayout = net.payout
@@ -666,7 +668,11 @@ require 'hmac-md5'
             if (net.status == "INTTEST") then
               @netstatus = "INTTEST"
             else
-              # MUST BE AN ACTIVE NETWORK -> Continue
+              if (net.status == "SAFETY") then
+                @poorconversion = true
+              else
+                # MUST BE AN ACTIVE NETWORK -> Continue
+              end
             end
           end
         end
@@ -693,7 +699,16 @@ require 'hmac-md5'
     end
 
 
-      Survey.where("CountryLanguageID = ?", @usercountry).order( "SurveyGrossRank" ).each do |survey|
+    if @poorconversion then
+      @topofstack = 1
+    else
+      @topofstack = 101
+    end
+
+
+    Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
+
+#      Survey.where("CountryLanguageID = ?", @usercountry).order( "SurveyGrossRank" ).each do |survey|
 
       if (( survey.SurveyStillLive ) && 
         (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
@@ -813,10 +828,10 @@ require 'hmac-md5'
           puts
           user.SurveysWithMatchingQuota << @surveynumber
           
-          if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 8) then
+          if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 7) then
             @foundtopsurveyswithquota = true
           else
-            if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 5)
+            if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 4)
               @foundtopsurveyswithquota = true
             else
               #do nothing
@@ -1324,10 +1339,10 @@ require 'hmac-md5'
             puts '****************** Adding the survey to the list of eligible surveys due to quota match'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 8) then
+            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 7) then
               @foundtopsurveyswithquota = true
             else
-              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 5)
+              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 4)
                 @foundtopsurveyswithquota = true
               else
                 #do nothing
@@ -1350,10 +1365,10 @@ require 'hmac-md5'
             puts '************* Adding survey to list of eligible quotas even though no quotas specified but Totalquotaexists.'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 8) then
+            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 7) then
               @foundtopsurveyswithquota = true
             else
-              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 5)
+              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 4)
                 @foundtopsurveyswithquota = true
               else
                 #do nothing
@@ -1408,6 +1423,7 @@ require 'hmac-md5'
       return
     else
     end
+    
     
     
      # If the user qualifies for one or more survey, send user to the top ranked survey first and repeat until success/failure/OT/QT

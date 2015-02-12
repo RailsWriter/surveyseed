@@ -126,7 +126,7 @@ class RedirectsController < ApplicationController
             @user.SurveysCompleted[Time.now] = ['$1.25', 'P2S', @user.clickid, @user.netid]
             @user.save
             
-            print "*************** User.netid is FYBER: ", @user.netid
+            print "*************** User.netid is: ", @user.netid
             puts
               
             # Postback the network about success with users clickid
@@ -139,9 +139,24 @@ class RedirectsController < ApplicationController
                 end while @FyberPostBack.code != 200
             else
             end
+            
+            
+            if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+       
+              begin
+                @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  rescue HTTParty::Error => e
+                  puts 'HttParty::Error '+ e.message
+                  retry
+              end while @SupersonicPostBack.code != 200
+    
+            else
+            end
+                     
               
             # Happy ending
             redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'    
+        
           else
           
             # save attempt info in User and Survey tables
@@ -152,17 +167,36 @@ class RedirectsController < ApplicationController
             puts
           
             @user.SurveysAttempted << params[:tsfn]+'2222'
+            
             # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
             @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], @user.clickid, @user.netid]
             @user.save
+            
+            
 
             @survey = Survey.find_by SurveyNumber: params[:tsfn]
             print 'Successfully completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
             puts
             # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
             @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @user.netid]
-#            @survey.SurveyGrossRank = 1
-#            puts '********************************* Survey Rank raised to 1 following a complete!'
+
+
+
+            # Save (inverse of) TCR and reset counter for attempts at last complete
+
+            @survey.SurveyExactRank = @survey.SurveyExactRank + 1  # SurveyExactRank=Failure+OQ+Success count
+            @NumberofAttemptsSinceLastComplete = @survey.SurveyExactRank - @survey.NumberofAttemptsAtLastComplete
+            @survey.TCR = 1 / @NumberofAttemptsSinceLastComplete
+
+            @survey.NumberofAttemptsAtLastComplete = @survey.SurveyExactRank
+            
+#           if (100 < @survey.SurveyGrossRank) && (@survey.SurveyGrossRank <= 300)
+#              then surveyGrossRank = 1
+#              puts '********************************* If it is a New survey, its rank is raised to 1 following a complete!'
+#            else
+#            end
+
+
             @survey.save
 
             # Postback the network about success with users clickid
@@ -175,6 +209,21 @@ class RedirectsController < ApplicationController
               end while @FyberPostBack.code != 200
             else
             end
+            
+            
+            if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+       
+              begin
+                @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  rescue HTTParty::Error => e
+                  puts 'HttParty::Error '+ e.message
+                  retry
+              end while @SupersonicPostBack.code != 200
+    
+            else
+            end
+            
+            
 
             # Happy ending
             redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'
@@ -227,7 +276,7 @@ class RedirectsController < ApplicationController
               # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
               @survey.SurveyExactRank = @survey.SurveyExactRank + 1
               @survey.FailureCount = @survey.FailureCount + 1
-              print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn], 'new ExactRank/Failure count: ', @survey.SurveyExactRank
+              print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn], 'new ExactRank (Failure+OQ+Success) count: ', @survey.SurveyExactRank
               puts
               
               @survey.save

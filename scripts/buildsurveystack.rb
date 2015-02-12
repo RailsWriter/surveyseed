@@ -4,7 +4,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 
 
 # @initialrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
@@ -91,7 +91,9 @@ begin
         @survey.SurveyMobileConversion = offerwallresponse["Surveys"][i]["SurveyMobileConversion"]
         @survey.FailureCount = 0
         @survey.OverQuotaCount = 0
-        @survey.KEPC = 0
+        @survey.KEPC = 0.0
+        @survey.NumberofAttemptsAtLastComplete = 0
+        @survey.TCR = 0.0
       
 
         # Code for testing
@@ -152,8 +154,8 @@ begin
           else
           end
           
-          @survey.SurveyGrossRank = 101+(100-@survey.Conversion) 
-          print "Assigned NEW survey rank: ", @survey.SurveyGrossRank, " GEPC = ", SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] 
+          @survey.SurveyGrossRank = 201+(100-@survey.Conversion) 
+          print "Assigned NEW/GEPC=1/2 survey rank: ", @survey.SurveyGrossRank, " GEPC = ", SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] 
           puts
           
           
@@ -168,8 +170,8 @@ begin
             else
             end
             
-            @survey.SurveyGrossRank = 101+(100-@survey.Conversion)    
-            print "Assigned NEW survey rank: ", @survey.SurveyGrossRank, " GEPC = ", SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] 
+            @survey.SurveyGrossRank = 201+(100-@survey.Conversion)    
+            print "Assigned NEW/GEPC=1/2 survey rank: ", @survey.SurveyGrossRank, " GEPC = ", SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] 
             puts        
             
             
@@ -183,7 +185,7 @@ begin
             end
             
             @survey.SurveyGrossRank = 301+(100-@survey.Conversion)
-            print "Assigned NEW survey rank: ", @survey.SurveyGrossRank, " GEPC = ", SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] 
+            print "Assigned NEW/GEPC=5 survey rank: ", @survey.SurveyGrossRank, " GEPC = ", SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] 
             puts
                                    
           end
