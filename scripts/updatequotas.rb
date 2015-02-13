@@ -2,7 +2,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'stag'
+flag = 'prod'
 
 # @updatesrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
 
@@ -1079,19 +1079,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
 
       end # if @surveynumber exists  
       print '******************* Updating totalavailablesurveys at count i = ', i   
-      puts  
-      
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+      puts
   
   
   
@@ -1099,7 +1087,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
       # RANK the stack after every 20 updates!    
            
       
-      if (i == 1) || ((Time.now - @lastrankingtime) >= 100) then    
+      if (i == 1) || ((Time.now - @lastrankingtime) >= 1200) then    
           
         @lastrankingtime = Time.now
         
@@ -1111,14 +1099,14 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         # Safety: 1-100
         if (0 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 100) then
           
-        # Ideally we have low CPI fast converters in this group along with others that have converted in the past
-        # Surveys arrive in TCR order. If they do not perform move them to Bad+Oldtimers
+        # Only low CPI fast converters in this group
+        # Surveys arrive in TCR order. If they do not perform move them to Oldtimers
           
           @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
           
           if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 40) then  # 2.5% conversion rate i.e. 20 more after they were moved out of Fast converters
-            toberankedsurvey.SurveyGrossRank = 600 - (toberankedsurvey.TCR * 100).to_i
-            print "Assigned Top survey to Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            toberankedsurvey.SurveyGrossRank = 700 - (toberankedsurvey.TCR * 100).to_i
+            print "Assigned Safety survey to Horrible: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
           else
           end
         else # not in 1-100 rank range
@@ -1131,8 +1119,8 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
           
           if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 20) then
-            toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
-            print "Assigned Top survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            toberankedsurvey.SurveyGrossRank = 600 - (toberankedsurvey.TCR * 100).to_i
+            print "Assigned Fast survey to Old Timer: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
           else
           end
           
@@ -1189,15 +1177,17 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         else # not in 101-200 rank range
         end # not in 101-200 rank range
   
-        # New / GEPC= 1 or 2: 201-300
+        # New + GEPC= 1 or 2: 201-300
         if (200 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 300) then
           
-          if (toberankedsurvey.CompletedBy.length > 0) then
+          # This is the place for new surveys to be tested with 10 hits. They move to Fast or Try more if they do not complete in 10. If they turn GEPC=5 then move them to GEPC=5 group         
+          
+          if (toberankedsurvey.TCR >= 0.10) then # (1 in 10 hits)
             
             if (toberankedsurvey.CPI > 1.49) then
             
               toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
-              print "Assigned Top survey to Top: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              print "Assigned New survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
             else   
 
               if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.CPI <= 1.49) then
@@ -1215,7 +1205,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           if (toberankedsurvey.CompletedBy.length == 0) then
             
             if (toberankedsurvey.SurveyQuotaCalcTypeID == 5) then
-              # move it to GEPC=5 block
+              # move it to GEPC=5 group
               
               if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                 p "Found a toberankedsurvey with Conversion = 0"
@@ -1224,7 +1214,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               end
   
               toberankedsurvey.SurveyGrossRank = 301+(100-toberankedsurvey.Conversion)
-              print "Assigned NEW/GEPC=1 or 2 survey to GEPC=5: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              print "Assigned NEW/GEPC=5 survey to GEPC=5: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               puts
               
             else # GEPC 1 or 2
@@ -1238,7 +1228,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
                   end
     
                   toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
-                  print "Assigned NEW toberankedsurvey rank to Try More: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  print "Assigned NEW/GEPC=1/2 to Try More: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts    
                
                 else # less than 10 hits
@@ -1321,66 +1311,67 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         # New + GEPC=5 : 301-400
         if (300 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 400) then
         
-        if (toberankedsurvey.CompletedBy.length > 0) then
+          # This is the place for new GEPC=5 surveys to be tested with 10 hits. They move to Horrible if they do not complete in 10. If they turn GEPC=1/2 then move them to GEPC=1/2 group         
           
-          if (toberankedsurvey.CPI > 1.49) then
+          if (toberankedsurvey.TCR >= 0.10) then # (1 in 10 hits)
           
-            toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
-            print "Assigned Top survey to Top: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            if (toberankedsurvey.CPI > 1.49) then
           
-          else   
+              toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
+              print "Assigned New+GEPC=5 survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+          
+            else   
 
-            if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.CPI <= 1.49) then
+              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.CPI <= 1.49) then
           
-              toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
-              print "Assigned Top survey to Top: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-            else
-            end
+                toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
+                print "Assigned New+GEPC=5 survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              else
+              end
             
-          end 
-        else # Completes > 0
-        end # Completes > 0
+            end 
+          else # Completes > 0
+          end # Completes > 0
         
-        if (toberankedsurvey.CompletedBy.length == 0) then
+          if (toberankedsurvey.CompletedBy.length == 0) then
           
-          if (toberankedsurvey.SurveyQuotaCalcTypeID != 5) then
+            if (toberankedsurvey.SurveyQuotaCalcTypeID != 5) then
             # move it to New / GEPC= 1 or 2 block
             
-            if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-              p "Found a toberankedsurvey with Conversion = 0"
-              toberankedsurvey.Conversion = 1
-            else
-            end
-
-            toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
-            print "Assigned New/GEPC = 5 to NEW/GEPC=1 or 2: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-            puts
-            
-          else # (GEPC=5)
-    
-              if (toberankedsurvey.SurveyExactRank > 10) then
-            
-                if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-                  p "Found a toberankedsurvey with Conversion = 0"
-                  toberankedsurvey.Conversion = 1
-                else
-                end
-  
-                toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
-                print "Assigned New GEPC=5 survey rank to Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                puts    
-       
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                p "Found a toberankedsurvey with Conversion = 0"
+                toberankedsurvey.Conversion = 1
               else
+              end
+
+              toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
+              print "Assigned New/GEPC = 5 to NEW/GEPC=1 or 2: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              puts
+            
+            else # (GEPC=5)
+    
+                if (toberankedsurvey.SurveyExactRank > 10) then
+            
+                  if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                    p "Found a toberankedsurvey with Conversion = 0"
+                    toberankedsurvey.Conversion = 1
+                  else
+                  end
+  
+                  toberankedsurvey.SurveyGrossRank = 601+(100-toberankedsurvey.Conversion)
+                  print "Assigned New/GEPC=5 survey rank to Horrible: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  puts    
+       
+                else
                 
                 # wait until there are 10 attempts
                 
-              end # more than 10 hits on a GEPC = 1 or 2
+                end # more than 10 hits on a GEPC = 1 or 2
             
-          end # GEPC == 5
+            end # GEPC == 5
             
- #         end # if GEPC==5
-        else # completes = 0
-        end # completes = 0
+          else # completes = 0
+          end # completes = 0
     
        
  
@@ -1520,8 +1511,10 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           
         # Try More : 401-500
         if (400 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 500) then    
+          
+          # These surveys are here to get another 10 attempts (10 to 20). If they convert move them to Fast else take them to Horrible                  
             
-          if (toberankedsurvey.CompletedBy.length > 0) then
+          if (toberankedsurvey.TCR >= 0.05) then
             
             if (toberankedsurvey.CPI > 1.49) then
             
@@ -1541,22 +1534,8 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           else # Completes > 0
           end # Completes > 0
           
+          
           if (toberankedsurvey.CompletedBy.length == 0) then
-            
-            if (toberankedsurvey.SurveyQuotaCalcTypeID == 5) then
-              # move it to GEPC=5 block
-              
-              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-                p "Found a toberankedsurvey with Conversion = 0"
-                toberankedsurvey.Conversion = 1
-              else
-              end
-  
-              toberankedsurvey.SurveyGrossRank = 301+(100-toberankedsurvey.Conversion)
-              print "Assigned NEW/GEPC=1 or 2 survey rank to GEPC=5: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-              puts
-              
-            else # (GEPC 1 or 2)
               
               if toberankedsurvey.SurveyExactRank <= 20 then # No. of hits
         
@@ -1572,13 +1551,13 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
                 else
                 end
       
-                toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
-                print "Assigned a Try More to Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                toberankedsurvey.SurveyGrossRank = 601+(100-toberankedsurvey.Conversion)
+                print "Assigned a Try More to Horrible: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 puts   
           
               end # No. of hits
         
-            end # GEPC = 5
+#            end # GEPC = 5
       
           end # end for number of completes = 0
             
@@ -1675,24 +1654,27 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         else # not in rank 401-500 range
         end # not in rank 401-500 range
       
-        # The Bad : 501-600
+        # OldTimer : 501-600
         if (500 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 600) then
+          
+          # These are surveys that were good earlier but have fizzled to 0 < TCR < 0.05. If their TCR becomes > 0.5 move them to Fast.
 
-          @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
+#          @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
+      
           
           if (toberankedsurvey.TCR > 0.05) then
 
               toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
-              print "Assigned Top survey to Top: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              print "Assigned OldTimer survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
             else
             end
             
-          if (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.05) && (@toberankedsurveyNumberofAttemptsSinceLastComplete <= 20) then
+#         if (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.05) && (@toberankedsurveyNumberofAttemptsSinceLastComplete <= 20) then
             
-            toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
-            print "Assigned Top survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-          else
-          end
+#            toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
+#            print "Assigned Bad survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+#          else
+#          end
           
           
   
@@ -1750,21 +1732,21 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         end # not in rank 501-600 range
   
         # Horrible : 601-700
-        if (500 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 600) then
+        if (600 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 700) then
     
-          @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
+          # These are surveys which have seen moree than 20 attempts without a complete, if GEPC=1/2 or 10 attempts if GEPC=5. If they do start converting then move them to appropriate buckets. The low CPI surveys that fizzle also land up here.
           
-          if (toberankedsurvey.TCR > 0.05) then
+          if (toberankedsurvey.TCR >= 0.05) then
 
               toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
-              print "Assigned Top survey to Top: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+              print "Assigned Horrible survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
             else
             end
             
-          if ((toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.05)) && (@toberankedsurveyNumberofAttemptsSinceLastComplete <= 20) then
+          if ((toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.05)) then
             
-            toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
-            print "Assigned Top survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            toberankedsurvey.SurveyGrossRank = 600 - (toberankedsurvey.TCR * 100).to_i
+            print "Assigned Horrible survey to OldTimers/Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
           else
           end
           

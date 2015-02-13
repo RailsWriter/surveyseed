@@ -153,6 +153,15 @@ class RedirectsController < ApplicationController
             else
             end
                      
+            
+            # Keep a count of completes on each Network
+            
+            puts "*************** Adding timestamp to cmpletes on this network"
+            
+            @net = Network.find_by netid: @user.netid
+            @net.completes[Time.now]=1
+            @net.save
+                     
               
             # Happy ending
             redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'    
@@ -200,6 +209,7 @@ class RedirectsController < ApplicationController
             @survey.save
 
             # Postback the network about success with users clickid
+            
             if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
               begin
                 @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
@@ -223,7 +233,13 @@ class RedirectsController < ApplicationController
             else
             end
             
+            # Keep a count of completes on each Network
             
+            puts "*************** Adding timestamp to cmpletes on this network"
+            
+            @net = Network.find_by netid: @user.netid
+            @net.completes[Time.now]=1
+            @net.save
 
             # Happy ending
             redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'

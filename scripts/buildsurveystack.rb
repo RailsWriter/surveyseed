@@ -4,7 +4,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'stag'
+flag = 'prod'
 
 
 # @initialrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
@@ -129,7 +129,7 @@ begin
         end while SurveyStatistics.code != 200
         
         
-        # For the NEW survey - Store GEEPC in SurveyQuotaCalcTypeID as an integer. Also set SurveyExactRank and SampleTypeID to keep track of unsuccessful attempts and OQ instances respectively.
+        # For the NEW survey - Store GEPC in SurveyQuotaCalcTypeID as an integer. Also set SurveyExactRank and SampleTypeID to keep track of unsuccessful attempts and OQ instances respectively.
         
         @survey.SurveyExactRank = 0
         @survey.SampleTypeID = 0
