@@ -2,7 +2,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 
 # @updatesrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
 
@@ -1096,10 +1096,10 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         
         Survey.all.each do |toberankedsurvey|
     
-        # Safety: 1-100
-        if (0 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 100) then
+        # Safety: 1-95
+        if (0 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 95) then
           
-        # Only low CPI fast converters in this group
+        # Only low CPI TCR > 0.05 (fast converters) in this group
         # Surveys arrive in TCR order. If they do not perform move them to Oldtimers
           
           @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
@@ -1112,6 +1112,12 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         else # not in 1-100 rank range
         end # not in 1-100 rank range
         
+        # Custom: 96-100
+        if (95 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 100) then
+        # do nothing. surveys are put here manually to give them quick exposure to traffic
+        else
+        end  
+      
         # Fast Converters 101-200
         if (100 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 200) then
           
@@ -1188,19 +1194,15 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             
               toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
               print "Assigned New survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-            else   
-
-              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.CPI <= 1.49) then
+            else
             
                 toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
                 print "Assigned Top survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-              else
-              end
               
             end 
             
-          else # Completes > 0
-          end # Completes > 0
+          else # Completes > 0 or TCR > 0.1
+          end # Completes > 0 or TCR > 0.1
           
           if (toberankedsurvey.CompletedBy.length == 0) then
             
@@ -1302,8 +1304,6 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
 #          end # end for number of completes
 
 
-
-
     
         else # not in 201-300 rank range
         end # not in 201-300 rank range
@@ -1322,16 +1322,12 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           
             else   
 
-              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.CPI <= 1.49) then
-          
                 toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
                 print "Assigned New+GEPC=5 survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-              else
-              end
             
             end 
-          else # Completes > 0
-          end # Completes > 0
+          else # Completes > 0 or TCR > 0.1
+          end # Completes > 0 or TCR > 0.1
         
           if (toberankedsurvey.CompletedBy.length == 0) then
           
@@ -1521,18 +1517,14 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
               print "Assigned Try more survey to Top: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
             else   
-              
-              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.CPI <= 1.49) then
             
                 toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
                 print "Assigned Try more survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-              else
-              end
               
             end 
             
-          else # Completes > 0
-          end # Completes > 0
+          else # Completes > 0 or TCR > 0.5
+          end # Completes > 0 or TCR > 0.5
           
           
           if (toberankedsurvey.CompletedBy.length == 0) then

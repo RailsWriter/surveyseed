@@ -702,7 +702,8 @@ require 'hmac-md5'
     if @poorconversion then
       @topofstack = 1
     else
-      @topofstack = 101
+      # make top of Custom surveys as starting spot for picking qualified surveys
+      @topofstack = 96
     end
 
     print "**************************** PoorConversion is turned: ", @poorconversion, ' Topofstack is: ', @topofstack
