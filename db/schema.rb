@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150204044941) do
+ActiveRecord::Schema.define(version: 20150212061538) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -31,6 +31,11 @@ ActiveRecord::Schema.define(version: 20150204044941) do
     t.text     "completes",     limit: 50000000
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+    t.string   "Flag1"
+    t.string   "Flag2"
+    t.string   "Flag3"
+    t.string   "Flag4"
+    t.string   "Flag5"
   end
 
   create_table "surveys", force: true do |t|
@@ -77,6 +82,8 @@ ActiveRecord::Schema.define(version: 20150204044941) do
     t.float    "GEPC"
     t.integer  "FailureCount"
     t.integer  "OverQuotaCount"
+    t.integer  "NumberofAttemptsAtLastComplete"
+    t.float    "TCR"
   end
 
   create_table "us_geos", force: true do |t|

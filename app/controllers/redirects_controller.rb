@@ -163,7 +163,7 @@ class RedirectsController < ApplicationController
           
             @user = User.find_by user_id: params[:PID]
 
-            print 'Suceess for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+            print '************** Suceess for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
             puts
           
             @user.SurveysAttempted << params[:tsfn]+'2222'
@@ -175,7 +175,7 @@ class RedirectsController < ApplicationController
             
 
             @survey = Survey.find_by SurveyNumber: params[:tsfn]
-            print 'Successfully completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
+            print '************ Successfully completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
             puts
             # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
             @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @user.netid]
@@ -186,7 +186,7 @@ class RedirectsController < ApplicationController
 
             @survey.SurveyExactRank = @survey.SurveyExactRank + 1  # SurveyExactRank=Failure+OQ+Success count
             @NumberofAttemptsSinceLastComplete = @survey.SurveyExactRank - @survey.NumberofAttemptsAtLastComplete
-            @survey.TCR = 1 / @NumberofAttemptsSinceLastComplete
+            @survey.TCR = (1.0 / @NumberofAttemptsSinceLastComplete).round(3)
 
             @survey.NumberofAttemptsAtLastComplete = @survey.SurveyExactRank
             

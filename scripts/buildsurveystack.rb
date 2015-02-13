@@ -108,17 +108,8 @@ begin
         
 
    
-        # Assign an initial gross ranks to the chosen survey
-        # KEPC = 0 until no conversion else = no. of completes/no. of total attempts (failure+success) * cpi
-        
-        # Top: 1 is the best and 100 is the worst rank for EXISTING surveys that have converted and have a 0.02 =< KEPC
-        
-        # New: 101 is the best and 200 is the worst rank for a lowest conversion rate (0 or 1) for a NEW survey with GEPC 1 or 2. (initial KEPC = 0)
-        # Try More: 201 is the best and 300 is the worst rank for a lowest conversion rate (0 or 1) for an EXISTING survey with GEPC 1 or 2 or 0.01 =< KEPC < 0.02
-        # GEPC=5: 301 is the best and 400 is the worst rank for a lowest conversion rate (0 or 1) for an NEW or EXISTING survey with GEPC 5. (initial KEPC = 0)
-        
-        # Bad: 401 is the best and 500 is the worst rank for EXISTING surveys that have converted and have a 0 < KEPC < 0.01
-        # Horrible: 501 is the best and 600 is the worst rank for EXISTING surveys that did not convert after MAX (20) attempts and have KEPC = 0
+        # Assign an initial gross ranks to the chosen new survey
+        # New surveys with GEPC = 1 0r 2 are put in New and GEPC=5 blocks of 201-300 and 301-400 respectively.
         
 
         begin

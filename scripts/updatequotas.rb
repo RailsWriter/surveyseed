@@ -41,7 +41,7 @@ begin
   
   begin
     sleep(1)
-    puts 'CONNECTING FOR index of ALL ALLOCATED SURVEYS' 
+    puts '************ CONNECTING FOR index of ALL ALLOCATED SURVEYS' 
  
     if flag == 'prod' then
      IndexofAllocatedSurveys = HTTParty.get(base_url+'/Supply/v1/Surveys/SupplierAllocations/All/5458?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
@@ -104,10 +104,10 @@ begin
           puts
           
 
-          # Update GEPC and the rank of the existing survey if Conversion value has changed since originally downloaded. However, make no change if survey KEPC >= 0.02 i.e. Rank < 100.
+          # Update GEPC and the rank of the existing survey if Conversion value has changed since originally downloaded.
           
 
-          # First Update GEEPC information of the existing survey          
+          # First Update GEPC information of the existing survey          
           
           
           begin
@@ -152,29 +152,13 @@ begin
           puts
 
 
-          # Update conversion and rank based on updated information. Make no rank changes based on conversion to surveys with KEPC > 0.02 i.e. rank < 100
+          # Update conversion and rank based on updated information.
 
 
           survey.Conversion = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
           
           
-          #Re-order rank within the category of existing surveys in ranks 101-600
-            
-
-          if (100 < survey.SurveyGrossRank) && (survey.SurveyGrossRank <= 200) then
-            # Reorder by conversion values
-              
-            if survey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-              p "Found a survey with Conversion = 0"
-              survey.Conversion = 1
-            else
-            end
-            
-            survey.SurveyGrossRank = 101+(100-survey.Conversion)
-            print "Updated existing survey rank to: ", survey.SurveyGrossRank
-            puts
-          else
-          end
+          #Re-order rank within the category of existing surveys in ranks 201-500 and 601-700 based on updated conversion information, 501-600 (Old Timers + Bad) are ranked by TCR
 
 
 
@@ -226,7 +210,7 @@ begin
           end
             
             
-          if (500 < survey.SurveyGrossRank) && (survey.SurveyGrossRank <= 600) then
+          if (600 < survey.SurveyGrossRank) && (survey.SurveyGrossRank <= 700) then
             # Reorder by conversion values
             
             if survey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
@@ -235,7 +219,7 @@ begin
             else
             end
             
-            survey.SurveyGrossRank = 501+(100-survey.Conversion)
+            survey.SurveyGrossRank = 601+(100-survey.Conversion)
             print "Updated existing survey rank to: ", survey.SurveyGrossRank
             puts
           else
@@ -607,7 +591,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         end while NewSurveyStatistics.code != 200
         
 
-        # For the NEW survey - Store GEEPC in SurveyQuotaCalcTypeID as an integer. Also set SurveyExactRank and SampleTypeID to keep track of unsuccessful and OQ attempts respectively.
+        # For the NEW survey - Store GEPC in SurveyQuotaCalcTypeID as an integer. Also set SurveyExactRank and SampleTypeID to keep track of unsuccessful and OQ attempts respectively.
         
         @newsurvey.SurveyExactRank = 0
         @newsurvey.SampleTypeID = 0
@@ -1115,7 +1099,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
       # RANK the stack after every 20 updates!    
            
       
-      if (i == 1) || ((Time.now - @lastrankingtime) >= 1200) then    
+      if (i == 1) || ((Time.now - @lastrankingtime) >= 100) then    
           
         @lastrankingtime = Time.now
         
@@ -1224,10 +1208,11 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               end
               
             end 
+            
           else # Completes > 0
           end # Completes > 0
           
-          if (toberankedsurvey.CompletedBy.length = 0) then
+          if (toberankedsurvey.CompletedBy.length == 0) then
             
             if (toberankedsurvey.SurveyQuotaCalcTypeID == 5) then
               # move it to GEPC=5 block
@@ -1242,7 +1227,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               print "Assigned NEW/GEPC=1 or 2 survey to GEPC=5: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               puts
               
-            else (GEPC 1 or 2)
+            else # GEPC 1 or 2
       
                 if (toberankedsurvey.SurveyExactRank > 10) then
               
@@ -1262,13 +1247,12 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
                   
                 end # more than 10 hits on a GEPC = 1 or 2
               
-              end # GEPC == 5
+            end # GEPC == 5
               
-            end # if GEPC==5
+  #          end # if GEPC==5
           else # completes = 0
           end # completes = 0
-          
-          
+                    
 
           # OLD GEPC=5
           #if (300 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 400) then
@@ -1326,6 +1310,10 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
 #            end # GEPC = 5
       
 #          end # end for number of completes
+
+
+
+
     
         else # not in 201-300 rank range
         end # not in 201-300 rank range
@@ -1353,7 +1341,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         else # Completes > 0
         end # Completes > 0
         
-        if (toberankedsurvey.CompletedBy.length = 0) then
+        if (toberankedsurvey.CompletedBy.length == 0) then
           
           if (toberankedsurvey.SurveyQuotaCalcTypeID != 5) then
             # move it to New / GEPC= 1 or 2 block
@@ -1368,7 +1356,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             print "Assigned New/GEPC = 5 to NEW/GEPC=1 or 2: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
             puts
             
-          else (GEPC=5)
+          else # (GEPC=5)
     
               if (toberankedsurvey.SurveyExactRank > 10) then
             
@@ -1376,22 +1364,24 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
                   p "Found a toberankedsurvey with Conversion = 0"
                   toberankedsurvey.Conversion = 1
                 else
-                  # do nothing until it gets 10 hits
                 end
   
                 toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
                 print "Assigned New GEPC=5 survey rank to Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 puts    
+       
               else
+                
+                # wait until there are 10 attempts
+                
               end # more than 10 hits on a GEPC = 1 or 2
             
-            end # GEPC == 5
+          end # GEPC == 5
             
-          end # if GEPC==5
+ #         end # if GEPC==5
         else # completes = 0
         end # completes = 0
     
-        
        
  
         # Old GEPC =5
@@ -1551,7 +1541,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           else # Completes > 0
           end # Completes > 0
           
-          if (toberankedsurvey.CompletedBy.length = 0) then
+          if (toberankedsurvey.CompletedBy.length == 0) then
             
             if (toberankedsurvey.SurveyQuotaCalcTypeID == 5) then
               # move it to GEPC=5 block
@@ -1566,7 +1556,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               print "Assigned NEW/GEPC=1 or 2 survey rank to GEPC=5: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               puts
               
-            else (GEPC 1 or 2)
+            else # (GEPC 1 or 2)
               
               if toberankedsurvey.SurveyExactRank <= 20 then # No. of hits
         
@@ -1679,6 +1669,8 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
 #            end # GEPC = 5
       
 #          end # end for number of completes
+
+
     
         else # not in rank 401-500 range
         end # not in rank 401-500 range
@@ -1688,14 +1680,14 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
 
           @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
           
-          if (TCR > 0.05) then
+          if (toberankedsurvey.TCR > 0.05) then
 
               toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
               print "Assigned Top survey to Top: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
             else
             end
             
-          if (TCR > 0) && (TCR < 0.05) && (@toberankedsurveyNumberofAttemptsSinceLastComplete <= 20) then
+          if (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.05) && (@toberankedsurveyNumberofAttemptsSinceLastComplete <= 20) then
             
             toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
             print "Assigned Top survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
@@ -1762,14 +1754,14 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
     
           @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
           
-          if (TCR > 0.05) then
+          if (toberankedsurvey.TCR > 0.05) then
 
               toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
               print "Assigned Top survey to Top: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
             else
             end
             
-          if ((TCR > 0) && (TCR < 0.05)) && (@toberankedsurveyNumberofAttemptsSinceLastComplete <= 20) then
+          if ((toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.05)) && (@toberankedsurveyNumberofAttemptsSinceLastComplete <= 20) then
             
             toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
             print "Assigned Top survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
@@ -1839,12 +1831,10 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
     
         else # not in rank 601-700 range
         end # not in rank 601-700 range
-        
-        
-        
+                
         toberankedsurvey.save!
 
-        print "Ranking survey number = ", toberankedsurvey.SurveyNumber
+        print "Ranked survey number = ", toberankedsurvey.SurveyNumber
         puts
         
         end # do for all toberankedsurvey 
