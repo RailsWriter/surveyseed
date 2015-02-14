@@ -86,7 +86,7 @@ class RedirectsController < ApplicationController
         # Is there anything to save from the attempt info in User and Survey tables?
         # params[:tsfn] was being returned empty in one run period.
         
-        @user.SurveysAttempted << params[:tsfn]+'1111'
+        @user.SurveysAttempted << params[:tsfn]+'-1'
         @user.save
         
         # User lands up here if anything unclear happens in the ride. Best course seems to be to send the user back to very begining to start over.
@@ -120,10 +120,11 @@ class RedirectsController < ApplicationController
             print '******************* Suceess in P2S router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
             puts
 
-            @user.SurveysAttempted << 'P2S'+'2222'
+            @user.SurveysAttempted << 'P2S-2'
             # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
             
-            @user.SurveysCompleted[Time.now] = ['$1.25', 'P2S', @user.clickid, @user.netid]
+#            @user.SurveysCompleted[Time.now] = ['$1.25', 'P2S', @user.clickid, @user.netid]
+            @user.SurveysCompleted[params[:PID]] = [Time.now, 'P2S', @user.clickid, @user.netid]
             @user.save
             
             print "*************** User.netid is: ", @user.netid
@@ -175,7 +176,7 @@ class RedirectsController < ApplicationController
             print '************** Suceess for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
             puts
           
-            @user.SurveysAttempted << params[:tsfn]+'2222'
+            @user.SurveysAttempted << params[:tsfn]+'-2'
             
             # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
             @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], @user.clickid, @user.netid]
@@ -266,7 +267,7 @@ class RedirectsController < ApplicationController
             print 'Failure in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
             puts
 
-            @user.SurveysAttempted << 'P2S'+'3333'
+            @user.SurveysAttempted << 'P2S'+'-3'
             @user.save        
             
             #Tell user that they were not matched in P2S due to Failure
@@ -283,7 +284,7 @@ class RedirectsController < ApplicationController
             # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
             # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
             if params[:tsfn] != nil then
-              @user.SurveysAttempted << params[:tsfn]+'3333'                   
+              @user.SurveysAttempted << params[:tsfn]+'-3'                   
               @user.save
             
             
@@ -430,7 +431,7 @@ class RedirectsController < ApplicationController
             print 'OQ in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
             puts
 
-            @user.SurveysAttempted << 'P2S'+'4444'
+            @user.SurveysAttempted << 'P2S'+'-4'
             @user.save  
             
             #Tell user that they were not matched due to OQ in P2S
@@ -445,7 +446,7 @@ class RedirectsController < ApplicationController
             print 'OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
             puts          
           
-            @user.SurveysAttempted << params[:tsfn]+'4444'
+            @user.SurveysAttempted << params[:tsfn]+'-4'
             @user.save
           
           
@@ -595,7 +596,7 @@ class RedirectsController < ApplicationController
           print '*********************** QTerm for user_id/PID, CID:', params[:PID], @user.clickid
           puts     
         
-          @user.SurveysAttempted << params[:tsfn]+'5555'
+          @user.SurveysAttempted << params[:tsfn]+'-5'
           @user.black_listed = true
           @user.save
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=2'

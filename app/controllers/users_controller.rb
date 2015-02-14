@@ -833,10 +833,10 @@ require 'hmac-md5'
           puts
           user.SurveysWithMatchingQuota << @surveynumber
           
-          if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 7) then
+          if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 6) then
             @foundtopsurveyswithquota = true
           else
-            if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 4)
+            if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 3)
               @foundtopsurveyswithquota = true
             else
               #do nothing
@@ -1344,10 +1344,10 @@ require 'hmac-md5'
             puts '****************** Adding the survey to the list of eligible surveys due to quota match'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 7) then
+            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 6) then
               @foundtopsurveyswithquota = true
             else
-              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 4)
+              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 3)
                 @foundtopsurveyswithquota = true
               else
                 #do nothing
@@ -1370,10 +1370,10 @@ require 'hmac-md5'
             puts '************* Adding survey to list of eligible quotas even though no quotas specified but Totalquotaexists.'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 7) then
+            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 6) then
               @foundtopsurveyswithquota = true
             else
-              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 4)
+              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 3)
                 @foundtopsurveyswithquota = true
               else
                 #do nothing
@@ -1639,7 +1639,9 @@ require 'hmac-md5'
   else
   end
     
-    user.SurveysCompleted["TESTSURVEY"] = [0, Time.now, user.clickid, user.netid]
+    user.SurveysAttempted << 'TESTSURVEY'
+#    user.SurveysCompleted["TESTSURVEY"] = [0, Time.now, user.clickid, user.netid]
+    user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, user.netid]
     user.save
     
     redirect_to '/users/successful'
