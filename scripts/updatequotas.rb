@@ -1107,6 +1107,8 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 40) then  # 2.5% conversion rate i.e. 20 more after they were moved out of Fast converters
             toberankedsurvey.SurveyGrossRank = 700 - (toberankedsurvey.TCR * 100).to_i
             print "Assigned Safety survey to Horrible: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            puts
+            toberankedsurvey.TCR = 1.0 / @toberankedsurveyNumberofAttemptsSinceLastComplete
           else
           end
         else # not in 1-100 rank range
@@ -1127,6 +1129,8 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 20) then
             toberankedsurvey.SurveyGrossRank = 600 - (toberankedsurvey.TCR * 100).to_i
             print "Assigned Fast survey to Old Timer: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            puts
+            toberankedsurvey.TCR = 1.0 / @toberankedsurveyNumberofAttemptsSinceLastComplete
           else
           end
           
@@ -1654,7 +1658,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
 #          @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
       
           
-          if (toberankedsurvey.TCR > 0.05) then
+          if (toberankedsurvey.TCR >= 0.05) then
 
               toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
               print "Assigned OldTimer survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
