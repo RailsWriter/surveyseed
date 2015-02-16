@@ -1479,24 +1479,36 @@ require 'hmac-md5'
         @p2s_gender = "f"
       end
       
+      
+      p2s_hispanic = [0, 6729, 6730, 6898, 6900, 6901, 6902, 6903, 6904, 6905, 6906, 6907, 6908, 6909, 6910, '']
+      @p2s_hispanic = p2s_hispanic[user.ethnicity.to_i]
+      
+      p2s_employment_status = [0, 7007, 7008, 7006, 7006, 7013, 7013, 7012, 7011, 7009, 7010, 7009, '']
+      @p2s_employment_status = p2s_employment_status[user.householdcomp]
+      
+      
+      p2s_income_level = [0, 9089, 9089, 9089, 9071, 9072, 9088, 9073, 9087, 9074, 9086, 9090, 9075, 9091, 9076, 9092, 9077, 9093, 9078, 9094, 9079, 9080, 9081, 9082, 9085, 9084, 9084, '']
+      @p2s_income_level = p2s_income_level[user.householdincome.to_i]
+      
+      
+      p2s_race = [0, 10094, 10095, 10101, 10097, 10098, 10104, 10109, 10110, 10111, 10096, 10102, 10106, 10107, 10108, 10103, '']
+      @p2s_race = p2s_race[user.race.to_i]
+      
+      p2s_education_level = [0, 10157, 10157, 10157, 10158, 10163, 10159, 10160, 10161, 10165, 10162, 10164, '']
+      @p2s_education_level = p2s_education_level[user.eduation.to_i]
+
+
       # p2s additional values
 
       if user.country=="9" then 
-        @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP
+        @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race
       else
         if user.country=="6" then
-          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP
+          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level
         else
           if user.country=="5" then
-            @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP
+            @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level
           else
-            if user.country=="7" then
-              @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP
-            else
-              puts "*************************************** P2S: Find out why country code is not correctly set"
-              @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP
-              return
-            end
           end
         end
       end  
@@ -1541,13 +1553,11 @@ require 'hmac-md5'
           if user.country=="7" then
             @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_IN='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp.to_s
           else
-            puts "*************************************** UseRide: Find out why country code is not correctly set"
-            @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp.to_s
-            return
           end
         end
       end
     end    
+    
     
     @parsed_user_agent = UserAgent.parse(user.user_agent)
     
