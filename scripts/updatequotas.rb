@@ -2,7 +2,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'prod'
+flag = 'stag'
 
 
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
@@ -1007,6 +1007,8 @@ puts
             if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
               p "Found a toberankedsurvey with Conversion = 0"
               toberankedsurvey.Conversion = 700
+              toberankedsurvey.label = 'H: CPI<1.5 and TCR<0.5'
+              
             else
 
               toberankedsurvey.SurveyGrossRank = 601+(100-toberankedsurvey.Conversion)
@@ -1045,6 +1047,8 @@ puts
             if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
               p "Found a toberankedsurvey with Conversion = 0"
               toberankedsurvey.Conversion = 600
+              toberankedsurvey.label = 'OT: TCR<0.5'
+              
             else
             
               toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
@@ -1127,6 +1131,7 @@ puts
               toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100)
               print "Assigned New survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               toberankedsurvey.label = 'F: TCR>1'
+            
             else
             
                 toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100)
@@ -1147,11 +1152,20 @@ puts
             end
 
             if (@GCR < 0.01) then
-  
-              toberankedsurvey.SurveyGrossRank = 500-(100*@GCR)
-              print "Assigned NEW/GCR>=0.01 survey to GCR<0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-              puts
-              toberankedsurvey.label = 'GCR<0.01'
+              
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                toberankedsurvey.Conversion = 500
+                print "Assigned a GCR>=0.01 to GCR<0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts   
+                toberankedsurvey.label = 'GCR<0.1: GCR changed in GCR>=0.01'
+                
+              else
+    
+                toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
+                print "Assigned a Try More to GCR<0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts   
+                toberankedsurvey.label = 'GCR<0.1: GCR changed in GCR>=0.01'
+              end        
               
             else # GCR>=0.01
       
@@ -1159,15 +1173,15 @@ puts
                   
                   if (@GCR >= 1) then
                     toberankedsurvey.SurveyGrossRank = 301
-                    print "Assigned GCR<0.01 to GCR>=0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    print "Assigned GCR<0.01 to TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts 
-                    toberankedsurvey.label = 'TM: Hits>10'
+                    toberankedsurvey.label = 'TM: Hits>10 & GCR >= 0.01'
                   else
     
                     toberankedsurvey.SurveyGrossRank = 400-(100*@GCR)
                     print "Assigned NEW/GCR>0.01 to Try More: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts    
-                    toberankedsurvey.label = 'TM: Hits>10'
+                    toberankedsurvey.label = 'TM: Hits>10 & GCR >= 0.01'
                   end
                
                 else # less than 10 hits
@@ -1295,25 +1309,47 @@ puts
         
               # do nothing - let it get 20 hits. Reposition for updated GCR
              
-              if (@GCR >= 1) then
-                toberankedsurvey.SurveyGrossRank = 301
-                print "Repositioned TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                puts
-                toberankedsurvey.label = 'TM: Repositioned'
-                 
-              else
+              if (@GCR >= 0.01) then
                 
-                toberankedsurvey.SurveyGrossRank = 400-(100*@GCR)
-                print "Repositioned TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                puts    
-                toberankedsurvey.label = 'TM: Repositioned'
-              end
+                if (@GCR >= 1) then
+                  toberankedsurvey.SurveyGrossRank = 301
+                  print "Repositioned TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  puts
+                  toberankedsurvey.label = 'TM: Repositioned'
+                 
+                else
+                
+                  toberankedsurvey.SurveyGrossRank = 400-(100*@GCR)
+                  print "Repositioned TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  puts    
+                  toberankedsurvey.label = 'TM: Repositioned'
+                end
+                
+              else # GCR changed to <= 0.01
+                
+                if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                  toberankedsurvey.Conversion = 500
+                  print "Assigned a Try More to GCR<0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  puts   
+                  toberankedsurvey.label = 'GCR<0.1: GCR changed in TM'
+                  
+                else
+      
+                  toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
+                  print "Assigned a Try More to GCR<0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  puts   
+                  toberankedsurvey.label = 'GCR<0.1: GCR changed in TM'
+                end
+                
+               end # @GCR values 
                 
             else # No. of hits > 20
         
               if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                 p "Found a toberankedsurvey with Conversion = 0"
                 toberankedsurvey.Conversion = 700
+                toberankedsurvey.label = 'H: Hits>20, TCR=0'
+                
               else
       
                 toberankedsurvey.SurveyGrossRank = 601+(100-toberankedsurvey.Conversion)
@@ -1447,8 +1483,8 @@ puts
           if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.05)
             
             if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-              p "Found a toberankedsurvey with Conversion = 0"
               toberankedsurvey.Conversion = 600
+              toberankedsurvey.label = 'OT/B: 0<TCR<0.05'
             
             else
 
@@ -1493,6 +1529,7 @@ puts
                     toberankedsurvey.SurveyGrossRank = 700
                     print "Assigned New/GCR<0.01 survey rank to Horrible: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts
+                    toberankedsurvey.label = 'H: From GCR<0.01'
                   
                   else
   
@@ -1510,6 +1547,7 @@ puts
                     toberankedsurvey.SurveyGrossRank = 500
                     print "Repositioned New/GCR<0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts
+                    toberankedsurvey.label = 'GCR<0.01: Repositioned'
               
                   else
                 
@@ -1661,7 +1699,7 @@ puts
         else # not in 301-400 rank range
         end # not in 301-400 rank range
       
-        # OldTimer + Bad 501-600
+        # Bad 501-600
         if (500 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 600) then
           
           # These are surveys that were good earlier but have fizzled to 0 < TCR < 0.05. The bad converters with TCR < 0.05 are also here. Ordered by Conversion. If their TCR becomes > 0.5 move them to Fast.
@@ -1670,6 +1708,7 @@ puts
 
             toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100)
             print "Assigned OldTimer survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            toberankedsurvey.label = 'F: TCR>0.05 in B'
           else
           end
             
@@ -1681,6 +1720,7 @@ puts
               toberankedsurvey.SurveyGrossRank = 600
               print "OT/B: Repositioned: ", toberankedsurvey.SurveyGrossRank
               puts
+              toberankedsurvey.label = 'OT/B: Repositioned'
               
             else
             
@@ -1792,19 +1832,49 @@ puts
           if (toberankedsurvey.CompletedBy.length == 0) then
             #Reposition according to latest Conversion
             
-            if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-              toberankedsurvey.SurveyGrossRank = 700
-              
+            if toberankedsurvey.CPI > 0 then
+              @GCR = toberankedsurvey.GEPC / toberankedsurvey.CPI
             else
-            
-              toberankedsurvey.SurveyGrossRank = 601+(100-toberankedsurvey.Conversion)
-              print "Updated existing Horrible survey rank to: ", toberankedsurvey.SurveyGrossRank
-              puts
-              toberankedsurvey.label = 'H: Repositioned'
+              @GCR = toberankedsurvey.GEPC
             end
+                     
+            @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
+            
+            if (@GCR>= 0.01) && (@toberankedsurveyNumberofAttemptsSinceLastComplete < 20) && (toberankedsurvey.CPI > 1.49) then
+                
+              if (@GCR >= 1) then
+                toberankedsurvey.SurveyGrossRank = 301
+                print "Assigned H to TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts 
+                toberankedsurvey.label = 'TM: Hits>10 & GCR>=0.01'
+              else
+
+                toberankedsurvey.SurveyGrossRank = 400-(100*@GCR)
+                print "Assigned H to Try More: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts    
+                toberankedsurvey.label = 'TM: Hits>10 & GCR>=0.01'
+              end         
+            
+            else     
+            
+              if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                toberankedsurvey.SurveyGrossRank = 700
+                toberankedsurvey.label = 'H: Repositioned'
+              
+              else
+            
+                toberankedsurvey.SurveyGrossRank = 601+(100-toberankedsurvey.Conversion)
+                print "Updated existing Horrible survey rank to: ", toberankedsurvey.SurveyGrossRank
+                puts
+                toberankedsurvey.label = 'H: Repositioned'
+              end
+            
+            end # GCR, ALC, CPI conditions
             
           else
-          end
+          end # no of completes = 0
+            
+          
             
           
     
