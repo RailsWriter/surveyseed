@@ -1479,7 +1479,7 @@ puts
                  
               else
                 
-                toberankedsurvey.SurveyGrossRank = 300-(100*GCR)
+                toberankedsurvey.SurveyGrossRank = 300-(100*@GCR)
                 print "Assigned GCR<0.1 to GCR>=0.1: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 puts
                 toberankedsurvey.label = 'GCR>=0.1: GCR changed'
