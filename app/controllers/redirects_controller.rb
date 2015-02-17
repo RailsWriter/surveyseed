@@ -62,7 +62,6 @@ class RedirectsController < ApplicationController
     end
     
     
-    # SurveyQuotaCalcTypeID is GEEPC value used to determine lowering of rank
     # SurveyExactRank is a counter for failures+OQ
     # SampleTypeID is used to count OQ incidences
     
@@ -123,8 +122,19 @@ class RedirectsController < ApplicationController
             @user.SurveysAttempted << 'P2S-2'
             # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
             
+            if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
+              @net_name = "SuperSonic"
+            else
+            end
+            
+            if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
+              @net_name = "Fyber"
+            else
+            end
+            
+            
 #            @user.SurveysCompleted[Time.now] = ['$1.25', 'P2S', @user.clickid, @user.netid]
-            @user.SurveysCompleted[params[:PID]] = [Time.now, 'P2S', @user.clickid, @user.netid]
+            @user.SurveysCompleted[params[:PID]] = [Time.now, 'P2S', @user.clickid, @net_name]
             @user.save
             
             print "*************** User.netid is: ", @user.netid
@@ -179,7 +189,19 @@ class RedirectsController < ApplicationController
             @user.SurveysAttempted << params[:tsfn]+'-2'
             
             # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
-            @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], @user.clickid, @user.netid]
+            
+            if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
+              @net_name = "SuperSonic"
+            else
+            end
+            
+            if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
+              @net_name = "Fyber"
+            else
+            end
+            
+            
+            @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], @user.clickid, @net_name]
             @user.save
             
             
@@ -188,7 +210,7 @@ class RedirectsController < ApplicationController
             print '************ Successfully completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
             puts
             # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
-            @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @user.netid]
+            @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
 
 
 
@@ -454,7 +476,7 @@ class RedirectsController < ApplicationController
           
             # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
 
-            @survey.SampleTypeID = @survey.SampleTypeID + 1 # counts number of OQ incidents for a survey
+#            @survey.SampleTypeID = @survey.SampleTypeID + 1 # counts number of OQ incidents for a survey
             @survey.OverQuotaCount = @survey.OverQuotaCount + 1
 
             @survey.SurveyExactRank = @survey.SurveyExactRank + 1

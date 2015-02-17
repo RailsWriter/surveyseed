@@ -403,7 +403,6 @@ require 'hmac-md5'
     
   end
   
-  
   def race_US
     
 #    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
@@ -621,8 +620,6 @@ require 'hmac-md5'
     end
     
   end
-  
-  
 
   def ranksurveysforuser (session_id)
 
@@ -649,16 +646,20 @@ require 'hmac-md5'
         net = Network.find_by netid: @netid
         user.currentpayout = net.payout
         if (net.status == "EXTTEST") then
-          case (net.testcompletes.length)
-            when 0..9
-              net.testcompletes[user.clickid] = [1]
-              redirect_to '/users/techtrendssamplesurvey'
-              return
-            when 10..100000000
-              puts "*************************** More than 10 EXTTEST attempts"
-              redirect_to '/users/testattemptsmaxd'
-              return
-          end
+          redirect_to '/users/techtrendssamplesurvey'
+          return
+                    
+#          case (net.testcompletes.length)
+#            when 0..9
+#              net.testcompletes[user.clickid] = [1]
+#              redirect_to '/users/techtrendssamplesurvey'
+#              return
+#            when 10..100000000
+#              puts "*************************** More than 10 EXTTEST attempts"
+#              redirect_to '/users/testattemptsmaxd'
+#              return
+#          end
+
         else
           if (net.status == "INACTIVE") then
             p '****************************** ACCESS FROM AN INACTIVE NETWOK DENIED'
@@ -672,7 +673,17 @@ require 'hmac-md5'
                 @poorconversion = true
               else
                 # MUST BE AN ACTIVE NETWORK -> Continue
-              end
+                if net.Flag1 !=nil then
+                  if net.Flag1.to_i > 0 then
+                    net.Flag1 = (net.Flag1.to_i - 1).to_s
+                    net.save
+                    redirect_to '/users/techtrendssamplesurvey'
+                    return
+                  else
+                  end
+                else
+                end
+             end
             end
           end
         end
@@ -1648,10 +1659,23 @@ require 'hmac-md5'
     
   else
   end
+  
+  
+  # Save Test completed information
+  
+  if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
+    @net_name = "SuperSonic"
+  else
+  end
+  
+  if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
+    @net_name = "Fyber"
+  else
+  end
     
     user.SurveysAttempted << 'TESTSURVEY'
 #    user.SurveysCompleted["TESTSURVEY"] = [0, Time.now, user.clickid, user.netid]
-    user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, user.netid]
+    user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
     user.save
     
     redirect_to '/users/successful'

@@ -882,7 +882,7 @@ puts
               end while NewSurveyStatistics.code != 200
         
 
-              # For the NEW survey - save GEPC. It will be used to compute GCR. Also set SurveyExactRank and SampleTypeID to keep track of unsuccessful and OQ attempts respectively.
+              # For the NEW survey - save GEPC. It will be used to compute GCR. Also set SurveyExactRank to keep track of unsuccessful/OQ/success attempts.
         
               if NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] != nil then
                 @newsurvey.GEPC = NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
@@ -892,7 +892,7 @@ puts
               
               
               @newsurvey.SurveyExactRank = 0
-              @newsurvey.SampleTypeID = 0
+#              @newsurvey.SampleTypeID = 0
         
               
               # Assign a GCR to the new survey since we now have its CPI from SupplierLink
