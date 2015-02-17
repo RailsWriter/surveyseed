@@ -13,7 +13,7 @@ Survey.all.each do |survey|
   # TM -> From ranks 401-500 to 301-400
   if (400 < survey.SurveyGrossRank) && (survey.SurveyGrossRank <= 500) then  
     survey.SurveyGrossRank = survey.SurveyGrossRank - 100
-    print "Ranked survey TM to 401-500: ", survey.SurveyNumber
+    print "Ranked survey TM to 301-400: ", survey.SurveyNumber
     puts
   else
   end
