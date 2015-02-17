@@ -4,7 +4,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'stag'
+flag = 'prod'
 
 
 # @initialrankingapproach = 'ConversionsFirst' # set to 'EEPCFirst' or 'ConversionsFirst'
@@ -144,13 +144,13 @@ begin
           
           if (@GCR >= 1) then
             @survey.SurveyGrossRank = 201
-            print "Assigned NEW/GCR>=0.01 survey rank: ", @survey.SurveyGrossRank, "GEPC= ", @survey.GEPC. "GCR= ", @GCR
+            print "Assigned NEW/GCR>=0.01 survey rank: ", @survey.SurveyGrossRank, "GEPC= ", @survey.GEPC, "GCR= ", @GCR
             puts
              
           else
             
             @survey.SurveyGrossRank = 300-(100*@GCR)
-            print "Assigned NEW/GCR>=0.01 survey rank: ", @survey.SurveyGrossRank, " GEPC = ", @survey.GEPC. "GCR= ", @GCR
+            print "Assigned NEW/GCR>=0.01 survey rank: ", @survey.SurveyGrossRank, " GEPC = ", @survey.GEPC, "GCR= ", @GCR
             puts
           end
           
@@ -165,10 +165,11 @@ begin
           else
           
             @survey.SurveyGrossRank = 401+(100-@survey.Conversion)
-            print "Assigned NEW/GCR<0.01 survey rank: ", @survey.SurveyGrossRank, " GEPC = ", @survey.GEPC. "GCR= ", @GCR
+            print "Assigned NEW/GCR<0.01 survey rank: ", @survey.SurveyGrossRank, " GEPC = ", @survey.GEPC, "GCR= ", @GCR
             puts
           end
           
+        else
         end          
           
           
@@ -414,21 +415,21 @@ begin
       
      
           #End of second if. Going through all (i)
-        end
-      else
-        # End of first if. This (i) survey is already in the database => nothing to do. Update script will take care of quota changes and removal.
-        # BUT this should never happen because once SupplierLink is created the survey is moved from OW to Allocation List
-        print 'This survey is already in database:', offerwallresponse["Surveys"][i]["SurveyNumber"]
-        puts
       end
-      # End of totalavailablesurveys (do loop)
-    end
-
-      timenow = Time.now
-  
-      print 'BuildSurveyStack: Time at end', timenow
+    else
+      # End of first if. This (i) survey is already in the database => nothing to do. Update script will take care of quota changes and removal.
+      # BUT this should never happen because once SupplierLink is created the survey is moved from OW to Allocation List
+      print 'This survey is already in database:', offerwallresponse["Surveys"][i]["SurveyNumber"]
       puts
-      if (timenow - starttime) > 1200 then 
+    end
+      # End of totalavailablesurveys (do loop)
+  end
+
+  timenow = Time.now
+  
+  print 'BuildSurveyStack: Time at end', timenow
+  puts
+  if (timenow - starttime) > 1200 then 
         print 'time elapsed since start =', (timenow - starttime), '- going to repeat immediately'
         puts
         timetorepeat = true
@@ -439,4 +440,4 @@ begin
         timetorepeat = true
       end
 
-    end while timetorepeat
+end while timetorepeat

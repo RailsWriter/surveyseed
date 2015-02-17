@@ -833,7 +833,7 @@ require 'hmac-md5'
           puts
           user.SurveysWithMatchingQuota << @surveynumber
           
-          if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 6) then
+          if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 5) then
             @foundtopsurveyswithquota = true
           else
             if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 3)
@@ -1344,7 +1344,7 @@ require 'hmac-md5'
             puts '****************** Adding the survey to the list of eligible surveys due to quota match'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 6) then
+            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 5) then
               @foundtopsurveyswithquota = true
             else
               if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 3)
@@ -1370,7 +1370,7 @@ require 'hmac-md5'
             puts '************* Adding survey to list of eligible quotas even though no quotas specified but Totalquotaexists.'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 6) then
+            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 5) then
               @foundtopsurveyswithquota = true
             else
               if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 3)
@@ -1481,33 +1481,33 @@ require 'hmac-md5'
       
       
       p2s_hispanic = [0, 6729, 6730, 6898, 6900, 6901, 6902, 6903, 6904, 6905, 6906, 6907, 6908, 6909, 6910, '']
-      @p2s_hispanic = p2s_hispanic[user.ethnicity.to_i]
+      @p2s_hispanic = p2s_hispanic[user.ethnicity.to_i].to_s
       
       p2s_employment_status = [0, 7007, 7008, 7006, 7006, 7013, 7013, 7012, 7011, 7009, 7010, 7009, '']
-      @p2s_employment_status = p2s_employment_status[user.householdcomp]
+      @p2s_employment_status = p2s_employment_status[user.householdcomp].to_s
       
       
       p2s_income_level = [0, 9089, 9089, 9089, 9071, 9072, 9088, 9073, 9087, 9074, 9086, 9090, 9075, 9091, 9076, 9092, 9077, 9093, 9078, 9094, 9079, 9080, 9081, 9082, 9085, 9084, 9084, '']
-      @p2s_income_level = p2s_income_level[user.householdincome.to_i]
+      @p2s_income_level = p2s_income_level[user.householdincome.to_i].to_s
       
       
       p2s_race = [0, 10094, 10095, 10101, 10097, 10098, 10104, 10109, 10110, 10111, 10096, 10102, 10106, 10107, 10108, 10103, '']
-      @p2s_race = p2s_race[user.race.to_i]
+      @p2s_race = p2s_race[user.race.to_i].to_s
       
       p2s_education_level = [0, 10157, 10157, 10157, 10158, 10163, 10159, 10160, 10161, 10165, 10162, 10164, '']
-      @p2s_education_level = p2s_education_level[user.eduation.to_i]
+      @p2s_education_level = p2s_education_level[user.eduation.to_i].to_s
 
 
       # p2s additional values
 
-      if user.country=="9" then 
+      if user.country=="9" then
         @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race
       else
         if user.country=="6" then
-          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level
+          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level
         else
           if user.country=="5" then
-            @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level
+            @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level
           else
           end
         end

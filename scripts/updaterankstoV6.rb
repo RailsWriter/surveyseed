@@ -10,15 +10,22 @@ Survey.all.each do |survey|
   else
   end
   
-  # TM -> Rank 301-400 from 401-500
-  if (300 < survey.SurveyGrossRank) && (survey.SurveyGrossRank <= 400) then  
+  # TM -> From ranks 401-500 to 301-400
+  if (400 < survey.SurveyGrossRank) && (survey.SurveyGrossRank <= 500) then  
     survey.SurveyGrossRank = survey.SurveyGrossRank - 100
     print "Ranked survey TM to 401-500: ", survey.SurveyNumber
     puts
   else
   end
-  
-  GEPC=5 -> Re-rank 901-1000 in to 401-500
+
+  survey.save
+  print "Survey: ", survey.SurveyNumber
+  puts
+end
+
+Survey.all.each do |survey|  
+
+  # GEPC=5 -> Re-rank 901-1000 in to 401-500
   if (900 < survey.SurveyGrossRank) && (survey.SurveyGrossRank <= 1000) then  
     survey.SurveyGrossRank = survey.SurveyGrossRank - 500
     print "Ranked survey 901-1000 to 401-500: ", survey.SurveyNumber

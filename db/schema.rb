@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150212061538) do
+ActiveRecord::Schema.define(version: 20150216085720) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 20150212061538) do
     t.integer  "OverQuotaCount"
     t.integer  "NumberofAttemptsAtLastComplete"
     t.float    "TCR"
+    t.string   "label"
   end
 
   create_table "us_geos", force: true do |t|

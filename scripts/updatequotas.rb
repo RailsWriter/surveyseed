@@ -2,7 +2,7 @@ require 'httparty'
 
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
-flag = 'stag'
+flag = 'prod'
 
 
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
@@ -20,9 +20,6 @@ else
     p "******** QUOTA UPDATE: SET base URL correctly *******"
   end
 end
-
-print " ************* QUOTA UPDATE: base url is", base_url
-puts
 
 
 # Initialize timer outside of the repeat cycle to maintain ranking frequency
@@ -385,7 +382,7 @@ begin
           rescue HTTParty::Error => e
           puts 'HttParty::Error '+ e.message
           retry
-        end while @SurveyQuotas.code != 200
+      end while @SurveyQuotas.code != 200
 
         # Save quotas information for each survey
   
@@ -408,7 +405,7 @@ begin
         print "********************* There is NO remaining allocation for this EXISTING survey number: ", @surveynumber
         puts
         
-      end # end for total remaining in survey allocations 
+        end # end for total remaining in survey allocations 
       
       end # do the survey block
       
@@ -416,36 +413,18 @@ begin
         # Survey number does not exist. This is a NEW entry from allocation, get qualifications, quotas, and supplierlinks for it and create as new if the survey meets our biz requirements of countrylanguage, studytype, etc.        
 
  
- if (((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 7) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9)) && 
-   ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 11) ||  
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || 
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23))) then
-   
+        if (((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 7) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9)) && ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 11) ||  (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23))) then
       
-print '---------------------> Matches: CountryLanguageID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 7) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9))
-puts
+          print '---------------------> Matches: CountryLanguageID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) ||      (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 7) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9))
+          puts
 
-print '---------------------> Matches: StudyTypeID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 11) ||
-   (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23))
-  
-   puts
+          print '---------------------> Matches: StudyTypeID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 11) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23))
+puts
    
-   print 'Matches: SurveyNumber is ', @surveynumber
-   puts
-   print '----------------->Matches:  StudyTypeID = ', IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"]
-   puts
+         print 'Matches: SurveyNumber is ', @surveynumber
+         puts
+         print '----------------->Matches:  StudyTypeID = ', IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"]
+         puts
       
          
         @newsurvey = Survey.new
@@ -823,8 +802,7 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               @newsurvey.SurveyStillLive = @NewSurveyQuotas["SurveyStillLive"]
               @newsurvey.SurveyStatusCode = @NewSurveyQuotas["SurveyStatusCode"]
               @newsurvey.SurveyQuotas = @NewSurveyQuotas["SurveyQuotas"]
-              
-              
+                           
         
             # Get Supplierlinks for the survey
     
@@ -957,17 +935,19 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               
               # Finally save the new survey information in the database
               @newsurvey.save!
-            end
+            end # SupplierLinks Available
  
-          else
+          else # TotalNumberOfAllocations for the new survey
+            
             # This NEW survey does not have any total remaining completes. It is like the survey is not live for us.
             # We may not save it locally. DO NOTHING.
             print "********************* There is NO remaining allocation for this NEW survey number: ", IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"]
             puts
             
-          end
+          end # TotalNumberOfAllocations for the new survey
           
-          else
+        else # download a new survey
+          
             print '******************************** This survey does not meet our biz requirements: ', IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"]
             puts
             
@@ -982,7 +962,8 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
                puts
             
             
-          end # download a new survey if the new survey qualifies for being suitable from countrylanguageID, studytypeID, and BidLOI criteria
+        end # download a new survey if the new survey qualifies for being suitable from countrylanguageID, studytypeID, and BidLOI criteria
+
 
       end # if @surveynumber exists  
       print '******************* Updating totalavailablesurveys at count i = ', i   
@@ -993,8 +974,9 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
   
       # RANK the stack after every 20 minutes    
            
+      if (i == 1000) || ((Time.now - @lastrankingtime) >= 300000) then    
       
-      if (i == 1) || ((Time.now - @lastrankingtime) >= 300) then    
+#      if (i == 1) || ((Time.now - @lastrankingtime) >= 300) then    
           
         @lastrankingtime = Time.now
         
@@ -1025,16 +1007,21 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             end
             
           else
+            
+            toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100)
+            print "Reposition Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            toberankedsurvey.label = 'S: TCR>1'
+            
           end
           
-        else # not in 1-100 rank range
-        end # not in 1-100 rank range
+        else # not in 1-95 rank range
+        end # not in 1-95 rank range
         
         # Custom: 96-100
         if (95 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 100) then
         # do nothing. surveys are put here manually to give them quick exposure to traffic
         else
-        end  
+        end  # not in 96-100 range
       
         # Fast Converters 101-200        
         if (100 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 200) then
@@ -1058,6 +1045,11 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             end
             
           else
+            
+            toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100)
+            print "Reposition Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+            toberankedsurvey.label = 'F: TCR>1'
+            
           end
           
           
@@ -1122,12 +1114,12 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             
             if (toberankedsurvey.CPI > 1.49) then
             
-              toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
+              toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100)
               print "Assigned New survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               toberankedsurvey.label = 'F: TCR>1'
             else
             
-                toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
+                toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100)
                 print "Assigned Top survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 toberankedsurvey.label = 'S: TCR>1 & CPI<1.5'
               
@@ -1174,14 +1166,14 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
                                
                   if (@GCR >= 1) then
                     toberankedsurvey.SurveyGrossRank = 201
-                    print "Assigned New/GCR>=0.01 to New/GCR>=0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    print "Repositioned New/GCR>=0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts 
                     toberankedsurvey.label = 'NEW/GCR>0.01: Repositioned'
                  
                   else
                   
                     toberankedsurvey.SurveyGrossRank = 300-(100*@GCR)
-                    print "Assigned NEW/GCR>0.01 to NEW/GCR>0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    print "Repositioned NEW/GCR>0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts    
                     toberankedsurvey.label = 'NEW/GCR>0.01: Repositioned'
                   end
@@ -1295,14 +1287,14 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
              
               if (@GCR >= 1) then
                 toberankedsurvey.SurveyGrossRank = 301
-                print "Assigned TM to TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                puts 
+                print "Repositioned TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts
                 toberankedsurvey.label = 'TM: Repositioned'
                  
               else
                 
                 toberankedsurvey.SurveyGrossRank = 400-(100*@GCR)
-                print "Assigned TM to TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                print "Repositioned TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 puts    
                 toberankedsurvey.label = 'TM: Repositioned'
               end
@@ -1427,13 +1419,13 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           
             if (toberankedsurvey.CPI > 1.49) then
           
-              toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
+              toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100)
               print "Assigned GCR<0.01 survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               toberankedsurvey.label = 'F: TCR>0.05 from GCR>=0.01'
           
             else   
 
-                toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
+                toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100)
                 print "Assigned GCR<0.01 survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 toberankedsurvey.label = 'S: TCR>0.05 from GCR<0.01'
             
@@ -1488,8 +1480,9 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
                 if (toberankedsurvey.SurveyExactRank > 10) then
             
                   if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-                    p "Found a toberankedsurvey with Conversion = 0"
                     toberankedsurvey.SurveyGrossRank = 700
+                    print "Assigned New/GCR<0.01 survey rank to Horrible: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    puts
                   
                   else
   
@@ -1505,11 +1498,13 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
                 
                   if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                     toberankedsurvey.SurveyGrossRank = 500
+                    print "Repositioned New/GCR<0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    puts
               
                   else
                 
                     toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
-                    print "Assigned New/GCR<0.01 survey rank to Horrible: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    print "Repositioned New/GCR<0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts    
                     toberankedsurvey.label = 'GCR<0.01: Repositioned'
                   end         
@@ -1663,10 +1658,10 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           
           if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.05) then
 
-              toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100)
-              print "Assigned OldTimer survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-            else
-            end
+            toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100)
+            print "Assigned OldTimer survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+          else
+          end
             
             
           if (toberankedsurvey.CompletedBy.length == 0) then
@@ -1674,11 +1669,13 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
             
             if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
               toberankedsurvey.SurveyGrossRank = 600
+              print "OT/B: Repositioned: ", toberankedsurvey.SurveyGrossRank
+              puts
               
             else
             
-              toberankedsurvey.SurveyGrossRank = 601+(100-toberankedsurvey.Conversion)
-              print "Updated existing Horrible survey rank to: ", toberankedsurvey.SurveyGrossRank
+              toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
+              print "OT/B: Repositioned: ", toberankedsurvey.SurveyGrossRank
               puts
               toberankedsurvey.label = 'OT/B: Repositioned'
             end
@@ -1796,6 +1793,9 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
               toberankedsurvey.label = 'H: Repositioned'
             end
             
+          else
+          end
+            
           
     
 #          if toberankedsurvey.CompletedBy.length > 0 then
@@ -1871,38 +1871,37 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
         
       else
         # i is not 1 and it has not been 20 mins since last ranking, so do nothing
-      end
+      end # time for ranking
       
       print "******************** Last ranking time: ", @lastrankingtime
       puts
            
 
-    end # do loop of totalavailablesurveys (i)
+  end # do loop of totalavailablesurveys (i)
     
-    # Delete surveys which are neither custom entered nor on the allocation list but are in local database
+  # Delete surveys which are neither custom entered nor on the allocation list but are in local database
     
+  surveysnottobedeleted = Array.new
+  listofsurveynumbers = Array.new
+  surveystobedeleted = Array.new
     
-    surveysnottobedeleted = Array.new
-    listofsurveynumbers = Array.new
-    surveystobedeleted = Array.new
-    
-    Survey.all.each do |oldsurvey|
-      listofsurveynumbers << oldsurvey.SurveyNumber
-#      print 'Investigating Survey Number from the dbase: ', listofsurveynumbers
-#      puts
+  Survey.all.each do |oldsurvey|
+    listofsurveynumbers << oldsurvey.SurveyNumber
+    #      print 'Investigating Survey Number from the dbase: ', listofsurveynumbers
+    #      puts
       
-      (0..totalavailablesurveys).each do |k|
-        if IndexofAllocatedSurveys["SupplierAllocationSurveys"][k]["SurveyNumber"] == oldsurvey.SurveyNumber then
-#          print 'Marked a survey to be ALIVE: ', oldsurvey.SurveyNumber
-#          puts     
+    (0..totalavailablesurveys).each do |k|
+      if IndexofAllocatedSurveys["SupplierAllocationSurveys"][k]["SurveyNumber"] == oldsurvey.SurveyNumber then
+          #          print 'Marked a survey to be ALIVE: ', oldsurvey.SurveyNumber
+          #          puts     
           surveysnottobedeleted << oldsurvey.SurveyNumber
-         else
-           # do nothing
-         end # if
-#         print 'looping list of allocationsurveys, count:', k
-#         puts
-       end # do k
-     end # do j
+        else
+          # do nothing
+        end # if
+        #         print 'looping list of allocationsurveys, count:', k
+        #         puts
+      end # do k
+    end # do j
      
      print '******************** List of all surveys in DB', listofsurveynumbers
      puts
@@ -1923,17 +1922,17 @@ print '---------------------> Matches: StudyTypeID match is True or False: ', ((
           puts
           oldsurvey.delete
         end
-      end
-    end # do21 oldsurvey
+    end
+  end # do21 oldsurvey
     
-    print 'Surveys deleted: ', surveystobedeleted
-    puts
+  print 'Surveys deleted: ', surveystobedeleted
+  puts
     
 
-    timenow = Time.now
-    print 'Time at end', timenow
-    puts
-    if (timenow - starttime) > 1800 then 
+  timenow = Time.now
+  print 'Time at end', timenow
+  puts
+  if (timenow - starttime) > 1800 then 
       print 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to repeat immediately'
       puts
       timetorepeat = true
