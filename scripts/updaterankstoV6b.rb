@@ -4,6 +4,7 @@ Survey.all.each do |survey|
   
   if survey.GEPC == nil then
     survey.GEPC = 0.0
+    puts "Found nil"
   else
   end
     
