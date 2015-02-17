@@ -121,8 +121,12 @@ begin
           end while SurveyStatistics.code != 200
       
 
+          if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] != nil then
+            survey.GEPC = SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+          else
+            survey.GEPC = 0.0
+          end
           
-          survey.GEPC = SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
           survey.Conversion = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
                     
           print '******************* Effective GEPC is: ', survey.GEPC, ' Conversion is: ', survey.Conversion
@@ -880,7 +884,13 @@ puts
 
               # For the NEW survey - save GEPC. It will be used to compute GCR. Also set SurveyExactRank and SampleTypeID to keep track of unsuccessful and OQ attempts respectively.
         
-              @newsurvey.GEPC = NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+              if NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] != nil then
+                @newsurvey.GEPC = NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+              else
+                @newsurvey.GEPC = 0.0
+              end
+              
+              
               @newsurvey.SurveyExactRank = 0
               @newsurvey.SampleTypeID = 0
         
