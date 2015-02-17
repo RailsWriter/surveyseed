@@ -974,7 +974,7 @@ puts
   
       # RANK the stack after every 20 minutes    
            
-      if (i == 1000) || ((Time.now - @lastrankingtime) >= 300000) then    
+      if (i == 30000) || ((Time.now - @lastrankingtime) >= 300000) then    
       
 #      if (i == 1) || ((Time.now - @lastrankingtime) >= 300) then    
           
