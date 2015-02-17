@@ -128,7 +128,12 @@ begin
         
         # For the NEW survey - Store GEPC. Also set SurveyExactRank and SampleTypeID to keep track of unsuccessful attempts and OQ instances respectively.
         
-        @survey.GEPC = SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+        if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] != nil then
+          @survey.GEPC = SurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
+        else
+          @survey.GEPC = 0.0
+        end
+          
         @survey.SurveyExactRank = 0
         @survey.SampleTypeID = 0
         
