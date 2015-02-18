@@ -1060,9 +1060,9 @@ puts
             
           else
             
-            toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100)
+            toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
             print "Reposition Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-            toberankedsurvey.label = 'F: TCR>1'
+            toberankedsurvey.label = 'F: TCR>1 Repositioned'
             
           end
           
@@ -1128,13 +1128,13 @@ puts
             
             if (toberankedsurvey.CPI > 1.49) then
             
-              toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100)
+              toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
               print "Assigned New survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               toberankedsurvey.label = 'F: TCR>1'
             
             else
             
-                toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100)
+                toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
                 print "Assigned Top survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 toberankedsurvey.label = 'S: TCR>1 & CPI<1.5'
               
@@ -1281,13 +1281,13 @@ puts
             
             if (toberankedsurvey.CPI > 1.49) then
             
-              toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100)
+              toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
               print "Assigned Try more survey to Top: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               toberankedsurvey.label = 'F: TCR>0.5'
           
             else   
             
-                toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100)
+                toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
                 print "Assigned Try more survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 toberankedsurvey.label = 'S: TCR>0.5'
               
@@ -1465,13 +1465,13 @@ puts
           
             if (toberankedsurvey.CPI > 1.49) then
           
-              toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100)
+              toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
               print "Assigned GCR<0.01 survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               toberankedsurvey.label = 'F: TCR>0.05 from GCR>=0.01'
           
             else   
 
-                toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100)
+                toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
                 print "Assigned GCR<0.01 survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 toberankedsurvey.label = 'S: TCR>0.05 from GCR<0.01'
             
@@ -1706,7 +1706,7 @@ puts
           
           if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.05) then
 
-            toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100)
+            toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
             print "Assigned OldTimer survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
             toberankedsurvey.label = 'F: TCR>0.05 in B'
           else
@@ -1807,13 +1807,13 @@ puts
             
             if toberankedsurvey.CPI > 1.49 then
 
-              toberankedsurvey.SurveyGrossRank = 200 - (toberankedsurvey.TCR * 100).to_i
+              toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100).to_i
               print "Assigned Horrible survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               toberankedsurvey.label = 'F: TCR>0.05 from H'
               
             else
               
-              toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100).to_i
+              toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100).to_i
               print "Assigned Horrible survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
               toberankedsurvey.label = 'S: TCR>0.05 from H'
             end
