@@ -133,7 +133,6 @@ class RedirectsController < ApplicationController
             end
             
             
-#            @user.SurveysCompleted[Time.now] = ['$1.25', 'P2S', @user.clickid, @user.netid]
             @user.SurveysCompleted[params[:PID]] = [Time.now, 'P2S', @user.clickid, @net_name]
             @user.save
             
@@ -608,7 +607,6 @@ class RedirectsController < ApplicationController
         p 'QTerm'
  
         if params[:PID] == 'test' then
-  #          @user = User.last
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=1'
         else
                   
@@ -621,6 +619,19 @@ class RedirectsController < ApplicationController
           @user.SurveysAttempted << params[:tsfn]+'-5'
           @user.black_listed = true
           @user.save
+          
+          
+          @survey = Survey.find_by SurveyNumber: params[:tsfn]
+          
+          # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
+
+          @survey.SurveyExactRank = @survey.SurveyExactRank + 1
+          print '***************************** Unsuccessful attempts count raised by 1 following a TERM for survey number: ', params[:tsfn]
+          puts
+            
+          @survey.save
+                    
+          
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=2'
         end
         

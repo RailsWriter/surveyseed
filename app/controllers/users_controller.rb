@@ -640,7 +640,7 @@ require 'hmac-md5'
       # If this is a TEST e.g. with a network provider then route user to run the standard test survey.
 
       @netid = user.netid
-      @poorconversion=false
+      @poorconversion = false
       
       if Network.where(netid: @netid).exists? then
         net = Network.find_by netid: @netid
@@ -648,18 +648,6 @@ require 'hmac-md5'
         if (net.status == "EXTTEST") then
           redirect_to '/users/techtrendssamplesurvey'
           return
-                    
-#          case (net.testcompletes.length)
-#            when 0..9
-#              net.testcompletes[user.clickid] = [1]
-#              redirect_to '/users/techtrendssamplesurvey'
-#              return
-#            when 10..100000000
-#              puts "*************************** More than 10 EXTTEST attempts"
-#              redirect_to '/users/testattemptsmaxd'
-#              return
-#          end
-
         else
           if (net.status == "INACTIVE") then
             p '****************************** ACCESS FROM AN INACTIVE NETWOK DENIED'
@@ -673,6 +661,7 @@ require 'hmac-md5'
                 @poorconversion = true
               else
                 # MUST BE AN ACTIVE NETWORK -> Continue
+                @poorconversion = false
                 if net.Flag1 !=nil then
                   if net.Flag1.to_i > 0 then
                     net.Flag1 = (net.Flag1.to_i - 1).to_s
@@ -1661,7 +1650,17 @@ require 'hmac-md5'
   end
   
   
-  # Save Test completed information
+  
+  # Keep a count of Test completes on each Network
+  
+  puts "*************** Adding Testcompletes to cmpletes on this network"
+  
+  @net = Network.find_by netid: user.netid
+  @net.completes[Time.now]="TEST"
+  @net.save
+  
+  
+  # Save Test completed information by user
   
   if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
     @net_name = "SuperSonic"
@@ -1674,7 +1673,6 @@ require 'hmac-md5'
   end
     
     user.SurveysAttempted << 'TESTSURVEY'
-#    user.SurveysCompleted["TESTSURVEY"] = [0, Time.now, user.clickid, user.netid]
     user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
     user.save
     
