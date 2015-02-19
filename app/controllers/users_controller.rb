@@ -795,7 +795,7 @@ require 'hmac-md5'
       
       puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after first 10 top ranked surveys with quota are found"
       
-      @foundtopsurveyswithquota = false   # false means not finished finding top surveys (set it to true if testing p2s)
+      @foundtopsurveyswithquota = true   # false means not finished finding top surveys (set it to true if testing p2s)
       
       (0..user.QualifiedSurveys.length-1).each do |j| #1
           
