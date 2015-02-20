@@ -996,7 +996,7 @@ puts
           # Safety 1-95
           if (0 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 95) then
           
-            # Only low CPI TCR > 0.05 (fast converters) in this group. Surveys arrive in TCR order. If they do not perform move them to Horrible.
+            # Only low CPI TCR > 0.066 (fast converters) in this group. Surveys arrive in TCR order. If they do not perform move them to Horrible.
     
             if (toberankedsurvey.TotalRemaining == 0) then
           
@@ -1017,11 +1017,11 @@ puts
           
               @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
           
-              if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 20) then  # worst than 5% conversion rate i.e. 20 more after they were moved out of New
+              if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 15) then  # worst than 6.6% conversion rate i.e. 15 more after they were moved out of New
             
                 if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                   toberankedsurvey.SurveyGrossRank = 700
-                  toberankedsurvey.label = 'H: CPI<1.5 and TCR<0.5'
+                  toberankedsurvey.label = 'H: CPI<1.5 and TCR<0.066'
               
                 else
 
@@ -1029,7 +1029,7 @@ puts
                   print "Assigned Safety survey to Horrible: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts
                   toberankedsurvey.TCR = 1.0 / @toberankedsurveyNumberofAttemptsSinceLastComplete
-                  toberankedsurvey.label = 'H: CPI<1.5 and TCR<0.5'
+                  toberankedsurvey.label = 'H: CPI<1.5 and TCR<0.066'
                 end
             
               else
@@ -1040,6 +1040,7 @@ puts
                 toberankedsurvey.label = 'S: Repositioned'
             
               end
+            
             end # TotalRemaining
             
  
@@ -1055,7 +1056,7 @@ puts
           # Fast Converters 101-200        
           if (100 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 200) then
           
-            # Only high CPI and TCR > 0.05 (fast converters) in this group. Surveys arrive in TCR order. If they do not perform move them to OldTimers & Bad.          
+            # Only high CPI and TCR > 0.066 (fast converters) in this group. Surveys arrive in TCR order. If they do not perform move them to OldTimers & Bad.          
           
             if (toberankedsurvey.TotalRemaining == 0) then
             
@@ -1075,11 +1076,11 @@ puts
           
               @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
           
-              if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 20) then
+              if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 15) then
             
                 if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                   toberankedsurvey.SurveyGrossRank = 600
-                  toberankedsurvey.label = 'OT: TCR<0.5'
+                  toberankedsurvey.label = 'OT: TCR<0.066'
               
                 else
             
@@ -1087,7 +1088,7 @@ puts
                   print "Assigned Fast survey to Old Timer: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts
                   toberankedsurvey.TCR = 1.0 / @toberankedsurveyNumberofAttemptsSinceLastComplete
-                  toberankedsurvey.label = 'OT: TCR<0.5'
+                  toberankedsurvey.label = 'OT: TCR<0.066'
                 end
             
               else
@@ -1218,7 +1219,7 @@ puts
           # Try More 301-400
           if (300 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 400) then    
           
-            # These surveys are here to get another 10 attempts (10 to 20). If they convert move them to Fast else take them to Horrible        
+            # These surveys are here to get another 5 attempts (10 to 15). If they convert move them to Fast else take them to Horrible        
           
             if (toberankedsurvey.TotalRemaining == 0) then
             
@@ -1236,24 +1237,24 @@ puts
           
             else                            
             
-              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.05) then
+              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.066) then
             
                 if (toberankedsurvey.CPI > 1.49) then
             
                   toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
                   print "Assigned Try more survey to Top: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                  toberankedsurvey.label = 'F: TCR>0.5'
+                  toberankedsurvey.label = 'F: TCR>0.066'
           
                 else   
             
                     toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
                     print "Assigned Try more survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                    toberankedsurvey.label = 'S: TCR>0.5'
+                    toberankedsurvey.label = 'S: TCR>0.066'
               
                 end 
             
-              else # Completes > 0 or TCR > 0.05
-              end # Completes > 0 or TCR > 0.05
+              else # Completes > 0 or TCR > 0.066
+              end # Completes > 0 or TCR > 0.066
           
               if (toberankedsurvey.CompletedBy.length == 0) then
             
@@ -1264,9 +1265,9 @@ puts
                   @GCR = toberankedsurvey.GEPC
                 end
                           
-                if toberankedsurvey.SurveyExactRank <= 20 then # No. of hits
+                if toberankedsurvey.SurveyExactRank <= 15 then # No. of hits
         
-                  # do nothing - let it get 20 hits. Reposition for updated GCR
+                  # do nothing - let it get 15 hits. Reposition for updated GCR
              
                   if (@GCR >= 0.01) then
                 
@@ -1302,19 +1303,19 @@ puts
                 
                    end # @GCR values 
                 
-                else # No. of hits > 20
+                else # No. of hits > 15
         
                   if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                     p "Found a toberankedsurvey with Conversion = 0"
                     toberankedsurvey.SurveyGrossRank = 700
-                    toberankedsurvey.label = 'H: Hits>20, TCR=0'
+                    toberankedsurvey.label = 'H: Hits>15, TCR=0'
                 
                   else
       
                     toberankedsurvey.SurveyGrossRank = 601+(100-toberankedsurvey.Conversion)
                     print "Assigned a Try More to Horrible: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts   
-                    toberankedsurvey.label = 'H: Hits>20, TCR=0'
+                    toberankedsurvey.label = 'H: Hits>15, TCR=0'
                   end
           
                 end # No. of hits
@@ -1330,7 +1331,7 @@ puts
           # New+GCR<0.01 401-500
           if (400 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 500) then
         
-            # This is the place for new GCR<0.01 surveys. If they make TCR>0.5 then move to Fast or Safety. Move to OldTimers and Bad if TCR<0.5 but more than 0. They move to Horrible if they do not complete in 10. If they turn GCR>=0.01 then move them to GCR>=0.01. 
+            # This is the place for new GCR<0.01 surveys. If they make TCR>0.066 then move to Fast or Safety. Move to OldTimers and Bad if TCR<0.066 but more than 0. They move to Horrible if they do not complete in 10. If they turn GCR>=0.01 then move them to GCR>=0.01. 
           
           
             if (toberankedsurvey.TotalRemaining == 0) then
@@ -1349,37 +1350,37 @@ puts
           
             else              
           
-              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.05) then # (1 in 10 hits)
+              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.066) then # (1 in 10 hits)
           
                 if (toberankedsurvey.CPI > 1.49) then
           
                   toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
                   print "Assigned GCR<0.01 survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                  toberankedsurvey.label = 'F: TCR>0.05 from GCR>=0.01'
+                  toberankedsurvey.label = 'F: TCR>0.066 from GCR>=0.01'
           
                 else   
 
                     toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
                     print "Assigned GCR<0.01 survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                    toberankedsurvey.label = 'S: TCR>0.05 from GCR<0.01'
+                    toberankedsurvey.label = 'S: TCR>0.066 from GCR<0.01'
             
                 end 
             
-              else # Completes > 0 or TCR > 0.05
-              end # Completes > 0 or TCR > 0.05
+              else # Completes > 0 or TCR > 0.066
+              end # Completes > 0 or TCR > 0.066
           
-              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.05)
+              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.066)
             
                 if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                   toberankedsurvey.SurveyGrossRank = 600
-                  toberankedsurvey.label = 'OT/B: 0<TCR<0.05'
+                  toberankedsurvey.label = 'OT/B: 0<TCR<0.066'
             
                 else
 
                   toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
                   print "Assigned New/GCR<0.01 survey rank to OldTimers+Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts    
-                  toberankedsurvey.label = 'OT/B: 0<TCR<0.05'
+                  toberankedsurvey.label = 'OT/B: 0<TCR<0.066'
                 end
             
               else
@@ -1461,7 +1462,7 @@ puts
           # Bad 501-600
           if (500 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 600) then
           
-            # These are surveys that were good earlier but have fizzled to 0 < TCR < 0.05. The bad converters with TCR < 0.05 are also here. Ordered by Conversion. If their TCR becomes > 0.5 move them to Fast.
+            # These are surveys that were good earlier but have fizzled to 0 < TCR < 0.066. The bad converters with TCR < 0.066 are also here. Ordered by Conversion. If their TCR becomes > 0.066 move them to Fast.
           
             if (toberankedsurvey.TotalRemaining == 0) then
             
@@ -1479,11 +1480,11 @@ puts
           
             else
           
-              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.05) then
+              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.066) then
 
                 toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
                 print "Assigned OldTimer survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                toberankedsurvey.label = 'F: TCR>0.05 in B'
+                toberankedsurvey.label = 'F: TCR>0.066 in B'
               else
               end
             
@@ -1516,7 +1517,7 @@ puts
           # Horrible 601-700
           if (600 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 700) then
     
-             # These are surveys which have seen moree than 20 attempts without a complete, if GCR>=0.01 or 10 attempts if GCR<0.01. Ordered by Conversion. If they do start converting then move them to appropriate buckets. Low CPI surveys that fizzle also land up here.
+             # These are surveys which have seen moree than 15 attempts without a complete, if GCR>=0.01 or 10 attempts if GCR<0.01. Ordered by Conversion. If they do start converting then move them to appropriate buckets. Low CPI surveys that fizzle also land up here.
           
             if (toberankedsurvey.TotalRemaining == 0) then
             
@@ -1534,29 +1535,29 @@ puts
           
             else          
    
-              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.05) then
+              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.066) then
             
                 if toberankedsurvey.CPI > 1.49 then
 
                   toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100).to_i
                   print "Assigned Horrible survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                  toberankedsurvey.label = 'F: TCR>0.05 from H'
+                  toberankedsurvey.label = 'F: TCR>0.066 from H'
               
                 else
               
                   toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100).to_i
                   print "Assigned Horrible survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                  toberankedsurvey.label = 'S: TCR>0.05 from H'
+                  toberankedsurvey.label = 'S: TCR>0.066 from H'
                 end
               
               else
               end
             
-              if ((toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.05)) then
+              if ((toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.066)) then
             
                 toberankedsurvey.SurveyGrossRank = 600 - (toberankedsurvey.TCR * 100)
                 print "Assigned Horrible survey to OldTimers/Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                toberankedsurvey.label = 'OT+B: TCR>0.05 from H'
+                toberankedsurvey.label = 'OT+B: TCR>0.066 from H'
               else
               end
           
@@ -1571,7 +1572,7 @@ puts
                      
                 @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
             
-                if (@GCR>= 0.01) && (@toberankedsurveyNumberofAttemptsSinceLastComplete < 20) && (toberankedsurvey.CPI > 1.49) then
+                if (@GCR>= 0.01) && (@toberankedsurveyNumberofAttemptsSinceLastComplete < 15) && (toberankedsurvey.CPI > 1.49) then
                 
                   if (@GCR >= 1) then
                     toberankedsurvey.SurveyGrossRank = 301
@@ -1620,29 +1621,29 @@ puts
             else
             
             
-                if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.05) then
+                if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.066) then
             
                   if toberankedsurvey.CPI > 1.49 then
 
                     toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
                     print "Assigned Dead survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                    toberankedsurvey.label = 'F: TCR>0.05 from D'
+                    toberankedsurvey.label = 'F: TCR>0.066 from D'
               
                   else
               
                     toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
                     print "Assigned Dead survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                    toberankedsurvey.label = 'S: TCR>0.05 from D'
+                    toberankedsurvey.label = 'S: TCR>0.066 from D'
                   end
               
                 else
                 end
             
-                if ((toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.05)) then
+                if ((toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.066)) then
             
                   toberankedsurvey.SurveyGrossRank = 600 - (toberankedsurvey.TCR * 100)
                   print "Assigned Dead survey to Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                  toberankedsurvey.label = 'B: TCR>0.05 from D'
+                  toberankedsurvey.label = 'B: TCR>0.066 from D'
                 else
                 end
           
@@ -1657,7 +1658,7 @@ puts
                      
                   @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
             
-                  if (@GCR>= 0.01) && (@toberankedsurveyNumberofAttemptsSinceLastComplete < 20) && (toberankedsurvey.CPI > 1.49) then
+                  if (@GCR>= 0.01) && (@toberankedsurveyNumberofAttemptsSinceLastComplete < 15) && (toberankedsurvey.CPI > 1.49) then
                 
                     if (@GCR >= 1) then
                       toberankedsurvey.SurveyGrossRank = 301
