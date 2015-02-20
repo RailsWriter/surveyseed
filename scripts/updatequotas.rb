@@ -1020,8 +1020,7 @@ puts
               if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 20) then  # worst than 5% conversion rate i.e. 20 more after they were moved out of New
             
                 if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-                  p "Found a toberankedsurvey with Conversion = 0"
-                  toberankedsurvey.Conversion = 700
+                  toberankedsurvey.SurveyGrossRank = 700
                   toberankedsurvey.label = 'H: CPI<1.5 and TCR<0.5'
               
                 else
@@ -1079,8 +1078,7 @@ puts
               if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 20) then
             
                 if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-                  p "Found a toberankedsurvey with Conversion = 0"
-                  toberankedsurvey.Conversion = 600
+                  toberankedsurvey.SurveyGrossRank = 600
                   toberankedsurvey.label = 'OT: TCR<0.5'
               
                 else
@@ -1102,55 +1100,6 @@ puts
           
             end # TotalRemaining          
           
-          
-    
-    #          toberankedsurvey.KEPC = toberankedsurvey.CPI * (toberankedsurvey.CompletedBy.length.to_f/(toberankedsurvey.SurveyExactRank + toberankedsurvey.CompletedBy.length))
-    
-    #          if 0.02 <= toberankedsurvey.KEPC then
-            
-      
-                # Unless KEPC > 1 the others are ordered by KEPC value. It will always be above 98
-    #            if toberankedsurvey.KEPC * 100 >= 100 then
-    #              toberankedsurvey.SurveyGrossRank = 1
-    #              print "Assigned Top toberankedsurvey to Top tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                  puts
-    #            else
-    #              toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.KEPC * 100)
-    #              print "Assigned Top toberankedsurvey to Top tier rank: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-    #              puts
-    #            end
-
-    #         else
-    #         end
-
-
-
-    
-     #         if (0.01 <= toberankedsurvey.KEPC) &&  (toberankedsurvey.KEPC < 0.02) then    
-    
-    #            if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-    #              p "Found a toberankedsurvey with Conversion = 0"
-    #              toberankedsurvey.Conversion = 1
-    #            else
-    #            end
-      
-    #            toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
-    #            print "Updated existing 1-100 ranked toberankedsurvey to: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                puts
-    #          end
-    
-    #          if (0 <= toberankedsurvey.KEPC) &&  (toberankedsurvey.KEPC < 0.01) then  
-    
-    #            if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-    #              p "Found a toberankedsurvey with Conversion = 0"
-    #              toberankedsurvey.Conversion = 1
-    #            else
-    #            end
-      
-    #            toberankedsurvey.SurveyGrossRank = 401+(100-toberankedsurvey.Conversion)
-    #            print "Updated existing 1-100 ranked toberankedsurvey to: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-    #            puts
-    #          end
     
           else # not in 101-200 rank range
           end # not in 101-200 rank range
@@ -1206,7 +1155,7 @@ puts
                 if (@GCR < 0.01) then
               
                   if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-                    toberankedsurvey.Conversion = 500
+                    toberankedsurvey.SurveyGrossRank = 500
                     print "Assigned a GCR>=0.01 to GCR<0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts   
                     toberankedsurvey.label = 'GCR<0.1: GCR changed in GCR>=0.01'
@@ -1338,7 +1287,7 @@ puts
                   else # GCR changed to <= 0.01
                 
                     if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-                      toberankedsurvey.Conversion = 500
+                      toberankedsurvey.SurveyGrossRank = 500
                       print "Assigned a Try More to GCR<0.01: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                       puts   
                       toberankedsurvey.label = 'GCR<0.1: GCR changed in TM'
@@ -1357,7 +1306,7 @@ puts
         
                   if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                     p "Found a toberankedsurvey with Conversion = 0"
-                    toberankedsurvey.Conversion = 700
+                    toberankedsurvey.SurveyGrossRank = 700
                     toberankedsurvey.label = 'H: Hits>20, TCR=0'
                 
                   else
@@ -1422,7 +1371,7 @@ puts
               if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.05)
             
                 if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-                  toberankedsurvey.Conversion = 600
+                  toberankedsurvey.SurveyGrossRank = 600
                   toberankedsurvey.label = 'OT/B: 0<TCR<0.05'
             
                 else
