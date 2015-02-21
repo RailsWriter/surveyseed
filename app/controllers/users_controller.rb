@@ -724,7 +724,7 @@ require 'hmac-md5'
         (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ])) &&
         (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ])) &&
         (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ user.householdcomp.to_s ] & survey.QualificationHHCPreCodes.flatten) == [ user.householdcomp.to_s ])) &&
-        ((survey.CPI == nil) || (survey.CPI > 1.49))) then
+        ((survey.CPI == nil) || (survey.CPI > 0.99))) then
         
         # Add a more generic condition that survey.CPI > user.currentpayout
         
@@ -833,10 +833,10 @@ require 'hmac-md5'
           puts
           user.SurveysWithMatchingQuota << @surveynumber
           
-          if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 3) then
+          if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 2) then
             @foundtopsurveyswithquota = true
           else
-            if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 3)
+            if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 2)
               @foundtopsurveyswithquota = true
             else
               #do nothing
@@ -1344,10 +1344,10 @@ require 'hmac-md5'
             puts '****************** Adding the survey to the list of eligible surveys due to quota match'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 3) then
+            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 2) then
               @foundtopsurveyswithquota = true
             else
-              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 3)
+              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 2)
                 @foundtopsurveyswithquota = true
               else
                 #do nothing
@@ -1370,10 +1370,10 @@ require 'hmac-md5'
             puts '************* Adding survey to list of eligible quotas even though no quotas specified but Totalquotaexists.'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 3) then
+            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 2) then
               @foundtopsurveyswithquota = true
             else
-              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 3)
+              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 2)
                 @foundtopsurveyswithquota = true
               else
                 #do nothing
