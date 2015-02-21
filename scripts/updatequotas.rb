@@ -997,7 +997,7 @@ puts
            
 #      if (i == 30000) || ((Time.now - @lastrankingtime) >= 300000) then    
       
-      if (i == 1) || ((Time.now - @lastrankingtime) >= 1200) then    
+      if (i == 1) || ((Time.now - @lastrankingtime) >= 1800) then    
           
         @lastrankingtime = Time.now
         
