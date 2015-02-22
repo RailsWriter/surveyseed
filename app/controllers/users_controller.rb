@@ -84,8 +84,7 @@ require 'hmac-md5'
         user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
         p user
 
-        # user = User.where( "ip_address = ip_address AND session_id = session.id" )
-        # Why do I have to stop at first. Optimizes. But there should be not more than 1 entry.
+        # Why do I have to stop at first? Optimizes. But there should be not more than 1 entry.
 
         if user.black_listed==true then
           p '******************* EVAL_AGE: REPEAT USER is Black listed'
@@ -771,7 +770,7 @@ require 'hmac-md5'
         puts
 
       end
-      # End of all surveys in the database that meet the country, age, gender and ZIP criteria
+      # End of all surveys in the database that meet the standard qualifications criteria
     end
 
     if user.QualifiedSurveys.empty? then  #0
@@ -793,9 +792,9 @@ require 'hmac-md5'
       # Look through surveys this user is qualified for to check if there is quota available. Quota numbers can be read as Maximum or upper limit allowed for a qualification e.g. ages 20-24 quota of 30 and ages 25-30 quota of 50 is the upper limit on both of the groups. The code should first find if the number of respondents in the quota teh respondent falls in has need for more respondents. When a quota is split into parts then respondent must fall into at least one of them.
       
       
-      puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after first 10 top ranked surveys with quota are found"
+      puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after specified number of top ranked surveys with quota are found"
       
-      @foundtopsurveyswithquota = false   # false means not finished finding top surveys (set it to true if testing p2s)
+      @foundtopsurveyswithquota = true   # false means not finished finding top surveys (set it to true if testing p2s)
       
       (0..user.QualifiedSurveys.length-1).each do |j| #1
           
