@@ -221,12 +221,29 @@ class RedirectsController < ApplicationController
 
             @survey.NumberofAttemptsAtLastComplete = @survey.SurveyExactRank
             
-#           if (100 < @survey.SurveyGrossRank) && (@survey.SurveyGrossRank <= 300)
-#              then surveyGrossRank = 1
-#              puts '********************************* If it is a New survey, its rank is raised to 1 following a complete!'
-#            else
-#            end
+            # Move the just converted survey to F or S immediately, if it is already not there
 
+            if (@survey.SurveyGrossRank > 200) then
+              
+              if (@survey.CPI > 1.49) then
+      
+                @survey.SurveyGrossRank = 201 - (@survey.TCR * 100)
+                print "**************** Assigned just converted survey to Fast: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
+                @survey.label = 'F: Just converted'
+      
+              else
+      
+                  @survey.SurveyGrossRank = 101 - (@survey.TCR * 100)
+                  print "************** Assigned Just converted to Safety: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
+                  @survey.label = 'S: Just converted'
+        
+              end 
+
+            else
+
+              # the survey is already in F or S i.e. rank is <= 200
+
+            end
 
             @survey.save
 
