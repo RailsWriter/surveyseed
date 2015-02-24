@@ -794,7 +794,48 @@ require 'hmac-md5'
       
       puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after specified number of top ranked surveys with quota are found"
       
+<<<<<<< Local Changes
       @foundtopsurveyswithquota = true   # false means not finished finding top surveys (set it to true if testing p2s)
+=======
+<<<<<<< HEAD
+      @foundtopsurveyswithquota = true   # false means not finished finding top surveys (set it to true if testing p2s)
+=======
+
+      @p2s = Network.find_by name: "P2S"
+      
+      if (@p2s.Flag1 == nil) || (@p2s.Flag1 != "HEAD") || (@p2s.Flag1 == "NOTHEAD") then 
+        @foundtopsurveyswithquota = false   # false means not finished finding top FED surveys (set it to true if testing p2s)
+        print "**************** P2S is NOT at the Head"
+        puts
+        
+        if @p2s.Flag2 != nil then
+          @p2s_US = @p2s.Flag2.to_i
+        else
+          p2s_US = 1
+        end
+      
+        if @p2s.Flag3 != nil then
+          @p2s_CA = @p2s.Flag3.to_i
+        else
+          p2s_CA = 1
+        end
+      
+        if @p2s.Flag4 != nil then
+          @p2s_AU = @p2s.Flag4.to_i
+        else
+          p2s_AU = 1
+        end
+        
+        
+      else
+        @foundtopsurveyswithquota = true    # true takes users to P2S directly, if set as HEAD
+        print "**************** P2S IS at the Head"
+        puts
+      end
+      
+      
+>>>>>>> lastcommit
+>>>>>>> External Changes
       
       (0..user.QualifiedSurveys.length-1).each do |j| #1
           
@@ -1652,8 +1693,37 @@ require 'hmac-md5'
   
   # Keep a count of Test completes on each Network
   
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+<<<<<<< Local Changes
+  puts "*************** Keeping track of Test completes on each network"
+ 
+=======
+  puts "*************** Adding Testcompletes to cmpletes on this network"
+=======
+  puts "*************** Adding Testcompletes to cmpletes on this network"
+>>>>>>> External Changes
+  
+<<<<<<< Local Changes
+>>>>>>> External Changes
+=======
+>>>>>>> External Changes
+=======
+  puts "*************** Adding Testcompletes to cmpletes on this network"
+=======
+  puts "*************** Adding Testcompletes to cmpletes on this network"
+>>>>>>> External Changes
+  
+<<<<<<< Local Changes
+>>>>>>> External Changes
+=======
+>>>>>>> External Changes
+=======
   puts "*************** Adding Testcompletes to cmpletes on this network"
   
+>>>>>>> External Changes
   @net = Network.find_by netid: user.netid
   @net.completes[Time.now]="TEST"
   @net.save

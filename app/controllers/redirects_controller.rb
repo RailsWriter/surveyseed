@@ -164,12 +164,21 @@ class RedirectsController < ApplicationController
             end
                      
             
-            # Keep a count of completes on each Network
+            # Keep a count of completes on Supersonic Network
             
-            puts "*************** Adding timestamp to cmpletes on this network"
+            puts "*************** Keeping track of cmpletes on SS network"
             
-            @net = Network.find_by netid: @user.netid
-            @net.completes[Time.now]=1
+           
+            if @user.netid = "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+              @net = Network.find_by netid: @user.netid
+              if @net.Flag3 == nil then
+                @net.Flag3 = "1" 
+              else
+                @net.Flag3 = (@net.Flag3.to_i + 1).to_s
+              end
+            else
+            end
+            
             @net.save
                      
               
@@ -221,12 +230,29 @@ class RedirectsController < ApplicationController
 
             @survey.NumberofAttemptsAtLastComplete = @survey.SurveyExactRank
             
-#           if (100 < @survey.SurveyGrossRank) && (@survey.SurveyGrossRank <= 300)
-#              then surveyGrossRank = 1
-#              puts '********************************* If it is a New survey, its rank is raised to 1 following a complete!'
-#            else
-#            end
+            # Move the just converted survey to F or S immediately, if it is already not there
 
+            if (@survey.SurveyGrossRank > 200) then
+              
+              if (@survey.CPI > 1.49) then
+      
+                @survey.SurveyGrossRank = 201 - (@survey.TCR * 100)
+                print "**************** Assigned just converted survey to Fast: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
+                @survey.label = 'F: Just converted'
+      
+              else
+      
+                  @survey.SurveyGrossRank = 101 - (@survey.TCR * 100)
+                  print "************** Assigned Just converted to Safety: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
+                  @survey.label = 'S: Just converted'
+        
+              end 
+
+            else
+
+              # the survey is already in F or S i.e. rank is <= 200. do nothing
+
+            end
 
             @survey.save
 
@@ -255,13 +281,29 @@ class RedirectsController < ApplicationController
             else
             end
             
-            # Keep a count of completes on each Network
             
-            puts "*************** Adding timestamp to cmpletes on this network"
             
-            @net = Network.find_by netid: @user.netid
-            @net.completes[Time.now]=1
+            # Keep a count of completes on Supersonic Network
+            
+            puts "*************** Keeping track of cmpletes on SS network"
+            
+           
+            if @user.netid = "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+              @net = Network.find_by netid: @user.netid
+              if @net.Flag3 == nil then
+                @net.Flag3 = "1" 
+              else
+                @net.Flag3 = (@net.Flag3.to_i + 1).to_s
+              end
+            else
+            end
+            
             @net.save
+            
+            
+            
+            
+            
 
             # Happy ending
             redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'
