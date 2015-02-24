@@ -164,12 +164,21 @@ class RedirectsController < ApplicationController
             end
                      
             
-            # Keep a count of completes on each Network
+            # Keep a count of completes on Supersonic Network
             
-            puts "*************** Adding timestamp to cmpletes on this network"
+            puts "*************** Keeping track of cmpletes on SS network"
             
-            @net = Network.find_by netid: @user.netid
-            @net.completes[Time.now]=1
+           
+            if @user.netid = "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+              @net = Network.find_by netid: @user.netid
+              if @net.Flag3 == nil then
+                @net.Flag3 = "1" 
+              else
+                @net.Flag3 = (@net.Flag3.to_i + 1).to_s
+              end
+            else
+            end
+            
             @net.save
                      
               
@@ -241,7 +250,7 @@ class RedirectsController < ApplicationController
 
             else
 
-              # the survey is already in F or S i.e. rank is <= 200
+              # the survey is already in F or S i.e. rank is <= 200. do nothing
 
             end
 
@@ -272,13 +281,29 @@ class RedirectsController < ApplicationController
             else
             end
             
-            # Keep a count of completes on each Network
             
-            puts "*************** Adding timestamp to cmpletes on this network"
             
-            @net = Network.find_by netid: @user.netid
-            @net.completes[Time.now]=1
+            # Keep a count of completes on Supersonic Network
+            
+            puts "*************** Keeping track of cmpletes on SS network"
+            
+           
+            if @user.netid = "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+              @net = Network.find_by netid: @user.netid
+              if @net.Flag3 == nil then
+                @net.Flag3 = "1" 
+              else
+                @net.Flag3 = (@net.Flag3.to_i + 1).to_s
+              end
+            else
+            end
+            
             @net.save
+            
+            
+            
+            
+            
 
             # Happy ending
             redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'

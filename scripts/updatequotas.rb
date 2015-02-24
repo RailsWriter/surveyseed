@@ -1011,7 +1011,7 @@ puts
           
             # Only low CPI and TCR > 0.066 surveys in this group. Surveys arrive in TCR order. If they do not perform move them to Horrible.
     
-            if (toberankedsurvey.TotalRemaining == 0) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
           
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
@@ -1020,7 +1020,7 @@ puts
               else
 
                 toberankedsurvey.SurveyGrossRank = 701+(100-toberankedsurvey.Conversion)
-                print "Assigned 0 Remaining to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                print "Assigned 0 Remaining / Old to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 puts
                 toberankedsurvey.label = 'D: Rem = 0'
               end
@@ -1070,7 +1070,7 @@ puts
           
             # Only high CPI and TCR > 0.066 (fast converters) in this group. Surveys arrive in TCR order. If they do not perform move them to Bad.          
           
-            if (toberankedsurvey.TotalRemaining == 0) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
             
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
@@ -1079,7 +1079,7 @@ puts
               else
 
                 toberankedsurvey.SurveyGrossRank = 701+(100-toberankedsurvey.Conversion)
-                print "Assigned 0 Remaining to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                print "Assigned 0 Remaining / Old to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 puts
                 toberankedsurvey.label = 'D: Rem = 0'
               end
@@ -1122,7 +1122,7 @@ puts
           
             # This is the place for new surveys to be tested with first 10 hits. They move to Fast or Try more if they do not complete in 10. If they changed to GCR<0.01 then move them to GCR<0.01
          
-            if (toberankedsurvey.TotalRemaining == 0) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
             
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
@@ -1131,7 +1131,7 @@ puts
               else
 
                 toberankedsurvey.SurveyGrossRank = 701+(100-toberankedsurvey.Conversion)
-                print "Assigned 0 Remaining to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                print "Assigned 0 Remaining / Old to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 puts
                 toberankedsurvey.label = 'D: Rem = 0'
               end
@@ -1233,7 +1233,7 @@ puts
           
             # These surveys are here to get another 5 attempts (10 to 15). If they convert move them to Fast else take them to Horrible        
           
-            if (toberankedsurvey.TotalRemaining == 0) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
             
               if toberankedsurvey.Conversion == 0 then
                   toberankedsurvey.SurveyGrossRank = 800
@@ -1242,7 +1242,7 @@ puts
                 else
 
                   toberankedsurvey.SurveyGrossRank = 701+(100-toberankedsurvey.Conversion)
-                  print "Assigned 0 Remaining to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  print "Assigned 0 Remaining / Old to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts
                   toberankedsurvey.label = 'D: Rem = 0'
                 end
@@ -1346,7 +1346,7 @@ puts
             # This is the place for new GCR<0.01 surveys. If they make TCR>0.066 then move to Fast or Safety. Move to OldTimers and Bad if TCR<0.066 but more than 0. They move to Horrible if they do not complete in 10. If they turn GCR>=0.01 then move them to GCR>=0.01. 
           
           
-            if (toberankedsurvey.TotalRemaining == 0) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
             
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
@@ -1355,7 +1355,7 @@ puts
               else
 
                 toberankedsurvey.SurveyGrossRank = 701+(100-toberankedsurvey.Conversion)
-                print "Assigned 0 Remaining to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                print "Assigned 0 Remaining / Old to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 puts
                 toberankedsurvey.label = 'D: Rem = 0'
               end
@@ -1476,7 +1476,7 @@ puts
           
             # These are surveys that were good earlier but have fizzled to 0 < TCR < 0.066. The bad converters with TCR < 0.066 are also here. Ordered by Conversion. If their TCR becomes > 0.066 move them to Fast.
           
-            if (toberankedsurvey.TotalRemaining == 0) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
             
                 if toberankedsurvey.Conversion == 0 then
                   toberankedsurvey.SurveyGrossRank = 800
@@ -1485,7 +1485,7 @@ puts
                 else
 
                   toberankedsurvey.SurveyGrossRank = 701+(100-toberankedsurvey.Conversion)
-                  print "Assigned 0 Remaining to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  print "Assigned 0 Remaining / Old to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts
                   toberankedsurvey.label = 'D: Rem = 0'
                 end
@@ -1531,7 +1531,7 @@ puts
     
              # These are surveys which have seen moree than 15 attempts without a complete, if GCR>=0.01 or 10 attempts if GCR<0.01. Ordered by Conversion. If they do start converting then move them to appropriate buckets. Low CPI surveys that fizzle also land up here.
           
-            if (toberankedsurvey.TotalRemaining == 0) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
             
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
@@ -1540,7 +1540,7 @@ puts
               else
 
                 toberankedsurvey.SurveyGrossRank = 701+(100-toberankedsurvey.Conversion)
-                print "Assigned 0 Remaining to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                print "Assigned 0 Remaining / Old to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 puts
                 toberankedsurvey.label = 'D: Rem = 0'
               end
@@ -1626,7 +1626,7 @@ puts
           # Dead 701-800
           if (700 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 800) then
           
-            if (toberankedsurvey.TotalRemaining == 0) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
             
               # do nothing about it - stays dead
           
@@ -1707,15 +1707,14 @@ puts
             end
           
           else
-          end # Dear range 701-800
+          end # not in Dead range 701-800
         
            # Ignore 801-900
           if (800 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 900) then
             # do nothing. surveys are put here manually to hide them from ranking
           else
           end  # not in 801-900 range
-  
-                
+                  
         toberankedsurvey.save!
 
         print "Ranked survey number = ", toberankedsurvey.SurveyNumber

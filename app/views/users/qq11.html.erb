@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<div class="header">
+			<center>
+				<h1>Personal Industry</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<center>
+				<p>Which of the following best describes the industry that you work in?</p>
+			</center>
+				
+				<%= form_tag("personalindustry", method: "post") do %>
+				<fieldset>
+				<div class="mybiglistinput">
+					
+					<label>
+					<%= radio_button_tag 'pindustry', '1' %>
+				  		Accounting
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '2' %>
+				  		Advertising
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '3' %>
+				  		Agriculture/Fishing
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '4' %>
+				  		Architecture
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '5' %>
+				  		Automotive
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '6' %>
+				  		Aviation
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '7' %>
+				  		Banking/Financial
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '8' %>
+				  		Bio-Tech
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '9' %>
+				  		Brokerage
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '10' %>
+				  		Carpenting/Electrical installations/VVS
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '11' %>
+				  		Chemicals/Plastics/Rubber
+					</label><br>					
+					<label>
+					<%= radio_button_tag 'pindustry', '12' %>
+				  		Communications/Information
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '13' %>
+				  		Computer Hardware
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '14' %>
+				  		Computer Reseller (software/hardware)
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '15' %>
+				  		Computer Software
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '16' %>
+				  		Construction
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '17' %>
+				  		Consulting
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '18' %>
+				  		Consumer Electronics
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '19' %>
+				  		Consumer Packaged Goods
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '20' %>
+				  		Education
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '21' %>
+				  		Energy/Utilities/Oil and Gas
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '22' %>
+				  		Engineering
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '23' %>
+				  		Environmental Services
+					</label><br>					
+					<label>
+					<%= radio_button_tag 'pindustry', '24' %>
+				  		Fashion/Apparel
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '25' %>
+				  		Food/Beverage
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '26' %>
+				  		Government/Public Sector
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '27' %>
+				  		Healthcare
+					</label><br>
+					<%= radio_button_tag 'pindustry', '28' %>
+				  		Hospitality/Tourism
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '29' %>
+				  		Human Resources
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '30' %>
+				  		Information Technology/IT
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '31' %>
+				  		Insurance
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '32' %>
+				  		Internet
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '33' %>
+				  		Legal/Law
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '34' %>
+				  		Manufacturing
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '35' %>
+				  		Market Research
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '36' %>
+				  		Marketing/Sales
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '37' %>
+				  		Media/Entertainment
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '38' %>
+				  		Military
+					</label><br>					
+					<label>
+					<%= radio_button_tag 'pindustry', '39' %>
+				  		Non Profit/Social services
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '40' %>
+				  		Personal Services
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '41' %>
+				  		Pharmaceuticals
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '42' %>
+				  		Printing Publishing
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '43' %>
+				  		Public Relations
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '44' %>
+				  		Real Estate/Property
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '45' %>
+				  		Retail/Wholesale trade
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '46' %>
+				  		Security
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '47' %>
+				  		Shipping/Distribution
+					</label><br>
+					<label>
+					<%= radio_button_tag 'pindustry', '48' %>
+				  		Telecommunications
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '49' %>
+				  		Transportation
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'pindustry', '50' %>
+				  		Other
+					</label><br>					
+					<label>
+					<%= radio_button_tag 'pindustry', '51' %>
+				  		I don't work
+					</label><br><br>
+				</div>
+					
+				<div class="myinput">
+					<center>
+					<%= submit_tag "Next" %>
+					</center>
+				</div>
+			</fieldset>
+			<% end %>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('KetsciLogoSm.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

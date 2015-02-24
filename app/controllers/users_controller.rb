@@ -37,6 +37,22 @@ require 'hmac-md5'
       netid = params[:netid]
       clickid = params[:clickid]
       
+      
+      # temporarily keep track of Supersonic clicks like this
+      
+      if netid = "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+        @SSnet = Network.find_by netid: netid
+        if @SSnet.Flag2 == nil then
+          @SSnet.Flag2 = "1" 
+        else
+          @SSnet.Flag2 = (@SSnet.Flag2.to_i + 1).to_s
+        end
+      else
+      end
+      @SSnet.save
+        
+        
+      
       tracker.track(ip_address, 'Age')
       
       # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
@@ -590,6 +606,7 @@ require 'hmac-md5'
     
   end
   
+  
 #  def householdcomp  
 
 #    user=User.find_by session_id: session.id
@@ -613,13 +630,44 @@ require 'hmac-md5'
     if params[:employment] != nil
       user.householdcomp=params[:employment]
       user.save
-      ranksurveysforuser(session.id)
+      redirect_to '/users/qq11'
+#      ranksurveysforuser(session.id)
     else
       redirect_to '/users/qq10'
     end
     
   end
+  
+  def personalindustry  
+    
+#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
+    user=User.find_by session_id: session.id
+    
+#    tracker.track(user.ip_address, 'pindustry')
+    
+    if params[:pindustry] != nil
+      user.pindustry=params[:pindustry]
+      user.save
+      redirect_to '/users/qq12'
+    else
+      redirect_to '/users/qq11'
+    end
+    
+  end
+  
+  def pleasewait
+    
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+
+    user=User.find_by session_id: session.id
+    
+    tracker.track(user.ip_address, 'pleasewait')    
+    
+    ranksurveysforuser(session.id)
+    
+  end
+  
   def ranksurveysforuser (session_id)
 
     user=User.find_by session_id: session_id
@@ -644,6 +692,12 @@ require 'hmac-md5'
       if Network.where(netid: @netid).exists? then
         net = Network.find_by netid: @netid
         user.currentpayout = net.payout
+        
+        
+        
+        
+        
+        
         if (net.status == "EXTTEST") then
           redirect_to '/users/techtrendssamplesurvey'
           return
@@ -797,15 +851,37 @@ require 'hmac-md5'
 
       @p2s = Network.find_by name: "P2S"
       
-      if (@p2s.Flag1 == nil) or (@p2s.Flag1 != "HEAD") then 
+      if (@p2s.Flag1 == nil) || (@p2s.Flag1 != "HEAD") || (@p2s.Flag1 == "NOTHEAD") then 
         @foundtopsurveyswithquota = false   # false means not finished finding top FED surveys (set it to true if testing p2s)
-        print "**************** P2S is NOT Head"
+        print "**************** P2S is NOT at the Head"
         puts
+        
+        if @p2s.Flag2 != nil then
+          @p2s_US = @p2s.Flag2.to_i
+        else
+          p2s_US = 1
+        end
+      
+        if @p2s.Flag3 != nil then
+          @p2s_CA = @p2s.Flag3.to_i
+        else
+          p2s_CA = 1
+        end
+      
+        if @p2s.Flag4 != nil then
+          @p2s_AU = @p2s.Flag4.to_i
+        else
+          p2s_AU = 1
+        end
+        
+        
       else
         @foundtopsurveyswithquota = true    # true takes users to P2S directly, if set as HEAD
-        print "**************** P2S IS Head"
+        print "**************** P2S IS at the Head"
         puts
       end
+      
+      
       
       (0..user.QualifiedSurveys.length-1).each do |j| #1
           
@@ -843,14 +919,30 @@ require 'hmac-md5'
           puts
           user.SurveysWithMatchingQuota << @surveynumber
           
-          if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 4) then
+          if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_US) then
+            
             @foundtopsurveyswithquota = true
+          
           else
-            if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 3)
+            
+            if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_CA) then
+              
               @foundtopsurveyswithquota = true
+            
             else
-              #do nothing
+            
+              if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
+                
+                @foundtopsurveyswithquota = true
+              
+              else
+              
+                #do nothing
+              
+              end
+            
             end
+          
           end
           
         end #3
@@ -1354,15 +1446,33 @@ require 'hmac-md5'
             puts '****************** Adding the survey to the list of eligible surveys due to quota match'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 4) then
+            
+            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_US) then
+            
               @foundtopsurveyswithquota = true
+          
             else
-              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 3)
+            
+              if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_CA) then
+              
                 @foundtopsurveyswithquota = true
+            
               else
-                #do nothing
+            
+                if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
+                
+                  @foundtopsurveyswithquota = true
+              
+                else
+              
+                  #do nothing
+              
+                end
+            
               end
+          
             end
+            
 
           else
             print 'Quota in survey number = is not open for this user: ', @surveynumber
@@ -1372,25 +1482,41 @@ require 'hmac-md5'
           
           
         else #5          
-          if totalquotaexists == false then
+          if totalquotaexists == false then #6
             #do nothing
-          else
+          else #6
             # NumberOfQuotas (k) is 0 i.e. there are no quotas specified but totalquotacount exists.
             # The survey is open to All, provided there is need for respondents specified in Total
             puts '************* Adding survey to list of eligible quotas even though no quotas specified but Totalquotaexists.'
             user.SurveysWithMatchingQuota << @surveynumber
             
-            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= 4) then
+            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_US) then
+            
               @foundtopsurveyswithquota = true
+          
             else
-              if ((user.country == '5') || (user.country == '6')) && (user.SurveysWithMatchingQuota.uniq.length >= 3)
+            
+              if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_CA) then
+              
                 @foundtopsurveyswithquota = true
+            
               else
-                #do nothing
+            
+                if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
+                
+                  @foundtopsurveyswithquota = true
+              
+                else
+              
+                  #do nothing
+              
+                end
+            
               end
+          
             end
             
-          end  
+          end  # 6
         end #5 if there is quota specified in k = 0 (total) or more (other IDs)
           
           
@@ -1514,10 +1640,10 @@ require 'hmac-md5'
         @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race
       else
         if user.country=="6" then
-          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level
+          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level
         else
           if user.country=="5" then
-            @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level
+            @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level
           else
           end
         end
@@ -1601,7 +1727,8 @@ require 'hmac-md5'
       print '***************** User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile
       puts
     
-      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile    
+#      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile    
+      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
       user.SupplierLink = user.SupplierLink.drop(1)
       user.save
       redirect_to @EntryLink
@@ -1609,7 +1736,6 @@ require 'hmac-md5'
     end # if user.SupplierLink[0] == @p2sSupplierLink then
     
   end
-  
 
   # Sample survey pages control logic (p0 to success)
   
@@ -1661,13 +1787,24 @@ require 'hmac-md5'
   
   
   
+  
   # Keep a count of Test completes on each Network
   
-  puts "*************** Adding Testcompletes to cmpletes on this network"
+  puts "*************** Keeping track of Test completes on each network"
   
+ 
   @net = Network.find_by netid: user.netid
-  @net.completes[Time.now]="TEST"
+
+  if @net.Flag4 == nil then
+    @net.Flag4 = "1" 
+  else
+    @net.Flag4 = (@net.Flag4.to_i + 1).to_s
+  end
+  
   @net.save
+  
+  
+  
   
   
   # Save Test completed information by user

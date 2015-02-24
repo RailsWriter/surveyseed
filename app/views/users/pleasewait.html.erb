@@ -10,16 +10,20 @@
 	<body class="body">
 		<div class="header">
 			<center>
-				<h1>Success!</h1>
+				<h1>Qualifications Complete!</h1>
 			</center>
 		</header>
 		
 		<div id="content">
 			<center>
-				<p>Thanks for completing this survey. Please return to the app or site you clicked on this offer to claim your reward.</p>
-				<p>You are welcome to try again. You can take up to 3 surveys today.</p><br><br><br><br>
-				<p>Visit <%= link_to "Ketsci.com", 'http://www.ketsci.com' %> to create your own survey questions to get responses quickly from a diverse demographics of your choice.
-				</center>			
+				<p>Thanks. On pressing Continue we will match the best survey for your qualifications. It may take a 5-10 seconds.</p>
+				<br><br>
+				<%= form_tag("pleasewait", method: "post") do %>
+				<div class="agree">
+					<%= submit_tag "Continue" %>
+				</div>
+				<% end %>
+			</center>				
 		</content>
 		<br>
 		<br>
