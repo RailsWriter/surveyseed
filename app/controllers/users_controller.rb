@@ -859,19 +859,19 @@ require 'hmac-md5'
         if @p2s.Flag2 != nil then
           @p2s_US = @p2s.Flag2.to_i
         else
-          p2s_US = 1
+          @p2s_US = 1
         end
       
         if @p2s.Flag3 != nil then
           @p2s_CA = @p2s.Flag3.to_i
         else
-          p2s_CA = 1
+          @p2s_CA = 1
         end
       
         if @p2s.Flag4 != nil then
           @p2s_AU = @p2s.Flag4.to_i
         else
-          p2s_AU = 1
+          @p2s_AU = 1
         end
         
         
@@ -1632,18 +1632,22 @@ require 'hmac-md5'
       
       p2s_education_level = [0, 10157, 10157, 10157, 10158, 10163, 10159, 10160, 10161, 10165, 10162, 10164, '']
       @p2s_education_level = p2s_education_level[user.eduation.to_i].to_s
+      
+      p2s_org_id = [0, 22942, 22934, '', '', 22936, '', 22942, '', '', 22938, '', 22957, 22957, 22957, 22957, 22938, '', '', 22939, 22940, '', '', '', '', '', 22943, 22944, 22945, '', 22957, '', '', 22946, 22947, 22949, 22948, 22950, '', 22952, '', 22944, 22953, '', 22954, '', '', '', '', '', 22959, '']
+      @p2s_org_id = p2s_org_id[user.pindustry.to_i].to_s
+      
 
 
       # p2s additional values
 
       if user.country=="9" then
-        @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race
+        @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race+'&org_id='+@p2s_org_id
       else
         if user.country=="6" then
-          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level
+          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id
         else
           if user.country=="5" then
-            @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level
+            @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id
           else
           end
         end
@@ -1678,16 +1682,16 @@ require 'hmac-md5'
     end
     
     if user.country=="9" then 
-      @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP+'&HISPANIC='+user.ethnicity+'&ETHNICITY='+user.race+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_US='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp.to_s
+      @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP+'&HISPANIC='+user.ethnicity+'&ETHNICITY='+user.race+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_US='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp.to_s+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry
     else
       if user.country=="6" then
-        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp.to_s
+        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp.to_s+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry
       else
         if user.country=="5" then
-          @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp.to_s
+          @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp.to_s+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry
         else
           if user.country=="7" then
-            @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_IN='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp.to_s
+            @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_IN='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.householdcomp.to_s+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry
           else
           end
         end
@@ -1703,11 +1707,11 @@ require 'hmac-md5'
     if @parsed_user_agent.platform == 'iPhone' then
       
       @MS_is_mobile = '&MS_is_mobile=true'
-      p "*************************************** UseRide: MS_is_mobile is set TRUE"
+      p "*************************************** UserRide: MS_is_mobile is set TRUE"
       
     else
       @MS_is_mobile = '&MS_is_mobile=false'
-      p "*************************************** UseRide: MS_is_mobile is set FALSE"
+      p "*************************************** UserRide: MS_is_mobile is set FALSE"
       
     end
 
@@ -1727,8 +1731,8 @@ require 'hmac-md5'
       print '***************** User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile
       puts
     
-#      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile    
-      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
+      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile    
+#      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
       user.SupplierLink = user.SupplierLink.drop(1)
       user.save
       redirect_to @EntryLink
