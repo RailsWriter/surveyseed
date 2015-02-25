@@ -5,7 +5,7 @@ require 'httparty'
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
 
-flag = 'prod'
+flag = 'stag'
 
 
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
@@ -104,7 +104,7 @@ begin
         puts
         
    
-        # Assign an initial ranks to the chosen new survey by its GCR (GEPC/CPI). New surveys with GCR>=0.01 are put in 101-200 and GCR<0.01 in 401-500.
+        # Assign an initial ranks to the chosen new survey by its Conv or GCR (GEPC/CPI), if Conv=0. New surveys with Conv>0 are put in 201-300 and Conv=0 are in 401-500.
         
 
         begin
@@ -133,7 +133,7 @@ begin
         end
 
         
-        #Convert GEPC to GCR to give priority to CR over EPC.
+        # Convert GEPC to GCR to give priority to CR over EPC.
         if @survey.CPI >0 then
           @GCR = @survey.GEPC / @survey.CPI
         else
@@ -141,36 +141,26 @@ begin
         end
         
         
-        if @GCR >= 0.01 then
+        if @survey.Conversion > 0 then
           
+            @survey.SurveyGrossRank = 201+(100-@survey.Conversion)
+            print "Assigned Conv>0 survey rank: ", @survey.SurveyGrossRank
+            puts
+        
+        else # Conv=0
+        
           if (@GCR >= 1) then
-            @survey.SurveyGrossRank = 201
-            print "Assigned NEW/GCR>=0.01 survey rank: ", @survey.SurveyGrossRank, "GEPC= ", @survey.GEPC, "GCR= ", @GCR
+            @survey.SurveyGrossRank = 401
+            print "Assigned Conv=0 survey rank: ", @survey.SurveyGrossRank, "GCR= ", @GCR
             puts
              
           else
             
-            @survey.SurveyGrossRank = 300-(100*@GCR)
-            print "Assigned NEW/GCR>=0.01 survey rank: ", @survey.SurveyGrossRank, " GEPC = ", @survey.GEPC, "GCR= ", @GCR
+            @survey.SurveyGrossRank = 500-(100*@GCR)
+            print "Assigned Conv=0 survey rank: ", @survey.SurveyGrossRank, "GCR= ", @GCR
             puts
           end
-          
-        else
-        end
-        
-        if @GCR < 0.01 then
-        
-          if @survey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-            @survey.SurveyGrossRank = 500
 
-          else
-          
-            @survey.SurveyGrossRank = 401+(100-@survey.Conversion)
-            print "Assigned NEW/GCR<0.01 survey rank: ", @survey.SurveyGrossRank, " GEPC = ", @survey.GEPC, "GCR= ", @GCR
-            puts
-          end
-          
-        else
         end          
                     
 
