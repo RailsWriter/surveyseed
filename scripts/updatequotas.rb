@@ -1171,16 +1171,16 @@ puts
             
                   if (@GCR >= 1) then
                     toberankedsurvey.SurveyGrossRank = 401
-                    print "Assigned a Conv>0 to Conv=0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    print "Assigned a Conv>0 to Poor: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts 
-                    toberankedsurvey.label = 'Conv=0 from Conv>0'
+                    toberankedsurvey.label = 'Poor from Conv>0'
        
                   else
         
                     toberankedsurvey.SurveyGrossRank = 500-(100*@GCR)
-                    print "Assigned a Conv>0 to Conv=0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    print "Assigned a Conv>0 to Poor: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts    
-                    toberankedsurvey.label = 'Conv=0 from Conv>0'
+                    toberankedsurvey.label = 'Poor from Conv>0'
                   end
             
       

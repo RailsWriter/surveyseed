@@ -40,16 +40,16 @@ require 'hmac-md5'
       
       # temporarily keep track of Supersonic clicks like this
       
-      if netid = "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+      if netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
         @SSnet = Network.find_by netid: netid
         if @SSnet.Flag2 == nil then
           @SSnet.Flag2 = "1" 
         else
           @SSnet.Flag2 = (@SSnet.Flag2.to_i + 1).to_s
         end
+        @SSnet.save
       else
       end
-      @SSnet.save
         
         
       
@@ -693,12 +693,9 @@ require 'hmac-md5'
         net = Network.find_by netid: @netid
         user.currentpayout = net.payout
         
-        
-        
-        
-        
-        
+             
         if (net.status == "EXTTEST") then
+          puts "***********EXTTEST FOUND ***************"
           redirect_to '/users/techtrendssamplesurvey'
           return
         else
@@ -1039,8 +1036,8 @@ require 'hmac-md5'
                   end
                   
                 when 45
-                  print 'ZIPS: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
+              #    print 'ZIPS: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+              #    puts
                   @zipquotavalidationwasdone=true
  
                 # Except for Canada, check for zip in other countries
@@ -1181,8 +1178,8 @@ require 'hmac-md5'
                   end
                   
                 when 45
-                  print 'ZIPS: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
+               #   print 'ZIPS: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+              #   puts
                   # @zipquotavalidationwasdone=true
                   @NestedQuestionID << 45
  
