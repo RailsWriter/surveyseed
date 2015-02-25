@@ -405,7 +405,7 @@ class RedirectsController < ApplicationController
               end
 
 
-              if ((@user.SupplierLink.length == 1) then #P2S is the next link
+              if (@user.SupplierLink.length == 1) then #P2S is the next link
           
                 print 'User will be sent to this survey: ', @user.SupplierLink[0]
                 puts
@@ -640,7 +640,7 @@ class RedirectsController < ApplicationController
             end
 
         
-            if ((@user.SupplierLink.length == 1) then #P2S is the next link
+            if (@user.SupplierLink.length == 1) then #P2S is the next link
           
               print 'User will be sent to this survey: ', @user.SupplierLink[0]
               puts
