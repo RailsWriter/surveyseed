@@ -336,7 +336,7 @@ class RedirectsController < ApplicationController
             #Tell user that they were not matched in P2S due to Failure
             redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=5'
             
-          else # p2s redirect
+          else # not p2s redirect
             
             # save attempt info in User and Survey tables
             @user = User.find_by user_id: params[:PID]          
@@ -356,7 +356,7 @@ class RedirectsController < ApplicationController
               # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
               @survey.SurveyExactRank = @survey.SurveyExactRank + 1
               @survey.FailureCount = @survey.FailureCount + 1
-              print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn], 'new ExactRank (Failure+OQ+Success) count: ', @survey.SurveyExactRank
+              print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn], ' new ExactRank (Failure+OQ+Success) count= ', @survey.SurveyExactRank
               puts
               
               @survey.save
@@ -405,12 +405,25 @@ class RedirectsController < ApplicationController
               end
 
 
-              print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-              puts
-              @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-              @user.SupplierLink = @user.SupplierLink.drop(1)
-              @user.save
-              redirect_to @NextEntryLink
+              if ((@user.SupplierLink.length == 1) then #P2S is the next link
+          
+                print 'User will be sent to this survey: ', @user.SupplierLink[0]
+                puts
+                @NextEntryLink = @user.SupplierLink[0]
+                @user.SupplierLink = @user.SupplierLink.drop(1)
+                @user.save
+                redirect_to @NextEntryLink
+           
+              else
+                
+                print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
+                puts
+                @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
+                @user.SupplierLink = @user.SupplierLink.drop(1)
+                @user.save
+                redirect_to @NextEntryLink
+
+              end
 
             else # if SupplierLink empty?
               
@@ -500,7 +513,7 @@ class RedirectsController < ApplicationController
             #Tell user that they were not matched due to OQ in P2S
             redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
 
-          else # p2sredirect
+          else # not a p2sredirect
             
             # save attempt info in User and Survey tables
             @user = User.find_by user_id: params[:PID]
@@ -587,6 +600,7 @@ class RedirectsController < ApplicationController
           
           if (@user.SupplierLink.empty? == false) then
             
+            
             if @user.country=="9" then 
               @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.householdcomp.to_s
             else
@@ -626,12 +640,24 @@ class RedirectsController < ApplicationController
             end
 
         
-            print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-            puts
-            @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-            @user.SupplierLink = @user.SupplierLink.drop(1)
-            @user.save
-            redirect_to @NextEntryLink
+            if ((@user.SupplierLink.length == 1) then #P2S is the next link
+          
+              print 'User will be sent to this survey: ', @user.SupplierLink[0]
+              puts
+              @NextEntryLink = @user.SupplierLink[0]
+              @user.SupplierLink = @user.SupplierLink.drop(1)
+              @user.save
+              redirect_to @NextEntryLink
+           
+            else
+        
+              print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
+              puts
+              @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
+              @user.SupplierLink = @user.SupplierLink.drop(1)
+              @user.save
+              redirect_to @NextEntryLink
+            end
             
           else # if SupplierLink empty
             
