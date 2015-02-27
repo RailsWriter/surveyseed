@@ -749,115 +749,14 @@ require 'hmac-md5'
 #    end
 
 
-    if @poorconversion then
-      @topofstack = 1
-    else
-      # make top of Custom surveys as starting spot for picking qualified surveys
-      @topofstack = 96
-    end
+# move below logic to outside of qualifications loop since we need to check it once per user and not per survey. Also, qualification will not be needed if P2S is at HEAD
 
-    print "**************************** PoorConversion is turned: ", @poorconversion, ' Topofstack is: ', @topofstack
-    puts
-
-    Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
-
-      print "************************** Chosen survey rank: ", survey.SurveyGrossRank
-
-      if (( survey.SurveyStillLive ) && 
-        (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
-        (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
-        (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
-        (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ])) &&
-        (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ])) &&
-        (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ])) &&
-        (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ])) &&
-        (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ user.householdcomp.to_s ] & survey.QualificationHHCPreCodes.flatten) == [ user.householdcomp.to_s ])) &&
-        ((survey.CPI == nil) || (survey.CPI > 1.49))) then
-        
-        # Add a more generic condition that survey.CPI > user.currentpayout
-        
-        #Prints for testing code
-
-        @_gender = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
-        @_age = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
-        @_ZIP = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
-        @_race = (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ]))
-        @_ethnicity= (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ]))
-        @_education= (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ]))
-        @_HHI= (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ]))
-        @_employment = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ user.householdcomp.to_s ] & survey.QualificationHHCPreCodes.flatten) == [ user.householdcomp.to_s ]))
-        
-        
-        print '************ User QUALIFIED for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ', survey.QualificationZIPPreCodes, ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.householdcomp.to_s, ' Std_Employment PreCode from survey: ', survey.QualificationHHCPreCodes, 'SurveyStillAlive: ', survey.SurveyStillLive
-         
-        puts
-        
-        print 'Gender match: ', @_gender, ' Age match: ', @_age, ' ZIP match: ', @_ZIP, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment
-        puts
-        
-        user.QualifiedSurveys << survey.SurveyNumber
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-      else
-        # This survey qualifications did not match with the user
-        # Print for testing/verification
-        
-        @_gender = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
-        @_age = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
-        @_ZIP = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
-        @_race = (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ]))
-        @_ethnicity = (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ]))
-        @_education = (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ]))
-        @_HHI= (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ]))
-        @_employment = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ user.householdcomp.to_s ] & survey.QualificationHHCPreCodes.flatten) == [ user.householdcomp.to_s ]))
-        
-        
-        print '************ User DID NOT QUALIFY for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ', survey.QualificationZIPPreCodes, ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.householdcomp.to_s, ' Std_Employment PreCode from survey: ', survey.QualificationHHCPreCodes, 'SurveyStillAlive: ', survey.SurveyStillLive
-         
-        puts
-        
-        print 'Gender match:', @_gender, ' Age match: ', @_age, ' ZIP match: ', @_ZIP, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment
-        puts
-
-      end
-      # End of all surveys in the database that meet the standard qualifications criteria
-    end
-
-    if user.QualifiedSurveys.empty? then  #0
-# delete this if because quota check makes this check redundant
-      
-      puts '************* User did not qualify for a survey so taking user to show FailureLink page'
-      redirect_to '/users/nosuccess'
-      return
-      
-    else #0
-      
-      
-      print '********** This USER_ID has QUALIFIED for the following surveys: ', user.user_id, ' ', user.QualifiedSurveys
-      puts
-
-      # Lets save the surveys user qualifies for in this user's record of database in rank order
-      user.save
-
-      # Look through surveys this user is qualified for, to check if there is quota available. Quota numbers can be read as Maximum or upper limit allowed for a qualification e.g. ages 20-24 quota of 30 and ages 25-30 quota of 50 is the upper limit on both of the groups. The code should first find if the number of respondents in the quota teh respondent falls in has need for more respondents. When a quota is split into parts then respondent must fall into at least one of them.
-      
-      
-      puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after specified number of top ranked surveys with quota are found"
-      
-
+    # Below are the terms set for P2S being HEAD or not and how many FED surveys we are going to pick by country
+    
       @p2s = Network.find_by name: "P2S"
       
       if (@p2s.Flag1 == nil) || (@p2s.Flag1 != "HEAD") || (@p2s.Flag1 == "NOTHEAD") then 
+        
         @foundtopsurveyswithquota = false   # false means not finished finding top FED surveys (set it to true if testing p2s)
         print "**************** P2S is NOT at the Head"
         puts
@@ -879,701 +778,799 @@ require 'hmac-md5'
         else
           @p2s_AU = 1
         end
-        
-        
+                
       else
+        
         @foundtopsurveyswithquota = true    # true takes users to P2S directly, if set as HEAD
         print "**************** P2S IS at the Head"
         puts
+        
       end
       
-# move above logic to outside of qualifications loop since we need to check it once per user and not per survey. Also, qualification will not be needed if P2S is at HEAD
+# moved above logic to outside of qualifications loop since we need to check it once per user and not per survey. Also, qualification will not be needed if P2S is at HEAD
 
-      
-      
-      (0..user.QualifiedSurveys.length-1).each do |j| #1
-        
-# delete the j loop and move the section below into the before else clause of qualified surveys found
 
+    if @poorconversion then
+      @topofstack = 1
+    else
+      # make top of Custom surveys as starting spot for picking qualified surveys
+      @topofstack = 96
+    end
+
+    print "**************************** PoorConversion is turned: ", @poorconversion, ' Topofstack is: ', @topofstack
+    puts
         
+
+    Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
+
+      if @foundtopsurveyswithquota == false then  #3 false means not finished finding top surveys
+        
+
+        if (( survey.SurveyStillLive ) && 
+          (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
+          (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
+          (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
+          (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ])) &&
+          (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ])) &&
+          (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ])) &&
+          (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ])) &&
+          (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ user.householdcomp.to_s ] & survey.QualificationHHCPreCodes.flatten) == [ user.householdcomp.to_s ])) &&
+          ((survey.CPI == nil) || (survey.CPI > 1.49))) then
+        
+        # Add a more generic condition that survey.CPI > user.currentpayout
+        
+        #Prints for testing code
+
+        @_gender = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
+        @_age = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
+        @_ZIP = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
+        @_race = (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ]))
+        @_ethnicity= (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ]))
+        @_education= (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ]))
+        @_HHI= (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ]))
+        @_employment = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ user.householdcomp.to_s ] & survey.QualificationHHCPreCodes.flatten) == [ user.householdcomp.to_s ]))
+        
+        
+        print '************ User QUALIFIED for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ..... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.householdcomp.to_s, ' Std_Employment PreCode from survey: ', survey.QualificationHHCPreCodes, 'SurveyStillAlive: ', survey.SurveyStillLive
+         
+        puts
+        
+        print 'Gender match: ', @_gender, ' Age match: ', @_age, ' ZIP match: ', @_ZIP, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment
+        puts
+        
+        user.QualifiedSurveys << survey.SurveyNumber
+        
+        print '********** This USER_ID: ', user.user_id, ' has QUALIFIED for the following survey : ', survey.SurveyNumber
+        puts
+        
+        print '********** In total This USER_ID: ', user.user_id, ' has QUALIFIED for the following surveys: ', user.QualifiedSurveys
+        puts
+        
+        
+#        if user.QualifiedSurveys.empty? then  #0
+    # delete this if because quota check makes this check redundant
+      
+#          puts '************* User did not qualify for this survey so taking user to show FailureLink page'
+#          redirect_to '/users/nosuccess'
+#          return
+      
+#        else #0
+      
+
+          # Lets save the surveys user qualifies for in this user's record of database in rank order
+          user.save
           
-        if @foundtopsurveyswithquota == false then  #3 false means not finished finding top surveys
+# redundant?
 
-        @surveynumber = user.QualifiedSurveys[j]
-       
-# replace the above line by @surveynumber = survey.SurveyNumber to assign it the survey number user qualified for.        
+          # Look through the survey this user is qualified for, to check if there is quota available. Quota numbers can be read as Maximum or upper limit allowed for a qualification e.g. ages 20-24 quota of 30 and ages 25-30 quota of 50 is the upper limit on both of the groups. The code should first find if the number of respondents in the quota teh respondent falls in has need for more respondents. When a quota is split into parts then respondent must fall into at least one of them.
+      
+      
+          puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after specified number of top ranked surveys with quota are found"
+      
+      
+ #         (0..user.QualifiedSurveys.length-1).each do |j| #1
+ # delete the j loop and move the section below into the before else clause of qualified surveys found        
+          
+#            @surveynumber = user.QualifiedSurveys[j]
+# delete above and use the survey number in Qualifications j-loop
+            
+            @surveynumber = survey.SurveyNumber
         
         
+#            Survey.where( "SurveyNumber = ?", @surveynumber).each do |survey| #2
+    # delete the line above because we will be in the qualifications do loop for this survey number
+
+
+            @NumberOfQuotas = survey.SurveyQuotas.length-1
+            print '************ The Number of Quota IDs in this survey are more than 1: ', @NumberOfQuotas+1
+            puts
+            print '************ Lets examine if there are any Total+Quotas (k) open for this user'
+            puts
+
+            # each survey specifies k quotas each
         
-        Survey.where( "SurveyNumber = ?", @surveynumber).each do |survey| #2
-# delete the line above because we will be in the qualifications do loop for this survey number
-
-
-
-        @NumberOfQuotas = survey.SurveyQuotas.length-1
-        print '************ The Number of Quota IDs in this survey are more than 1: ', @NumberOfQuotas+1
-        puts
-        print '************ Lets examine if there are any Total+Quotas (k) open for this user'
-        puts
-
-        # each survey specifies k quotas each
+            # first entry (k=0) is always for Total quota. Check if total quota exists i.e. respondents/completes are needed.
+            totalquotaexists = false
         
-        # first entry (k=0) is always for Total quota. Check if total quota exists i.e. respondents/completes are needed.
-        totalquotaexists = false
-        
-        if (survey.SurveyQuotas[0]["SurveyQuotaType"] == "Total" ) then  #3
+            if (survey.SurveyQuotas[0]["SurveyQuotaType"] == "Total" ) then  #3
            
-          puts "**************** Found Total quota values"       
-          if survey.SurveyQuotas[0]["NumberOfRespondents"] > 0 then #4
-            print 'Total quota numberofrespondents is: ', survey.SurveyQuotas[0]["NumberOfRespondents"]
-            puts
-            totalquotaexists = true
-          else #4
-            # Total NumberOfRespondent needed = 0. No completes required
-            print '************* No completes required - no quota available for this syurvey: ', survey.SurveyNumber
-            puts
-          end #4
-        else #3
-          # Lets assume that quota is open for all users so add this survey number to user's ride
-          print '************* No Total quota ID found. Assuming that quota is open for ALL users. Might want to change this to refuse this survey based on experience. This should typically NOT happen.'
-          puts
-          user.SurveysWithMatchingQuota << @surveynumber
-          
-          if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_US) then
-            
-            @foundtopsurveyswithquota = true
-          
-          else
-            
-            if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_CA) then
-              
-              @foundtopsurveyswithquota = true
-            
-            else
-            
-              if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
-                
-                @foundtopsurveyswithquota = true
-              
-              else
-              
-                #do nothing
-              
-              end
-            
-            end
-          
-          end
-          
-        end #3
-          
-
-        # Review quota IDs if there are more entries than Total quota (at k=0)
-        
-        if (totalquotaexists) && (@NumberOfQuotas > 0) then #5
-
-          # Assume all quotas are closed unless proven false
-          agequotaexists = false
-          genderquotaexists = false
-          @ZIPquotaexists = false
-          ethnicityquotaexists = false
-          racequotaexists = false
-          educationquotaexists = false
-          hhiquotaexists = false
-          
-          
-          # These will help ensure that if a questionID exists in a survey - we make sure that the user meets that question ID's quota
-          @agequotavalidationwasdone = false
-          @genderquotavalidationwasdone = false
-          @zipquotavalidationwasdone = false
-          @ethnicityquotavalidationwasdone = false
-          @racequotavalidationwasdone = false
-          @educationquotavalidationwasdone = false
-          @hhiquotavalidationwasdone = false
-          
-          # Create a new list for each survey
-          @listofunmatchednestedquestionIDs = Array.new
-          @NestedQuestionIDstringArray = Array.new
-          
-          # Go through each quota (k)
-          
-          (1..@NumberOfQuotas).each do |k| #6
-            puts '***************** Starting at the next value of k i.e. next QuotaID: ', survey.SurveyQuotas[k]["SurveyQuotaID"]
-            @NumberOfRespondents = survey.SurveyQuotas[k]["NumberOfRespondents"]
-            print 'Number of respondents =, in this quota ID index k=: ', @NumberOfRespondents, ' ', k
-            puts
-            print '***** Questions in this quota: ', survey.SurveyQuotas[k]["Questions"]
-            puts            
-
-            
-          if survey.SurveyQuotas[k]["NumberOfRespondents"] > 0 then #7
-            
-            print '****************** Needs respondents at k=', k
-            puts
-            
-            @NumberOfQuestions = survey.SurveyQuotas[k]["Questions"].length
-            
-            print '*********************** Number of questions = ', @NumberOfQuestions
-            puts
-            
-            if @NumberOfQuestions == 1 then #8 unnested quota
- 
-#              (0..survey.SurveyQuotas[k]["Questions"].length-1).each do |l| #10
-                
-                l = 0
-                puts '**************** Number of questions is 1. Setting l=0'
-                print '*********** Question ID= for the question is: ', survey.SurveyQuotas[k]["Questions"][l]["QuestionID"]
+              puts "**************** Found Total quota values"       
+              if survey.SurveyQuotas[0]["NumberOfRespondents"] > 0 then #4
+                print 'Total quota numberofrespondents is: ', survey.SurveyQuotas[0]["NumberOfRespondents"]
                 puts
+                totalquotaexists = true
+              else #4
+                # Total NumberOfRespondent needed = 0. No completes required
+                print '************* No completes required - no quota available for this syurvey: ', survey.SurveyNumber
+                puts
+              end #4
+            else #3
+              # Lets assume that quota is open for all users so add this survey number to user's ride
+              print '************* No Total quota ID found. Assuming that quota is open for ALL users. Might want to change this to refuse this survey based on experience. This should typically NOT happen.'
+              puts
+              user.SurveysWithMatchingQuota << @surveynumber
+          
+              if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_US) then
+            
+                @foundtopsurveyswithquota = true
+          
+              else
+            
+                if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_CA) then
               
-              # check if a quota exists for this user by matching precodes for the questions (at l=0) in a quota (k)
+                  @foundtopsurveyswithquota = true
+            
+                else
+            
+                  if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
+                
+                    @foundtopsurveyswithquota = true
+              
+                  else
+              
+                    #do nothing
+              
+                  end
+            
+                end
+          
+              end
+          
+            end #3
+          
+
+            # Review quota IDs if there are more entries than Total quota (at k=0)
+        
+            if (totalquotaexists) && (@NumberOfQuotas > 0) then #5
+
+              # Assume all quotas are closed unless proven false
+              agequotaexists = false
+              genderquotaexists = false
+              @ZIPquotaexists = false
+              ethnicityquotaexists = false
+              racequotaexists = false
+              educationquotaexists = false
+              hhiquotaexists = false
+          
+          
+              # These will help ensure that if a questionID exists in a survey - we make sure that the user meets that question ID's quota
+              @agequotavalidationwasdone = false
+              @genderquotavalidationwasdone = false
+              @zipquotavalidationwasdone = false
+              @ethnicityquotavalidationwasdone = false
+              @racequotavalidationwasdone = false
+              @educationquotavalidationwasdone = false
+              @hhiquotavalidationwasdone = false
+          
+              # Create a new list for each survey
+              @listofunmatchednestedquestionIDs = Array.new
+              @NestedQuestionIDstringArray = Array.new
+          
+              # Go through each quota (k)
+          
+              (1..@NumberOfQuotas).each do |k| #6
+                puts '***************** Starting at the next value of k i.e. next QuotaID: ', survey.SurveyQuotas[k]["SurveyQuotaID"]
+                @NumberOfRespondents = survey.SurveyQuotas[k]["NumberOfRespondents"]
+                print 'Number of respondents =, in this quota ID index k=: ', @NumberOfRespondents, ' ', k
+                puts
+                print '***** Questions in this quota: ', survey.SurveyQuotas[k]["Questions"]
+                puts            
+
+            
+              if survey.SurveyQuotas[k]["NumberOfRespondents"] > 0 then #7
+            
+                print '****************** Needs respondents at k=', k
+                puts
+            
+                @NumberOfQuestions = survey.SurveyQuotas[k]["Questions"].length
+            
+                print '*********************** Number of questions = ', @NumberOfQuestions
+                puts
+            
+                if @NumberOfQuestions == 1 then #8 unnested quota
+ 
+    #              (0..survey.SurveyQuotas[k]["Questions"].length-1).each do |l| #10
+                
+                    l = 0
+                    puts '**************** Number of questions is 1. Setting l=0'
+                    print '*********** Question ID= for the question is: ', survey.SurveyQuotas[k]["Questions"][l]["QuestionID"]
+                    puts
+              
+                  # check if a quota exists for this user by matching precodes for the questions (at l=0) in a quota (k)
             
               
-              case survey.SurveyQuotas[k]["Questions"][l]["QuestionID"] #9
+                  case survey.SurveyQuotas[k]["Questions"][l]["QuestionID"] #9
                 
-                when 42
-                  print 'Age: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  @agequotavalidationwasdone = true
+                    when 42
+                      print 'Age: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      @agequotavalidationwasdone = true
                   
-                  if ([ user.age ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.age ] ) then
-                    agequotaexists=true                     
-                    puts '*********** Age question matches'
-                  else
-                    agequotaexists = false || agequotaexists
-                    print '********************************************************************* Age question does not match: ', agequotaexists
-                    puts
-                  end
+                      if ([ user.age ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.age ] ) then
+                        agequotaexists=true                     
+                        puts '*********** Age question matches'
+                      else
+                        agequotaexists = false || agequotaexists
+                        print '********************************************************************* Age question does not match: ', agequotaexists
+                        puts
+                      end
                   
-                when 43
-                  print 'Gender: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  @genderquotavalidationwasdone = true
+                    when 43
+                      print 'Gender: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      @genderquotavalidationwasdone = true
                   
-                  if ( @GenderPreCode & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == @GenderPreCode ) then
-                    genderquotaexists=true
-                    puts '************ Gender question matches'
-                  else
-                    genderquotaexists=false || genderquotaexists
-                    print '******************************************************************* Gender question does not match: ', genderquotaexists
-                    puts
-                  end
+                      if ( @GenderPreCode & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == @GenderPreCode ) then
+                        genderquotaexists=true
+                        puts '************ Gender question matches'
+                      else
+                        genderquotaexists=false || genderquotaexists
+                        print '******************************************************************* Gender question does not match: ', genderquotaexists
+                        puts
+                      end
                   
-                when 45
-              #    print 'ZIPS: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-              #    puts
-                  @zipquotavalidationwasdone=true
+                    when 45
+                  #    print 'ZIPS: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                  #    puts
+                      @zipquotavalidationwasdone=true
  
-                # Except for Canada, check for zip in other countries
+                    # Except for Canada, check for zip in other countries
 
-                  if ((user.country == 6) || ( [ user.ZIP ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.ZIP ] )) then
-                    @ZIPquotaexists=true
-                   puts '********** ZIP question matches'
-                  else
-                    @ZIPquotaexists=false || @ZIPquotaexists
-                    puts '********** ZIP question does not match'
-                  end
+                      if ((user.country == 6) || ( [ user.ZIP ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.ZIP ] )) then
+                        @ZIPquotaexists=true
+                       puts '********** ZIP question matches'
+                      else
+                        @ZIPquotaexists=false || @ZIPquotaexists
+                        puts '********** ZIP question does not match'
+                      end
                   
-                when 47
-                  print 'Ethnicity (47, Hispanic): ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  @ethnicityquotavalidationwasdone = true
+                    when 47
+                      print 'Ethnicity (47, Hispanic): ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      @ethnicityquotavalidationwasdone = true
                   
-                  if ([ user.ethnicity ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.ethnicity ] ) then
-                    ethnicityquotaexists = true
-                    puts '*********** Ethnicity question matches'
-                  else
-                    ethnicityquotaexists = false || ethnicityquotaexists
-                    print '******************************************************************* Ethnicity question does not match: ', ethnicityquotaexists
-                    puts
-                  end
-                  
-                  
-                when 113
-                  print 'Race (113, Ethnicity): ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  @racequotavalidationwasdone=true
-                  
-                  if ([ user.race ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.race ] ) then
-                    racequotaexists = true
-                    puts '*********** Race question matches'
-                  else
-                    racequotaexists = false || racequotaexists
-                    puts '*********** Race question does not match'
-                  end
+                      if ([ user.ethnicity ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.ethnicity ] ) then
+                        ethnicityquotaexists = true
+                        puts '*********** Ethnicity question matches'
+                      else
+                        ethnicityquotaexists = false || ethnicityquotaexists
+                        print '******************************************************************* Ethnicity question does not match: ', ethnicityquotaexists
+                        puts
+                      end
                   
                   
-                when 633
-                  print 'Education: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  @educationquotavalidationwasdone=true
+                    when 113
+                      print 'Race (113, Ethnicity): ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      @racequotavalidationwasdone=true
                   
-                  if ([ user.eduation ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.eduation ] ) then
-                    educationquotaexists = true
-                    puts '*********** Education question matches'
-                  else
-                    educationquotaexists = false || educationquotaexists
-                    puts '*********** Education question does not match'
-                  end
+                      if ([ user.race ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.race ] ) then
+                        racequotaexists = true
+                        puts '*********** Race question matches'
+                      else
+                        racequotaexists = false || racequotaexists
+                        puts '*********** Race question does not match'
+                      end
                   
-                when 14785
-                  print 'Std_HHI_US: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  @hhiquotavalidationwasdone=true
                   
-                  if ([ user.householdincome ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.householdincome ] ) then
-                    hhiquotaexists = true
-                    puts '*********** Std_HHI_US question matches'
-                  else
-                    hhiquotaexists = false || hhiquotaexists
-                    puts '*********** Std_HHI_US question does not match'
-                  end
+                    when 633
+                      print 'Education: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      @educationquotavalidationwasdone=true
                   
-                when 14887
-                  print 'Std_HHI_INT: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  @hhiquotavalidationwasdone=true
+                      if ([ user.eduation ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.eduation ] ) then
+                        educationquotaexists = true
+                        puts '*********** Education question matches'
+                      else
+                        educationquotaexists = false || educationquotaexists
+                        puts '*********** Education question does not match'
+                      end
                   
-                  if ([ user.householdincome ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.householdincome ] ) then
-                    hhiquotaexists = true
-                    puts '*********** Std_HHI_INT question matches'
-                  else
-                    hhiquotaexists = false || hhiquotaexists
-                    puts '*********** Std_HHI_INT question does not match'
-                  end
+                    when 14785
+                      print 'Std_HHI_US: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      @hhiquotavalidationwasdone=true
                   
-                end #9 End case
+                      if ([ user.householdincome ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.householdincome ] ) then
+                        hhiquotaexists = true
+                        puts '*********** Std_HHI_US question matches'
+                      else
+                        hhiquotaexists = false || hhiquotaexists
+                        puts '*********** Std_HHI_US question does not match'
+                      end
+                  
+                    when 14887
+                      print 'Std_HHI_INT: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      @hhiquotavalidationwasdone=true
+                  
+                      if ([ user.householdincome ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.householdincome ] ) then
+                        hhiquotaexists = true
+                        puts '*********** Std_HHI_INT question matches'
+                      else
+                        hhiquotaexists = false || hhiquotaexists
+                        puts '*********** Std_HHI_INT question does not match'
+                      end
+                  
+                    end #9 End case
                 
-#              end  #10 end of reviewing the question (where l = 0) for fit in a quota (k) - removed by setting l=o
+    #              end  #10 end of reviewing the question (where l = 0) for fit in a quota (k) - removed by setting l=o
               
                                
-            else #8 nested quota i.e. no. of questions (l) > 1
+                else #8 nested quota i.e. no. of questions (l) > 1
               
               
-              @nestedagequotaexists = true
-              @nestedgenderquotaexists = true
-              @nestedzipquotaexists = true
-              @nestedethnicityquotaexists = true
-              @nestedracequotaexists = true
-              @nestededucationquotaexists = true
-              @nestedhhiquotaexists = true
+                  @nestedagequotaexists = true
+                  @nestedgenderquotaexists = true
+                  @nestedzipquotaexists = true
+                  @nestedethnicityquotaexists = true
+                  @nestedracequotaexists = true
+                  @nestededucationquotaexists = true
+                  @nestedhhiquotaexists = true
               
               
-              # we will need to name this nested condition. create a nested question ID
-              @NestedQuestionID = Array.new
+                  # we will need to name this nested condition. create a nested question ID
+                  @NestedQuestionID = Array.new
               
               
-              (0..survey.SurveyQuotas[k]["Questions"].length-1).each do |l| #11
-                print '******** Looping through each question (l=) of a nested quota (k): ', l
-                puts
-                print '*********** Question ID = for this l (above) position in this nested quota is: ', survey.SurveyQuotas[k]["Questions"][l]["QuestionID"]
-                puts
+                  (0..survey.SurveyQuotas[k]["Questions"].length-1).each do |l| #11
+                    print '******** Looping through each question (l=) of a nested quota (k): ', l
+                    puts
+                    print '*********** Question ID = for this l (above) position in this nested quota is: ', survey.SurveyQuotas[k]["Questions"][l]["QuestionID"]
+                    puts
 
-              # check if a quota exists for this user by matching precodes for all questions (l) in a quota (k)
+                  # check if a quota exists for this user by matching precodes for all questions (l) in a quota (k)
               
-              case survey.SurveyQuotas[k]["Questions"][l]["QuestionID"] #12
+                  case survey.SurveyQuotas[k]["Questions"][l]["QuestionID"] #12
                 
-                when 42
-                  print 'Age: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                   # @agequotavalidationwasdone = true
-                  @NestedQuestionID << 42
+                    when 42
+                      print 'Age: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                       # @agequotavalidationwasdone = true
+                      @NestedQuestionID << 42
                   
-                  if ([ user.age ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.age ] ) then
-                    @nestedagequotaexists=true                     
-                    puts '*********** Nested Age question matches'
-                  else
-                    @nestedagequotaexists=false
-                    puts '*********** Nested Age question does not match'
-                  end
-                  
-                when 43
-                  print 'Gender: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  # @genderquotavalidationwasdone=true
-                  @NestedQuestionID << 43
-                  
-                  if ( @GenderPreCode & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == @GenderPreCode ) then
-                    @nestedgenderquotaexists=true
-                    puts '************ nested Gender question matches'
-                  else
-                    @nestedgenderquotaexists=false
-                    puts '************* nested Gender question does not match'
-                  end
-                  
-                when 45
-               #   print 'ZIPS: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-              #   puts
-                  # @zipquotavalidationwasdone=true
-                  @NestedQuestionID << 45
- 
-                # Except for Canada, check for zip in other countries
-
-                  if ((user.country == 6) || ( [ user.ZIP ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.ZIP ] )) then
-                    @nestedzipquotaexists=true
-                   puts '********** nested ZIP question matches'
-                  else
-                    @nestedzipquotaexists=false
-                    puts '********** nested ZIP question does not match'
-                  end
-                  
-                when 47
-                  print 'Ethnicity (47, Hispanic): ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  # @ethnicityquotavalidationwasdone=true
-                  @NestedQuestionID << 47
-                  
-                  if ([ user.ethnicity ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.ethnicity ] ) then
-                    @nestedethnicityquotaexists = true
-                    puts '*********** nested Ethnicity question matches'
-                  else
-                    @nestedethnicityquotaexists = false
-                    puts '*********** nested Ethnicity question does not match'
-                  end
-                  
-                  
-                when 113
-                  print 'Race (113, Ethnicity): ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  # @racequotavalidationwasdone=true
-                  @NestedQuestionID << 113
-                  
-                  if ([ user.race ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.race ] ) then
-                    @nestedracequotaexists = true
-                    puts '*********** nested Race question matches'
-                  else
-                    @nestedracequotaexists = false
-                    puts '*********** Race  question does not match'
-                  end
-                  
-                  
-                when 633
-                  print 'Education: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  # @educationquotavalidationwasdone=true
-                  @NestedQuestionID << 633
-                  
-                  if ([ user.eduation ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.eduation ] ) then
-                    @nestededucationquotaexists = true
-                    puts '*********** nested Education question matches'
-                  else
-                    @nestededucationquotaexists = false
-                    puts '*********** nested Education question does not match'
-                  end
-                  
-                when 14785
-                  print 'Std_HHI_US: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  # @hhiquotavalidationwasdone=true
-                  @NestedQuestionID << 14785
-                  
-                  if ([ user.householdincome ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.householdincome ] ) then
-                    @nestedhhiquotaexists = true
-                    puts '*********** nested Std_HHI_US question matches'
-                  else
-                    @nestedhhiquotaexists = false
-                    puts '*********** nested Std_HHI_US question does not match'
-                  end
-                  
-                when 14887
-                  print 'Std_HHI_INT: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
-                  puts
-                  # @hhiquotavalidationwasdone=true
-                  @NestedQuestionID << 14887
-                  
-                  if ([ user.householdincome ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.householdincome ] ) then
-                    @nestedhhiquotaexists = true
-                    puts '*********** nested Std_HHI_INT question matches'
-                  else
-                    @nestedhhiquotaexists = false
-                    puts '*********** nested Std_HHI_INT question does not match'
-                  end
-                  
-                end #12 End case
-
-              end  #11 Next l until End of do l for l > 0 - end of reviewing all questions for fit in quota (k)              
-              
-                # Quota k exists if qualifications for user profile match with all nested questions (l) in quota (k)
-                if ((@nestedagequotaexists == false) || (@nestedgenderquotaexists == false) || (@nestedzipquotaexists == false) || (@nestedethnicityquotaexists == false) || (@nestedracequotaexists == false) || (@nestededucationquotaexists == false) || (@nestedhhiquotaexists == false)) then
-                  puts '**************** Is true even if any one @nestedquotaexists is false i.e. if user does not meet at least one of the nested criteria.  => This Quota ID is closed for this user.'
-                  nestedquota = false
-                else
-                  puts '*************** Is false only if ALL @nestedquotaexists are simultaneously = true or one or more questions do not match. Therefore, these nested questions match the user. This quota ID is open for this user.'
-                  nestedquota = true
-                  
-                end # End if   
-                  
-                # Keep a list of all nested quota names
-                @nestedquotaname = @NestedQuestionID.uniq.sort.join
-                  print 'New nested questionID string formed: ', @nestedquotaname
-                  puts
-                  print 'Items in the list of nested quotas array BEFORE: ', @NestedQuestionIDstringArray
-                  puts
-                  print 'Items in the list of unmatched nested quotas list BEFORE: ', @listofunmatchednestedquestionIDs
-                  puts
-                  
-                  # if the nested condition was found true in a previous instance then do not add to unmatched list else do
-                  if (nestedquota == false) then 
-                    if (@NestedQuestionIDstringArray.include?(@nestedquotaname)) then
-                      if (@listofunmatchednestedquestionIDs.include?(@nestedquotaname) == false) then
-                        puts '************it must have been true before => so do nothing'
-                        
+                      if ([ user.age ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.age ] ) then
+                        @nestedagequotaexists=true                     
+                        puts '*********** Nested Age question matches'
                       else
-                        puts '************* it is already on the unmatched and all nested quotas list => so do nothing'
+                        @nestedagequotaexists=false
+                        puts '*********** Nested Age question does not match'
                       end
+                  
+                    when 43
+                      print 'Gender: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      # @genderquotavalidationwasdone=true
+                      @NestedQuestionID << 43
+                  
+                      if ( @GenderPreCode & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == @GenderPreCode ) then
+                        @nestedgenderquotaexists=true
+                        puts '************ nested Gender question matches'
+                      else
+                        @nestedgenderquotaexists=false
+                        puts '************* nested Gender question does not match'
+                      end
+                  
+                    when 45
+                   #   print 'ZIPS: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                  #   puts
+                      # @zipquotavalidationwasdone=true
+                      @NestedQuestionID << 45
+ 
+                    # Except for Canada, check for zip in other countries
+
+                      if ((user.country == 6) || ( [ user.ZIP ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.ZIP ] )) then
+                        @nestedzipquotaexists=true
+                       puts '********** nested ZIP question matches'
+                      else
+                        @nestedzipquotaexists=false
+                        puts '********** nested ZIP question does not match'
+                      end
+                  
+                    when 47
+                      print 'Ethnicity (47, Hispanic): ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      # @ethnicityquotavalidationwasdone=true
+                      @NestedQuestionID << 47
+                  
+                      if ([ user.ethnicity ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.ethnicity ] ) then
+                        @nestedethnicityquotaexists = true
+                        puts '*********** nested Ethnicity question matches'
+                      else
+                        @nestedethnicityquotaexists = false
+                        puts '*********** nested Ethnicity question does not match'
+                      end
+                  
+                  
+                    when 113
+                      print 'Race (113, Ethnicity): ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      # @racequotavalidationwasdone=true
+                      @NestedQuestionID << 113
+                  
+                      if ([ user.race ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.race ] ) then
+                        @nestedracequotaexists = true
+                        puts '*********** nested Race question matches'
+                      else
+                        @nestedracequotaexists = false
+                        puts '*********** Race  question does not match'
+                      end
+                  
+                  
+                    when 633
+                      print 'Education: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      # @educationquotavalidationwasdone=true
+                      @NestedQuestionID << 633
+                  
+                      if ([ user.eduation ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.eduation ] ) then
+                        @nestededucationquotaexists = true
+                        puts '*********** nested Education question matches'
+                      else
+                        @nestededucationquotaexists = false
+                        puts '*********** nested Education question does not match'
+                      end
+                  
+                    when 14785
+                      print 'Std_HHI_US: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      # @hhiquotavalidationwasdone=true
+                      @NestedQuestionID << 14785
+                  
+                      if ([ user.householdincome ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.householdincome ] ) then
+                        @nestedhhiquotaexists = true
+                        puts '*********** nested Std_HHI_US question matches'
+                      else
+                        @nestedhhiquotaexists = false
+                        puts '*********** nested Std_HHI_US question does not match'
+                      end
+                  
+                    when 14887
+                      print 'Std_HHI_INT: ', survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes")
+                      puts
+                      # @hhiquotavalidationwasdone=true
+                      @NestedQuestionID << 14887
+                  
+                      if ([ user.householdincome ] & survey.SurveyQuotas[k]["Questions"][l].values_at("PreCodes").flatten == [ user.householdincome ] ) then
+                        @nestedhhiquotaexists = true
+                        puts '*********** nested Std_HHI_INT question matches'
+                      else
+                        @nestedhhiquotaexists = false
+                        puts '*********** nested Std_HHI_INT question does not match'
+                      end
+                  
+                    end #12 End case
+
+                  end  #11 Next l until End of do l for l > 0 - end of reviewing all questions for fit in quota (k)              
+              
+                    # Quota k exists if qualifications for user profile match with all nested questions (l) in quota (k)
+                    if ((@nestedagequotaexists == false) || (@nestedgenderquotaexists == false) || (@nestedzipquotaexists == false) || (@nestedethnicityquotaexists == false) || (@nestedracequotaexists == false) || (@nestededucationquotaexists == false) || (@nestedhhiquotaexists == false)) then
+                      puts '**************** Is true even if any one @nestedquotaexists is false i.e. if user does not meet at least one of the nested criteria.  => This Quota ID is closed for this user.'
+                      nestedquota = false
                     else
-                      puts '*************** this nested question has not ocurred before => so it should be added to the unmatched list and the list of nestedquota names.'
-                      @listofunmatchednestedquestionIDs << @nestedquotaname
-                      @NestedQuestionIDstringArray << @nestedquotaname
-                    end
-                  else
-                    puts '************** nestedquota is true. add to list of nestedquota names. if it was previously not then remove it from unmatched list.'
-                    @NestedQuestionIDstringArray << @nestedquotaname
-                    if @listofunmatchednestedquestionIDs.include?(@nestedquotaname) then
-                      @listofunmatchednestedquestionIDs.delete(@nestedquotaname)
-                    else
-                      puts '*********** do nothing because the quota is satisfied'
-                    end
-                  end  
+                      puts '*************** Is false only if ALL @nestedquotaexists are simultaneously = true or one or more questions do not match. Therefore, these nested questions match the user. This quota ID is open for this user.'
+                      nestedquota = true
+                  
+                    end # End if   
+                  
+                    # Keep a list of all nested quota names
+                    @nestedquotaname = @NestedQuestionID.uniq.sort.join
+                      print 'New nested questionID string formed: ', @nestedquotaname
+                      puts
+                      print 'Items in the list of nested quotas array BEFORE: ', @NestedQuestionIDstringArray
+                      puts
+                      print 'Items in the list of unmatched nested quotas list BEFORE: ', @listofunmatchednestedquestionIDs
+                      puts
+                  
+                      # if the nested condition was found true in a previous instance then do not add to unmatched list else do
+                      if (nestedquota == false) then 
+                        if (@NestedQuestionIDstringArray.include?(@nestedquotaname)) then
+                          if (@listofunmatchednestedquestionIDs.include?(@nestedquotaname) == false) then
+                            puts '************it must have been true before => so do nothing'
+                        
+                          else
+                            puts '************* it is already on the unmatched and all nested quotas list => so do nothing'
+                          end
+                        else
+                          puts '*************** this nested question has not ocurred before => so it should be added to the unmatched list and the list of nestedquota names.'
+                          @listofunmatchednestedquestionIDs << @nestedquotaname
+                          @NestedQuestionIDstringArray << @nestedquotaname
+                        end
+                      else
+                        puts '************** nestedquota is true. add to list of nestedquota names. if it was previously not then remove it from unmatched list.'
+                        @NestedQuestionIDstringArray << @nestedquotaname
+                        if @listofunmatchednestedquestionIDs.include?(@nestedquotaname) then
+                          @listofunmatchednestedquestionIDs.delete(@nestedquotaname)
+                        else
+                          puts '*********** do nothing because the quota is satisfied'
+                        end
+                      end  
               
-                  print 'Items in the list of nested quotas array AFTER: ', @NestedQuestionIDstringArray
-                  puts
-                  print 'Items in the list of unmatched nested quotas list AFTER: ', @listofunmatchednestedquestionIDs
-                  puts
+                      print 'Items in the list of nested quotas array AFTER: ', @NestedQuestionIDstringArray
+                      puts
+                      print 'Items in the list of unmatched nested quotas list AFTER: ', @listofunmatchednestedquestionIDs
+                      puts
               
               
               
-              end # 8 when all nested quotas (l) across a k subquota have been reviewed when NOR > 0
+                  end # 8 when all nested quotas (l) across a k subquota have been reviewed when NOR > 0
               
-            else #7 NumbeOfRespondents for this Quota ID is <= 0
-              # No need to review questions for match
-            end # 7                   
-          end #6 Next k until End do k - checked all quota IDs from k = 1 and above
+                else #7 NumbeOfRespondents for this Quota ID is <= 0
+                  # No need to review questions for match
+                end # 7                   
+              end #6 Next k until End do k - checked all quota IDs from k = 1 and above
           
 
 
-          # for all unnested quotas across all k sub-quotas
+              # for all unnested quotas across all k sub-quotas
           
-          # These flags help figure out which question IDs were in the quota and if user qualifies for the question whose pre-codes are typically split into separate quotas
-          agequotaok = true
-          genderquotaok = true
-          zipquotaok = true
-          ethnicityquotaok = true
-          racequotaok = true
-          educationquotaok = true
-          hhiquotaok = true
-          
-            
-          if @agequotavalidationwasdone then
-            if agequotaexists then
+              # These flags help figure out which question IDs were in the quota and if user qualifies for the question whose pre-codes are typically split into separate quotas
               agequotaok = true
-            else
-              agequotaok = false
-            end
-          else
-          end
-          
-          if @genderquotavalidationwasdone then
-            if genderquotaexists then
               genderquotaok = true
-            else
-              genderquotaok = false
-            end
-          else
-          end
-          
-          if @zipquotavalidationwasdone then
-            if @ZIPquotaexists then
               zipquotaok = true
-            else
-              zipquotaok = false
-            end
-          else
-          end
-          
-          if @ethnicityquotavalidationwasdone then
-            if ethnicityquotaexists then
               ethnicityquotaok = true
-            else
-              ethnicityquotaok = false
-            end
-          else
-          end
-          
-          if @racequotavalidationwasdone then
-            if racequotaexists then
               racequotaok = true
-            else
-              racequotaok = false
-            end
-          else
-          end
-          
-          if @educationquotavalidationwasdone then
-            if educationquotaexists then
               educationquotaok = true
-            else
-              educationquotaok = false
-            end
-          else
-          end
-          
-          if @hhiquotavalidationwasdone then
-            if hhiquotaexists then
               hhiquotaok = true
-            else
-              hhiquotaok = false
-            end
-          else
-          end
-
-
-          # if a validation was done and the below is true then the quota exists
           
-          print '*********************Unnested Quota status: age, gender, zip, ethnicity, race, education and hhi: ', agequotaok, genderquotaok, zipquotaok, ethnicityquotaok, racequotaok, educationquotaok, hhiquotaok
-          puts
-          
-          if (agequotaok && genderquotaok && zipquotaok && ethnicityquotaok && racequotaok && educationquotaok && hhiquotaok) then
-            unnestedquotasexist = true
-            puts 'unnested quota validation works out true'
-          else
-            unnestedquotasexist = false
-            puts 'unnested quota validation does NOT work out true'
-          end
             
-          # if no questions matched and no validation was done then the following let sthe survey be included in the quota
-          if (@agequotavalidationwasdone == false) &&
-            (@genderquotavalidationwasdone == false) &&
-            (@zipquotavalidationwasdone == false) &&
-            (@ethnicityquotavalidationwasdone == false) &&
-            (@racequotavalidationwasdone == false) &&
-            (@educationquotavalidationwasdone == false) &&
-            (@hhiquotavalidationwasdone == false) then
-            unnestedquotasexist = true
-            
-            puts '********** Unnested quota declared available since no questions matched'
-          else
-          end
-          
-
-          # quota validation result for nested quota across all k sub-quotas of a survey
-            # status of @listofunmatchednestedquestionIDs nil indicates that all quotas were matched
-          
-          
-          # total quota validation result across all k sub-quotas of a survey
-          
-          if (@listofunmatchednestedquestionIDs.empty?) && (unnestedquotasexist) then
-            # Everytime (Quota ID set of l quetions) a quota matches, capture the surveynumber. Delete duplicates later
-            puts '****************** Adding the survey to the list of eligible surveys due to quota match'
-            user.SurveysWithMatchingQuota << @surveynumber
-            
-            
-            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_US) then
-            
-              @foundtopsurveyswithquota = true
-          
-            else
-            
-              if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_CA) then
-              
-                @foundtopsurveyswithquota = true
-            
-              else
-            
-                if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
-                
-                  @foundtopsurveyswithquota = true
-              
+              if @agequotavalidationwasdone then
+                if agequotaexists then
+                  agequotaok = true
                 else
-              
-                  #do nothing
-              
+                  agequotaok = false
                 end
-            
+              else
               end
           
-            end
-            
-
-          else
-            print 'Quota in survey number = is not open for this user: ', @surveynumber
-            puts
-          end
-          
-          
-          
-        else #5          
-          if totalquotaexists == false then #6
-            #do nothing
-          else #6
-            # NumberOfQuotas (k) is 0 i.e. there are no quotas specified but totalquotacount exists.
-            # The survey is open to All, provided there is need for respondents specified in Total
-            puts '************* Adding survey to list of eligible quotas even though no quotas specified but Totalquotaexists.'
-            user.SurveysWithMatchingQuota << @surveynumber
-            
-            if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_US) then
-            
-              @foundtopsurveyswithquota = true
-          
-            else
-            
-              if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_CA) then
-              
-                @foundtopsurveyswithquota = true
-            
-              else
-            
-                if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
-                
-                  @foundtopsurveyswithquota = true
-              
+              if @genderquotavalidationwasdone then
+                if genderquotaexists then
+                  genderquotaok = true
                 else
-              
-                  #do nothing
-              
+                  genderquotaok = false
                 end
-            
+              else
               end
           
-            end
+              if @zipquotavalidationwasdone then
+                if @ZIPquotaexists then
+                  zipquotaok = true
+                else
+                  zipquotaok = false
+                end
+              else
+              end
+          
+              if @ethnicityquotavalidationwasdone then
+                if ethnicityquotaexists then
+                  ethnicityquotaok = true
+                else
+                  ethnicityquotaok = false
+                end
+              else
+              end
+          
+              if @racequotavalidationwasdone then
+                if racequotaexists then
+                  racequotaok = true
+                else
+                  racequotaok = false
+                end
+              else
+              end
+          
+              if @educationquotavalidationwasdone then
+                if educationquotaexists then
+                  educationquotaok = true
+                else
+                  educationquotaok = false
+                end
+              else
+              end
+          
+              if @hhiquotavalidationwasdone then
+                if hhiquotaexists then
+                  hhiquotaok = true
+                else
+                  hhiquotaok = false
+                end
+              else
+              end
+
+
+              # if a validation was done and the below is true then the quota exists
+          
+              print '*********************Unnested Quota status: age, gender, zip, ethnicity, race, education and hhi: ', agequotaok, genderquotaok, zipquotaok, ethnicityquotaok, racequotaok, educationquotaok, hhiquotaok
+              puts
+          
+              if (agequotaok && genderquotaok && zipquotaok && ethnicityquotaok && racequotaok && educationquotaok && hhiquotaok) then
+                unnestedquotasexist = true
+                puts 'unnested quota validation works out true'
+              else
+                unnestedquotasexist = false
+                puts 'unnested quota validation does NOT work out true'
+              end
             
-          end  # 6
-        end #5 if there is quota specified in k = 0 (total) or more (other IDs)
+              # if no questions matched and no validation was done then the following let sthe survey be included in the quota
+              if (@agequotavalidationwasdone == false) &&
+                (@genderquotavalidationwasdone == false) &&
+                (@zipquotavalidationwasdone == false) &&
+                (@ethnicityquotavalidationwasdone == false) &&
+                (@racequotavalidationwasdone == false) &&
+                (@educationquotavalidationwasdone == false) &&
+                (@hhiquotavalidationwasdone == false) then
+                unnestedquotasexist = true
+            
+                puts '********** Unnested quota declared available since no questions matched'
+              else
+              end
+          
+
+              # quota validation result for nested quota across all k sub-quotas of a survey
+                # status of @listofunmatchednestedquestionIDs nil indicates that all quotas were matched
           
           
-        end  #2 End reviewing quotas of a |survey|
+              # total quota validation result across all k sub-quotas of a survey
+          
+              if (@listofunmatchednestedquestionIDs.empty?) && (unnestedquotasexist) then
+                # Everytime (Quota ID set of l quetions) a quota matches, capture the surveynumber. Delete duplicates later
+                puts '****************** Adding the survey to the list of eligible surveys due to quota match'
+                user.SurveysWithMatchingQuota << @surveynumber
+            
+            
+                if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_US) then
+            
+                  @foundtopsurveyswithquota = true
+          
+                else
+            
+                  if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_CA) then
+              
+                    @foundtopsurveyswithquota = true
+            
+                  else
+            
+                    if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
+                
+                      @foundtopsurveyswithquota = true
+              
+                    else
+              
+                      #do nothing
+              
+                    end
+            
+                  end
+          
+                end
+            
+
+              else
+                print 'Quota in survey number = is not open for this user: ', @surveynumber
+                puts
+              end
+          
+          
+          
+            else #5          
+              if totalquotaexists == false then #6
+                #do nothing
+              else #6
+                # NumberOfQuotas (k) is 0 i.e. there are no quotas specified but totalquotacount exists.
+                # The survey is open to All, provided there is need for respondents specified in Total
+                puts '************* Adding survey to list of eligible quotas even though no quotas specified but Totalquotaexists.'
+                user.SurveysWithMatchingQuota << @surveynumber
+            
+                if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_US) then
+            
+                  @foundtopsurveyswithquota = true
+          
+                else
+            
+                  if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_CA) then
+              
+                    @foundtopsurveyswithquota = true
+            
+                  else
+            
+                    if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
+                
+                      @foundtopsurveyswithquota = true
+              
+                    else
+              
+                      #do nothing
+              
+                    end
+            
+                  end
+          
+                end
+            
+              end  # 6
+            end #5 if there is quota specified in k = 0 (total) or more (other IDs)
+          
+          
+#           end  #2 End reviewing quotas of a |survey|
+# This end above is redundant since we did not need another survey loop in quotas - just used the one in quals.
+       
+#          end  #1 End j - going through the list of qualified surveys
+           # delete this j-loop end      
+        
+#        end #0 End 'if' user did qualify for any survey(s)
+    
+    # delete this end above because quota check makes this check redundant
+        
+        
+        
+        
+      else
+        # This survey qualifications did not match with the user
+        # Print for testing/verification
+        
+        @_gender = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
+        @_age = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
+        @_ZIP = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
+        @_race = (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ]))
+        @_ethnicity = (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ]))
+        @_education = (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ]))
+        @_HHI= (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ]))
+        @_employment = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ user.householdcomp.to_s ] & survey.QualificationHHCPreCodes.flatten) == [ user.householdcomp.to_s ]))
+        
+        
+        print '************ User DID NOT QUALIFY for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ....... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.householdcomp.to_s, ' Std_Employment PreCode from survey: ', survey.QualificationHHCPreCodes, 'SurveyStillAlive: ', survey.SurveyStillLive
+         
+        puts
+        
+        print 'Gender match:', @_gender, ' Age match: ', @_age, ' ZIP match: ', @_ZIP, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment
+        puts
+
+        end # if survey meets qualification criteria or not
       
       else
-      end #3 if @foundtopsurveyswithquota = false
-       
-      end  #1 End j - going through the list of qualified surveys
+      end #3 if @foundtopsurveyswithquota == false
+    
+    end # do loop for all surveys in db
+    
+    
+    # Lets save the survey numbers that the user meets the qualifications and quota requirements for in this user's record of database in rank order
       
-# delete this j-loop end      
-        
-    end #0 End 'if' user did qualify for any survey(s)
-    
-# delete this end because quota check makes this check redundant
-    
-    
-    
-    # Lets save the survey numbers that the user meets the quota requirements for in this user's record of database in rank order
-      
-      if (user.SurveysWithMatchingQuota.empty?) then
-        p '******************** USERRIDE: No Surveys matching quota were found in Fulcrum'
+    if (user.SurveysWithMatchingQuota.empty?) then
+      p '******************** USERRIDE: No Surveys matching quota were found in Fulcrum'
 #        redirect_to '/users/nosuccess'
 #        return
-      else       
-        user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
-        print '*************** List of Fulcrum surveys where quota is available:', user.SurveysWithMatchingQuota
-        puts
-      end
+    else       
+      user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
+      print '*************** List of Fulcrum surveys where quota is available:', user.SurveysWithMatchingQuota
+      puts
+    end
       
-      user.save
+    user.save
       
-      # Begin the ride
-      userride (session_id)
+    # Begin the ride
+    userride (session_id)
       
-     # End matching surveys to users and ranking 
-  end
+  end # ranksurveys
     
   def userride (session_id)
     
