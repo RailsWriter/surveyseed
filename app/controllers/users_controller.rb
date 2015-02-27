@@ -797,6 +797,17 @@ require 'hmac-md5'
         
         user.QualifiedSurveys << survey.SurveyNumber
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
       else
         # This survey qualifications did not match with the user
         # Print for testing/verification
@@ -886,7 +897,7 @@ require 'hmac-md5'
 
         
           
-        if @foundtopsurveyswithquota == false then       #3 false means not finished finding top surveys
+        if @foundtopsurveyswithquota == false then  #3 false means not finished finding top surveys
 
         @surveynumber = user.QualifiedSurveys[j]
        
