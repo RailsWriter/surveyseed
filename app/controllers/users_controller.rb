@@ -682,17 +682,16 @@ require 'hmac-md5'
     user.SurveysWithMatchingQuota = []
     user.SupplierLink = []
 
-      # Lets find surveys that user is qualified for.
+    # Lets find surveys that user is qualified for.
       
-      # If this is a TEST e.g. with a network provider then route user to run the standard test survey.
+    # If this is a TEST e.g. with a network provider then route user to run the standard test survey.
 
-      @netid = user.netid
-      @poorconversion = false
+    @netid = user.netid
+    @poorconversion = false
       
       if Network.where(netid: @netid).exists? then
         net = Network.find_by netid: @netid
-        user.currentpayout = net.payout
-        
+        user.currentpayout = net.payout       
              
         if (net.status == "EXTTEST") then
           puts "***********EXTTEST FOUND ***************"
@@ -733,20 +732,21 @@ require 'hmac-md5'
         return
       end
       
-    puts "STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
+    puts "**************************** STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
+    
     # change countrylanguageid setting to match user countryID only
     @usercountry = (user.country).to_i
 
 
-    if (Survey.where("CountryLanguageID = ?", @usercountry)).exists? then
+#    if (Survey.where("CountryLanguageID = ?", @usercountry)).exists? then
       # do nothing
       #  print 'Surveys with the users LanguageID are available', user.user_id
       #  puts
-    else
-      p '******************** USERRIDE: No Surveys with country language found in users_controller'
-      redirect_to '/users/nosuccess'
-      return
-    end
+#    else
+#      p '******************** USERRIDE: No Surveys with country language found in users_controller'
+#      redirect_to '/users/nosuccess'
+#      return
+#    end
 
 
     if @poorconversion then
@@ -760,8 +760,6 @@ require 'hmac-md5'
     puts
 
     Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
-
-#      Survey.where("CountryLanguageID = ?", @usercountry).order( "SurveyGrossRank" ).each do |survey|
 
       print "************************** Chosen survey rank: ", survey.SurveyGrossRank
 
@@ -825,14 +823,14 @@ require 'hmac-md5'
     end
 
     if user.QualifiedSurveys.empty? then  #0
+# delete this if because quota check makes this check redundant
+      
       puts '************* User did not qualify for a survey so taking user to show FailureLink page'
       redirect_to '/users/nosuccess'
       return
-#      userride (session_id)
+      
     else #0
       
-      # delete the empty item from initialization
-  #    user.QualifiedSurveys.reject! { |c| c.empty? }
       
       print '********** This USER_ID has QUALIFIED for the following surveys: ', user.user_id, ' ', user.QualifiedSurveys
       puts
@@ -840,7 +838,7 @@ require 'hmac-md5'
       # Lets save the surveys user qualifies for in this user's record of database in rank order
       user.save
 
-      # Look through surveys this user is qualified for to check if there is quota available. Quota numbers can be read as Maximum or upper limit allowed for a qualification e.g. ages 20-24 quota of 30 and ages 25-30 quota of 50 is the upper limit on both of the groups. The code should first find if the number of respondents in the quota teh respondent falls in has need for more respondents. When a quota is split into parts then respondent must fall into at least one of them.
+      # Look through surveys this user is qualified for, to check if there is quota available. Quota numbers can be read as Maximum or upper limit allowed for a qualification e.g. ages 20-24 quota of 30 and ages 25-30 quota of 50 is the upper limit on both of the groups. The code should first find if the number of respondents in the quota teh respondent falls in has need for more respondents. When a quota is split into parts then respondent must fall into at least one of them.
       
       
       puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after specified number of top ranked surveys with quota are found"
@@ -878,14 +876,28 @@ require 'hmac-md5'
         puts
       end
       
+# move above logic to outside of qualifications loop since we need to check it once per user and not per survey. Also, qualification will not be needed if P2S is at HEAD
+
       
       
       (0..user.QualifiedSurveys.length-1).each do |j| #1
+        
+# delete the j loop and move the section below into the before else clause of qualified surveys found
+
+        
           
         if @foundtopsurveyswithquota == false then       #3 false means not finished finding top surveys
 
-          @surveynumber = user.QualifiedSurveys[j]
-          Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey| #2
+        @surveynumber = user.QualifiedSurveys[j]
+       
+# replace the above line by @surveynumber = survey.SurveyNumber to assign it the survey number user qualified for.        
+        
+        
+        
+        Survey.where( "SurveyNumber = ?", @surveynumber).each do |survey| #2
+# delete the line above because we will be in the qualifications do loop for this survey number
+
+
 
         @NumberOfQuotas = survey.SurveyQuotas.length-1
         print '************ The Number of Quota IDs in this survey are more than 1: ', @NumberOfQuotas+1
@@ -893,7 +905,7 @@ require 'hmac-md5'
         print '************ Lets examine if there are any Total+Quotas (k) open for this user'
         puts
 
-        # each of j surveys specifies k quotas each
+        # each survey specifies k quotas each
         
         # first entry (k=0) is always for Total quota. Check if total quota exists i.e. respondents/completes are needed.
         totalquotaexists = false
@@ -1523,12 +1535,16 @@ require 'hmac-md5'
       end #3 if @foundtopsurveyswithquota = false
        
       end  #1 End j - going through the list of qualified surveys
+      
+# delete this j-loop end      
         
     end #0 End 'if' user did qualify for any survey(s)
     
+# delete this end because quota check makes this check redundant
     
     
-      # Lets save the survey numbers that the user meets the quota requirements for in this user's record of database in rank order
+    
+    # Lets save the survey numbers that the user meets the quota requirements for in this user's record of database in rank order
       
       if (user.SurveysWithMatchingQuota.empty?) then
         p '******************** USERRIDE: No Surveys matching quota were found in Fulcrum'
