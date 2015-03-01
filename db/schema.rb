@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150301081146) do
+ActiveRecord::Schema.define(version: 20150301085522) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -91,7 +91,6 @@ ActiveRecord::Schema.define(version: 20150301081146) do
     t.string   "zip"
     t.string   "zip_type"
     t.string   "primary_city"
-    t.string   "acceptable_cities"
     t.string   "county"
     t.string   "timezone"
     t.string   "area_codes"
@@ -101,7 +100,6 @@ ActiveRecord::Schema.define(version: 20150301081146) do
     t.string   "country"
     t.boolean  "decommissioned"
     t.integer  "estimated_population"
-    t.string   "notes"
     t.string   "City"
     t.string   "CriteriaID"
     t.string   "State"
