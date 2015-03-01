@@ -3,7 +3,7 @@
 UsGeo.all.each do |geo|
 
   
-  if ((geo.zip.to_i >= 01001) && (geo.zip.to_i <= 06928)) then
+  if ((geo.zip.to_i >= 1001) && (geo.zip.to_i <= 6928)) then
     geo.region = "Northeast"
     geo.regionPrecode = "1"
     geo.division = "New England"
@@ -11,7 +11,7 @@ UsGeo.all.each do |geo|
   else
   end
   
-  if (geo.zip.to_i <= 00544) || ((geo.zip.to_i >= 07001) && (geo.zip.to_i <= 19612)) then
+  if (geo.zip.to_i <= 544) || ((geo.zip.to_i >= 7001) && (geo.zip.to_i <= 19640)) then
     geo.region = "Northeast"
     geo.regionPrecode = "1"
     geo.division = "Middle Atlantic"

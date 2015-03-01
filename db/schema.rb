@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150301085522) do
+ActiveRecord::Schema.define(version: 20150301093731) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -108,6 +108,10 @@ ActiveRecord::Schema.define(version: 20150301085522) do
     t.string   "DMARegionCode"
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
+    t.string   "region"
+    t.string   "regionPrecode"
+    t.string   "division"
+    t.string   "divisionPrecode"
   end
 
   create_table "users", force: true do |t|
