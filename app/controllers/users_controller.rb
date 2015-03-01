@@ -691,7 +691,13 @@ require 'hmac-md5'
       
       if Network.where(netid: @netid).exists? then
         net = Network.find_by netid: @netid
-        user.currentpayout = net.payout       
+        
+        if net.payout == nil then
+          @currentpayout = 1.49 
+        else
+          @currentpayout = net.payout  
+        end
+             
              
         if (net.status == "EXTTEST") then
           puts "***********EXTTEST FOUND ***************"
@@ -732,49 +738,30 @@ require 'hmac-md5'
         return
       end
       
-    puts "**************************** STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
+
     
-    # change countrylanguageid setting to match user countryID only
-    @usercountry = (user.country).to_i
-
-
-#    if (Survey.where("CountryLanguageID = ?", @usercountry)).exists? then
-      # do nothing
-      #  print 'Surveys with the users LanguageID are available', user.user_id
-      #  puts
-#    else
-#      p '******************** USERRIDE: No Surveys with country language found in users_controller'
-#      redirect_to '/users/nosuccess'
-#      return
-#    end
-
-
-# move below logic to outside of qualifications loop since we need to check it once per user and not per survey. Also, qualification will not be needed if P2S is at HEAD
-
-    # Below are the terms set for P2S being HEAD or not and how many FED surveys we are going to pick by country
-    
-      @p2s = Network.find_by name: "P2S"
+#      @p2s = Network.find_by name: "P2S"
       
-      if (@p2s.Flag1 == nil) || (@p2s.Flag1 != "HEAD") || (@p2s.Flag1 == "NOTHEAD") then 
+      if (net.Flag2 == nil) || (net.Flag2 != "HEAD") || (net.Flag2 == "NOTHEAD") then 
         
         @foundtopsurveyswithquota = false   # false means not finished finding top FED surveys (set it to true if testing p2s)
         print "**************** P2S is NOT at the Head"
         puts
         
-        if @p2s.Flag2 != nil then
-          @p2s_US = @p2s.Flag2.to_i
+        if net.Flag3 != nil then
+          @p2s_US = net.Flag3.to_i
         else
           @p2s_US = 1
         end
       
-        if @p2s.Flag3 != nil then
-          @p2s_CA = @p2s.Flag3.to_i
+        if net.Flag4 != nil then
+          @p2s_CA = net.Flag4.to_i
         else
           @p2s_CA = 1
         end
       
-        if @p2s.Flag4 != nil then
-          @p2s_AU = @p2s.Flag4.to_i
+        if net.Flag5 != nil then
+          @p2s_AU = net.Flag5.to_i
         else
           @p2s_AU = 1
         end
@@ -787,7 +774,6 @@ require 'hmac-md5'
         
       end
       
-# moved above logic to outside of qualifications loop since we need to check it once per user and not per survey. Also, qualification will not be needed if P2S is at HEAD
 
 
     if @poorconversion then
@@ -800,6 +786,13 @@ require 'hmac-md5'
     print "**************************** PoorConversion is turned: ", @poorconversion, ' Topofstack is: ', @topofstack
     puts
         
+
+
+    puts "**************************** STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
+    
+    # change countrylanguageid setting to match user countryID only
+    @usercountry = (user.country).to_i
+
 
     Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
 
@@ -815,9 +808,8 @@ require 'hmac-md5'
           (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ])) &&
           (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ])) &&
           (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ user.householdcomp.to_s ] & survey.QualificationHHCPreCodes.flatten) == [ user.householdcomp.to_s ])) &&
-          ((survey.CPI == nil) || (survey.CPI > 1.49))) then
-        
-        # Add a more generic condition that survey.CPI > user.currentpayout
+          ((survey.CPI == nil) || (survey.CPI > @currentpayout))) then
+          
         
         #Prints for testing code
 
