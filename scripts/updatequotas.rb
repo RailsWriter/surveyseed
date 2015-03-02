@@ -3,7 +3,7 @@ require 'httparty'
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
 
-flag = 'prod'
+flag = 'stag'
 
 
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
@@ -131,81 +131,7 @@ begin
           survey.Conversion = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
                     
           print '******************* GEPC is: ', survey.GEPC, ' Conversion is: ', survey.Conversion
-          puts
-
-     
-          
-#          if (survey.SurveyExactRank > 10) || (survey.CompletedBy.length > 0) then # if 20
-            # do nothing
-#          else # If 20
-            # update Rank with new Conversion data
-#            case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
-#              when 0..5
-#                puts "Lowest Rank 20"
-#                survey.SurveyGrossRank = 20
-#              when 6..10
-#                puts "Rank 19"
-#                survey.SurveyGrossRank = 19
-#              when 11..15
-#                puts "Rank 18"
-#                survey.SurveyGrossRank = 18
-#              when 16..20
-#                puts "Rank 17"
-#                survey.SurveyGrossRank = 17
-#              when 21..25
-#                puts "Rank 16"
-#                survey.SurveyGrossRank = 16
-#              when 26..30
-#                puts "Rank 15"
-#                survey.SurveyGrossRank = 15
-#              when 31..35
-#                puts "Rank 14"
-#                survey.SurveyGrossRank = 14
-#              when 36..40
-#                puts "Rank 13"
-#                survey.SurveyGrossRank = 13
-#              when 41..45
-#                puts "Rank 12"
-#                survey.SurveyGrossRank = 12
-#              when 46..50
-#                puts "Rank 11"
-#                survey.SurveyGrossRank = 11
-#              when 51..55
-#                puts "Rank 10"
-#                survey.SurveyGrossRank = 10
-#              when 56..60
-#                puts "Rank 9"
-#                survey.SurveyGrossRank = 9
-#              when 61..65
-#                puts "Rank 8"
-#                survey.SurveyGrossRank = 8
-#              when 66..70
-#                puts "Rank 7"
-#                survey.SurveyGrossRank = 7
-#              when 71..75
-#                puts "Rank 6"
-#                survey.SurveyGrossRank = 6
-#              when 76..80
-#                puts "Rank 5"
-#                survey.SurveyGrossRank = 5
-#              when 81..85
-#                puts "Rank 4"
-#                survey.SurveyGrossRank = 4
-#              when 86..90
-#                puts "Rank 3"
-#                survey.SurveyGrossRank = 3
-#              when 91..95
-#                puts "Rank 2"
-#                survey.SurveyGrossRank = 2
-#              when 96..100
-#                puts "Highest Rank 1"
-#                survey.SurveyGrossRank = 1
-#            end # end case
-            
-            
-#          end # if 20 'if (survey.SurveyExactRank > 10) || (survey.CompletedBy.length > 0) then'
-
- 
+          puts 
  
  
  
@@ -242,6 +168,13 @@ begin
       survey.QualificationEducationPreCodes = ["ALL"]  
       survey.QualificationHHIPreCodes = ["ALL"]
       survey.QualificationHHCPreCodes = ["ALL"]
+      
+      survey.QualificationEmploymentPreCodes = ["ALL"]      
+      survey.QualificationPIndustryPreCodes = ["ALL"]
+      survey.QualificationDMAPreCodes = ["ALL"]
+      survey.QualificationStatePreCodes = ["ALL"]
+      survey.QualificationDivisionPreCodes = ["ALL"]          
+      survey.QualificationRegionPreCodes = ["ALL"]
 
 
     # Update specific qualifications to be current information
@@ -259,6 +192,14 @@ begin
         survey.QualificationEducationPreCodes = ["ALL"]  
         survey.QualificationHHIPreCodes = ["ALL"]
         survey.QualificationHHCPreCodes = ["ALL"]
+        
+        survey.QualificationEmploymentPreCodes = ["ALL"]      
+        survey.QualificationPIndustryPreCodes = ["ALL"]
+        survey.QualificationDMAPreCodes = ["ALL"]
+        survey.QualificationStatePreCodes = ["ALL"]
+        survey.QualificationDivisionPreCodes = ["ALL"]          
+        survey.QualificationRegionPreCodes = ["ALL"]
+        
        
       else
         @NumberOfQualificationsQuestions = SurveyQualifications["SurveyQualification"]["Questions"].length-1
@@ -349,17 +290,53 @@ begin
               end
               p '------------------------------------------------------------>> Rename HHComp to STANDARD_EMPLOYMENT: '
               survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
+              survey.QualificationEmploymentPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
+
+              
 
 
-            when 643
+
+            when 5729
               if flag == 'stag' then
-                print '------------------------------------------------------------->> STANDARD_INDUSTRY: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                print '************ STANDARD_INDUSTRY_PERSONAL: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end    
+              survey.QualificationPIndustryPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+              
+            when 97
+              if flag == 'stag' then
+                print 'DMA: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 puts
               else
               end
+              survey.QualificationDMAPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
               
-    
-                         
+            when 96
+              if flag == 'stag' then
+                print 'State: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              survey.QualificationStatePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+            
+            when 101
+              if flag == 'stag' then
+                print 'Division: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              survey.QualificationDivisionPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+              
+            when 122
+              if flag == 'stag' then
+                print 'Region: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              survey.QualificationRegionPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+              
+                        
           end # case
           
         end #do j     
@@ -468,151 +445,6 @@ puts
         puts
    
 
-        
-#        if @updatesrankingapproach == 'EEPCFirst' then
-#          if NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] > 0.2 then
-#            @newsurvey.SurveyGrossRank = 1
-#            print '******************* Effective GlobalEPC is > 0.2 = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
-#            puts
-#          else
-#            if ((0 < NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]) && (NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"] <= 0.2)) then
-#              @newsurvey.SurveyGrossRank = 5
-#              print '******************* Effective GlobalEPC is <= 0.2 = ', NewSurveyStatistics["SurveyStatistics"]["EffectiveEPC"]
-#              puts
-#            else
-#              case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
-#              when 0..5
-#                puts "Lowest Rank 20"
-#                @newsurvey.SurveyGrossRank = 20
-#              when 6..10
-#                puts "Rank 19"
-#                @newsurvey.SurveyGrossRank = 19
-#              when 11..15
-#                puts "Rank 18"
-#                @newsurvey.SurveyGrossRank = 18
-#              when 16..20
-#                puts "Rank 17"
-#                @newsurvey.SurveyGrossRank = 17
-#              when 21..25
-#                puts "Rank 16"
-#                @newsurvey.SurveyGrossRank = 16
-#              when 26..30
-#                puts "Rank 15"
-#                @newsurvey.SurveyGrossRank = 15
-#              when 31..35
-#                puts "Rank 14"
-#                @newsurvey.SurveyGrossRank = 14
-#              when 36..40
-#                puts "Rank 13"
-#                @newsurvey.SurveyGrossRank = 13
-#              when 41..45
-#                puts "Rank 12"
-#                @newsurvey.SurveyGrossRank = 12
-#              when 46..50
-#                puts "Rank 11"
-#                @newsurvey.SurveyGrossRank = 11
-#              when 51..55
-#                puts "Rank 10"
-#                @newsurvey.SurveyGrossRank = 10
-#              when 56..60
-#                puts "Rank 9"
-#                @newsurvey.SurveyGrossRank = 9
-#              when 61..65
-#                puts "Rank 8"
-#                @newsurvey.SurveyGrossRank = 8
-#              when 66..70
-#                puts "Rank 7"
-#                @newsurvey.SurveyGrossRank = 7
-#              when 71..75
-#                puts "Rank 6"
-#                @newsurvey.SurveyGrossRank = 6
-#              when 76..80
-#                puts "Rank 5"
-#                @newsurvey.SurveyGrossRank = 5
-#              when 81..85
-#                puts "Rank 4"
-#                @newsurvey.SurveyGrossRank = 4
-#              when 86..90
-#                puts "Rank 3"
-#                @newsurvey.SurveyGrossRank = 3
-#              when 91..95
-#                puts "Rank 2"
-#                @newsurvey.SurveyGrossRank = 2
-#              when 96..100
-#                puts "Highest Rank 1"
-#                @newsurvey.SurveyGrossRank = 1
-#              end # end case
-              
-#            end # end of if EEPC is between 0 and 0.2
-#          end # end of, if EEPC is more than 0.2
-          
-#        else # for 'ConversionFirst' approach
-          
-#          case IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["Conversion"]
-#            when 0..5
-#              puts "Lowest Rank 20"
-#              @newsurvey.SurveyGrossRank = 20
-#            when 6..10
-#              puts "Rank 19"
-#              @newsurvey.SurveyGrossRank = 19
-#            when 11..15
-#              puts "Rank 18"
-#              @newsurvey.SurveyGrossRank = 18
-#            when 16..20
-#              puts "Rank 17"
-#              @newsurvey.SurveyGrossRank = 17
-#            when 21..25
-#              puts "Rank 16"
-#              @newsurvey.SurveyGrossRank = 16
-#            when 26..30
-#              puts "Rank 15"
-#              @newsurvey.SurveyGrossRank = 15
-#            when 31..35
-#              puts "Rank 14"
-#              @newsurvey.SurveyGrossRank = 14
-#            when 36..40
-#              puts "Rank 13"
-#              @newsurvey.SurveyGrossRank = 13
-#            when 41..45
-#              puts "Rank 12"
-#              @newsurvey.SurveyGrossRank = 12
-#            when 46..50
-#              puts "Rank 11"
-#              @newsurvey.SurveyGrossRank = 11
-#            when 51..55
-#              puts "Rank 10"
-#              @newsurvey.SurveyGrossRank = 10
-#            when 56..60
-#              puts "Rank 9"
-#              @newsurvey.SurveyGrossRank = 9
-#            when 61..65
-#              puts "Rank 8"
-#              @newsurvey.SurveyGrossRank = 8
-#            when 66..70
-#              puts "Rank 7"
-#              @newsurvey.SurveyGrossRank = 7
-#            when 71..75
-#              puts "Rank 6"
-#              @newsurvey.SurveyGrossRank = 6
-#            when 76..80
-#              puts "Rank 5"
-#              @newsurvey.SurveyGrossRank = 5
-#            when 81..85
-#              puts "Rank 4"
-#              @newsurvey.SurveyGrossRank = 4
-#            when 86..90
-#              puts "Rank 3"
-#              @newsurvey.SurveyGrossRank = 3
-#            when 91..95
-#              puts "Rank 2"
-#              @newsurvey.SurveyGrossRank = 2
-#            when 96..100
-#              puts "Highest Rank 1"
-#              @newsurvey.SurveyGrossRank = 1
-#          end # end case
-      
-#        end # end of rankingapproach switch
-
 
 
           # Before getting qualifications, quotas, and supplier links first check if there is any remaining total allocation for this NEW survey
@@ -675,6 +507,16 @@ puts
           @newsurvey.QualificationHHIPreCodes = ["ALL"]
           @newsurvey.QualificationHHCPreCodes = ["ALL"]
           
+          
+          @newsurvey.QualificationEmploymentPreCodes = ["ALL"]    
+          @newsurvey.QualificationPIndustryPreCodes = ["ALL"]
+          @newsurvey.QualificationDMAPreCodes = ["ALL"]
+          @newsurvey.QualificationStatePreCodes = ["ALL"]
+          @newsurvey.QualificationDivisionPreCodes = ["ALL"]          
+          @newsurvey.QualificationRegionPreCodes = ["ALL"]
+          
+          
+          
           # Insert specific qualifications where required
           
           # Change HHC to Employment
@@ -689,6 +531,14 @@ puts
             @newsurvey.QualificationEducationPreCodes = ["ALL"]  
             @newsurvey.QualificationHHIPreCodes = ["ALL"]
             @newsurvey.QualificationHHCPreCodes = ["ALL"]
+            
+            @newsurvey.QualificationEmploymentPreCodes = ["ALL"]    
+            @newsurvey.QualificationPIndustryPreCodes = ["ALL"]
+            @newsurvey.QualificationDMAPreCodes = ["ALL"]
+            @newsurvey.QualificationStatePreCodes = ["ALL"]
+            @newsurvey.QualificationDivisionPreCodes = ["ALL"]          
+            @newsurvey.QualificationRegionPreCodes = ["ALL"]
+            
             
           else
             @NumberOfQualificationsQuestions = NewSurveyQualifications["SurveyQualification"]["Questions"].length-1
@@ -770,6 +620,8 @@ puts
                   else
                   end
                   
+                  
+                  
                 when 2189
                   if flag == 'stag' then
                     print '------------------------------------------------------------>> STANDARD_EMPLOYMENT: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
@@ -778,14 +630,51 @@ puts
                   end
                   p '------------------------------------------------------------>> Rename HHComp to STANDARD_EMPLOYMENT: '
                   @newsurvey.QualificationHHCPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
+                  @newsurvey.QualificationEmploymentPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                   
                   
-                when 643
+                  
+                when 5729
                   if flag == 'stag' then
-                    print '------------------------------------------------------------->> STANDARD_INDUSTRY: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print '************ STANDARD_INDUSTRY_PERSONAL: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
-                  end     
+                  end    
+                  @newsurvey.QualificationPIndustryPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                               
+                when 97
+                  if flag == 'stag' then
+                    print 'DMA: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @newsurvey.QualificationDMAPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                   
+                when 96
+                  if flag == 'stag' then
+                    print 'State: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @newsurvey.QualificationStatePreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                
+                when 101
+                  if flag == 'stag' then
+                    print 'Division: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @newsurvey.QualificationDivisionPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+                when 122
+                  if flag == 'stag' then
+                    print 'Region: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @newsurvey.QualificationRegionPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+                 
               end # case
 
             end #do15 for j      

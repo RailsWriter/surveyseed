@@ -5,7 +5,7 @@ require 'httparty'
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
 
-flag = 'prod'
+flag = 'stag'
 
 
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
@@ -199,6 +199,13 @@ begin
           @survey.QualificationHHIPreCodes = ["ALL"]
           @survey.QualificationHHCPreCodes = ["ALL"]
           
+          @survey.QualificationEmploymentPreCodes = ["ALL"]
+          @survey.QualificationPIndustryPreCodes = ["ALL"]
+          @survey.QualificationDMAPreCodes = ["ALL"]
+          @survey.QualificationStatePreCodes = ["ALL"]
+          @survey.QualificationDivisionPreCodes = ["ALL"]          
+          @survey.QualificationRegionPreCodes = ["ALL"]
+          
 
         # Insert specific qualifications where required
           
@@ -215,6 +222,13 @@ begin
             @survey.QualificationEducationPreCodes = ["ALL"]  
             @survey.QualificationHHIPreCodes = ["ALL"]
             @survey.QualificationHHCPreCodes = ["ALL"]
+            
+            @survey.QualificationEmploymentPreCodes = ["ALL"]
+            @survey.QualificationPIndustryPreCodes = ["ALL"]
+            @survey.QualificationDMAPreCodes = ["ALL"]
+            @survey.QualificationStatePreCodes = ["ALL"]
+            @survey.QualificationDivisionPreCodes = ["ALL"]          
+            @survey.QualificationRegionPreCodes = ["ALL"]
             
             
           else
@@ -284,6 +298,10 @@ begin
                   else
                   end
                   @survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")     
+                  
+                  
+                  
+                  
                 when 7064
                   if flag == 'stag' then
                     print '------------------------------------------------------------------->> Parental_Status_Standard: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
@@ -298,23 +316,62 @@ begin
                   end
                   
                   
+                  
+                  
                 when 2189
                   if flag == 'stag' then
-                    print '------------------------------------------------------------>> STANDARD_EMPLOYMENT: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print '******** STANDARD_EMPLOYMENT: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
                   p '------------------------------------------------------------>> Rename HHComp to STANDARD_EMPLOYMENT: '
-                  @survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
+                  @survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  @survey.QualificationEmploymentPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
              
-             
-             
-                when 643
+                
+                
+                when 5729
                   if flag == 'stag' then
-                    print '------------------------------------------------------------->> STANDARD_INDUSTRY: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print '************ STANDARD_INDUSTRY_PERSONAL: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end    
+                  @survey.QualificationPIndustryPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+                when 97
+                  if flag == 'stag' then
+                    print 'DMA: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @survey.QualificationDMAPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+                when 96
+                  if flag == 'stag' then
+                    print 'State: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @survey.QualificationStatePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                
+                when 101
+                  if flag == 'stag' then
+                    print 'Division: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @survey.QualificationDivisionPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+                when 122
+                  if flag == 'stag' then
+                    print 'Region: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @survey.QualificationRegionPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+                  
+                  
               end # case
               
             end #do      
