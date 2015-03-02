@@ -1081,7 +1081,7 @@ require 'hmac-md5'
           (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ])) &&
           (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ])) &&
           (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ])) &&          
-          ((survey.CPI == nil) || (survey.CPI > @currentpayout)) ) ||
+          ((survey.CPI == nil) || (survey.CPI >= @currentpayout)) ) ||
           
           ( (survey.CountryLanguageID == 9) &&          
                     ( survey.SurveyStillLive ) && 
@@ -1099,7 +1099,7 @@ require 'hmac-md5'
                     (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ])) && 
                     (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ])) && 
                     (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ])) &&         
-                    ((survey.CPI == nil) || (survey.CPI > @currentpayout)) )
+                    ((survey.CPI == nil) || (survey.CPI >= @currentpayout)) )
           
           then
           
@@ -1115,7 +1115,7 @@ require 'hmac-md5'
         @_HHI= (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ]))
         @_employment = (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ]))
         @_pindustry = (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ]))
-        @_CPI_check = ((survey.CPI == nil) || (survey.CPI > @currentpayout))
+        @_CPI_check = ((survey.CPI == nil) || (survey.CPI >= @currentpayout))
 
         
         print '************ User QUALIFIED for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ..... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.employment, ' Std_Employment PreCode from survey: ', survey.QualificationEmploymentPreCodes, ' User Entered PIndustry: ', user.pindustry, ' PIndustry PreCode from survey: ', survey.QualificationPIndustryPreCodes, ' Network Payout: ', @currentpayout, ' CPI from survey: ', survey.CPI, 'SurveyStillAlive: ', survey.SurveyStillLive
@@ -1840,7 +1840,7 @@ require 'hmac-md5'
         @_HHI= (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ]))
         @_employment = (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ]))
         @_pindustry = (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ]))
-        @_CPI_check = ((survey.CPI == nil) || (survey.CPI > @currentpayout))
+        @_CPI_check = ((survey.CPI == nil) || (survey.CPI >= @currentpayout))
 
         
         
