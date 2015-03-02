@@ -169,17 +169,22 @@ class RedirectsController < ApplicationController
             puts "*************** Keeping track of cmpletes on SS network"
             
            
-            if @user.netid = "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
-              @net = Network.find_by netid: @user.netid
-              if @net.Flag3 == nil then
-                @net.Flag3 = "1" 
-              else
-                @net.Flag3 = (@net.Flag3.to_i + 1).to_s
-              end
+#            if @user.netid = "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+            @net = Network.find_by netid: @user.netid
+            
+            if @net.Flag3 == nil then
+              
+              @net.Flag3 = "1" 
+              @net.save
+              
             else
+
+              @net.Flag3 = (@net.Flag3.to_i + 1).to_s
+              @net.save
+
             end
             
-            @net.save
+            
                      
               
             # Happy ending
@@ -283,22 +288,26 @@ class RedirectsController < ApplicationController
             
             
             
-            # Keep a count of completes on Supersonic Network
+            # Keep a count of completes on all Networks
             
-            puts "*************** Keeping track of cmpletes on SS network"
+            puts "*************** Keeping track of completes on all networks"
             
            
-            if @user.netid = "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
-              @net = Network.find_by netid: @user.netid
-              if @net.Flag3 == nil then
-                @net.Flag3 = "1" 
-              else
-                @net.Flag3 = (@net.Flag3.to_i + 1).to_s
-              end
+#            if @user.netid = "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+            @net = Network.find_by netid: @user.netid
+            if @net.Flag3 == nil then
+              
+              @net.Flag3 = "1" 
+              @net.save
+              
             else
+              
+              @net.Flag3 = (@net.Flag3.to_i + 1).to_s
+              @net.save
+              
             end
             
-            @net.save
+           
             
             
             
@@ -430,61 +439,7 @@ class RedirectsController < ApplicationController
               redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
               
             end # if SupplierLink empty?
-              
-            
-#            if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
-#              @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
-#              print '********************************* Reached 10 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a Failuare for survey number, to new rank: ', params[:tsfn], ' ', @survey.SurveyGrossRank
-#              puts
-#            else
-#            end
-            
-#            if ( @survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
-#              @survey.SurveyGrossRank = 21
-#              print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
-#              puts 
-#            else
-#            end            
-            
-#            if ( @survey.SurveyExactRank == 40 ) && (@survey.CompletedBy.length == 1) then
-#              @survey.SurveyGrossRank = 21
-#              print '********************************* Reached 100 Unsuccessful attempts, with only 1 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
-#              puts 
-#            else
-#            end
-            
-#            if ( @survey.SurveyExactRank == 60 ) && (@survey.CompletedBy.length == 2) then
-#              @survey.SurveyGrossRank = 21
-#              print '********************************* Reached 60 Unsuccessful attempts, with only 2 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
-#              puts 
-#            else
-#            end
-            
-#            if ( @survey.SurveyExactRank == 80 ) && (@survey.CompletedBy.length == 3) then
-#              @survey.SurveyGrossRank = 21
-#              print '********************************* Reached 80 Unsuccessful attempts, with only 3 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
-#              puts 
-#            else
-#            end
-            
-#            if ( @survey.SurveyExactRank == 100 ) && (@survey.CompletedBy.length == 4) then
-#              @survey.SurveyGrossRank = 21
-#              print '********************************* Reached 100 Unsuccessful attempts, with only 4 complete - rank reduced to 21 following a Failuare for survey number: ', params[:tsfn]
-#              puts 
-#            else
-#            end
-            
-
-#            if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / (@survey.CompletedBy.length+0.1) ) > 10 ))
-              # 0.1 is arbitrarily added to avoid division by 0
-              
-#              @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
-#              print '********************************* Reached 120+ Unsuccessful attempts, and less than 10% completes - rank reduced proportionate to EPC following a Failuare for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
-#              puts 
-#            else
-#            end
-              
-          
+                        
           end # p2s redirect   
         end # if test
                 

@@ -10,15 +10,16 @@
 	<body class="body">
 		<div class="header">
 			<center>
-				<h1>Thanks for entering your profile information</h1>
+				<h1>Thanks for entering your profile information!</h1>
 			</center>
 		</header>
 		
 		<div id="content">
 			<center>
-				<p>Once you click the Continue button below, we will match you with the best available survey.</p>
+				<p>Once you click the Continue button, we will match you with the best available survey.</p>
 				<br><br>
-				<p> Only if we need, we might ask for a few additional profile information. Your personal information is safe and will only be used to make your survey completion experience better.
+				<p> Your personal information is safe and will only be used to make your survey completion experience better. If necessary, we might ask a few additional profile questions.</p>
+				<br><br><br>
 				<%= form_tag("pleasewait", method: "post") do %>
 				<div class="agree">
 					<%= submit_tag "Continue" %>

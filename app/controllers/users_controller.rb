@@ -38,17 +38,16 @@ require 'hmac-md5'
       clickid = params[:clickid]
       
       
-      # temporarily keep track of Supersonic clicks like this
+      # Keep track of clicks on each network
       
-      if netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
-        @SSnet = Network.find_by netid: netid
-        if @SSnet.Flag2 == nil then
-          @SSnet.Flag2 = "1" 
-        else
-          @SSnet.Flag2 = (@SSnet.Flag2.to_i + 1).to_s
-        end
+#      if netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+      @SSnet = Network.find_by netid: netid
+      if @SSnet.Flag2 == nil then
+        @SSnet.Flag2 = "1" 
         @SSnet.save
       else
+        @SSnet.Flag2 = (@SSnet.Flag2.to_i + 1).to_s
+        @SSnet.save
       end
         
         
@@ -681,254 +680,270 @@ require 'hmac-md5'
     if user.country == '9' then
       @geo = UsGeo.find_by zip: user.ZIP
       
-      case @geo.State
-      when "NotApplicable"
+      if @geo == nil then
         @statePrecode = "0"
-        print "NotApplicable PreCode Used for: ", @geo.State
-        puts
-      when "Alabama"
-        @statePrecode = "1"
-        print "Alabama PreCode Used for: ", @geo.State
-        puts
-      when "Alaska"
-        @statePrecode = "2"
-        print "Alaska PreCode Used for: ", @geo.State
-        puts
-      when "Arizona"
-        @statePrecode = "3"
-        print "Arizona PreCode Used for: ", @geo.State
-        puts
-      when "Arkansas"
-        @statePrecode = "4"
-        print "Arkansas PreCode Used for: ", @geo.State
-        puts
-      when "California"
-        @statePrecode = "5"
-        print "California PreCode Used for: ", @geo.State
-        puts
-      when "Colorado"
-        @statePrecode = "6"
-        print "Colorado PreCode Used for: ", @geo.State
-        puts
-      when "Connecticut"
-        @statePrecode = "7"
-        print "Connecticut PreCode Used for: ", @geo.State
-        puts
-      when "Delaware"
-        @statePrecode = "8"
-        print "Delaware PreCode Used for: ", @geo.State
-        puts
-      when "DistrictofColumbia"
-        @statePrecode = "9"
-        print "DistrictofColumbia PreCode Used for: ", @geo.State
-        puts
-      when "Florida"
-        @statePrecode = "10"
-        print "Florida PreCode Used for: ", @geo.State
-        puts
-      when "Georgia"
-        @statePrecode = "11"
-        print "Georgia PreCode Used for: ", @geo.State
-        puts
-      when "Hawaii"
-        @statePrecode = "12"
-        print "Hawaii PreCode Used for: ", @geo.State
-        puts
-      when "Idaho"
-        @statePrecode = "13"
-        print "Idaho PreCode Used for: ", @geo.State
-        puts
-      when "Illinois"
-        @statePrecode = "14"
-        print "Illinois PreCode Used for: ", @geo.State
-        puts
-      when "Indiana"
-        @statePrecode = "15"
-        print "Indiana PreCode Used for: ", @geo.State
-        puts
-      when "Iowa"
-        @statePrecode = "16"
-        print "Iowa PreCode Used for: ", @geo.State
-        puts
-      when "Kansas"
-        @statePrecode = "17"
-        print "Kansas PreCode Used for: ", @geo.State
-        puts
-      when "Kentucky"
-        @statePrecode = "18"
-        print "Kentucky PreCode Used for: ", @geo.State
-        puts
-      when "Louisiana"
-        @statePrecode = "19"
-        print "Louisiana PreCode Used for: ", @geo.State
-        puts
-      when "Maine"
-        @statePrecode = "20"
-        print "Maine PreCode Used for: ", @geo.State
-        puts
-      when "Maryland"
-        @statePrecode = "21"
-        print "Maryland PreCode Used for: ", @geo.State
-        puts
-      when "Massachusetts"
-        @statePrecode = "22"
-        print "Massachusetts PreCode Used for: ", @geo.State
-        puts
-      when "Michigan"
-        @statePrecode = "23"
-        print "Michigan PreCode Used for: ", @geo.State
-        puts
-      when "Minnesota"
-        @statePrecode = "24"
-        print "Minnesota PreCode Used for: ", @geo.State
-        puts
-      when "Mississippi"
-        @statePrecode = "25"
-        print "Mississippi PreCode Used for: ", @geo.State
-        puts
-      when "Missouri"
-        @statePrecode = "26"
-        print "Missouri PreCode Used for: ", @geo.State
-        puts
-      when "Montana"
-        @statePrecode = "27"
-        print "Montana PreCode Used for: ", @geo.State
-        puts
-      when "Nebraska"
-        @statePrecode = "28"
-        print "Nebraska PreCode Used for: ", @geo.State
-        puts
-      when "Nevada"
-        @statePrecode = "29"
-        print "Nevada PreCode Used for: ", @geo.State
-        puts
-      when "NewHampshire"
-        @statePrecode = "30"
-        print "NewHampshire PreCode Used for: ", @geo.State
-        puts
-      when "NewJersey"
-        @statePrecode = "31"
-        print "NewJersey PreCode Used for: ", @geo.State
-        puts
-      when "NewMexico"
-        @statePrecode = "32"
-        print "NewMexico PreCode Used for: ", @geo.State
-        puts
-      when "NewYork"
-        @statePrecode = "33"
-        print "NewYork PreCode Used for: ", @geo.State
-        puts
-      when "NorthCarolina"
-        @statePrecode = "34"
-        print "NorthCarolina PreCode Used for: ", @geo.State
-        puts
-      when "NorthDakota"
-        @statePrecode = "35"
-        print "NorthDakota PreCode Used for: ", @geo.State
-        puts
-      when "Ohio"
-        @statePrecode = "36"
-        print "Ohio PreCode Used for: ", @geo.State
-        puts
-      when "Oklahoma"
-        @statePrecode = "37"
-        print "Oklahoma PreCode Used for: ", @geo.State
-        puts
-      when "Oregon"
-        @statePrecode = "38"
-        print "Oregon PreCode Used for: ", @geo.State
-        puts
-      when "Pennsylvania"
-        @statePrecode = "39"
-        print "Pennsylvania PreCode Used for: ", @geo.State
-        puts
-      when "RhodeIsland"
-        @statePrecode = "40"
-        print "RhodeIsland PreCode Used for: ", @geo.State
-        puts
-      when "SouthCarolina"
-        @statePrecode = "41"
-        print "SouthCarolina PreCode Used for: ", @geo.State
-        puts
-      when "SouthDakota"
-        @statePrecode = "42"
-        print "SouthDakota PreCode Used for: ", @geo.State
-        puts
-      when "Tennessee"
-        @statePrecode = "43"
-        print "Tennessee PreCode Used for: ", @geo.State
-        puts
-      when "Texas"
-        @statePrecode = "44"
-        print "Texas PreCode Used for: ", @geo.State
-        puts
-      when "Utah"
-        @statePrecode = "45"
-        print "Utah PreCode Used for: ", @geo.State
-        puts
-      when "Vermont"
-        @statePrecode = "46"
-        print "Vermont PreCode Used for: ", @geo.State
-        puts
-      when "Virginia"
-        @statePrecode = "47"
-        print "Virginia PreCode Used for: ", @geo.State
-        puts
-      when "Washington"
-        @statePrecode = "48"
-        print "Washington PreCode Used for: ", @geo.State
-        puts
-      when "WestVirginia"
-        @statePrecode = "49"
-        print "WestVirginia PreCode Used for: ", @geo.State
-        puts
-      when "Wisconsin"
-        @statePrecode = "50"
-        print "Wisconsin PreCode Used for: ", @geo.State
-        puts
-      when "Wyoming"
-        @statePrecode = "51"
-        print "Wyoming PreCode Used for: ", @geo.State
-        puts
+        @DMARegionCode = "0"
+        @regionPrecode = "0"
+        @dividionPrecode = "0"
+        puts "NotApplicable PreCodes Used for INVALID ZIPCODE"
+        
+      else
+      
+        @DMARegionCode = @geo.DMARegionCode
+        @regionPrecode = @geo.regionPrecode
+        @divisionPrecode = @geo.divisionPrecode
+        
+        case @geo.State
+        when "NotApplicable"
+          @statePrecode = "0"
+          print "NotApplicable PreCode Used for: ", @geo.State
+          puts
+        when "Alabama"
+          @statePrecode = "1"
+          print "Alabama PreCode Used for: ", @geo.State
+          puts
+        when "Alaska"
+          @statePrecode = "2"
+          print "Alaska PreCode Used for: ", @geo.State
+          puts
+        when "Arizona"
+          @statePrecode = "3"
+          print "Arizona PreCode Used for: ", @geo.State
+          puts
+        when "Arkansas"
+          @statePrecode = "4"
+          print "Arkansas PreCode Used for: ", @geo.State
+          puts
+        when "California"
+          @statePrecode = "5"
+          print "California PreCode Used for: ", @geo.State
+          puts
+        when "Colorado"
+          @statePrecode = "6"
+          print "Colorado PreCode Used for: ", @geo.State
+          puts
+        when "Connecticut"
+          @statePrecode = "7"
+          print "Connecticut PreCode Used for: ", @geo.State
+          puts
+        when "Delaware"
+          @statePrecode = "8"
+          print "Delaware PreCode Used for: ", @geo.State
+          puts
+        when "DistrictofColumbia"
+          @statePrecode = "9"
+          print "DistrictofColumbia PreCode Used for: ", @geo.State
+          puts
+        when "Florida"
+          @statePrecode = "10"
+          print "Florida PreCode Used for: ", @geo.State
+          puts
+        when "Georgia"
+          @statePrecode = "11"
+          print "Georgia PreCode Used for: ", @geo.State
+          puts
+        when "Hawaii"
+          @statePrecode = "12"
+          print "Hawaii PreCode Used for: ", @geo.State
+          puts
+        when "Idaho"
+          @statePrecode = "13"
+          print "Idaho PreCode Used for: ", @geo.State
+          puts
+        when "Illinois"
+          @statePrecode = "14"
+          print "Illinois PreCode Used for: ", @geo.State
+          puts
+        when "Indiana"
+          @statePrecode = "15"
+          print "Indiana PreCode Used for: ", @geo.State
+          puts
+        when "Iowa"
+          @statePrecode = "16"
+          print "Iowa PreCode Used for: ", @geo.State
+          puts
+        when "Kansas"
+          @statePrecode = "17"
+          print "Kansas PreCode Used for: ", @geo.State
+          puts
+        when "Kentucky"
+          @statePrecode = "18"
+          print "Kentucky PreCode Used for: ", @geo.State
+          puts
+        when "Louisiana"
+          @statePrecode = "19"
+          print "Louisiana PreCode Used for: ", @geo.State
+          puts
+        when "Maine"
+          @statePrecode = "20"
+          print "Maine PreCode Used for: ", @geo.State
+          puts
+        when "Maryland"
+          @statePrecode = "21"
+          print "Maryland PreCode Used for: ", @geo.State
+          puts
+        when "Massachusetts"
+          @statePrecode = "22"
+          print "Massachusetts PreCode Used for: ", @geo.State
+          puts
+        when "Michigan"
+          @statePrecode = "23"
+          print "Michigan PreCode Used for: ", @geo.State
+          puts
+        when "Minnesota"
+          @statePrecode = "24"
+          print "Minnesota PreCode Used for: ", @geo.State
+          puts
+        when "Mississippi"
+          @statePrecode = "25"
+          print "Mississippi PreCode Used for: ", @geo.State
+          puts
+        when "Missouri"
+          @statePrecode = "26"
+          print "Missouri PreCode Used for: ", @geo.State
+          puts
+        when "Montana"
+          @statePrecode = "27"
+          print "Montana PreCode Used for: ", @geo.State
+          puts
+        when "Nebraska"
+          @statePrecode = "28"
+          print "Nebraska PreCode Used for: ", @geo.State
+          puts
+        when "Nevada"
+          @statePrecode = "29"
+          print "Nevada PreCode Used for: ", @geo.State
+          puts
+        when "NewHampshire"
+          @statePrecode = "30"
+          print "NewHampshire PreCode Used for: ", @geo.State
+          puts
+        when "NewJersey"
+          @statePrecode = "31"
+          print "NewJersey PreCode Used for: ", @geo.State
+          puts
+        when "NewMexico"
+          @statePrecode = "32"
+          print "NewMexico PreCode Used for: ", @geo.State
+          puts
+        when "NewYork"
+          @statePrecode = "33"
+          print "NewYork PreCode Used for: ", @geo.State
+          puts
+        when "NorthCarolina"
+          @statePrecode = "34"
+          print "NorthCarolina PreCode Used for: ", @geo.State
+          puts
+        when "NorthDakota"
+          @statePrecode = "35"
+          print "NorthDakota PreCode Used for: ", @geo.State
+          puts
+        when "Ohio"
+          @statePrecode = "36"
+          print "Ohio PreCode Used for: ", @geo.State
+          puts
+        when "Oklahoma"
+          @statePrecode = "37"
+          print "Oklahoma PreCode Used for: ", @geo.State
+          puts
+        when "Oregon"
+          @statePrecode = "38"
+          print "Oregon PreCode Used for: ", @geo.State
+          puts
+        when "Pennsylvania"
+          @statePrecode = "39"
+          print "Pennsylvania PreCode Used for: ", @geo.State
+          puts
+        when "RhodeIsland"
+          @statePrecode = "40"
+          print "RhodeIsland PreCode Used for: ", @geo.State
+          puts
+        when "SouthCarolina"
+          @statePrecode = "41"
+          print "SouthCarolina PreCode Used for: ", @geo.State
+          puts
+        when "SouthDakota"
+          @statePrecode = "42"
+          print "SouthDakota PreCode Used for: ", @geo.State
+          puts
+        when "Tennessee"
+          @statePrecode = "43"
+          print "Tennessee PreCode Used for: ", @geo.State
+          puts
+        when "Texas"
+          @statePrecode = "44"
+          print "Texas PreCode Used for: ", @geo.State
+          puts
+        when "Utah"
+          @statePrecode = "45"
+          print "Utah PreCode Used for: ", @geo.State
+          puts
+        when "Vermont"
+          @statePrecode = "46"
+          print "Vermont PreCode Used for: ", @geo.State
+          puts
+        when "Virginia"
+          @statePrecode = "47"
+            print "Virginia PreCode Used for: ", @geo.State
+            puts
+        when "Washington"
+          @statePrecode = "48"
+          print "Washington PreCode Used for: ", @geo.State
+          puts
+        when "WestVirginia"
+          @statePrecode = "49"
+          print "WestVirginia PreCode Used for: ", @geo.State
+          puts
+        when "Wisconsin"
+          @statePrecode = "50"
+          print "Wisconsin PreCode Used for: ", @geo.State
+          puts
+        when "Wyoming"
+          @statePrecode = "51"
+          print "Wyoming PreCode Used for: ", @geo.State
+          puts
 #      when "NotApplicable"
 #        @statePrecode = "52"
 #        print "NotApplicable PreCode Used for: ", @geo.State
 #        puts
-      when "AmericanSamoa"
-        @statePrecode = "53"
-        print "AmericanSamoa PreCode Used for: ", @geo.State
-        puts
-      when "FederatedStatesofMicronesia"
-        @statePrecode = "54"
-        print "FederatedStatesofMicronesia PreCode Used for: ", @geo.State
-        puts
-      when "Guam"
-        @statePrecode = "55"
-        print "Guam PreCode Used for: ", @geo.State
-        puts
-      when "MarshallIslands"
-        @statePrecode = "56"
-        print "MarshallIslands PreCode Used for: ", @geo.State
-        puts
-      when "NorthernMarinaIslands"
-        @statePrecode = "57"
-        print "NorthernMarinaIslands PreCode Used for: ", @geo.State
-        puts
-      when "Palau"
-        @statePrecode = "58"
-        print "Palau PreCode Used for: ", @geo.State
-        puts
-      when "PuertoRico"
-        @statePrecode = "59"
-        print "PuertoRico PreCode Used for: ", @geo.State
-        puts
-      when "VirginIslands"
-        @statePrecode = "60"
-        print "VirginIslands PreCode Used for: ", @geo.State
-        puts
-      end # case
+        when "AmericanSamoa"
+          @statePrecode = "53"
+          print "AmericanSamoa PreCode Used for: ", @geo.State
+          puts
+        when "FederatedStatesofMicronesia"
+          @statePrecode = "54"
+          print "FederatedStatesofMicronesia PreCode Used for: ", @geo.State
+          puts
+        when "Guam"
+          @statePrecode = "55"
+          print "Guam PreCode Used for: ", @geo.State
+          puts
+        when "MarshallIslands"
+          @statePrecode = "56"
+          print "MarshallIslands PreCode Used for: ", @geo.State
+          puts
+        when "NorthernMarinaIslands"
+          @statePrecode = "57"
+          print "NorthernMarinaIslands PreCode Used for: ", @geo.State
+          puts
+        when "Palau"
+          @statePrecode = "58"
+          print "Palau PreCode Used for: ", @geo.State
+          puts
+        when "PuertoRico"
+          @statePrecode = "59"
+          print "PuertoRico PreCode Used for: ", @geo.State
+          puts
+        when "VirginIslands"
+          @statePrecode = "60"
+          print "VirginIslands PreCode Used for: ", @geo.State
+          puts
+        end # case
+        
+      end # if @geo = nil
+      
     else
-    end
+    end # if country = 9
     
     
     # Just in case user goes back to last qualification question and returns - this prevents the array from adding duplicates to previous list. Need to prevent back action across the board and then delete these to avaoid blank entries in these arrays.
@@ -996,12 +1011,12 @@ require 'hmac-md5'
     # Set the priority for P2S stack
         
     @foundtopsurveyswithquota = false   # false means not finished finding top FED surveys (set it to true if testing p2s)
-    puts "**************** P2S is NOT at the Head by default"
+    puts "**************** P2S is NOT at the Head"
         
     if net.P2S_US != nil then
       if (net.P2S_US == 0) && (user.country == "9") then
         @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
-        print "**************** P2S IS at the Head"
+        puts "**************** P2S IS at the Head"
 
       else
         @p2s_US = net.P2S_US
@@ -1013,7 +1028,7 @@ require 'hmac-md5'
     if net.P2S_CA != nil then
       if (net.P2S_CA == 0) && (user.country == "6") then
         @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
-        print "**************** P2S IS at the Head"
+        puts "**************** P2S IS at the Head"
 
       else
         @p2s_CA = net.P2S_CA
@@ -1025,7 +1040,7 @@ require 'hmac-md5'
     if net.P2S_AU != nil then
       if (net.P2S_AU == 0) && (user.country == "5") then
         @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
-        print "**************** P2S IS at the Head"
+        puts "**************** P2S IS at the Head"
 
       else
         @p2s_AU = net.P2S_AU
@@ -1080,10 +1095,10 @@ require 'hmac-md5'
                     (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ])) &&
                     (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ])) && 
                     
-                    (( survey.QualificationDMAPreCodes.empty? ) || ( survey.QualificationDMAPreCodes.flatten == [ "ALL" ] ) || (([ @geo.DMARegionCode ] & survey.QualificationDMAPreCodes.flatten) == [ @geo.DMARegionCode ])) && 
+                    (( survey.QualificationDMAPreCodes.empty? ) || ( survey.QualificationDMAPreCodes.flatten == [ "ALL" ] ) || (([ @DMARegionCode ] & survey.QualificationDMAPreCodes.flatten) == [ @DMARegionCode ])) && 
                     (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ])) && 
-                    (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @geo.regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @geo.regionPrecode ])) && 
-                    (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @geo.divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @geo.divisionPrecode ])) &&         
+                    (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ])) && 
+                    (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ])) &&         
                     ((survey.CPI == nil) || (survey.CPI > @currentpayout)) )
           
           then
@@ -1101,17 +1116,6 @@ require 'hmac-md5'
         @_employment = (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ]))
         @_pindustry = (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ]))
         @_CPI_check = ((survey.CPI == nil) || (survey.CPI > @currentpayout))
-        
-        
-        if (survey.CountryLanguageID == 9) then
-          
-          @_DMA = (( survey.QualificationDMAPreCodes.empty? ) || ( survey.QualificationDMAPreCodes.flatten == [ "ALL" ] ) || (([ @geo.DMARegionCode ] & survey.QualificationDMAPreCodes.flatten) == [ @geo.DMARegionCode ]))
-          @_State = (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ]))
-          @_region = (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @geo.regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @geo.regionPrecode ]))
-          @_Division = (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @geo.divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @geo.divisionPrecode ]))
-          
-        else
-        end
 
         
         print '************ User QUALIFIED for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ..... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.employment, ' Std_Employment PreCode from survey: ', survey.QualificationEmploymentPreCodes, ' User Entered PIndustry: ', user.pindustry, ' PIndustry PreCode from survey: ', survey.QualificationPIndustryPreCodes, ' Network Payout: ', @currentpayout, ' CPI from survey: ', survey.CPI, 'SurveyStillAlive: ', survey.SurveyStillLive
@@ -1123,14 +1127,16 @@ require 'hmac-md5'
         
 
         if (survey.CountryLanguageID == 9) then
-          print '************** DMA match: ', @_DMA, 'State match: ', @_State, 'Region match: ', @_region, 'Division match: ', @_Division
+          
+          @_DMA = (( survey.QualificationDMAPreCodes.empty? ) || ( survey.QualificationDMAPreCodes.flatten == [ "ALL" ] ) || (([ @DMARegionCode ] & survey.QualificationDMAPreCodes.flatten) == [ @DMARegionCode ]))
+          @_State = (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ]))
+          @_region = (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ]))
+          @_Division = (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ]))        
+          
+          print '************** DMA match: ', @_DMA, ' State match: ', @_State, ' Region match: ', @_region, ' Division match: ', @_Division
           puts
         else
         end
-
-
-
-
 
 
 
@@ -1835,6 +1841,7 @@ require 'hmac-md5'
         @_employment = (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ]))
         @_pindustry = (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ]))
         @_CPI_check = ((survey.CPI == nil) || (survey.CPI > @currentpayout))
+
         
         
         print '************ User DID NOT QUALIFY for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ....... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.employment, ' Std_Employment PreCode from survey: ', survey.QualificationEmploymentPreCodes, ' User Entered PIndustry: ', user.pindustry, ' PIndustry PreCode from survey: ', survey.QualificationPIndustryPreCodes, ' Network Payout: ', @currentpayout, ' CPI from survey: ', survey.CPI, 'SurveyStillAlive: ', survey.SurveyStillLive
@@ -1845,7 +1852,13 @@ require 'hmac-md5'
         puts
         
         if (survey.CountryLanguageID == 9) then
-          print '************** DMA match: ', @_DMA, 'State match: ', @_State, 'Region match: ', @_region, 'Division match: ', @_Division
+          
+          @_DMA = (( survey.QualificationDMAPreCodes.empty? ) || ( survey.QualificationDMAPreCodes.flatten == [ "ALL" ] ) || (([ @DMARegionCode ] & survey.QualificationDMAPreCodes.flatten) == [ @DMARegionCode ]))
+          @_State = (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ]))
+          @_region = (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ]))
+          @_Division = (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ]))
+                    
+          print '************** DMA match: ', @_DMA, ' State match: ', @_State, ' Region match: ', @_region, ' Division match: ', @_Division
           puts
         else
         end
@@ -1949,7 +1962,7 @@ require 'hmac-md5'
       @p2s_hispanic = p2s_hispanic[user.ethnicity.to_i].to_s
       
       p2s_employment_status = [0, 7007, 7008, 7006, 7006, 7013, 7013, 7012, 7011, 7009, 7010, 7009, '']
-      @p2s_employment_status = p2s_employment_status[user.employment].to_s
+      @p2s_employment_status = p2s_employment_status[user.employment.to_i].to_s
       
       
       p2s_income_level = [0, 9089, 9089, 9089, 9071, 9072, 9088, 9073, 9087, 9074, 9086, 9090, 9075, 9091, 9076, 9092, 9077, 9093, 9078, 9094, 9079, 9080, 9081, 9082, 9085, 9084, 9084, '']
