@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150302020933) do
+ActiveRecord::Schema.define(version: 20150302024114) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -36,6 +36,9 @@ ActiveRecord::Schema.define(version: 20150302020933) do
     t.string   "Flag3"
     t.string   "Flag4"
     t.string   "Flag5"
+    t.integer  "P2S_US"
+    t.integer  "P2S_CA"
+    t.integer  "P2S_AU"
   end
 
   create_table "surveys", force: true do |t|

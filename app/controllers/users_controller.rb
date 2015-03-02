@@ -998,37 +998,37 @@ require 'hmac-md5'
     @foundtopsurveyswithquota = false   # false means not finished finding top FED surveys (set it to true if testing p2s)
     puts "**************** P2S is NOT at the Head by default"
         
-    if net.Flag3 != nil then
-      if (net.Flag3 == 0) && (user.country == "9") then
+    if net.P2S_US != nil then
+      if (net.P2S_US == 0) && (user.country == "9") then
         @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
         print "**************** P2S IS at the Head"
 
       else
-        @p2s_US = net.Flag3.to_i
+        @p2s_US = net.P2S_US
       end
     else
       @p2s_US = 1
     end
       
-    if net.Flag4 != nil then
-      if (net.Flag4 == 0) && (user.country == "6") then
+    if net.P2S_CA != nil then
+      if (net.P2S_CA == 0) && (user.country == "6") then
         @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
         print "**************** P2S IS at the Head"
 
       else
-        @p2s_CA = net.Flag4.to_i
+        @p2s_CA = net.P2S_CA
       end        
     else
       @p2s_CA = 1
     end
       
-    if net.Flag5 != nil then
-      if (net.Flag5 == 0) && (user.country == "5") then
+    if net.P2S_AU != nil then
+      if (net.P2S_AU == 0) && (user.country == "5") then
         @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
         print "**************** P2S IS at the Head"
 
       else
-        @p2s_AU = net.Flag5.to_i
+        @p2s_AU = net.P2S_AU
       end        
     else
       @p2s_AU = 1
