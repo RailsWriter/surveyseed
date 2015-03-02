@@ -13,4 +13,12 @@ class Survey < ActiveRecord::Base
   serialize :CompletedBy, Hash
   serialize :SupplierLink, Hash
   
+  
+  serialize :QualificationEmploymentPreCodes, Array
+  serialize :QualificationPIndustryPreCodes, Array
+  serialize :QualificationDMAPreCodes, Array
+  serialize :QualificationStatePreCodes, Array
+  serialize :QualificationRegionPreCodes, Array
+  serialize :QualificationDivisionPreCodes, Array
+  
 end

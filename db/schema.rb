@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150301093731) do
+ActiveRecord::Schema.define(version: 20150302020933) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -63,20 +63,20 @@ ActiveRecord::Schema.define(version: 20150301093731) do
     t.integer  "SampleTypeID"
     t.text     "QualificationAgePreCodes"
     t.text     "QualificationGenderPreCodes"
-    t.text     "QualificationZIPPreCodes",       limit: 1000000
+    t.text     "QualificationZIPPreCodes",        limit: 1000000
     t.text     "QualificationHHIPreCodes"
     t.text     "QualificationEducationPreCodes"
     t.text     "QualificationHHCPreCodes"
     t.text     "QualificationEthnicityPreCodes"
     t.text     "QualificationRacePreCodes"
-    t.text     "SurveyQuotas",                   limit: 50000000
+    t.text     "SurveyQuotas",                    limit: 50000000
     t.string   "SurveyStatusCode"
     t.boolean  "SurveyStillLive"
     t.integer  "SurveyGrossRank"
     t.integer  "SurveyExactRank"
     t.text     "SupplierLink"
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
     t.text     "CompletedBy"
     t.float    "KEPC"
     t.float    "GEPC"
@@ -85,6 +85,12 @@ ActiveRecord::Schema.define(version: 20150301093731) do
     t.integer  "NumberofAttemptsAtLastComplete"
     t.float    "TCR"
     t.string   "label"
+    t.text     "QualificationEmploymentPreCodes"
+    t.text     "QualificationPIndustryPreCodes"
+    t.text     "QualificationDMAPreCodes"
+    t.text     "QualificationStatePreCodes"
+    t.text     "QualificationRegionPreCodes"
+    t.text     "QualificationDivisionPreCodes"
   end
 
   create_table "us_geos", force: true do |t|
