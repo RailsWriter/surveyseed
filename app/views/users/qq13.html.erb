@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<div class="header">
+			<center>
+				<h1>Job Title</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<center>
+				<p>What is your job title, level or responsibility?</p>
+			</center>
+				
+				<%= form_tag("jobtitleaction", method: "post") do %>
+				<fieldset>
+				<div class="mybiglistinput">
+					
+					<label>
+					<%= radio_button_tag 'jtitle', '1' %>
+				  		C-Level (e.g. CEO, CFO), Owner, Partner, President 
+					</label><br>
+					<label>
+					<%= radio_button_tag 'jtitle', '2' %>
+				  		Vice President (EVP, SVP, AVP, VP) 
+					</label><br>
+					<label>
+					<%= radio_button_tag 'jtitle', '3' %>
+				  		Director (Group Director, Sr. Director, Director) 
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'jtitle', '4' %>
+				  		Manager (Group Manager, Sr. Manager, Manager, Program Manager) 
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'jtitle', '5' %>
+				  		Analyst
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'jtitle', '6' %>
+				  		Assistant or Associate
+					</label><br>
+					<label>
+					<%= radio_button_tag 'jtitle', '7' %>
+				  		Administrative (Clerical or Support Staff)
+					</label><br>
+					<label>
+					<%= radio_button_tag 'jtitle', '8' %>
+				  		Consultant
+					</label><br>
+					<label>
+					<%= radio_button_tag 'jtitle', '9' %>
+				  		Intern
+					</label><br>
+					<label>
+					<%= radio_button_tag 'jtitle', '10' %>
+				  		Volunteer
+					</label><br>				
+					<label>
+					<%= radio_button_tag 'jtitle', '11' %>
+				  		None of the above
+					</label><br><br>
+				</div>
+					
+				<div class="myinput">
+					<center>
+					<%= submit_tag "Next" %>
+					</center>
+				</div>
+			</fieldset>
+			<% end %>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('KetsciLogoSm.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

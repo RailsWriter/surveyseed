@@ -5,7 +5,7 @@ require 'httparty'
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
 
-flag = 'prod'
+flag = 'stag'
 
 
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
@@ -66,8 +66,7 @@ begin
     
     if (Survey.where("SurveyNumber = ?", offerwallresponse["Surveys"][i]["SurveyNumber"])).exists? == false then
     
-      if ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 5) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 6) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 7) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9)) && ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 17) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 19) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && ((offerwallresponse["Surveys"][i]["CPI"] == nil) || (offerwallresponse["Surveys"][i]["CPI"] > 0.99)) && 
-(offerwallresponse["Surveys"][i]["SurveyNumber"] != 111477)        then
+      if ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 5) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 6) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 7) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9)) && ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 17) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 19) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && ((offerwallresponse["Surveys"][i]["CPI"] == nil) || (offerwallresponse["Surveys"][i]["CPI"] > 0.99)) then
 
         # Save key data for the NEW survey i
     
@@ -198,14 +197,15 @@ begin
           @survey.QualificationEthnicityPreCodes = ["ALL"]  
           @survey.QualificationEducationPreCodes = ["ALL"]  
           @survey.QualificationHHIPreCodes = ["ALL"]
-          @survey.QualificationHHCPreCodes = ["ALL"]
-          
+          @survey.QualificationHHCPreCodes = ["ALL"]          
           @survey.QualificationEmploymentPreCodes = ["ALL"]
           @survey.QualificationPIndustryPreCodes = ["ALL"]
           @survey.QualificationDMAPreCodes = ["ALL"]
           @survey.QualificationStatePreCodes = ["ALL"]
           @survey.QualificationDivisionPreCodes = ["ALL"]          
           @survey.QualificationRegionPreCodes = ["ALL"]
+          
+          @survey.QualificationJobTitlePreCodes = ["ALL"]
           
 
         # Insert specific qualifications where required
@@ -222,14 +222,15 @@ begin
             @survey.QualificationEthnicityPreCodes = ["ALL"]  
             @survey.QualificationEducationPreCodes = ["ALL"]  
             @survey.QualificationHHIPreCodes = ["ALL"]
-            @survey.QualificationHHCPreCodes = ["ALL"]
-            
+            @survey.QualificationHHCPreCodes = ["ALL"]            
             @survey.QualificationEmploymentPreCodes = ["ALL"]
             @survey.QualificationPIndustryPreCodes = ["ALL"]
             @survey.QualificationDMAPreCodes = ["ALL"]
             @survey.QualificationStatePreCodes = ["ALL"]
             @survey.QualificationDivisionPreCodes = ["ALL"]          
             @survey.QualificationRegionPreCodes = ["ALL"]
+            
+            @survey.QualificationJobTitlePreCodes = ["ALL"]
             
             
           else
@@ -371,6 +372,14 @@ begin
                   end
                   @survey.QualificationRegionPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                   
+                  
+                when 15294
+                  if flag == 'stag' then
+                    print 'JobTitle: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @survey.QualificationJobTitlePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                   
                   
               end # case

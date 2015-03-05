@@ -3,7 +3,7 @@ require 'httparty'
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
 
-flag = 'prod'
+flag = 'stag'
 
 
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
@@ -168,13 +168,15 @@ begin
       survey.QualificationEducationPreCodes = ["ALL"]  
       survey.QualificationHHIPreCodes = ["ALL"]
       survey.QualificationHHCPreCodes = ["ALL"]
-      
       survey.QualificationEmploymentPreCodes = ["ALL"]      
       survey.QualificationPIndustryPreCodes = ["ALL"]
       survey.QualificationDMAPreCodes = ["ALL"]
       survey.QualificationStatePreCodes = ["ALL"]
       survey.QualificationDivisionPreCodes = ["ALL"]          
       survey.QualificationRegionPreCodes = ["ALL"]
+      
+      survey.QualificationJobTitlePreCodes = ["ALL"]
+      
 
 
     # Update specific qualifications to be current information
@@ -191,14 +193,16 @@ begin
         survey.QualificationEthnicityPreCodes = ["ALL"]  
         survey.QualificationEducationPreCodes = ["ALL"]  
         survey.QualificationHHIPreCodes = ["ALL"]
-        survey.QualificationHHCPreCodes = ["ALL"]
-        
+        survey.QualificationHHCPreCodes = ["ALL"]        
         survey.QualificationEmploymentPreCodes = ["ALL"]      
         survey.QualificationPIndustryPreCodes = ["ALL"]
         survey.QualificationDMAPreCodes = ["ALL"]
         survey.QualificationStatePreCodes = ["ALL"]
         survey.QualificationDivisionPreCodes = ["ALL"]          
         survey.QualificationRegionPreCodes = ["ALL"]
+        
+        survey.QualificationJobTitlePreCodes = ["ALL"]
+        
         
        
       else
@@ -335,8 +339,16 @@ begin
               else
               end
               survey.QualificationRegionPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-              
-                        
+
+
+            when 15294
+              if flag == 'stag' then
+                print '----------------------> JobTitle: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              survey.QualificationJobTitlePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+
           end # case
           
         end #do j     
@@ -506,14 +518,14 @@ puts
           @newsurvey.QualificationEducationPreCodes = ["ALL"]  
           @newsurvey.QualificationHHIPreCodes = ["ALL"]
           @newsurvey.QualificationHHCPreCodes = ["ALL"]
-          
-          
           @newsurvey.QualificationEmploymentPreCodes = ["ALL"]    
           @newsurvey.QualificationPIndustryPreCodes = ["ALL"]
           @newsurvey.QualificationDMAPreCodes = ["ALL"]
           @newsurvey.QualificationStatePreCodes = ["ALL"]
           @newsurvey.QualificationDivisionPreCodes = ["ALL"]          
           @newsurvey.QualificationRegionPreCodes = ["ALL"]
+
+          @newsurvey.QualificationJobTitlePreCodes = ["ALL"]
           
           
           
@@ -530,14 +542,15 @@ puts
             @newsurvey.QualificationEthnicityPreCodes = ["ALL"]  
             @newsurvey.QualificationEducationPreCodes = ["ALL"]  
             @newsurvey.QualificationHHIPreCodes = ["ALL"]
-            @newsurvey.QualificationHHCPreCodes = ["ALL"]
-            
+            @newsurvey.QualificationHHCPreCodes = ["ALL"]            
             @newsurvey.QualificationEmploymentPreCodes = ["ALL"]    
             @newsurvey.QualificationPIndustryPreCodes = ["ALL"]
             @newsurvey.QualificationDMAPreCodes = ["ALL"]
             @newsurvey.QualificationStatePreCodes = ["ALL"]
             @newsurvey.QualificationDivisionPreCodes = ["ALL"]          
             @newsurvey.QualificationRegionPreCodes = ["ALL"]
+
+            @newsurvey.QualificationJobTitlePreCodes = ["ALL"]
             
             
           else
@@ -674,6 +687,14 @@ puts
                   end
                   @newsurvey.QualificationRegionPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                   
+                when 15294
+                  if flag == 'stag' then
+                    print '-------------------> JobTitle: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @newsurvey.QualificationJobTitlePreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+          
                  
               end # case
 
@@ -982,7 +1003,7 @@ puts
       
                 if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                   toberankedsurvey.SurveyGrossRank = 600
-                  toberankedsurvey.label = 'B: TCR<0.066'
+                  toberankedsurvey.label = 'F->B: TCR<0.066'
         
                 else
       
@@ -990,7 +1011,7 @@ puts
                   print "Assigned Fast survey to Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts
                   toberankedsurvey.TCR = 1.0 / @toberankedsurveyNumberofAttemptsSinceLastComplete
-                  toberankedsurvey.label = 'B: TCR<0.066'
+                  toberankedsurvey.label = 'F->B: TCR<0.066'
                 end
       
               else
