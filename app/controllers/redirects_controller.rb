@@ -220,12 +220,16 @@ class RedirectsController < ApplicationController
             
 
             @survey = Survey.find_by SurveyNumber: params[:tsfn]
-            print '************ Successfully completed survey:', @survey.SurveyNumber #, 'by user_id:', @user.user_id
+            print '************ Successfully completed survey:', @survey.SurveyNumber
             puts
             # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
+            
+            if params[:tis] == nil then
+              params[:tis] = "XX"
+            else
+            end
+            
             @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
-
-
 
             # Save (inverse of) TCR and reset counter for attempts at last complete
 
@@ -376,21 +380,34 @@ class RedirectsController < ApplicationController
             # Give user chance to take another survey unless they do not qualify for any (other) survey
 
             if (@user.SupplierLink.empty? == false) then
+              
+              
+              if @user.children != nil then
+                @childrenvalue = '&Age_and_Gender_of_Child='+@user.children[0]
+                if @user.children.length > 1 then
+                  (1..@user.children.length-1).each do |i|
+                    @childrenvalue = @childrenvalue+'&Age_and_Gender_of_Child='+@user.children[i]
+                  end
+                else
+                end
+              else
+              end
+              
   
               if @user.country=="9" then 
-                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry
+                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
               else
                 if @user.country=="6" then
-                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry
+                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
                 else
                   if @user.country=="5" then
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
                   else
                     if @user.country=="7" then
-                      @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry
+                      @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
                     else
                       puts "*************************************** Redirects: Find out why country code is not correctly set"
-                      @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry
+                      @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
                       return
                     end
                   end
@@ -494,61 +511,6 @@ class RedirectsController < ApplicationController
             
             @survey.save
             
-            
-            
-          
-#            if (@survey.SurveyExactRank == 10 ) && (@survey.CompletedBy.length < 1) then
-#            @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
-#            print '********************************* Reached 10 Unsuccessful attempts, and no completes - rank reduced proportionate to EEPC following a OQ for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
-#            puts
-#          else
-#          end
-          
-#            if ( @survey.SurveyExactRank == 20 ) && (@survey.CompletedBy.length < 1) then
-#            @survey.SurveyGrossRank = 21
-#            print '********************************* Reached 20 Unsuccessful attempts, and no completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
-#            puts 
-#          else
-#          end
-          
-#            if ( @survey.SurveyExactRank == 40 ) && (@survey.CompletedBy.length == 1) then
-#            @survey.SurveyGrossRank = 21
-#            print '********************************* Reached 40 Unsuccessful attempts, and 0nly 1 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
-#            puts 
-#          else
-#          end
-          
-#            if ( @survey.SurveyExactRank == 60 ) && (@survey.CompletedBy.length == 2) then
-#            @survey.SurveyGrossRank = 20
-#            print '********************************* Reached 60 Unsuccessful attempts, with only 2 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
-#            puts 
-#          else
-#          end
-          
-#            if ( @survey.SurveyExactRank == 80 ) && (@survey.CompletedBy.length == 3) then
-#            @survey.SurveyGrossRank = 21
-#            print '********************************* Reached 80 Unsuccessful attempts, with only 3 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
-#            puts 
-#          else
-#          end
-          
-#            if ( @survey.SurveyExactRank == 100 ) && (@survey.CompletedBy.length == 4) then
-#            @survey.SurveyGrossRank = 21
-#            print '********************************* Reached 100 Unsuccessful attempts, with only 4 completes - rank reduced to 21 following a OQ for survey number: ', params[:tsfn]
-#            puts 
-#          else
-#          end
-                   
-#            if (( @survey.SurveyExactRank >= 120 ) && (( @survey.SurveyExactRank / (@survey.CompletedBy.length+0.1) ) > 10 ))
-             # 0.1 is arbitrarily added to avoid division by 0
-            
-#            @survey.SurveyGrossRank = @survey.SurveyGrossRank + @survey.SurveyQuotaCalcTypeID
-#            print '********************************* Reached 120+ Unsuccessful attempts, and less than 10% completes - rank reduced proportionate to EPC following a OQ for survey number: ', params[:tsfn], ' to new rank: ', @survey.SurveyGrossRank
-#            puts 
-#          else
-#          end
-                  
-            
           
 
           # Give user chance to take another survey
@@ -556,20 +518,33 @@ class RedirectsController < ApplicationController
           if (@user.SupplierLink.empty? == false) then
             
             
+          if @user.children != nil then
+            @childrenvalue = '&Age_and_Gender_of_Child='+@user.children[0]
+            if @user.children.length > 1 then
+              (1..@user.children.length-1).each do |i|
+                @childrenvalue = @childrenvalue+'&Age_and_Gender_of_Child='+@user.children[i]
+              end
+            else
+            end
+          else
+          end
+            
+            
+            
             if @user.country=="9" then 
-              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry
+              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
             else
               if @user.country=="6" then
-                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry
+                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
               else
                 if @user.country=="5" then
-                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry
+                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
                 else
                   if @user.country=="7" then
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
                   else
                     puts "*************************************** Redirects: Find out why country code is not correctly set"
-                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry
+                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
                     return
                   end
                 end

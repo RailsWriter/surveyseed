@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<div class="header">
+			<center>
+				<h1>Age and Gender of Children</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<center>
+				<p>Indicate the age and gender of your child or children. If you do not have any then choose none at the bootom:</p>
+			</center>
+				
+				<%= form_tag("childrenaction", method: "post") do %>
+				<fieldset>
+				<div class="mybiglistinput">
+					
+					<label>
+					<%= check_box_tag 'children[]', '1' %>
+				  		Boy under age 1
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '2' %>
+				  		Girl under age 1
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '3' %>
+				  		Boy age 1
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '4' %>
+				  		Girl age 1
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '5' %>
+				  		Boy age 2
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '6' %>
+				  		Girl age 2
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '7' %>
+				  		Boy age 3
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '8' %>
+				  		Girl age 3
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '9' %>
+				  		Boy age 4
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '10' %>
+				  		Girl age 4
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '11' %>
+				  		Boy age 5
+					</label><br>					
+					<label>
+					<%= check_box_tag 'children[]', '12' %>
+				  		Girl age 5
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '13' %>
+				  		Boy age 6
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '14' %>
+				  		Girl age 6
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '15' %>
+				  		Boy age 7
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '16' %>
+				  		Girl age 7
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '17' %>
+				  		Boy age 8
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '18' %>
+				  		Girl age 8
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '19' %>
+				  		Boy age 9
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '20' %>
+				  		Girl age 9
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '21' %>
+				  		Boy age 10
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '22' %>
+				  		Girl age 10
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '23' %>
+				  		Boy age 11
+					</label><br>					
+					<label>
+					<%= check_box_tag 'children[]', '24' %>
+				  		Girl age 11
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '25' %>
+				  		Boy age 12
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '26' %>
+				  		Girl age 12
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '27' %>
+				  		Male teen age 13
+					</label><br>
+					<%= check_box_tag 'children[]', '28' %>
+				  		Female teen age 13
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '29' %>
+				  		Male teen age 14
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '30' %>
+				  		Female teen age 14
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '31' %>
+				  		Male teen age 15
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '32' %>
+				  		Female teen age 15
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '33' %>
+				  		Male teen age 16
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '34' %>
+				  		Female teen age 16
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '35' %>
+				  		Male teen age 17
+					</label><br>
+					<label>
+					<%= check_box_tag 'children[]', '36' %>
+				  		Female teen age 17
+					</label><br>
+					<label>						
+					<%= check_box_tag 'children[]', '-3105' %>
+				  		None of the abovecheck_box_tag
+					</label><br><br>
+				</div>
+					
+				<div class="myinput">
+					<center>
+					<%= submit_tag "Next" %>
+					</center>
+				</div>
+			</fieldset>
+			<% end %>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('KetsciLogoSm.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

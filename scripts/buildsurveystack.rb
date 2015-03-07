@@ -15,7 +15,7 @@ print "**************************** ENV is set to ", flag
 puts
 
 
-if flag == 'prod' then
+if flag == 'stag' then
   base_url = prod_base_url
 else
   if flag == 'stag' then
@@ -37,7 +37,7 @@ begin
   
   begin
     sleep(1)
-    puts '*************** CONNECTING TO OFFERWALL for ALL SURVEYS LIST'
+    puts '*************** CONNECTING TO OFFERWALL for INDEX OF ALL SURVEYS'
     
     if flag == 'prod' then
       offerwallresponse = HTTParty.get(base_url+'/Supply/v1/Surveys/AllOfferwall/5458?key=AA3B4A77-15D4-44F7-8925-6280AD90E702')
@@ -54,6 +54,7 @@ begin
   end while offerwallresponse.code != 200
 
   puts 'http response', offerwallresponse
+  
   totalavailablesurveys = offerwallresponse["ResultCount"] - 1
   print '************* Total surveys: ', totalavailablesurveys+1
   puts
@@ -94,13 +95,13 @@ begin
         @survey.TCR = 0.0
         @survey.SurveyExactRank = 0
   
-        SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
+#        SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
         SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
         
   
         print '********************************************* PROCESSING i =', i
         puts
-        print '************************ SurveyName: ', SurveyName, ' SurveyNumber: ', SurveyNumber, ' CountryLanguageID: ', offerwallresponse["Surveys"][i]["CountryLanguageID"]
+        print '************************ SurveyName: ', offerwallresponse["Surveys"][i]["SurveyName"], ' SurveyNumber: ', SurveyNumber, ' CountryLanguageID: ', offerwallresponse["Surveys"][i]["CountryLanguageID"]
         puts
         
    
@@ -206,6 +207,7 @@ begin
           @survey.QualificationRegionPreCodes = ["ALL"]
           
           @survey.QualificationJobTitlePreCodes = ["ALL"]
+          @survey.QualificationChildrenPreCodes = ["ALL"]
           
 
         # Insert specific qualifications where required
@@ -231,6 +233,7 @@ begin
             @survey.QualificationRegionPreCodes = ["ALL"]
             
             @survey.QualificationJobTitlePreCodes = ["ALL"]
+            @survey.QualificationChildrenPreCodes = ["ALL"]
             
             
           else
@@ -310,14 +313,21 @@ begin
                     puts
                   else
                   end
+ 
+ 
+                  
+                  
                 when 1249
                   if flag == 'stag' then
                     print '----------------------------------------------------------------->> Age_and_Gender_of_Child: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
+                  @survey.QualificationChildrenPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes") 
                   
                   
+
+
                   
                   
                 when 2189
@@ -327,11 +337,9 @@ begin
                   else
                   end
                   p '------------------------------------------------------------>> Rename HHComp to STANDARD_EMPLOYMENT: '
-                  @survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+               #  @survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                   @survey.QualificationEmploymentPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
-             
-                
-                
+                            
                 when 5729
                   if flag == 'stag' then
                     print '************ STANDARD_INDUSTRY_PERSONAL: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
@@ -371,11 +379,10 @@ begin
                   else
                   end
                   @survey.QualificationRegionPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-                  
-                  
+                                    
                 when 15294
                   if flag == 'stag' then
-                    print 'JobTitle: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print '--------------------> JobTitle: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end

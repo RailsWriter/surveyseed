@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150302024114) do
+ActiveRecord::Schema.define(version: 20150307090212) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -94,6 +94,8 @@ ActiveRecord::Schema.define(version: 20150302024114) do
     t.text     "QualificationStatePreCodes"
     t.text     "QualificationRegionPreCodes"
     t.text     "QualificationDivisionPreCodes"
+    t.text     "QualificationJobTitlePreCodes"
+    t.text     "QualificationChildrenPreCodes"
   end
 
   create_table "us_geos", force: true do |t|
@@ -160,6 +162,8 @@ ActiveRecord::Schema.define(version: 20150302024114) do
     t.string   "clickid"
     t.string   "pindustry"
     t.string   "employment"
+    t.string   "jobtitle"
+    t.text     "children"
   end
 
 end

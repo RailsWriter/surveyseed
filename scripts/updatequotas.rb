@@ -174,8 +174,9 @@ begin
       survey.QualificationStatePreCodes = ["ALL"]
       survey.QualificationDivisionPreCodes = ["ALL"]          
       survey.QualificationRegionPreCodes = ["ALL"]
-      
       survey.QualificationJobTitlePreCodes = ["ALL"]
+
+      survey.QualificationChildrenPreCodes = ["ALL"]
       
 
 
@@ -199,9 +200,10 @@ begin
         survey.QualificationDMAPreCodes = ["ALL"]
         survey.QualificationStatePreCodes = ["ALL"]
         survey.QualificationDivisionPreCodes = ["ALL"]          
-        survey.QualificationRegionPreCodes = ["ALL"]
-        
+        survey.QualificationRegionPreCodes = ["ALL"]        
         survey.QualificationJobTitlePreCodes = ["ALL"]
+        
+        survey.QualificationChildrenPreCodes = ["ALL"]
         
         
        
@@ -278,22 +280,27 @@ begin
                 puts
               else
               end
+              
+
+              
             when 1249
               if flag == 'stag' then
                 print '----------------------------------------------------------------->> Age_and_Gender_of_Child: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 puts
               else
               end
+              survey.QualificationChildrenPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes") 
+
 
 
             when 2189
               if flag == 'stag' then
-                print '------------------------------------------------------------>> STANDARD_EMPLOYMENT: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                print 'STANDARD_EMPLOYMENT: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 puts
               else
               end
               p '------------------------------------------------------------>> Rename HHComp to STANDARD_EMPLOYMENT: '
-              survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
+          #    survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
               survey.QualificationEmploymentPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
 
               
@@ -524,8 +531,9 @@ puts
           @newsurvey.QualificationStatePreCodes = ["ALL"]
           @newsurvey.QualificationDivisionPreCodes = ["ALL"]          
           @newsurvey.QualificationRegionPreCodes = ["ALL"]
-
           @newsurvey.QualificationJobTitlePreCodes = ["ALL"]
+
+          @newsurvey.QualificationChildrenPreCodes = ["ALL"]
           
           
           
@@ -549,8 +557,9 @@ puts
             @newsurvey.QualificationStatePreCodes = ["ALL"]
             @newsurvey.QualificationDivisionPreCodes = ["ALL"]          
             @newsurvey.QualificationRegionPreCodes = ["ALL"]
-
             @newsurvey.QualificationJobTitlePreCodes = ["ALL"]
+
+            @newsurvey.QualificationChildrenPreCodes = ["ALL"]
             
             
           else
@@ -626,23 +635,27 @@ puts
                     puts
                   else
                   end
+                  
+                  
+                  
                 when 1249
                   if flag == 'stag' then
                     print '----------------------------------------------------------------->> Age_and_Gender_of_Child: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
+                  @newsurvey.QualificationChildrenPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                   
                   
                   
                 when 2189
                   if flag == 'stag' then
-                    print '------------------------------------------------------------>> STANDARD_EMPLOYMENT: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print 'STANDARD_EMPLOYMENT: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
                   p '------------------------------------------------------------>> Rename HHComp to STANDARD_EMPLOYMENT: '
-                  @newsurvey.QualificationHHCPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
+                #  @newsurvey.QualificationHHCPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
                   @newsurvey.QualificationEmploymentPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                    
                   
@@ -899,7 +912,7 @@ puts
            
 #      if (i == 30000) || ((Time.now - @lastrankingtime) >= 300000) then    
       
-      if (i == 1) || ((Time.now - @lastrankingtime) >= 1800) then    
+      if (i == 1) || ((Time.now - @lastrankingtime) >= 2000) then    
           
         @lastrankingtime = Time.now
         
@@ -1056,13 +1069,13 @@ puts
       
                   toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
                   print "Assigned From Conv>0 to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                  toberankedsurvey.label = 'F: From Conv>0'
+                  toberankedsurvey.label = 'G->F: From Conv>0'
       
                 else
       
                     toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
                     print "Assigned From Conv>0 to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                    toberankedsurvey.label = 'S: From Conv>0'
+                    toberankedsurvey.label = 'G->S: From Conv>0'
         
                 end 
       
@@ -1083,14 +1096,14 @@ puts
                     toberankedsurvey.SurveyGrossRank = 401
                     print "Assigned a Conv>0 to Poor: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts 
-                    toberankedsurvey.label = 'Poor from Conv>0'
+                    toberankedsurvey.label = 'G->P'
        
                   else
         
                     toberankedsurvey.SurveyGrossRank = 500-(100*@GCR)
                     print "Assigned a Conv>0 to Poor: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts    
-                    toberankedsurvey.label = 'Poor from Conv>0'
+                    toberankedsurvey.label = 'G->P'
                   end
             
       
@@ -1102,14 +1115,14 @@ puts
                         toberankedsurvey.SurveyGrossRank = 400
                         print "Assigned Conv>0 to TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                         puts 
-                        toberankedsurvey.label = 'TM: From Conv>0'
+                        toberankedsurvey.label = 'G->TM'
       
                       else
 
                         toberankedsurvey.SurveyGrossRank = 301+(100-toberankedsurvey.Conversion)
                         print "Assigned Conv>0 to TM:", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                         puts
-                        toberankedsurvey.label = 'TM: From Conv>0'
+                        toberankedsurvey.label = 'G->TM'
                       end
                 
         
@@ -1121,14 +1134,14 @@ puts
                         toberankedsurvey.SurveyGrossRank = 300
                         print "Repositioned Conv>0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                         puts 
-                        toberankedsurvey.label = 'Conv>0: Repositioned'
+                        toberankedsurvey.label = 'G: Repositioned'
       
                       else
 
                         toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
                         print "Repositioned Conv>0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                         puts
-                        toberankedsurvey.label = 'Conv>0: Repositioned'
+                        toberankedsurvey.label = 'G: Repositioned'
                       end
 
                     end # more than 10 hits on a GCR>=0.01
@@ -1171,14 +1184,14 @@ puts
                   toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
                   print "Assigned Try more survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts
-                  toberankedsurvey.label = 'F: From TM'
+                  toberankedsurvey.label = 'TM->F'
     
                 else   
       
                     toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
                     print "Assigned Try more survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts
-                    toberankedsurvey.label = 'S: From TM'
+                    toberankedsurvey.label = 'TM->S'
         
                 end 
       
@@ -1211,14 +1224,14 @@ puts
                       toberankedsurvey.SurveyGrossRank = 401
                       print "Assigned a TM to Conv=0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                       puts 
-                      toberankedsurvey.label = 'Conv=0: changed in TM'
+                      toberankedsurvey.label = 'TM->P'
        
                     else
         
                       toberankedsurvey.SurveyGrossRank = 500-(100*@GCR)
                       print "Assigned a TM to Conv=0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                       puts    
-                      toberankedsurvey.label = 'Conv=0: changed in TM'
+                      toberankedsurvey.label = 'TM->P'
               
                     end
               
@@ -1277,13 +1290,13 @@ puts
     
                   toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
                   print "Assigned Poor survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                  toberankedsurvey.label = 'F: TCR>0.066 from Poor'
+                  toberankedsurvey.label = 'P->F: TCR>0.066'
     
                 else   
 
                     toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
                     print "Assigned Poor survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                    toberankedsurvey.label = 'S: TCR>0.066 from Poor'
+                    toberankedsurvey.label = 'P->S: TCR>0.066'
       
                 end 
       
@@ -1294,14 +1307,14 @@ puts
       
                 if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                   toberankedsurvey.SurveyGrossRank = 600
-                  toberankedsurvey.label = 'B: From Poor'
+                  toberankedsurvey.label = 'P->B'
       
                 else
 
                   toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
                   print "Assigned New/GCR<0.01 survey rank to OldTimers+Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts    
-                  toberankedsurvey.label = 'B: From Poor'
+                  toberankedsurvey.label = 'P->B'
                 end
       
               else
@@ -1320,7 +1333,7 @@ puts
                   toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
                   print "Conv>0: Conv changed,  From P: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts    
-                  toberankedsurvey.label = 'Conv>0: Conv changed, From P'
+                  toberankedsurvey.label = 'P->G'
       
                 else # (Conversion=0)
 
@@ -1329,7 +1342,7 @@ puts
                       toberankedsurvey.SurveyGrossRank = 700
                       print "Assigned New/GCR<0.01 survey rank to Horrible: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                       puts
-                      toberankedsurvey.label = 'H: From Poor'
+                      toberankedsurvey.label = 'P->H'
  
                     else
           
@@ -1444,13 +1457,13 @@ puts
 
                   toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100).to_i
                   print "Assigned Horrible survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                  toberankedsurvey.label = 'F: TCR>0.066 from H'
+                  toberankedsurvey.label = 'H->F: TCR>0.066'
         
                 else
         
                   toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100).to_i
                   print "Assigned Horrible survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                  toberankedsurvey.label = 'S: TCR>0.066 from H'
+                  toberankedsurvey.label = 'H->S: TCR>0.066'
                 end
         
               else
@@ -1460,7 +1473,7 @@ puts
       
                 toberankedsurvey.SurveyGrossRank = 600 - (toberankedsurvey.TCR * 100)
                 print "Assigned Horrible survey to Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                toberankedsurvey.label = 'B: TCR>0.066 from H'
+                toberankedsurvey.label = 'H->B: TCR>0.066'
               else
               end
     
@@ -1480,7 +1493,7 @@ puts
                   toberankedsurvey.SurveyGrossRank = 301+(100-toberankedsurvey.Conversion)
                   print "TM: From H: ", toberankedsurvey.SurveyGrossRank
                   puts
-                  toberankedsurvey.label = 'TM: From H'
+                  toberankedsurvey.label = 'H->TM'
          
                 else     
       
@@ -1521,13 +1534,13 @@ puts
 
                     toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
                     print "Assigned Dead survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                    toberankedsurvey.label = 'F: TCR>0.066 from D'
+                    toberankedsurvey.label = 'D->F: TCR>0.066'
         
                   else
         
                     toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
                     print "Assigned Dead survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                    toberankedsurvey.label = 'S: TCR>0.066 from D'
+                    toberankedsurvey.label = 'D->S: TCR>0.066'
                   end
         
                 else
@@ -1540,14 +1553,14 @@ puts
                     toberankedsurvey.SurveyGrossRank = 600
                     print "Dead survey to Bad: ", toberankedsurvey.SurveyGrossRank
                     puts
-                    toberankedsurvey.label = 'B: From Dead'
+                    toberankedsurvey.label = 'D->B'
             
                   else
             
                     toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
                     print "Dead survey to Bad: ", toberankedsurvey.SurveyGrossRank
                     puts
-                    toberankedsurvey.label = 'B: From Dead'
+                    toberankedsurvey.label = 'D->B'
               
                   end
           
@@ -1572,7 +1585,7 @@ puts
                     toberankedsurvey.SurveyGrossRank = 301+(100-toberankedsurvey.Conversion)
                     print "TM: From D: ", toberankedsurvey.SurveyGrossRank
                     puts
-                    toberankedsurvey.label = 'TM: From D'
+                    toberankedsurvey.label = 'D->TM'
      
                   else     
       
