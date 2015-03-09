@@ -5,7 +5,11 @@ require 'httparty'
 # Set flag to 'prod' to use production and 'stag' for staging base URL
 
 
+
 flag = 'prod'
+
+
+
 
 
 prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
@@ -15,7 +19,7 @@ print "**************************** ENV is set to ", flag
 puts
 
 
-if flag == 'stag' then
+if flag == 'prod' then
   base_url = prod_base_url
 else
   if flag == 'stag' then
