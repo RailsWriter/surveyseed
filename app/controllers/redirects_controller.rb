@@ -91,7 +91,7 @@ class RedirectsController < ApplicationController
         # User lands up here if anything unclear happens in the ride. Best course seems to be to send the user back to very begining to start over.
         redirect_to 'https://www.ketsci.com/redirects/default'
 
-#       Alternatively, we can automatically route the user - but it is risky as we do not exactly know the previos user state        
+#       Fix this to route the user to take other surveys       
 #        if (User.where("user_id = ?", params[:PID])).exists? then
 #          @user = User.find_by user_id: params[:PID]
 #          redirect_to 'https://www.ketsci.com/users/new'+'?NID='+@user.netid+'&CID='+@user.clickid
@@ -166,7 +166,7 @@ class RedirectsController < ApplicationController
             
             # Keep a count of completes on Supersonic Network
             
-            puts "*************** Keeping track of cmpletes on SS network"
+            puts "*************** Keeping track of completes on SS network"
             
            
 #            if @user.netid = "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
@@ -184,9 +184,7 @@ class RedirectsController < ApplicationController
 
             end
             
-            
-                     
-              
+             
             # Happy ending
             redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'    
         
@@ -213,10 +211,8 @@ class RedirectsController < ApplicationController
             else
             end
             
-            
             @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], @user.clickid, @net_name]
             @user.save
-            
             
 
             @survey = Survey.find_by SurveyNumber: params[:tsfn]
@@ -310,13 +306,7 @@ class RedirectsController < ApplicationController
               @net.save
               
             end
-            
-           
-            
-            
-            
-            
-            
+                     
 
             # Happy ending
             redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'
@@ -326,7 +316,7 @@ class RedirectsController < ApplicationController
 
       when "3"
         # FailureLink: https://www.ketsci.com/redirects/status?status=3&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
-        # FED uses this link is used when user is under age or they do not qualify for the survey they attempted. However since Ketsci eliminates those users already, this user
+        # FED uses this link when user is under age or they do not qualify for the survey they attempted. However since Ketsci eliminates those users already, this user
         # can be sent to try other surveys. If he/she has not qualified for any survey then take them to failure view.
       
         if params[:PID] == 'test' then 

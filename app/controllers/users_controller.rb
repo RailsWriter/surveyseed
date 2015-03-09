@@ -38,9 +38,8 @@ require 'hmac-md5'
       clickid = params[:clickid]
       
       
-      # Keep track of clicks on each network
+      # Keep track of clicks on each network as Flag2
       
-#      if netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
       @SSnet = Network.find_by netid: netid
       if @SSnet.Flag2 == nil then
         @SSnet.Flag2 = "1" 
@@ -50,8 +49,7 @@ require 'hmac-md5'
         @SSnet.save
       end
         
-        
-      
+     
       tracker.track(ip_address, 'Age')
       
       # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
@@ -95,6 +93,10 @@ require 'hmac-md5'
       else
       end
     
+    
+    
+      # This DB call should be optimized by using the id of record already found before
+      
       if (first_time_user==false) then
         user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
         p user
@@ -660,7 +662,7 @@ require 'hmac-md5'
 
     user=User.find_by session_id: session.id
     
-#    tracker.track(user.ip_address, 'pindustry')
+#    tracker.track(user.ip_address, 'jobtitle')
     
     if params[:jtitle] != nil
       user.jobtitle=params[:jtitle]
@@ -674,17 +676,19 @@ require 'hmac-md5'
   
   def childrenaction  
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#    tracker.track(user.ip_address, 'pindustry')
+    tracker.track(user.ip_address, 'children')
     
     if params[:children] != nil
       user.children=params[:children]
       user.save
       print "______________________________________>>> user.children.flatten: ", user.children.flatten
+      puts
       print "______________________________________>>> user.children[0]: ", user.children[0]
+      puts
       redirect_to '/users/qq12'
     else
       redirect_to '/users/qq14'
@@ -694,11 +698,11 @@ require 'hmac-md5'
   
   def pleasewait
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'pleasewait')    
+#    tracker.track(user.ip_address, 'pleasewait')    
     
     ranksurveysforuser(session.id)
     
@@ -1120,7 +1124,7 @@ require 'hmac-md5'
           (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ])) &&
           (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ])) &&     
           (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&
-          (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (([ user.children ] & survey.QualificationChildrenPreCodes.flatten) != nil)) &&
+          (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationChildrenPreCodes.flatten).empty? == false)) &&
           ((survey.CPI == nil) || (survey.CPI >= @currentpayout)) ) ||
           
           ( (survey.CountryLanguageID == 9) &&          
@@ -1135,7 +1139,7 @@ require 'hmac-md5'
           (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ])) &&
           (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ])) && 
           (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&                    
-          (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (([ user.children ] & survey.QualificationChildrenPreCodes.flatten) != nil)) &&                             
+          (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children  & survey.QualificationChildrenPreCodes.flatten).empty? == false)) &&                             
           (( survey.QualificationDMAPreCodes.empty? ) || ( survey.QualificationDMAPreCodes.flatten == [ "ALL" ] ) || (([ @DMARegionCode ] & survey.QualificationDMAPreCodes.flatten) == [ @DMARegionCode ])) && 
           (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ])) && 
           (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ])) && 
@@ -1149,6 +1153,7 @@ require 'hmac-md5'
 
           @_gender = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
           @_age = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
+          @_age_value = [user.age] & survey.QualificationAgePreCodes.flatten
           @_ZIP = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
           @_race = (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ]))
           @_ethnicity= (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ]))
@@ -1157,7 +1162,8 @@ require 'hmac-md5'
           @_employment = (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ]))
           @_pindustry = (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ]))
           @_jobtitle = (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ]))          
-          @_children = (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (([ user.children ] & survey.QualificationChildrenPreCodes.flatten) != nil))          
+          @_children = (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children  & survey.QualificationChildrenPreCodes.flatten).empty? == false)) 
+          @_children_logic = user.children & survey.QualificationChildrenPreCodes.flatten       
           @_CPI_check = ((survey.CPI == nil) || (survey.CPI >= @currentpayout))
 
         
@@ -1165,7 +1171,7 @@ require 'hmac-md5'
          
         puts
         
-        print '************* Gender match: ', @_gender, ' Age match: ', @_age, ' ZIP match: ', @_ZIP, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment, ' PIndustry match: ', @_pindustry, ' JobTitle match: ', @_jobtitle, ' Children match: ', @_children, ' CPI check: ', @_CPI_check
+        print '************* Gender match: ', @_gender, ' Age match: ', @_age, ' Age_logic value: ', @_age_value, ' ZIP match: ', @_ZIP, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment, ' PIndustry match: ', @_pindustry, ' JobTitle match: ', @_jobtitle, ' Children match: ', @_children, ' Children_logic value: ', @_children_logic, ' CPI check: ', @_CPI_check
         puts
         
 
@@ -1873,6 +1879,7 @@ require 'hmac-md5'
         
         @_gender = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
         @_age = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
+        @_age_value = [user.age] & survey.QualificationAgePreCodes.flatten
         @_ZIP = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
         @_race = (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ]))
         @_ethnicity = (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ]))
@@ -1881,7 +1888,8 @@ require 'hmac-md5'
         @_employment = (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ]))
         @_pindustry = (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ]))        
         @_jobtitle = (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ]))
-        @_children = (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (([ user.children ] & survey.QualificationChildrenPreCodes.flatten) != nil))          
+        @_children = (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children  & survey.QualificationChildrenPreCodes.flatten).empty? == false)) 
+        @_children_logic = user.children & survey.QualificationChildrenPreCodes.flatten  
         @_CPI_check = ((survey.CPI == nil) || (survey.CPI >= @currentpayout))
 
         
@@ -1890,7 +1898,7 @@ require 'hmac-md5'
          
         puts
         
-        print '************** Gender match:', @_gender, ' Age match: ', @_age, ' ZIP match: ', @_ZIP, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment, ' PIndustry match: ', @_pindustry, ' JobTitle match: ', @_jobtitle, ' Children match: ', @_children, ' CPI check: ', @_CPI_check
+        print '************** Gender match:', @_gender, ' Age match: ', @_age, ' Age_logic value: ', @_age_value, ' ZIP match: ', @_ZIP, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment, ' PIndustry match: ', @_pindustry, ' JobTitle match: ', @_jobtitle, ' Children match: ', @_children, ' Children_logic value: ', @_children_logic, ' CPI check: ', @_CPI_check
         puts
         
         if (survey.CountryLanguageID == 9) then
@@ -1953,6 +1961,7 @@ require 'hmac-md5'
     
      # If the user qualifies for one or more survey, send user to the top ranked survey first and repeat until success/failure/OT/QT
 #     @InferiorSupplierLink = Array.new
+
     (0..user.SurveysWithMatchingQuota.length-1).each do |i| #do14
       @surveynumber = user.SurveysWithMatchingQuota[i]
       Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey| # do15
@@ -1984,7 +1993,7 @@ require 'hmac-md5'
     end
 
 
-    # Queue up additional surveys from P2S or others. First calculate teh additional values to be attached.
+    # Queue up additional surveys from P2S. First calculate the additional values to be attached.
     
     @client = Network.find_by name: "P2S"
     if @client.status = "ACTIVE" then
@@ -2037,14 +2046,26 @@ require 'hmac-md5'
       
       
       p2s_children = [0, '', '', '', '', '', '', 6975, 6976, 6977, 6978, 6979, 6980, 6981, 6982, 6983, 6984, 6985, 6986, 6987, 6988, 6989, 6990, 6991, 6992, 6993, 6994, 6995, 6996, 6997, 6998, 6999, 7000, 7001, 7002, 7003, 7004, 7005]
+      
+      
       if user.children != nil then
         @p2s_children = p2s_children[user.children[0].to_i].to_s
+        
         if user.children.length > 1 then
+            
           (1..user.children.length-1).each do |i|
-            @p2s_children = @p2s_children+','+p2s_children[user.children[i].to_i].to_s
+          
+            if p2s_children[user.children[i].to_i] != '' then                  
+              @p2s_children = @p2s_children+','+p2s_children[user.children[i].to_i].to_s
+              
+            else
+            end              
+              
           end
+          
         else
         end
+        
       else
       end
       
