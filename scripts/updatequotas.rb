@@ -928,7 +928,7 @@ end while ((NewSupplierLink.code != 200) || (@newfailcount < 100))
            
 #      if (i == 30000) || ((Time.now - @lastrankingtime) >= 300000) then    
       
-      if (i == 1) || ((Time.now - @lastrankingtime) >= 2000) then    
+      if (i == 1) || ((Time.now - @lastrankingtime) >= 2200) then    
           
         @lastrankingtime = Time.now
         
