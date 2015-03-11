@@ -429,12 +429,17 @@ begin
         
           # Get Supplierlinks for the survey
     
+          # initialize failure count
+          @failcount = 0
+          
+          
             begin
               sleep(1)
               print '********************** GET SUPPLIERLINKS for SurveyNumber = ', SurveyNumber
-              puts
+              puts     
        
               if flag == 'stag' then
+                
                 SupplierLink = HTTParty.post(base_url+'/Supply/v1/SupplierLinks/Create/'+SurveyNumber.to_s+'/5411?key=5F7599DD-AB3B-4EFC-9193-A202B9ACEF0E',
                 :body => { :SupplierLinkTypeCode => "OWS", 
                   :TrackingTypeCode => "NONE", 
@@ -455,11 +460,14 @@ begin
                 else
               end
             end
+            
+            # increment failure count
+            @failcount = @failcount+1
 
             rescue HTTParty::Error => e
             puts 'HttParty::Error '+ e.message
             retry
-            end while SupplierLink.code != 200
+            end while ((SupplierLink.code != 200) || (@failcount < 100))
 
             print '******************* SUPPLIERLINKS ARE AVAILABLE for the NEW Survey: ', SupplierLink["SupplierLink"]
             puts

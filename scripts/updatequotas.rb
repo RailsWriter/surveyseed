@@ -751,6 +751,9 @@ puts
                            
         
             # Get Supplierlinks for the survey
+
+            # initialize failure count
+            @newfailcount = 0
     
             begin
 #            sleep(1)
@@ -783,11 +786,19 @@ puts
                 else
                 end
               end
+              
+              # increment failure count
+              @newfailcount = @newfailcount+1
             
               rescue HTTParty::Error => e
                 puts 'HttParty::Error '+ e.message
 #             retry
-            end while NewSupplierLink.code < 0
+#            end while NewSupplierLink.code < 0
+
+
+retry
+end while ((NewSupplierLink.code != 200) || (@newfailcount < 100))
+
 
             if NewSupplierLink.code != 200 then
               print '**************************************************** SUPPLIERLINKS NOT AVAILABLE'

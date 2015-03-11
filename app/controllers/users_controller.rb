@@ -537,11 +537,11 @@ require 'hmac-md5'
 
   def householdincome_US  
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#    tracker.track(user.ip_address, 'hhi_US')
+    tracker.track(user.ip_address, 'hhi_US')
     
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
@@ -555,11 +555,11 @@ require 'hmac-md5'
 
   def householdincome_CA
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#     tracker.track(user.ip_address, 'hhi_CA')
+     tracker.track(user.ip_address, 'hhi_CA')
     
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
@@ -591,11 +591,11 @@ require 'hmac-md5'
   
   def householdincome_AU  
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#     tracker.track(user.ip_address, 'hhi_AU')
+     tracker.track(user.ip_address, 'hhi_AU')
     
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
@@ -640,11 +640,11 @@ require 'hmac-md5'
   
   def personalindustry  
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#    tracker.track(user.ip_address, 'pindustry')
+    tracker.track(user.ip_address, 'pindustry')
     
     if params[:pindustry] != nil
       user.pindustry=params[:pindustry]
@@ -658,11 +658,11 @@ require 'hmac-md5'
   
   def jobtitleaction  
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#    tracker.track(user.ip_address, 'jobtitle')
+    tracker.track(user.ip_address, 'jobtitle')
     
     if params[:jtitle] != nil
       user.jobtitle=params[:jtitle]
@@ -698,11 +698,11 @@ require 'hmac-md5'
   
   def pleasewait
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#    tracker.track(user.ip_address, 'pleasewait')    
+    tracker.track(user.ip_address, 'pleasewait')    
     
     ranksurveysforuser(session.id)
     
@@ -2164,8 +2164,8 @@ require 'hmac-md5'
       print '***************** User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile
       puts
     
-#      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile    
-      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
+      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile    
+#      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
       user.SupplierLink = user.SupplierLink.drop(1)
       user.save
       redirect_to @EntryLink

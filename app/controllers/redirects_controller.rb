@@ -434,8 +434,8 @@ class RedirectsController < ApplicationController
                 
                 print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
                 puts
-              #  @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-                @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
+                @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
+              #  @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
                 @user.SupplierLink = @user.SupplierLink.drop(1)
                 @user.save
                 redirect_to @NextEntryLink
@@ -574,8 +574,8 @@ class RedirectsController < ApplicationController
         
               print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
               puts
-            #  @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-              @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
+              @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
+            #  @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
               @user.SupplierLink = @user.SupplierLink.drop(1)
               @user.save
               redirect_to @NextEntryLink
