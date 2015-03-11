@@ -2164,8 +2164,8 @@ require 'hmac-md5'
       print '***************** User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile
       puts
     
-      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile    
-#      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
+#      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile    
+      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
       user.SupplierLink = user.SupplierLink.drop(1)
       user.save
       redirect_to @EntryLink
