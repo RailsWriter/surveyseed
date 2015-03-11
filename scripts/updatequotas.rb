@@ -789,6 +789,8 @@ puts
               
               # increment failure count
               @newfailcount = @newfailcount+1
+              print "newfailcount is: ", @newfailcount
+              puts
             
               rescue HTTParty::Error => e
                 puts 'HttParty::Error '+ e.message
@@ -797,7 +799,7 @@ puts
 
 
 retry
-end while ((NewSupplierLink.code != 200) || (@newfailcount < 100))
+end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
 
 
             if NewSupplierLink.code != 200 then

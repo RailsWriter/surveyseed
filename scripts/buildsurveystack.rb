@@ -463,11 +463,13 @@ begin
             
             # increment failure count
             @failcount = @failcount+1
+            print "failcount is: ", @failcount
+            puts
 
             rescue HTTParty::Error => e
             puts 'HttParty::Error '+ e.message
             retry
-            end while ((SupplierLink.code != 200) || (@failcount < 100))
+            end while ((SupplierLink.code != 200) && (@failcount < 10))
 
             print '******************* SUPPLIERLINKS ARE AVAILABLE for the NEW Survey: ', SupplierLink["SupplierLink"]
             puts
