@@ -95,7 +95,7 @@ begin
           
           # increment failure count
           failcount1 = failcount1 + 1
-          Print "failcount1 =", failcount1
+          print "failcount1 =", failcount1
           puts
           
             rescue HTTParty::Error => e
