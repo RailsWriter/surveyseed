@@ -471,7 +471,7 @@ begin
             retry
             end while ((SupplierLink.code != 200) && (@failcount < 10))
 
-            print '******************* SUPPLIERLINKS ARE AVAILABLE for the NEW Survey: ', SupplierLink["SupplierLink"]
+            print '******************* SUPPLIERLINKS ARE AVAILABLE for the NEW Survey'
             puts
 #            puts SupplierLink["SupplierLink"]["LiveLink"]
             @survey.SupplierLink=SupplierLink["SupplierLink"]   

@@ -75,6 +75,9 @@ begin
 
         
         # Check if this exisitng survey has any remaining total allocation on the offerwall.
+
+        # initialize failure count
+        failcount1 = 0
         
         begin
           sleep(1)
@@ -89,17 +92,23 @@ begin
             else
             end
           end
+          
+          # increment failure count
+          failcount1 = failcount1 + 1
+          Print "failcount1 =", failcount1
+          puts
+          
             rescue HTTParty::Error => e
             puts 'HttParty::Error '+ e.message
             retry
-        end while @SupplierAllocations.code != 200
+        end while ((@SupplierAllocations.code != 200) && (failcount1 < 10))
         
         
         # First check if there are any completes needed.
         
         survey.TotalRemaining = @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
 
-        if @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0 then
+        if ((@SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0) && (failcount1 < 10)) then
           
           print "********************* There is total remaining allocation for this EXISTING survey number: ", @surveynumber, ' in the amount of: ', @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
           puts
@@ -807,7 +816,7 @@ end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
               puts
               # Do not save this survey
             else  
-              print '******************* SUPPLIERLINKS ARE AVAILABLE: ', NewSupplierLink["SupplierLink"]
+              print '******************* SUPPLIERLINKS ARE AVAILABLE'
               puts
 #             puts NewSupplierLink["SupplierLink"]["LiveLink"]
               @newsurvey.SupplierLink = NewSupplierLink["SupplierLink"]
@@ -893,7 +902,7 @@ end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
  
           else # TotalNumberOfAllocations for the new survey
             
-            # This NEW survey does not have any total remaining completes. It is like the survey is not live for us.
+            # This NEW survey does not have any total remaining completes or the survey allocation call fails since the survey does not exit. It is like the survey is not live for us.
             # We may not save it locally. DO NOTHING.
             print "********************* There is NO remaining allocation for this NEW survey number: ", IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"]
             puts
