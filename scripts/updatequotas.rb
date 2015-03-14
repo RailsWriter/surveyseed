@@ -478,9 +478,10 @@ puts
         puts
    
 
-
-
           # Before getting qualifications, quotas, and supplier links first check if there is any remaining total allocation for this NEW survey
+
+          # initialize failure count
+          failcount2 = 0
         
           begin
             sleep(1)
@@ -493,13 +494,19 @@ puts
               else
               end
             end
+
+
+            # increment failure count
+            failcount2 = failcount2 + 1
+            print "failcount2 =", failcount2
+            puts
               
-              rescue HTTParty::Error => e
+            rescue HTTParty::Error => e
               puts 'HttParty::Error '+ e.message
               retry
-          end while @NewSupplierAllocations.code != 200
+          end while ((@NewSupplierAllocations.code != 200) && (failcount2<10))
 
-          if @NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0 then
+          if ((@NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0) && (failcount2 < 10)) then
           
             print '********************* There is total remaining allocation for this NEW survey number: ', SurveyNumber, ' in the amount of: ', @NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
             puts

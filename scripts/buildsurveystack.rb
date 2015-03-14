@@ -482,8 +482,9 @@ begin
             puts
             @survey.save
           else
-            print 'This survey does not meet the CountryLanguageID, SurveyType, or CPI criteria.'
-            print 'At end i =', i, ' SurveyNumber = ', offerwallresponse["Surveys"][i]["SurveyNumber"]
+            print '************** This survey does not meet the CountryLanguageID, SurveyType, or CPI criteria.'
+            puts
+            print '*********** At end i =', i, ' SurveyNumber = ', offerwallresponse["Surveys"][i]["SurveyNumber"]
             puts
       
      

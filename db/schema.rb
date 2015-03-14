@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150307090212) do
+ActiveRecord::Schema.define(version: 20150312025725) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -39,6 +39,28 @@ ActiveRecord::Schema.define(version: 20150307090212) do
     t.integer  "P2S_US"
     t.integer  "P2S_CA"
     t.integer  "P2S_AU"
+  end
+
+  create_table "rfg_projects", force: true do |t|
+    t.string   "rfg_id"
+    t.string   "title"
+    t.string   "country"
+    t.string   "cpi"
+    t.integer  "estimatedIR"
+    t.integer  "estimatedLOI"
+    t.datetime "endOfField"
+    t.integer  "desiredCompletes"
+    t.integer  "currentCompletes"
+    t.boolean  "collectsPII"
+    t.integer  "state"
+    t.text     "datapoints"
+    t.datetime "lastModified"
+    t.string   "duplicationKey"
+    t.integer  "filterMode"
+    t.boolean  "isRecontact"
+    t.string   "mobileOptimized"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   create_table "surveys", force: true do |t|
