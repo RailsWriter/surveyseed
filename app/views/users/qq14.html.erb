@@ -16,13 +16,17 @@
 		
 		<div class="content">
 			<center>
-				<p>Indicate the age and gender of your child or children. If you do not have any, then choose 'None' at the bottom:</p>
+				<p>Indicate the age and gender of your child or children:</p>
 			</center>
 				
 				<%= form_tag("childrenaction", method: "post") do %>
 				<fieldset>
 				<div class="mybiglistinput">
 					
+					<label>						
+					<%= check_box_tag 'children[]', '-3105' %>
+				  		None
+					</label><br>
 					<label>
 					<%= check_box_tag 'children[]', '1' %>
 				  		Boy under age 1
@@ -165,10 +169,6 @@
 					<label>
 					<%= check_box_tag 'children[]', '36' %>
 				  		Female teen age 17
-					</label><br>
-					<label>						
-					<%= check_box_tag 'children[]', '-3105' %>
-				  		None of the abovecheck_box_tag
 					</label><br><br>
 				</div>
 					

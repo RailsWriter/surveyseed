@@ -105,5 +105,44 @@ class CenterController < ApplicationController
     def show_users_IN
       @users = User.where("country = ?", '7').each
     end
+    
+    
+    
+    
+    
+    def RFGProjects_US
+      
+      @projects = RfgProject.where("country = ?", "US").order(projectEPC: :desc).order(epc: :desc).each
+    
+      respond_to do |format|
+        format.html # home.html.erb
+        format.json { render json: @projects }
+      end      
+    end
+
+    def show_surveys_US
+      @projects = RfgProject.where("country = ?", "US").each  
+    end
+  
+  
+    def RFGProjects_CA
+      
+      @projects = RfgProject.where("country = ?", "CA").order(projectEPC: :desc).order(epc: :desc).each
+    
+      respond_to do |format|
+        format.html # home.html.erb
+        format.json { render json: @projects }
+      end      
+    end
+
+    def show_surveys_CA
+      @projects = RfgProject.where("country = ?", "CA").each  
+    end
+    
+    
+    
+    
+    
+    
   
 end

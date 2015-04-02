@@ -1,0 +1,39 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rfg_id: MyString
+  title: MyString
+  country: MyString
+  cpi: MyString
+  estimatedIR: 1
+  estimatedLOI: 1
+  endOfField: 2015-03-11 19:57:25
+  desiredCompletes: 1
+  currentCompletes: 1
+  collectsPII: false
+  state: 1
+  datapoints: MyText
+  lastModified: 2015-03-11 19:57:25
+  duplicationKey: MyString
+  filterMode: 1
+  isRecontact: false
+  mobileOptimized: MyString
+
+two:
+  rfg_id: MyString
+  title: MyString
+  country: MyString
+  cpi: MyString
+  estimatedIR: 1
+  estimatedLOI: 1
+  endOfField: 2015-03-11 19:57:25
+  desiredCompletes: 1
+  currentCompletes: 1
+  collectsPII: false
+  state: 1
+  datapoints: MyText
+  lastModified: 2015-03-11 19:57:25
+  duplicationKey: MyString
+  filterMode: 1
+  isRecontact: false
+  mobileOptimized: MyString

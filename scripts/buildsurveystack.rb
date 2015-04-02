@@ -475,7 +475,13 @@ begin
             puts
 #            puts SupplierLink["SupplierLink"]["LiveLink"]
             @survey.SupplierLink=SupplierLink["SupplierLink"]   
-            @survey.CPI = SupplierLink["SupplierLink"]["CPI"]  
+            
+            
+            if SupplierLink["SupplierLink"]["CPI"] == nil then
+              @survey.SurveyStillLive = 0.0
+            else                
+              @survey.CPI = SupplierLink["SupplierLink"]["CPI"]   
+            end
     
             # Finally save the survey information in the database
             print '**************************************************** SAVING THE SURVEYLINKS and all other SURVEY DATA IN DATABASE'

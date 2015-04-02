@@ -15,8 +15,8 @@ secret = "8ef1fe91d92e0602648d157f981bb934"
 #command='{ "command" : "test/copy/1", "data1" : "KETSCI TEST"}'
 #command='{ "command" : "livealert/inventory/1", "country" : "CA"}'
 #command='{ "command" : "livealert/targeting/1", "rfg_id" : "RFG141754-002"}'
-#command='{ "command" : "livealert/listDatapoints/1"}'
-command='{ "command" : "livealert/datapoint/1", "name" : "STANDARD_HHI_US"}'
+#command = '{ "command" : "livealert/listDatapoints/1"}'
+command = '{ "command" : "livealert/datapoint/1", "name" : "Region (US)"}'
 #command='{ "command" : "livealert/createLink/1", "rfg_id" : "RFG117241-010"}'
 #command='{ "command" : "livealert/stats/1", "rfg_id" : "RFG117241-010"}'
 #command='{ "command" : "livealert/log/1", "rfg_id" : "RFG117241-010"}'
@@ -37,12 +37,13 @@ Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
 end
 
 
-secret = [secret].pack("H*")
+
+#secret = [secret].pack("H*")
 
 # Build secret hash to append as a param to URL
 
-unix_timestamp_in_s = Time.now.to_i
-secret_hash = Digest::HMAC.hexdigest("#{unix_timestamp_in_s}#{hash.to_json}", secret, Digest::SHA1)
+#unix_timestamp_in_s = Time.now.to_i
+#secret_hash = Digest::HMAC.hexdigest("#{unix_timestamp_in_s}#{hash.to_json}", secret, Digest::SHA1)
 
-uri_string = "https://www.saysoforgod.com/API?apid=#{apid}&time=#{unix_timestamp_in_s}&hash=#{secret_hash}"
+#uri_string = "https://www.saysoforgod.com/API?apid=#{apid}&time=#{unix_timestamp_in_s}&hash=#{secret_hash}"
 

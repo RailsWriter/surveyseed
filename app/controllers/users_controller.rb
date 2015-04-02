@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
 
-require 'httparty'
-require 'mixpanel-ruby'
-require 'hmac-md5'
+  require 'httparty'
+  require 'mixpanel-ruby'
+  require 'hmac-md5'
 
   def new
     #    @user = User.new
@@ -325,7 +325,7 @@ require 'hmac-md5'
     
     
     if params[:zip].empty? == false
-      user.ZIP=params[:zip]
+      user.ZIP=params[:zip].upcase
       user.save
       redirect_to '/users/qq7_CA'
     else
@@ -606,17 +606,15 @@ require 'hmac-md5'
     end
     
   end
-  
-  
-#  def householdcomp  
+    
+  def householdcomp  
 
 #    user=User.find_by session_id: session.id
 ###    user.householdcomp=params[:householdcomp][:range]
 #    user.householdcomp=params[:householdcomp]
 #    user.save
 #    ranksurveysforuser(session.id)
-#  end
-  
+  end  
   
   def employment
     
@@ -1049,43 +1047,72 @@ require 'hmac-md5'
       redirect_to '/users/nosuccess'
       return
     end
+    
+    # Set RFG priority
+    
+    @RFGIsFront = false
+    @RFGIsBack = false
+    @RFGIsOff = false
+    
+    
+    if net.stackOrder != nil then
+      if (net.stackOrder == "RFGISFRONT") then
+        @RFGIsFront = true
+        puts "**************** RFG IS at the aHead of FED"
+            
+      else
+        if (net.Flag5 == "RFGISBACK") then
+          @RFGIsBack = true
+          puts "**************** RFG IS at the Back of FED"
+              
+        else
+          if (net.Flag5 == "RFGISOFF") then
+            @RFGIsOff = true
+          else
+          end    
+        end
+      end
+    else
+      @RFGIsOff = true
+    end
+    
 
     # Set the priority for P2S stack
         
     @foundtopsurveyswithquota = false   # false means not finished finding top FED surveys (set it to true if testing p2s)
-    puts "**************** P2S is NOT at the Head"
+    # puts "**************** P2S is NOT at the Head"
         
-    if net.P2S_US != nil then
-      if (net.P2S_US == 0) && (user.country == "9") then
+    if net.FED_US != nil then
+      if (net.FED_US == 0) && (user.country == "9") then
         @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
         puts "**************** P2S IS at the Head"
 
       else
-        @p2s_US = net.P2S_US
+        @fed_US = net.FED_US
       end
     else
-      @p2s_US = 1
+      @fed_US = 1
     end
       
-    if net.P2S_CA != nil then
-      if (net.P2S_CA == 0) && (user.country == "6") then
+    if net.FED_CA != nil then
+      if (net.FED_CA == 0) && (user.country == "6") then
         @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
         puts "**************** P2S IS at the Head"
 
       else
-        @p2s_CA = net.P2S_CA
+        @fed_CA = net.FED_CA
       end        
     else
-      @p2s_CA = 1
+      @fed_CA = 1
     end
       
-    if net.P2S_AU != nil then
-      if (net.P2S_AU == 0) && (user.country == "5") then
+    if net.FED_AU != nil then
+      if (net.FED_AU == 0) && (user.country == "5") then
         @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
         puts "**************** P2S IS at the Head"
 
       else
-        @p2s_AU = net.P2S_AU
+        @p2s_AU = net.FED_AU
       end        
     else
       @p2s_AU = 1
@@ -1194,17 +1221,7 @@ require 'hmac-md5'
         
         print '********** In total This USER_ID: ', user.user_id, ' has QUALIFIED for the following surveys: ', user.QualifiedSurveys
         puts
-        
-        
-#        if user.QualifiedSurveys.empty? then  #0
-    # delete this if because quota check makes this check redundant
-      
-#          puts '************* User did not qualify for this survey so taking user to show FailureLink page'
-#          redirect_to '/users/nosuccess'
-#          return
-      
-#        else #0
-      
+              
 
           # Lets save the surveys user qualifies for in this user's record of database in rank order
           user.save
@@ -1259,13 +1276,13 @@ require 'hmac-md5'
               puts
               user.SurveysWithMatchingQuota << @surveynumber
           
-              if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_US) then
+              if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_US) then
             
                 @foundtopsurveyswithquota = true
           
               else
             
-                if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_CA) then
+                if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_CA) then
               
                   @foundtopsurveyswithquota = true
             
@@ -1787,13 +1804,13 @@ require 'hmac-md5'
                 user.SurveysWithMatchingQuota << @surveynumber
             
             
-                if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_US) then
+                if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_US) then
             
                   @foundtopsurveyswithquota = true
           
                 else
             
-                  if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_CA) then
+                  if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_CA) then
               
                     @foundtopsurveyswithquota = true
             
@@ -1830,13 +1847,13 @@ require 'hmac-md5'
                 puts '************* Adding survey to list of eligible quotas even though no quotas specified but Totalquotaexists.'
                 user.SurveysWithMatchingQuota << @surveynumber
             
-                if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_US) then
+                if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_US) then
             
                   @foundtopsurveyswithquota = true
           
                 else
             
-                  if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_CA) then
+                  if (user.country == '6') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_CA) then
               
                     @foundtopsurveyswithquota = true
             
@@ -1915,6 +1932,16 @@ require 'hmac-md5'
         
         
         
+        if ((survey.CountryLanguageID == 5) || (survey.CountryLanguageID == 6)) && ( survey.QualificationZIPPreCodes.flatten != [ "ALL" ] ) then 
+          print "______________________________________________________________________________________>> Disqualified due to CA or AU zipcode mismatch"
+          print "ZIPs are ", survey.QualificationZIPPreCodes.flatten
+          puts
+        else
+        end
+          
+          
+          
+        
 
         end # if survey meets qualification criteria or not
       
@@ -1924,10 +1951,10 @@ require 'hmac-md5'
     end # do loop for all surveys in db
     
     
-    # Lets save the survey numbers that the user meets the qualifications and quota requirements for in this user's record of database in rank order
+    # Lets create the sequence of SupplierLinks refecting this priority of surveys and append the FED additional parameters
       
     if (user.SurveysWithMatchingQuota.empty?) then
-      p '******************** USERRIDE: No Surveys matching quota were found in Fulcrum'
+      p '******************** RankFEDSurveys: No Surveys matching quota were found in Fulcrum'
 #        redirect_to '/users/nosuccess'
 #        return
     else       
@@ -1936,26 +1963,7 @@ require 'hmac-md5'
       puts
     end
       
-    user.save
-      
-    # Begin the ride
-    userride (session_id)
-      
-  end # ranksurveys
     
-  def userride (session_id)
-    
-    user = User.find_by session_id: session_id
-    @PID = user.user_id
-
-    # If user is blacklisted, then qterm
-    if user.black_listed == true then
-      print '******************** UserID is BLACKLISTED: ', user.user_id
-      puts
-      redirect_to '/users/nosuccess'
-      return
-    else
-    end
     
     
     
@@ -1986,18 +1994,1383 @@ require 'hmac-md5'
 #    puts
     
     
-    # removing any blank entries
+    # Remove any blank entries
     if user.SupplierLink !=nil then
       user.SupplierLink.reject! { |c| c == nil}
     else
     end
+    
+    
+    if (@netstatus == "INTTEST") then
+      @PID = 'test'
+    else
+      @PID = user.user_id
+    end
+    
+    
+    if user.children != nil then
+      @childrenvalue = '&Age_and_Gender_of_Child='+user.children[0]
+      if user.children.length > 1 then
+        (1..user.children.length-1).each do |i|
+          @childrenvalue = @childrenvalue+'&Age_and_Gender_of_Child='+user.children[i]
+        end
+      else
+      end
+    else
+      @childrenvalue = ''
+    end    
+    
+    
+    
+    if user.country=="9" then 
+      @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP+'&HISPANIC='+user.ethnicity+'&ETHNICITY='+user.race+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_US='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
+    else
+      if user.country=="6" then
+        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
+      else
+        if user.country=="5" then
+          @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
+        else
+          if user.country=="7" then
+            @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_IN='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
+          else
+          end
+        end
+      end
+    end    
+    
+    
+    @parsed_user_agent = UserAgent.parse(user.user_agent)
+    
+    print "*************************************** RandFEDSurveys: User platform is: ", @parsed_user_agent.platform
+    puts
+    
+    if @parsed_user_agent.platform == 'iPhone' then
+      
+      @MS_is_mobile = '&MS_is_mobile=true'
+      p "*************************************** UserRide: MS_is_mobile is set TRUE"
+      
+    else
+      @MS_is_mobile = '&MS_is_mobile=false'
+      p "*************************************** UserRide: MS_is_mobile is set FALSE"
+      
+    end
+    
+    (0..user.SupplierLink.length-1).each do |i|
+      user.SupplierLink[i] = user.SupplierLink[i]+@PID+@AdditionalValues+@MS_is_mobile
+    end
+    
+    
+    # Save the survey numbers that the user meets the qualifications and quota requirements for in this user's record of database in rank order
+    
+    user.save
+    
+    # Select RFG projects
+    selectRfgProjects(session_id)  
+      
+  end # ranksurveys 
+  
+  def selectRfgProjects (session_id)
+    
+    user=User.find_by session_id: session_id
+    
+    @RFGclient = Network.find_by name: "RFG"
+    if @RFGclient.status == "ACTIVE" then
+      @rid = @RFGclient.netid+user.user_id
+    
+      print "**************** RFG @rid = ", @rid
+      puts
+     
+    
+    if user.country == '9' then
+      @geo = UsGeo.find_by zip: user.ZIP
+      
+      if @geo == nil then
+        @statePrecode = "0"
+        @DMARegionCode = "0"
+        @regionPrecode = "0"
+        @dividionPrecode = "0"
+        puts "NotApplicable PreCodes Used for INVALID ZIPCODE"
+        
+      else
+      
+        @DMARegionCode = @geo.DMARegionCode
+        @regionPrecode = @geo.regionPrecode
+        @divisionPrecode = @geo.divisionPrecode
+        
+        case @geo.State
+        when "NotApplicable"
+          @statePrecode = "0"
+          print "NotApplicable PreCode Used for: ", @geo.State
+          puts
+        when "Alabama"
+          @statePrecode = "1"
+          print "Alabama PreCode Used for: ", @geo.State
+          puts
+        when "Alaska"
+          @statePrecode = "2"
+          print "Alaska PreCode Used for: ", @geo.State
+          puts
+        when "Arizona"
+          @statePrecode = "3"
+          print "Arizona PreCode Used for: ", @geo.State
+          puts
+        when "Arkansas"
+          @statePrecode = "4"
+          print "Arkansas PreCode Used for: ", @geo.State
+          puts
+        when "California"
+          @statePrecode = "5"
+          print "California PreCode Used for: ", @geo.State
+          puts
+        when "Colorado"
+          @statePrecode = "6"
+          print "Colorado PreCode Used for: ", @geo.State
+          puts
+        when "Connecticut"
+          @statePrecode = "7"
+          print "Connecticut PreCode Used for: ", @geo.State
+          puts
+        when "Delaware"
+          @statePrecode = "8"
+          print "Delaware PreCode Used for: ", @geo.State
+          puts
+        when "DistrictofColumbia"
+          @statePrecode = "9"
+          print "DistrictofColumbia PreCode Used for: ", @geo.State
+          puts
+        when "Florida"
+          @statePrecode = "10"
+          print "Florida PreCode Used for: ", @geo.State
+          puts
+        when "Georgia"
+          @statePrecode = "11"
+          print "Georgia PreCode Used for: ", @geo.State
+          puts
+        when "Hawaii"
+          @statePrecode = "12"
+          print "Hawaii PreCode Used for: ", @geo.State
+          puts
+        when "Idaho"
+          @statePrecode = "13"
+          print "Idaho PreCode Used for: ", @geo.State
+          puts
+        when "Illinois"
+          @statePrecode = "14"
+          print "Illinois PreCode Used for: ", @geo.State
+          puts
+        when "Indiana"
+          @statePrecode = "15"
+          print "Indiana PreCode Used for: ", @geo.State
+          puts
+        when "Iowa"
+          @statePrecode = "16"
+          print "Iowa PreCode Used for: ", @geo.State
+          puts
+        when "Kansas"
+          @statePrecode = "17"
+          print "Kansas PreCode Used for: ", @geo.State
+          puts
+        when "Kentucky"
+          @statePrecode = "18"
+          print "Kentucky PreCode Used for: ", @geo.State
+          puts
+        when "Louisiana"
+          @statePrecode = "19"
+          print "Louisiana PreCode Used for: ", @geo.State
+          puts
+        when "Maine"
+          @statePrecode = "20"
+          print "Maine PreCode Used for: ", @geo.State
+          puts
+        when "Maryland"
+          @statePrecode = "21"
+          print "Maryland PreCode Used for: ", @geo.State
+          puts
+        when "Massachusetts"
+          @statePrecode = "22"
+          print "Massachusetts PreCode Used for: ", @geo.State
+          puts
+        when "Michigan"
+          @statePrecode = "23"
+          print "Michigan PreCode Used for: ", @geo.State
+          puts
+        when "Minnesota"
+          @statePrecode = "24"
+          print "Minnesota PreCode Used for: ", @geo.State
+          puts
+        when "Mississippi"
+          @statePrecode = "25"
+          print "Mississippi PreCode Used for: ", @geo.State
+          puts
+        when "Missouri"
+          @statePrecode = "26"
+          print "Missouri PreCode Used for: ", @geo.State
+          puts
+        when "Montana"
+          @statePrecode = "27"
+          print "Montana PreCode Used for: ", @geo.State
+          puts
+        when "Nebraska"
+          @statePrecode = "28"
+          print "Nebraska PreCode Used for: ", @geo.State
+          puts
+        when "Nevada"
+          @statePrecode = "29"
+          print "Nevada PreCode Used for: ", @geo.State
+          puts
+        when "NewHampshire"
+          @statePrecode = "30"
+          print "NewHampshire PreCode Used for: ", @geo.State
+          puts
+        when "NewJersey"
+          @statePrecode = "31"
+          print "NewJersey PreCode Used for: ", @geo.State
+          puts
+        when "NewMexico"
+          @statePrecode = "32"
+          print "NewMexico PreCode Used for: ", @geo.State
+          puts
+        when "NewYork"
+          @statePrecode = "33"
+          print "NewYork PreCode Used for: ", @geo.State
+          puts
+        when "NorthCarolina"
+          @statePrecode = "34"
+          print "NorthCarolina PreCode Used for: ", @geo.State
+          puts
+        when "NorthDakota"
+          @statePrecode = "35"
+          print "NorthDakota PreCode Used for: ", @geo.State
+          puts
+        when "Ohio"
+          @statePrecode = "36"
+          print "Ohio PreCode Used for: ", @geo.State
+          puts
+        when "Oklahoma"
+          @statePrecode = "37"
+          print "Oklahoma PreCode Used for: ", @geo.State
+          puts
+        when "Oregon"
+          @statePrecode = "38"
+          print "Oregon PreCode Used for: ", @geo.State
+          puts
+        when "Pennsylvania"
+          @statePrecode = "39"
+          print "Pennsylvania PreCode Used for: ", @geo.State
+          puts
+        when "RhodeIsland"
+          @statePrecode = "40"
+          print "RhodeIsland PreCode Used for: ", @geo.State
+          puts
+        when "SouthCarolina"
+          @statePrecode = "41"
+          print "SouthCarolina PreCode Used for: ", @geo.State
+          puts
+        when "SouthDakota"
+          @statePrecode = "42"
+          print "SouthDakota PreCode Used for: ", @geo.State
+          puts
+        when "Tennessee"
+          @statePrecode = "43"
+          print "Tennessee PreCode Used for: ", @geo.State
+          puts
+        when "Texas"
+          @statePrecode = "44"
+          print "Texas PreCode Used for: ", @geo.State
+          puts
+        when "Utah"
+          @statePrecode = "45"
+          print "Utah PreCode Used for: ", @geo.State
+          puts
+        when "Vermont"
+          @statePrecode = "46"
+          print "Vermont PreCode Used for: ", @geo.State
+          puts
+        when "Virginia"
+          @statePrecode = "47"
+            print "Virginia PreCode Used for: ", @geo.State
+            puts
+        when "Washington"
+          @statePrecode = "48"
+          print "Washington PreCode Used for: ", @geo.State
+          puts
+        when "WestVirginia"
+          @statePrecode = "49"
+          print "WestVirginia PreCode Used for: ", @geo.State
+          puts
+        when "Wisconsin"
+          @statePrecode = "50"
+          print "Wisconsin PreCode Used for: ", @geo.State
+          puts
+        when "Wyoming"
+          @statePrecode = "51"
+          print "Wyoming PreCode Used for: ", @geo.State
+          puts
+#      when "NotApplicable"
+#        @statePrecode = "52"
+#        print "NotApplicable PreCode Used for: ", @geo.State
+#        puts
+        when "AmericanSamoa"
+          @statePrecode = "53"
+          print "AmericanSamoa PreCode Used for: ", @geo.State
+          puts
+        when "FederatedStatesofMicronesia"
+          @statePrecode = "54"
+          print "FederatedStatesofMicronesia PreCode Used for: ", @geo.State
+          puts
+        when "Guam"
+          @statePrecode = "55"
+          print "Guam PreCode Used for: ", @geo.State
+          puts
+        when "MarshallIslands"
+          @statePrecode = "56"
+          print "MarshallIslands PreCode Used for: ", @geo.State
+          puts
+        when "NorthernMarinaIslands"
+          @statePrecode = "57"
+          print "NorthernMarinaIslands PreCode Used for: ", @geo.State
+          puts
+        when "Palau"
+          @statePrecode = "58"
+          print "Palau PreCode Used for: ", @geo.State
+          puts
+        when "PuertoRico"
+          @statePrecode = "59"
+          print "PuertoRico PreCode Used for: ", @geo.State
+          puts
+        when "VirginIslands"
+          @statePrecode = "60"
+          print "VirginIslands PreCode Used for: ", @geo.State
+          puts
+        end # case
+        
+      end # if @geo = nil
+      
+    else
+    end # if country = 9
+         
+    if user.country == '9' then
+      user_country = "US"
+    else
+      if user.country == '6' then
+        user_country = "CA"
+      else
+      end
+    end
+          
+    # Initialize for the number of RFG projects to be included
+    
+    @foundtopprojectswithquota = false  
+    @netid = user.netid
+      
+    if Network.where(netid: @netid).exists? then
+      net = Network.find_by netid: @netid
+        
+        
+        
+        if net.payout == nil then
+          @currentpayout = 1.49 # ensures breakeven at $1.25 payout
+          @currentpayoutstr = "$"+@currentpayout.to_s
+        else
+          @currentpayout = net.payout  
+          @currentpayoutstr = "$"+@currentpayout.to_s
+        end
+      
+      
+      
+      
+      
+      
+  
+      if net.RFG_US != nil then
+        if (net.RFG_US == 0) && (user.country == "9") then
+          @foundtopprojectswithquota = true
+          puts "**************** No RFG project is included "
 
+        else
+          @RFG_US = net.RFG_US
+        end
+      else
+        @RFG_US = 0
+        @foundtopprojectswithquota = true
+      end
+      
+      if net.RFG_CA != nil then
+        if (net.RFG_CA == 0) && (user.country == "6") then
+          @foundtopprojectswithquota = true
+          puts "**************** No RFG project is included "
 
+        else
+          @RFG_CA = net.RFG_CA
+        end        
+      else
+        @RFG_CA = 0
+        @foundtopprojectswithquota = true
+      end
+      
+    else
+      # Bad netid, Network is not known
+      p '****************************** selectRFGProjects: ACCESS FROM AN UNRECOGNIZED NETWOK DENIED'
+      redirect_to '/users/nosuccess'
+      return
+    end
+    
+    
+    #Initialize an array to store qualified projects
+    @RFGQualifiedProjects = Array.new
+    @RFGProjectsWithQuota = Array.new
+    @RFGSupplierLinks = Array.new
+    
+              
+    RfgProject.where("country = ?", user_country).order(projectEPC: :desc).order(epc: :desc).each do |project|
+
+      if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects
+        
+        print "*************** Checking qualifications for project number: ", project.rfg_id
+        puts
+        
+        # Initialize qualificatio parameters true. These are turned false if user does not qualify
+        @QualificationAge = true
+        @QualificationGender = true
+        @QualificationZip = true
+        @QualificationHhi = true
+        @QualificationPindustry = true
+        @QualificationChildren = true
+        @QualificationEducation = true
+        @QualificationEmployment = true
+        @QualificationDMA = true
+        @QualificationState = true
+        @QualificationRegion = true
+     
+        
+        (0..project.datapoints.length-1).each do |m|
+        
+          case project.datapoints[m]["name"]
+          when "Age"
+            @QualificationAge = true
+            (0..project.datapoints[m]["values"].length-1).each do |i|
+              @QualificationAge = (project.datapoints[m]["values"][i]["min"]..project.datapoints[m]["values"][i]["max"]).include?(user.age.to_i) && @QualificationAge
+            end
+            print "User entered age: ", user.age
+            puts
+            print "Project qual age: ", project.datapoints[m]["values"]
+            puts
+            print "@QualificationAge: ", @QualificationAge
+            puts
+            
+          when "Gender"
+            if project.datapoints[m]["values"].length == 2 then
+              @QualificationGender = true
+            else
+              if project.datapoints[m]["values"][0]["choice"] == user.gender.to_i then
+                @QualificationGender = true
+              else
+                @QualificationGender = false
+              end
+            end
+            print "User entered gender: ", user.gender
+            puts
+            print "Project qual gender: ", project.datapoints[m]["values"]
+            puts
+            print "@QualificationGender: ", @QualificationGender
+            puts
+            
+          when "List of Zips"
+            @QualificationZip = false
+            (0..project.datapoints[m]["values"].length-1).each do |i|
+             if (project.datapoints[m]["values"][i]["freelist"]).include?(user.ZIP) then 
+               @QualificationZip = true
+             else
+             end
+            end
+            print "User entered zip: ", user.ZIP
+            puts
+            print "Project qual zip: ", project.datapoints[m]["values"]
+            puts
+            print "@QualificationZip: ", @QualificationZip
+            puts
+            
+          when "List of FSAs (CA)"
+            @QualificationZip = false
+            (0..project.datapoints[m]["values"].length-1).each do |i|
+              if (project.datapoints[m]["values"][i]["freelist"]).include?(user.ZIP) then 
+                @QualificationZip = true
+              else
+              end
+            end
+            print "User entered zip: ", user.ZIP
+            puts
+            print "Project qual zip: ", project.datapoints[m]["values"]
+            puts
+            print "@QualificationZip: ", @QualificationZip
+            puts
+            
+          when "STANDARD_HHI_US"
+            @QualificationHhi = false
+            (0..project.datapoints[m]["values"].length-1).each do |i|
+              if project.datapoints[m]["values"][i]["choice"] == user.householdincome.to_i then
+                @QualificationHhi = true
+              else
+              end
+            end
+            print "User entered HHI: ", user.householdincome
+            puts
+            print "Project qual HHI: ", project.datapoints[m]["values"]
+            puts
+            print "@QualificationHhi: ", @QualificationHhi
+            puts
+            
+          when "STANDARD_HHI_INT"
+            @QualificationHhi = false
+            (0..project.datapoints[m]["values"].length-1).each do |i|
+              if project.datapoints[m]["values"][i]["choice"] == user.householdincome.to_i then
+                @QualificationHhi = true
+              else
+              end
+            end
+            print "User entered HHI: ", user.householdincome
+            puts
+            print "Project qual HHI: ", project.datapoints[m]["values"]
+            puts
+            print "@QualificationHhi: ", @QualificationHhi
+            puts
+              
+          when "RFG2_Employment Industry Personal"
+            @QualificationPindustry = false
+            (0..project.datapoints[m]["values"].length-1).each do |i|
+              if project.datapoints[m]["values"][i]["choice"] == user.pindustry.to_i then
+                @QualificationPindustry = true
+              else
+              end
+            end
+            print "User entered Pindustry: ", user.pindustry
+            puts
+            print "Project qual Pindustry: ", project.datapoints[m]["values"]
+            puts
+            print "@QualificationPindustry: ", @QualificationPindustry
+            puts
+                  
+          when "Children Age and Gender"
+              @QualificationChildren = false
+              (0..project.datapoints[m]["values"].length-1).each do |i|
+                if ((project.datapoints[m]["values"][i]["choice"].to_s & user.children).empty? == false) then
+                  @QualificationChildren = true
+                else
+                end
+              end
+              print "User entered Children: ", user.children
+              puts
+              print "Project qual Children: ", project.datapoints[m]["values"]
+              puts
+              print "@QualificationChildren: ", @QualificationChildren
+              puts
+                
+          when "Education (US)"
+              @QualificationEducation = false
+              (0..project.datapoints[m]["values"].length-1).each do |i|
+                if (project.datapoints[m]["values"][i]["choice"] <= 7) && ((project.datapoints[m]["values"][i]["choice"] == user.eduation.to_i)) then
+                  @QualificationEducation = true
+                  @RFGEducationUS = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end                  
+                if (project.datapoints[m]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 8) || (user.eduation.to_i == 9) || (user.eduation.to_i == 10)) then
+                  @QualificationEducation = true
+                  @RFGEducationUS = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 8) && (user.eduation.to_i == 11) then
+                  @QualificationEducation = true
+                  @RFGEducationUS = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 9) && (user.eduation.to_i == 12) then
+                  @QualificationEducation = true
+                  @RFGEducationUS = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end                    
+              end
+              print "User entered Education: ", user.eduation
+              puts
+              print "Project qual Education: ", project.datapoints[m]["values"]
+              puts
+              print "@QualificationEducation: ", @QualificationEducation
+              puts
+                  
+          when "Education (CA)"
+              @QualificationEducation = false
+              (0..project.datapoints[m]["values"].length-1).each do |i|
+              if (project.datapoints[m]["values"][i]["choice"] == 1) && (user.eduation.to_i == 1) then
+                  @QualificationEducation = true
+                  @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end 
+              if (project.datapoints[m]["values"][i]["choice"] == 2) && ((user.eduation.to_i == 2) || (user.eduation.to_i == 3)) then
+                @QualificationEducation = true
+                @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              if (project.datapoints[m]["values"][i]["choice"] == 3) && (user.eduation.to_i == 4) then
+                @QualificationEducation = true
+                @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              if (project.datapoints[m]["values"][i]["choice"] == 4) && ((user.eduation.to_i == 5) || (user.eduation.to_i == 6))  then
+                @QualificationEducation = true
+                @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+                    if (project.datapoints[m]["values"][i]["choice"] == 5) && ((user.eduation.to_i == 7) || (user.eduation.to_i == 8))  then
+                      @QualificationEducation = true
+                      @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
+                    else
+                    end
+                    if (project.datapoints[m]["values"][i]["choice"] == 6) && (user.eduation.to_i == 9) then
+                      @QualificationEducation = true
+                      @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
+                    else
+                    end                    
+                    if (project.datapoints[m]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 10) || (user.eduation.to_i == 11))  then
+                      @QualificationEducation = true
+                      @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
+                    else
+                    end
+                  end
+                  print "User entered Education: ", user.eduation
+                  puts
+                  print "Project qual Education: ", project.datapoints[m]["values"]
+                  puts
+                  print "@QualificationEducation: ", @QualificationEducation
+                  puts
+                        
+            when "Employment Status"
+              @QualificationEmployment = false
+              (0..project.datapoints[m]["values"].length-1).each do |i|
+              if (project.datapoints[m]["values"][i]["choice"] == 1) && (user.employment.to_i == 10) then
+                @QualificationEmployment = true
+                @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end 
+                      if (project.datapoints[m]["values"][i]["choice"] == 2) && (user.employment.to_i == 2) then
+                        @QualificationEmployment = true
+                        @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+                      else
+                      end
+                      if (project.datapoints[m]["values"][i]["choice"] == 3) && (user.employment.to_i == 1) then
+                        @QualificationEmployment = true
+                        @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+                      else
+                      end
+                      if (project.datapoints[m]["values"][i]["choice"] == 4) && (user.employment.to_i == 7)  then
+                        @QualificationEmployment = true
+                        @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+                      else
+                      end
+                      if (project.datapoints[m]["values"][i]["choice"] == 5) && (user.employment.to_i == 9)  then
+                        @QualificationEmployment = true
+                        @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+                      else
+                      end
+                      if (project.datapoints[m]["values"][i]["choice"] == 6) && ((user.employment.to_i == 3) || (user.employment.to_i == 4)) then
+                        @QualificationEmployment = true
+                        @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+                      else
+                      end                    
+                      if (project.datapoints[m]["values"][i]["choice"] == 7) && (user.employment.to_i == 8)  then
+                        @QualificationEmployment = true
+                        @RFGEmployment = project.datapoints[n]["values"][i]["choice"].to_s
+                      else
+                      end
+                    end
+          print "User entered Employment: ", user.employment
+          puts
+          print "Project qual Employment: ", project.datapoints[m]["values"]
+          puts
+          print "@QualificationEmployment: ", @QualificationEmployment
+          puts
+          
+        when "DMA (US)"
+          @QualificationDMA = false
+          (0..project.datapoints[m]["values"].length-1).each do |i|
+            if project.datapoints[m]["values"][i]["choice"] == @DMARegionCode.to_i then
+              @QualificationDMA = true
+            else
+            end
+          end
+          print "User entered DMA: ", @DMARegionCode
+          puts
+          print "Project qual DMA: ", project.datapoints[m]["values"]
+          puts
+          print "@QualificationDMA: ", @QualificationDMA
+          puts
+                    
+        when "State (US)"
+          @QualificationState = false
+          (0..project.datapoints[m]["values"].length-1).each do |i|
+            if project.datapoints[m]["values"][i]["choice"] == @StatePrecode.to_i then
+              @QualificationState = true
+            else
+            end
+          end
+          print "User entered State: ", @StatePrecode
+          puts
+          print "Project qual State: ", project.datapoints[m]["values"]
+          puts
+          print "@QualificationState: ", @QualificationState
+          puts
+          
+        when "Region (US)"
+          @QualificationRegion = false
+          (0..project.datapoints[m]["values"].length-1).each do |i|
+            if project.datapoints[m]["values"][i]["choice"] == @regionPrecode.to_i then
+              @QualificationRegion = true
+            else
+            end
+          end
+          print "User entered Region: ", @regionPrecode
+          puts
+          print "Project qual Region: ", project.datapoints[m]["values"]
+          puts
+          print "@QualificationRegion: ", @QualificationRegion
+          puts          
+          
+          
+        end # case statement
+        end # do m
+        
+        
+        print " QUALIFICATIONS CRITERIA for: ", project.rfg_id
+        puts
+        print "country = ", (project.country == "CA") || (project.country == "US")
+        puts
+        print "cpi = ", (project.cpi > @currentpayoutstr)
+        puts        
+        print "Live = ", (project.projectStillLive)
+        puts
+        print "Age = ", (@QualificationAge)
+        puts
+        print "Gender = ", (@QualificationGender)
+        puts
+        print "Zip = ", (@QualificationZip)
+        puts
+        print "HHI = ", (@QualificationHhi)
+        puts
+        print "PIndustry = ", (@QualificationPindustry)
+        puts
+        print "Education = ", (@QualificationEducation)
+        puts
+        print "Employment = ", (@QualificationEmployment)
+        puts
+        print "Children = ", (@QualificationChildren)
+        puts
+        print "DMA = ", (@QualificationDMA)
+        puts
+        print "State = ", (@QualificationState)
+        puts
+        print "Region = ", (@QualificationRegion)
+        puts
+        
+        
+        
+        
+        if ( (project.country == "CA") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) ) ||
+          
+          ( (project.country == "US") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) )          
+          then
+          
+          @RFGQualifiedProjects << project.rfg_id
+          
+          print '********** In total USER_ID: ', user.user_id, ' has QUALIFIED for the following RFG projects: ', @RFGQualifiedProjects
+          puts
+          
+
+          # Verify if there is a quota for the qualified user and if it is full
+          
+          if project.quotas.length > 0 then          
+            # @RFGQuotaIsAvailable = false # initialize quota availability as false, then check quotas to prove/disprove
+           # @RFGQuotaFull = false
+            
+            
+            
+          
+            (0..project.quotas.length-1).each do |j|
+              (0..project.quotas[j]["datapoints"].length-1).each do |n|
+            
+              # Assume quota per qualifications is available. These are turned false if user does not qualify
+              @QualificationAge = true
+              @QualificationGender = true
+              @QualificationZip = true
+              @QualificationHhi = true
+              @QualificationPindustry = true
+              @QualificationChildren = true
+              @QualificationEducation = true
+              @QualificationEmployment = true
+              @QualificationDMA = true
+              @QualificationState = true
+              @QualificationRegion = true
+              
+                                        
+              case project.quotas[j]["datapoints"][n]["name"]
+              when "Age"
+                @QualificationAge = true
+                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                  @QualificationAge = (project.quotas[j]["datapoints"][n]["values"][i]["min"]..project.quotas[j]["datapoints"][n]["values"][i]["max"]).include?(user.age.to_i) && @QualificationAge
+                end
+                print "User entered age: ", user.age
+                puts
+                print "Project qual age: ", project.quotas[j]["datapoints"][n]["values"]
+                puts
+                print "@QualificationAge: ", @QualificationAge
+                puts
+            
+              when "Gender"
+                if project.quotas[j]["datapoints"][n]["values"].length == 2 then
+                  @QualificationGender = true
+                else
+                  if project.quotas[j]["datapoints"][n]["values"][0]["choice"] == user.gender.to_i then
+                    @QualificationGender = true
+                  else
+                    @QualificationGender = false
+                  end
+                end
+                print "User entered gender: ", user.gender
+                puts
+                print "Project qual gender: ", project.quotas[j]["datapoints"][n]["values"]
+                puts
+                print "@QualificationGender: ", @QualificationGender
+                puts
+            
+              when "List of Zips"
+                @QualificationZip = false
+                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                 if (project.quotas[j]["datapoints"][n]["values"][i]["freelist"]).include?(user.ZIP) then 
+                   @QualificationZip = true
+                 else
+                 end
+                end
+                print "User entered zip: ", user.ZIP
+                puts
+                print "Project qual zip: ", project.quotas[j]["datapoints"][n]["values"]
+                puts
+                print "@QualificationZip: ", @QualificationZip
+                puts
+            
+              when "List of FSAs (CA)"
+                @QualificationZip = false
+                print "Project qual zip: ", project.quotas[j]["datapoints"][n]["values"]
+                puts
+                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["freelist"]).include?(user.ZIP) then 
+                    @QualificationZip = true
+                  else
+                  end
+                end
+                print "User entered zip: ", user.ZIP
+                puts
+                
+                print "@QualificationZip: ", @QualificationZip
+                puts
+            
+              when "STANDARD_HHI_US"
+                @QualificationHhi = false
+                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                  if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == user.householdincome.to_i then
+                    @QualificationHhi = true
+                  else
+                  end
+                end
+                print "User entered HHI: ", user.householdincome
+                puts
+                print "Project qual HHI: ", project.quotas[j]["datapoints"][n]["values"]
+                puts
+                print "@QualificationHhi: ", @QualificationHhi
+                puts
+            
+              when "STANDARD_HHI_INT"
+                @QualificationHhi = false
+                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                  if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == user.householdincome.to_i then
+                    @QualificationHhi = true
+                  else
+                  end
+                end
+                print "User entered HHI: ", user.householdincome
+                puts
+                print "Project qual HHI: ", project.quotas[j]["datapoints"][n]["values"]
+                puts
+                print "@QualificationHhi: ", @QualificationHhi
+                puts
+              
+              when "RFG2_Employment Industry Personal"
+                @QualificationPindustry = false
+                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                  if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == user.pindustry.to_i then
+                    @QualificationPindustry = true
+                  else
+                  end
+                end
+                print "User entered Pindustry: ", user.pindustry
+                puts
+                print "Project qual Pindustry: ", project.quotas[j]["datapoints"][n]["values"]
+                puts
+                print "@QualificationPindustry: ", @QualificationPindustry
+                puts
+                  
+              when "Children Age and Gender"
+                  @QualificationChildren = false
+                  (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                    if ((project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s & user.children).empty? == false) then
+                      @QualificationChildren = true
+                    else
+                    end
+                  end
+                  print "User entered Children: ", user.children
+                  puts
+                  print "Project qual Children: ", project.quotas[j]["datapoints"][n]["values"]
+                  puts
+                  print "@QualificationChildren: ", @QualificationChildren
+                  puts
+                
+              when "Education (US)"
+                  @QualificationEducation = false
+                  (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] <= 7) && ((project.quotas[j]["datapoints"][n]["values"][i]["choice"] == user.eduation.to_i)) then
+                      @QualificationEducation = true
+                      @RFGEducationUS = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                    else
+                    end                  
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 8) || (user.eduation.to_i == 9) || (user.eduation.to_i == 10)) then
+                      @QualificationEducation = true
+                      @RFGEducationUS = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                    else
+                    end
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 8) && (user.eduation.to_i == 11) then
+                      @QualificationEducation = true
+                      @RFGEducationUS = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                    else
+                    end
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 9) && (user.eduation.to_i == 12) then
+                      @QualificationEducation = true
+                      @RFGEducationUS = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                    else
+                    end                    
+                  end
+                  print "User entered Education: ", user.eduation
+                  puts
+                  print "Project qual Education: ", project.quotas[j]["datapoints"][n]["values"]
+                  puts
+                  print "@QualificationEducation: ", @QualificationEducation
+                  puts
+                  
+              when "Education (CA)"
+                  @QualificationEducation = false
+                  (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 1) && (user.eduation.to_i == 1) then
+                      @QualificationEducation = true
+                      @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end 
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) && ((user.eduation.to_i == 2) || (user.eduation.to_i == 3)) then
+                    @QualificationEducation = true
+                    @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3) && (user.eduation.to_i == 4) then
+                    @QualificationEducation = true
+                    @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) && ((user.eduation.to_i == 5) || (user.eduation.to_i == 6))  then
+                    @QualificationEducation = true
+                    @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end
+                        if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && ((user.eduation.to_i == 7) || (user.eduation.to_i == 8))  then
+                          @QualificationEducation = true
+                          @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                        else
+                        end
+                        if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && (user.eduation.to_i == 9) then
+                          @QualificationEducation = true
+                          @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                        else
+                        end                    
+                        if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 10) || (user.eduation.to_i == 11))  then
+                          @QualificationEducation = true
+                          @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                        else
+                        end
+                      end
+                      print "User entered Education: ", user.eduation
+                      puts
+                      print "Project qual Education: ", project.quotas[j]["datapoints"][n]["values"]
+                      puts
+                      print "@QualificationEducation: ", @QualificationEducation
+                      puts
+                        
+                when "Employment Status"
+                  @QualificationEmployment = false
+                  (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 1) && (user.employment.to_i == 10) then
+                    @QualificationEmployment = true
+                    @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end 
+                          if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) && (user.employment.to_i == 2) then
+                            @QualificationEmployment = true
+                            @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                          else
+                          end
+                          if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3) && (user.employment.to_i == 1) then
+                            @QualificationEmployment = true
+                            print "----------->>> project employment choice: ", project.quotas[j]["datapoints"][n]["values"][i]["choice"], 'and user.employment: ', user.employment
+                            puts 
+                            @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                          else
+                          end
+                          if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) && (user.employment.to_i == 7)  then
+                            @QualificationEmployment = true
+                            @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                          else
+                          end
+                          if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && (user.employment.to_i == 9)  then
+                            @QualificationEmployment = true
+                            @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                          else
+                          end
+                          if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && ((user.employment.to_i == 3) || (user.employment.to_i == 4)) then
+                            @QualificationEmployment = true
+                            @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                          else
+                          end                    
+                          if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && (user.employment.to_i == 8)  then
+                            @QualificationEmployment = true
+                            @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                          else
+                          end
+                        end
+              print "User entered Employment: ", user.employment
+              puts
+              print "Project qual Employment: ", project.quotas[j]["datapoints"][n]["values"]
+              puts
+              print "@QualificationEmployment: ", @QualificationEmployment
+              puts
+          
+            when "DMA (US)"
+              @QualificationDMA = false
+              (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == @DMARegionCode.to_i then
+                  @QualificationDMA = true
+                else
+                end
+              end
+              print "User entered DMA: ", @DMARegionCode
+              puts
+              print "Project qual DMA: ", project.quotas[j]["datapoints"][n]["values"]
+              puts
+              print "@QualificationDMA: ", @QualificationDMA
+              puts
+                    
+            when "State (US)"
+              @QualificationState = false
+              (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == @StatePrecode.to_i then
+                  @QualificationState = true
+                else
+                end
+              end
+              print "User entered State: ", @StatePrecode
+              puts
+              print "Project qual State: ", project.quotas[j]["datapoints"][n]["values"]
+              puts
+              print "@QualificationState: ", @QualificationState
+              puts
+          
+            when "Region (US)"
+              @QualificationRegion = false
+              (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == @regionPrecode.to_i then
+                  @QualificationRegion = true
+                else
+                end
+              end
+              print "User entered Region: ", @regionPrecode
+              puts
+              print "Project qual Region: ", project.quotas[j]["datapoints"][n]["values"]
+              puts
+              print "@QualificationRegion: ", @QualificationRegion
+              puts          
+              end # case statement
+              
+              
+              print " QUOTA AVAILABILITY CRITERIA for: ", project.rfg_id
+              puts
+              print "country = ", (project.country == "CA") || (project.country == "US")
+              puts
+              print "Age = ", (@QualificationAge)
+              puts
+              print "Gender = ", (@QualificationGender)
+              puts
+              print "Zip = ", (@QualificationZip)
+              puts
+              print "HHI = ", (@QualificationHhi)
+              puts
+              print "PIndustry = ", (@QualificationPindustry)
+              puts
+              print "Education = ", (@QualificationEducation)
+              puts
+              print "Employment = ", (@QualificationEmployment)
+              puts
+              print "Children = ", (@QualificationChildren)
+              puts
+              print "DMA = ", (@QualificationDMA)
+              puts
+              print "State = ", (@QualificationState)
+              puts
+              print "Region = ", (@QualificationRegion)
+              puts
+              
+              
+              
+              if ( (project.country == "CA") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEducation ) && (@QualificationEmployment) && (@QualificationChildren) ) then
+                
+                if project.quotas[j]["completesLeft"] > 0 then
+              
+                @RFGQuotaIsAvailable = true
+              else
+                # if previous quota was available then preserve that fact
+                @RFGQuotaIsAvailable = false
+                # @RFGQuotaFull = true
+              end
+            else
+            end
+              
+              if ( (project.country == "US") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry )  && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationEducation) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion)  ) then
+                
+                if project.quotas[j]["completesLeft"] > 0 then
+              
+                @RFGQuotaIsAvailable = true
+              else
+                # if previous quota was available then preserve that fact
+                @RFGQuotaIsAvailable = false
+                # @RFGQuotaFull = true
+              end
+              
+            else
+            end
+              
+            end # reviewed all n nested qualifications of a quota
+                           
+            end # all j quotas have been inspected
+
+          else
+            @RFGQuotaIsAvailable = true 
+            # @RFGQuotaFull = false
+            
+            print "************** Quota available: There are no quota restrictions"
+            puts
+          end
+          
+#           if @RFGQuotaFull == false then
+          if @RFGQuotaIsAvailable == true then
+          
+            print '********** USER_ID: ', user.user_id, ' has Quota for the RFG project: ', project.rfg_id
+            puts
+
+            @RFGProjectsWithQuota << project.rfg_id
+            @RFGSupplierLinks << project.link+'&rfg_id='+project.rfg_id
+                        
+            
+            if (user.country == '9') && (@RFGProjectsWithQuota.uniq.length >= @RFG_US) then
+          
+              @foundtopprojectswithquota = true
+        
+            else
+          
+              if (user.country == '6') && (@RFGProjectsWithQuota.uniq.length >= @RFG_CA) then
+            
+                @foundtopprojectswithquota = true
+          
+              else
+          
+                #do nothing
+          
+              end
+        
+            end
+            
+            
+          else
+            
+            print '********** USER_ID: ', user.user_id, ' DOES NOT HAVE ANY Quota available for the RFG projects: ', project.rfg_id
+            puts
+          end
+          
+        else
+          
+          print '************ User DID NOT QUALIFY for project number = ', project.rfg_id
+          puts
+          
+        end # Qualification check
+        
+      else
+      end # if foundtopprojects
+      
+    end # do all projects
+
+      
+    print '********** In total USER_ID: ', user.user_id, ' has Quota available for the RFG projects: ', @RFGProjectsWithQuota
+    puts
+      
+    print '********** Total SUPPLIERLINKS for the RFG projects user has quota are: ', @RFGSupplierLinks
+    puts
+      
+      
+    # Assemble additional parameters valuses to pass with the entry link
+      
+    if user.children != nil then
+      @RFGchildrenvalue = '&ChildrenAgeGender='+user.children[0]
+      if user.children.length > 1 then
+        (1..user.children.length-1).each do |i|
+          @RFGchildrenvalue = @RFGchildrenvalue+'&ChildrenAgeGender='+user.children[i]
+        end
+      else
+      end
+    else
+      @RFGchildrenvalue = ''
+    end
+      
+      
+    if @RFGEmployment == nil then        
+      @RFGEmployment = ''
+    else
+    end
+    
+    if @RFGEducationUS == nil then        
+      @RFGEducationUS = ''
+    else
+    end 
+    
+    if @RFGEducationCA == nil then        
+      @RFGEducationCA = ''
+    else
+    end 
+     
+      
+      
+    if user.country=="9" then 
+      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&age='+user.age+'&rfg2_14785='+user.householdincome+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+@RFGchildrenvalue
+    else
+      if user.country=="6" then
+          @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&age='+user.age+'&educationCA='+@RFGEducationCA+'&rfg2_14887='+user.householdincome+'&employment='+@RFGEmployment+@RFGchildrenvalue
+      else
+      end
+    end    
+      
+    if @parsed_user_agent.platform == 'iPhone' then
+      
+      @MS_is_mobile = '&MS_is_mobile=true'
+      p "*************************************** RankRFGProjects: MS_is_mobile is set TRUE"
+      
+    else
+      @MS_is_mobile = '&MS_is_mobile=false'
+      p "*************************************** RankRFGProjects: MS_is_mobile is set FALSE"
+      
+    end
+      
+    if @RFGSupplierLinks != nil then
+      (0..@RFGSupplierLinks.length-1).each do |i|
+        @RFGSupplierLinks[i] = @RFGSupplierLinks[i]+@RFGAdditionalValues+@MS_is_mobile
+      end
+      print "************ RFGSupplierLinks List: ", @RFGSupplierLinks
+      puts
+      
+    else
+      # do nothing, no RFG surveys natch the user
+      puts "************ User did not match any available quota in RFG projects"
+    end
+    
+    
+    
+    else
+    # do nothing for RFG
+    end # RFG status is ACTIVE
+    
+    
+    # Begin the ride
+    userride (session_id)      
+        
+  end #selectRfgProjects
+       
+  def userride (session_id)
+    
+    user = User.find_by session_id: session_id
+    @PID = user.user_id
+
+    # If user is blacklisted, then qterm
+    if user.black_listed == true then
+      print '******************** UserID is BLACKLISTED: ', user.user_id
+      puts
+      redirect_to '/users/nosuccess'
+      return
+    else
+    end
+       
+    # FED or RFG go first
+    
+    if (@RFGIsBack) then
+      user.SupplierLink << @RFGSupplierLinks
+      puts "RFG is Back"
+    else
+      if (@RFGIsFront) then
+        @tmp = @RFGSupplierLinks + user.SupplierLink
+        user.SupplierLink = @tmp
+        puts "RFG is Front"
+      else
+        # do nothing and RFG will not be included
+        puts "RFG is not included"
+      end
+    end
+    
+    # Save the order of FED and RFG
+    
+    user.save
+    
     # Queue up additional surveys from P2S. First calculate the additional values to be attached.
     
-    @client = Network.find_by name: "P2S"
-    if @client.status = "ACTIVE" then
-      @SUBID = @client.netid+user.user_id
+    @netid = user.netid  
+    @net = Network.find_by netid: @netid
+    
+    if (user.country == '9') then
+      if @net.P2S_US == 1 then
+        @P2SisAttached = true
+      else
+        @P2SisAttached = false
+      end
+    else
+    end
+  
+    if (user.country == '6') then
+      if @net.P2S_CA == 1 then
+        @P2SisAttached = true
+      else
+        @P2SisAttached = false
+      end
+    else
+    end
+    
+    if (user.country == '5') then
+      if @net.P2S_AU == 1 then
+        @P2SisAttached = true
+      else
+        @P2SisAttached = false
+      end
+    else
+    end   
+    
+    if (@P2SisAttached) then
+      @P2Sclient = Network.find_by name: "P2S"
+      @SUBID = @P2Sclient.netid+user.user_id
     
       print "**************** P2S @SUID = ", @SUBID
       puts
@@ -2006,18 +3379,6 @@ require 'hmac-md5'
         @p2s_gender = "m"
       else
         @p2s_gender = "f"
-      end
-      
-      
-      if user.children != nil then
-        @childrenvalue = '&Age_and_Gender_of_Child='+user.children[0]
-        if user.children.length > 1 then
-          (1..user.children.length-1).each do |i|
-            @childrenvalue = @childrenvalue+'&Age_and_Gender_of_Child='+user.children[i]
-          end
-        else
-        end
-      else
       end
              
       
@@ -2099,59 +3460,20 @@ require 'hmac-md5'
       puts
       
       user.SupplierLink << @p2sSupplierLink
+      
+      # Save the list of SupplierLinks with P2S, if ACTIVE
+    
+      user.save
 
     else
-      # do nothing for P2S
-    end
-    
-    # Save the list of SupplierLinks in user record
-    user.save
+      puts "********************** P2S is not attached"
+    end #if P2SisAttached 
 
     # Start the ride
-    if (@netstatus == "INTTEST") then
-      @PID = 'test'
-    else
-      @PID = user.user_id
-    end
-    
-    if user.country=="9" then 
-      @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP+'&HISPANIC='+user.ethnicity+'&ETHNICITY='+user.race+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_US='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
-    else
-      if user.country=="6" then
-        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
-      else
-        if user.country=="5" then
-          @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
-        else
-          if user.country=="7" then
-            @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_IN='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
-          else
-          end
-        end
-      end
-    end    
-    
-    
-    @parsed_user_agent = UserAgent.parse(user.user_agent)
-    
-    print "*************************************** UseRide: User platform is: ", @parsed_user_agent.platform
-    puts
-    
-    if @parsed_user_agent.platform == 'iPhone' then
-      
-      @MS_is_mobile = '&MS_is_mobile=true'
-      p "*************************************** UserRide: MS_is_mobile is set TRUE"
-      
-    else
-      @MS_is_mobile = '&MS_is_mobile=false'
-      p "*************************************** UserRide: MS_is_mobile is set FALSE"
-      
-    end
-
 
     if user.SupplierLink[0] == @p2sSupplierLink then
       
-      print '*************** User will be sent to P2S router as no other surveys are availabe: ', user.SupplierLink[0]
+      print '*************** User will be sent to P2S router as no other surveys are available: ', user.SupplierLink[0]
       puts
       
       @EntryLink = user.SupplierLink[0]
@@ -2161,10 +3483,10 @@ require 'hmac-md5'
       
     else
       
-      print '***************** User will be sent to this survey: ', user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile
+      print '***************** User will be sent to this survey: ', user.SupplierLink[0]
       puts
     
-      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues+@MS_is_mobile    
+      @EntryLink = user.SupplierLink[0]
 #      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
       user.SupplierLink = user.SupplierLink.drop(1)
       user.save
@@ -2173,8 +3495,6 @@ require 'hmac-md5'
     end # if user.SupplierLink[0] == @p2sSupplierLink then
     
   end
-
-  # Sample survey pages control logic (p0 to success)
   
   def p1action
     redirect_to '/users/p2'
@@ -2220,8 +3540,19 @@ require 'hmac-md5'
     end while @SupersonicPostBack.code != 200
     
   else
-  end
+  end  
   
+  if user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
+
+   begin
+     @RadiumOnePostBack = HTTParty.post('panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+       rescue HTTParty::Error => e
+      puts 'HttParty::Error '+ e.message
+       retry
+   end while @RadiumOnePostBack.code != 200
+
+  else
+  end
   
   
   
@@ -2239,9 +3570,6 @@ require 'hmac-md5'
   end
   
   @net.save
-  
-  
-  
   
   
   # Save Test completed information by user

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150312025725) do
+ActiveRecord::Schema.define(version: 20150401065718) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -39,6 +39,12 @@ ActiveRecord::Schema.define(version: 20150312025725) do
     t.integer  "P2S_US"
     t.integer  "P2S_CA"
     t.integer  "P2S_AU"
+    t.integer  "FED_US"
+    t.integer  "FED_CA"
+    t.integer  "FED_AU"
+    t.integer  "RFG_US"
+    t.integer  "RFG_CA"
+    t.string   "stackOrder"
   end
 
   create_table "rfg_projects", force: true do |t|
@@ -59,8 +65,21 @@ ActiveRecord::Schema.define(version: 20150312025725) do
     t.integer  "filterMode"
     t.boolean  "isRecontact"
     t.string   "mobileOptimized"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.integer  "starts"
+    t.integer  "completes"
+    t.integer  "terminates"
+    t.integer  "quotasfull"
+    t.integer  "cr"
+    t.string   "epc"
+    t.integer  "projectCR"
+    t.string   "projectEPC"
+    t.string   "quotaLimitBy"
+    t.boolean  "excludeNonMatching"
+    t.text     "quotas"
+    t.string   "link"
+    t.boolean  "projectStillLive"
   end
 
   create_table "surveys", force: true do |t|

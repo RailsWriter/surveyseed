@@ -1,0 +1,306 @@
+require 'digest/hmac'
+require 'net/http'
+require 'uri'
+
+
+class String
+	def hex2bin
+		scan(/../).map {|x| x.to_i(16).chr}.join
+	end
+end
+
+apid = "54ef65c3e4b04d0ae6f9f4a7"
+secret = "8ef1fe91d92e0602648d157f981bb934"
+
+
+
+# Get any new offerwall surveys from Federated Sample
+
+begin
+# set timer to download every 20 mins
+
+  starttime = Time.now
+  print '************************************** getRFGProjects: Time at start', starttime
+  puts
+
+
+
+  #command='{ "command" : "test/copy/1", "data1" : "KETSCI TEST"}'
+  command ='{ "command" : "livealert/inventory/1" }'
+  #command='{ "command" : "livealert/targeting/1", "rfg_id" : "RFG141754-002"}'
+  #command='{ "command" : "livealert/listDatapoints/1"}'
+  #command='{ "command" : "livealert/datapoint/1", "name" : "STANDARD_HHI_US"}'
+  #command='{ "command" : "livealert/createLink/1", "rfg_id" : "RFG117241-010"}'
+  #command='{ "command" : "livealert/stats/1", "rfg_id" : "RFG117241-010"}'
+  #command='{ "command" : "livealert/log/1", "rfg_id" : "RFG117241-010"}'
+
+
+
+  time=Time.now.to_i
+  hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.hex2bin, Digest::SHA1)
+  uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
+
+
+  Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+	req = Net::HTTP::Post.new uri
+	req.body = command
+	req.content_type = 'application/json'
+	response = http.request req
+  RFGProjectsIndex = JSON.parse(response.body)  
+end
+
+
+  print "RFGProjectsIndex: ", RFGProjectsIndex["response"]["projects"]
+  puts
+
+  NumberOfProjects = RFGProjectsIndex["response"]["projects"].length
+  
+  print "************ Number of projects: ", NumberOfProjects
+  puts
+
+  (0..NumberOfProjects-1).each do |i|
+    
+    skipProject = false
+     
+    if (RfgProject.where("rfg_id = ?", RFGProjectsIndex["response"]["projects"][i]["rfg_id"])).exists? == true then
+      
+      puts '************ Processing an already existING project'
+      RfgProject.where( "rfg_id = ?", RFGProjectsIndex["response"]["projects"][i]["rfg_id"] ).each do |existingproject|
+        @project=existingproject
+      end
+      print '***** @project = ', @project.rfg_id
+      puts
+      
+    else
+    
+      puts '************ Processing a NEW project'
+      if ((RFGProjectsIndex["response"]["projects"][i]["country"] == "CA") || (RFGProjectsIndex["response"]["projects"][i]["country"] == "US")) &&
+        ( RFGProjectsIndex["response"]["projects"][i]["cpi"] > "$0.99" ) then
+      
+        @project = RfgProject.new
+        @project.rfg_id = RFGProjectsIndex["response"]["projects"][i]["rfg_id"]
+        @project.title = RFGProjectsIndex["response"]["projects"][i]["title"]
+        @project.country = RFGProjectsIndex["response"]["projects"][i]["country"]
+        @project.cpi = RFGProjectsIndex["response"]["projects"][i]["cpi"]
+        @project.estimatedIR = RFGProjectsIndex["response"]["projects"][i]["estimatedIR"]
+        @project.estimatedLOI = RFGProjectsIndex["response"]["projects"][i]["estimatedLOI"]
+        @project.endOfField = RFGProjectsIndex["response"]["projects"][i]["endOfField"]
+        @project.desiredCompletes = RFGProjectsIndex["response"]["projects"][i]["desiredCompletes"]
+        @project.currentCompletes = RFGProjectsIndex["response"]["projects"][i]["currentCompletes"]
+        @project.collectsPII = RFGProjectsIndex["response"]["projects"][i]["collectsPII"]
+        @project.state = RFGProjectsIndex["response"]["projects"][i]["state"]
+        @project.datapoints = RFGProjectsIndex["response"]["projects"][i]["datapoints"]
+        @project.duplicationKey = RFGProjectsIndex["response"]["projects"][i]["duplicationKey"]
+        @project.filterMode = RFGProjectsIndex["response"]["projects"][i]["filterMode"]
+        @project.isRecontact = RFGProjectsIndex["response"]["projects"][i]["isRecontact"]
+        @project.mobileOptimized = RFGProjectsIndex["response"]["projects"][i]["mobileOptimized"]     
+      
+        print "********** Saved a New project available with project.rfg_id: ", @project.rfg_id
+        puts
+        
+        @project.save
+        
+      else
+        puts "This project does not meet our criteria, skip it"
+        @skipProject = true
+      end
+    end
+    
+    if (skipProject == false) then
+        command = { :command => "livealert/stats/1", :rfg_id => @project.rfg_id }.to_json        
+
+        time=Time.now.to_i
+        hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.hex2bin, Digest::SHA1)
+        uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
+
+      begin
+        Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+          req = Net::HTTP::Post.new uri
+          req.body = command
+          req.content_type = 'application/json'
+          response = http.request req
+          RFGProjectStats = JSON.parse(response.body)  
+        end
+        
+      rescue Net::ReadTimeout => e  
+        puts e.message
+      end
+
+        # print "******************* RFGProjectStats: ", RFGProjectStats
+        # puts
+
+        @project.starts = RFGProjectStats["response"]["starts"]
+        @project.completes = RFGProjectStats["response"]["completes"]
+        @project.terminates = RFGProjectStats["response"]["terminates"]
+        @project.quotasfull = RFGProjectStats["response"]["quotas"]
+        @project.cr = RFGProjectStats["response"]["cr"]
+        @project.epc = RFGProjectStats["response"]["epc"]
+        @project.projectCR = RFGProjectStats["response"]["projectCR"]
+        @project.projectEPC = RFGProjectStats["response"]["projectEPC"]
+        
+        puts "********* saved stats"
+      
+      
+        # Get project targeting information
+      
+        #command='{ "command" : "livealert/targeting/1", "rfg_id" : @project.rfg_id}'
+        command = { :command => "livealert/targeting/1", :rfg_id => @project.rfg_id }.to_json
+        
+        time=Time.now.to_i
+        hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.hex2bin, Digest::SHA1)
+        uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
+
+      begin
+        Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+          req = Net::HTTP::Post.new uri
+          req.body = command
+          req.content_type = 'application/json'
+          response = http.request req
+          @responsecode = response.code
+          print "@responsecode: ", @responsecode
+          puts
+          if @responsecode == 200 then
+            RFGProjectTargets = JSON.parse(response.body)  
+          else
+            #do nothing
+          end
+        end  
+      rescue StandardError  
+        false
+      end
+      
+     #   print "RFGProjectTargets: ", RFGProjectTargets
+      #  puts
+        
+      if @responsecode == 200 then
+        
+        @project.datapoints = RFGProjectTargets["response"]["datapoints"]
+        @project.lastModified = RFGProjectTargets["response"]["lastmodified"]
+        @project.filterMode = RFGProjectTargets["response"]["filtermode"]
+        @project.quotaLimitBy = RFGProjectTargets["response"]["quotaLimitBy"]
+        @project.excludeNonMatching = RFGProjectTargets["response"]["excludeNonMatching"]
+        @project.quotas = RFGProjectTargets["response"]["quotas"]
+      
+      
+        if RFGProjectTargets["response"]["desiredCompletes"] > RFGProjectTargets["response"]["currentCompletes"] then
+          @project.projectStillLive = true
+        else
+          @project.projectStillLive = false
+        end
+      
+      
+        # CreateLink for the project
+      
+        command = { :command => "livealert/createLink/1", :rfg_id => @project.rfg_id }.to_json
+        
+        time=Time.now.to_i
+        hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.hex2bin, Digest::SHA1)
+        uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
+
+
+        Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+          req = Net::HTTP::Post.new uri
+          req.body = command
+          req.content_type = 'application/json'
+          response = http.request req
+          RFGProjectLink = JSON.parse(response.body)  
+        end       
+      
+        if RFGProjectLink["result"] == 0 then
+          @project.link = RFGProjectLink["response"]["link"]
+          @project.projectStillLive = true
+          @project.save
+          print "************ New project saved: ", @project.rfg_id
+          puts
+        else
+          @project.projectStillLive = false
+          @project.save
+          print "********** Project not live - RFGProjectLink: ", RFGProjectLink
+          puts
+        end
+        
+      else
+        # project skipped
+      end # @responsecode != 200
+        
+    else
+      # project skipped
+    end
+  
+    print "Current i: ", i
+    puts
+  end # do loop for all i
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  # Delete projects which are neither custom entered nor on the index list but are in local database
+    
+  projectsnottobedeleted = Array.new
+  listofprojectnumbers = Array.new
+  projectstobedeleted = Array.new
+    
+  RfgProject.all.each do |oldproject|
+    listofprojectnumbers << oldproject.rfg_id
+    # print '************* Investigating Project Number from the dbase: ', listofprojectnumbers
+    # puts
+      
+    (0..NumberOfProjects-1).each do |k|
+      if RFGProjectsIndex["response"]["projects"][k]["rfg_id"] == oldproject.rfg_id then
+          #          print 'Marked a project to be ALIVE: ', oldproject.rfg_id
+          #          puts     
+        projectsnottobedeleted << oldproject.rfg_id
+      else
+        # do nothing
+      end # if
+        #         print 'looping list of allocationsurveys, count:', k
+        #         puts
+    end # do k
+  end # do oldproject
+     
+  # print '******************** List of all projects in DB', listofprojectnumbers
+  # puts
+  # print '****************** List of projects not to be deleted', projectsnottobedeleted
+  # puts
+
+  #   This section is there to remove old dead projects.
+    
+  RfgProject.all.each do |oldproject| #do21
+    if projectsnottobedeleted.include? (oldproject.rfg_id) then
+         # do nothing
+    else
+      projectstobedeleted << oldproject.rfg_id
+      print '******************** DELETING THIS Project NUMBER NOT on Index LIST: ', oldproject.rfg_id
+      puts
+      oldproject.delete
+    end
+  end # do21 oldproject
+    
+  print 'Projects deleted: ', projectstobedeleted
+  puts
+  
+ 
+  timenow = Time.now
+  
+  print 'getRFGProjects: Time at end', timenow
+  puts
+  
+  if (timenow - starttime) > 1000 then 
+    print 'time elapsed since start =', (timenow - starttime), '- going to repeat immediately'
+    puts
+    timetorepeat = true
+  else
+    print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 10 minutes since it typically takes under 10 mins to do a sweep'
+    puts
+    sleep (10.minutes)
+    timetorepeat = true
+  end
+
+end while timetorepeat

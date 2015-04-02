@@ -504,7 +504,7 @@ puts
             rescue HTTParty::Error => e
               puts 'HttParty::Error '+ e.message
               retry
-          end while ((@NewSupplierAllocations.code != 200) && (failcount2<10))
+          end while ((@NewSupplierAllocations.code != 200) && (failcount2 < 10))
 
           if ((@NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0) && (failcount2 < 10)) then
           
@@ -827,7 +827,12 @@ end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
               puts
 #             puts NewSupplierLink["SupplierLink"]["LiveLink"]
               @newsurvey.SupplierLink = NewSupplierLink["SupplierLink"]
-              @newsurvey.CPI = NewSupplierLink["SupplierLink"]["CPI"]   
+              
+              if NewSupplierLink["SupplierLink"]["CPI"] == nil then
+                @newsurvey.SurveyStillLive = 0.0
+              else                
+                @newsurvey.CPI = NewSupplierLink["SupplierLink"]["CPI"]   
+              end
              
               
            
@@ -946,7 +951,7 @@ end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
            
 #      if (i == 30000) || ((Time.now - @lastrankingtime) >= 300000) then    
       
-      if (i == 1) || ((Time.now - @lastrankingtime) >= 2200) then    
+      if (i == 1) || ((Time.now - @lastrankingtime) >= 2400) then    
           
         @lastrankingtime = Time.now
         
@@ -1686,33 +1691,33 @@ end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
           #          print 'Marked a survey to be ALIVE: ', oldsurvey.SurveyNumber
           #          puts     
           surveysnottobedeleted << oldsurvey.SurveyNumber
-        else
+      else
           # do nothing
-        end # if
+      end # if
         #         print 'looping list of allocationsurveys, count:', k
         #         puts
-      end # do k
-    end # do j
+    end # do k
+  end # do oldsurvey
      
-     print '******************** List of all surveys in DB', listofsurveynumbers
-     puts
-     print '****************** List of surveys not to be deleted', surveysnottobedeleted
-     puts
+  print '******************** List of all surveys in DB', listofsurveynumbers
+  puts
+  print '****************** List of surveys not to be deleted', surveysnottobedeleted
+  puts
 
-     #   This section is there to remove old dead surveys.
+  #   This section is there to remove old dead surveys.
     
-     Survey.all.each do |oldsurvey| #do21
-       if surveysnottobedeleted.include? (oldsurvey.SurveyNumber) then
-         # do nothing
-       else
-         if oldsurvey.SurveySID == "DONOTDELETE" then
-           # do nothing
-         else
-          surveystobedeleted << oldsurvey.SurveyNumber
-          print '******************** DELETING THIS SURVEY NUMBER NOT on Allocation LIST nor marked DONOTDELETE ', oldsurvey.SurveyNumber
-          puts
-          oldsurvey.delete
-        end
+  Survey.all.each do |oldsurvey| #do21
+    if surveysnottobedeleted.include? (oldsurvey.SurveyNumber) then
+     # do nothing
+    else
+      if oldsurvey.SurveySID == "DONOTDELETE" then
+       # do nothing
+      else
+        surveystobedeleted << oldsurvey.SurveyNumber
+        print '******************** DELETING THIS SURVEY NUMBER NOT on Allocation LIST nor marked DONOTDELETE ', oldsurvey.SurveyNumber
+        puts
+        oldsurvey.delete
+      end
     end
   end # do21 oldsurvey
     
