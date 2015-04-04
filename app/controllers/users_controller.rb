@@ -1085,7 +1085,7 @@ class UsersController < ApplicationController
     if net.FED_US != nil then
       if (net.FED_US == 0) && (user.country == "9") then
         @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
-        puts "**************** P2S IS at the Head"
+        # puts "**************** P2S IS at the Head"
 
       else
         @fed_US = net.FED_US
@@ -1097,7 +1097,7 @@ class UsersController < ApplicationController
     if net.FED_CA != nil then
       if (net.FED_CA == 0) && (user.country == "6") then
         @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
-        puts "**************** P2S IS at the Head"
+        # puts "**************** P2S IS at the Head"
 
       else
         @fed_CA = net.FED_CA
@@ -1109,7 +1109,7 @@ class UsersController < ApplicationController
     if net.FED_AU != nil then
       if (net.FED_AU == 0) && (user.country == "5") then
         @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
-        puts "**************** P2S IS at the Head"
+        # puts "**************** P2S IS at the Head"
 
       else
         @p2s_AU = net.FED_AU
@@ -2026,7 +2026,7 @@ class UsersController < ApplicationController
       @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP+'&HISPANIC='+user.ethnicity+'&ETHNICITY='+user.race+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_US='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
     else
       if user.country=="6" then
-        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
+        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP.slice(0..2)+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
       else
         if user.country=="5" then
           @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
@@ -2423,7 +2423,7 @@ class UsersController < ApplicationController
     @RFGSupplierLinks = Array.new
     
               
-    RfgProject.where("country = ?", user_country).order(projectEPC: :desc).order(epc: :desc).each do |project|
+    RfgProject.where("country = ? AND projectStillLive =?", user_country, true).order(projectEPC: :desc).order(epc: :desc).each do |project|
 
       if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects
         
@@ -2494,7 +2494,7 @@ class UsersController < ApplicationController
           when "List of FSAs (CA)"
             @QualificationZip = false
             (0..project.datapoints[m]["values"].length-1).each do |i|
-              if (project.datapoints[m]["values"][i]["freelist"]).include?(user.ZIP) then 
+              if (project.datapoints[m]["values"][i]["freelist"]).include?(user.ZIP.slice(0..2)) then 
                 @QualificationZip = true
               else
               end
@@ -2860,7 +2860,7 @@ class UsersController < ApplicationController
                 print "Project qual zip: ", project.quotas[j]["datapoints"][n]["values"]
                 puts
                 (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["freelist"]).include?(user.ZIP) then 
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["freelist"]).include?(user.ZIP.slice(0..2)) then 
                     @QualificationZip = true
                   else
                   end
@@ -3323,12 +3323,16 @@ class UsersController < ApplicationController
       puts "RFG is Back"
     else
       if (@RFGIsFront) then
-        @tmp = @RFGSupplierLinks + user.SupplierLink
+        if user.SupplierLink != nil then # i.e. FED surveys are included
+          @tmp = @RFGSupplierLinks + user.SupplierLink
+        else
+          @tmp = @RFGSupplierLinks
+        end
         user.SupplierLink = @tmp
         puts "RFG is Front"
       else
         # do nothing and RFG will not be included
-        puts "RFG is not included"
+        puts "*************** RFG is not included"
       end
     end
     

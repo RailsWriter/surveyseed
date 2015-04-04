@@ -18,12 +18,12 @@
 		
 		<div class="content">
 			<center>
-				<p>What are the first three digits of your Postal Code?</p>
+				<p>What is your 6 alphanumerals Postal Code?</p>
 				</center>
 				<%= form_tag("zip_CA", method: "post") do %>
 				<fieldset>
 				<div class="myzipinput">
-					<%= text_field_tag 'zip', nil, maxlength: 3 %>
+					<%= text_field_tag 'zip', nil, maxlength: 6 %>
 					<%= label_tag(:CAPOSTA1, '') %><br><br>
 					</div>
 					<div class="myinput">

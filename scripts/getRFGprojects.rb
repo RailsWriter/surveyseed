@@ -17,7 +17,7 @@ secret = "8ef1fe91d92e0602648d157f981bb934"
 # Get any new offerwall surveys from Federated Sample
 
 begin
-# set timer to download every 20 mins
+# set timer to download every 5 mins
 
   starttime = Time.now
   print '************************************** getRFGProjects: Time at start', starttime
@@ -42,12 +42,12 @@ begin
 
 
   Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
-	req = Net::HTTP::Post.new uri
-	req.body = command
-	req.content_type = 'application/json'
-	response = http.request req
-  RFGProjectsIndex = JSON.parse(response.body)  
-end
+	  req = Net::HTTP::Post.new uri
+	  req.body = command
+	  req.content_type = 'application/json'
+	  response = http.request req
+    RFGProjectsIndex = JSON.parse(response.body)  
+  end
 
 
   print "RFGProjectsIndex: ", RFGProjectsIndex["response"]["projects"]
@@ -64,12 +64,43 @@ end
      
     if (RfgProject.where("rfg_id = ?", RFGProjectsIndex["response"]["projects"][i]["rfg_id"])).exists? == true then
       
-      puts '************ Processing an already existING project'
       RfgProject.where( "rfg_id = ?", RFGProjectsIndex["response"]["projects"][i]["rfg_id"] ).each do |existingproject|
-        @project=existingproject
-      end
-      print '***** @project = ', @project.rfg_id
-      puts
+        @project=existingproject        
+        print '************ Processing an already EXISTING project:', @project.rfg_id
+        puts
+        
+        if RFGProjectsIndex["response"]["projects"][i]["lastModified"] == @project.lastModified then
+          skipProject = true # no need to update if no modifications
+        else
+          
+          @project.title = RFGProjectsIndex["response"]["projects"][i]["title"]
+          @project.cpi = RFGProjectsIndex["response"]["projects"][i]["cpi"]
+          @project.estimatedIR = RFGProjectsIndex["response"]["projects"][i]["estimatedIR"]
+          @project.estimatedLOI = RFGProjectsIndex["response"]["projects"][i]["estimatedLOI"]
+          @project.endOfField = RFGProjectsIndex["response"]["projects"][i]["endOfField"]
+          @project.desiredCompletes = RFGProjectsIndex["response"]["projects"][i]["desiredCompletes"]
+          @project.currentCompletes = RFGProjectsIndex["response"]["projects"][i]["currentCompletes"]
+          @project.collectsPII = RFGProjectsIndex["response"]["projects"][i]["collectsPII"]
+          @project.state = RFGProjectsIndex["response"]["projects"][i]["state"]
+          @project.datapoints = RFGProjectsIndex["response"]["projects"][i]["datapoints"]
+          @project.duplicationKey = RFGProjectsIndex["response"]["projects"][i]["duplicationKey"]
+          @project.filterMode = RFGProjectsIndex["response"]["projects"][i]["filterMode"]
+          @project.isRecontact = RFGProjectsIndex["response"]["projects"][i]["isRecontact"]
+          @project.mobileOptimized = RFGProjectsIndex["response"]["projects"][i]["mobileOptimized"]
+          @project.lastModified = RFGProjectsIndex["response"]["projects"][i]["lastModified"]
+        
+          if RFGProjectsIndex["response"]["projects"][i]["state"] != 2 then
+            @project.projectStillLive = false
+            skipProject = true # no need to update if no modifications
+          else
+            @project.projectStillLive = true
+          end
+          
+          @project.save
+        
+        end # if lastModified
+        
+      end # do existingproject
       
     else
     
@@ -93,19 +124,30 @@ end
         @project.duplicationKey = RFGProjectsIndex["response"]["projects"][i]["duplicationKey"]
         @project.filterMode = RFGProjectsIndex["response"]["projects"][i]["filterMode"]
         @project.isRecontact = RFGProjectsIndex["response"]["projects"][i]["isRecontact"]
-        @project.mobileOptimized = RFGProjectsIndex["response"]["projects"][i]["mobileOptimized"]     
+        @project.mobileOptimized = RFGProjectsIndex["response"]["projects"][i]["mobileOptimized"]  
+        @project.lastModified = RFGProjectsIndex["response"]["projects"][i]["lastModified"]
       
         print "********** Saved a New project available with project.rfg_id: ", @project.rfg_id
         puts
         
+        if @project.state != 2 then
+          @project.projectStillLive = false
+          skipProject = true # no need to update if no modifications
+        else
+          @project.projectStillLive = true
+        end
+        
         @project.save
         
       else
-        puts "This project does not meet our criteria, skip it"
-        @skipProject = true
-      end
-    end
+        puts "This NEW project does not meet our criteria, skip it"
+        skipProject = true
+      end # This NEW project does not meet our criteria
     
+    end # project exists?
+    
+    print "-----------------> skipProject =", skipProject
+    puts
     if (skipProject == false) then
         command = { :command => "livealert/stats/1", :rfg_id => @project.rfg_id }.to_json        
 
@@ -126,8 +168,8 @@ end
         puts e.message
       end
 
-        # print "******************* RFGProjectStats: ", RFGProjectStats
-        # puts
+   #     print "******************* RFGProjectStats: ", RFGProjectStats
+  #      puts
 
         @project.starts = RFGProjectStats["response"]["starts"]
         @project.completes = RFGProjectStats["response"]["completes"]
@@ -138,7 +180,7 @@ end
         @project.projectCR = RFGProjectStats["response"]["projectCR"]
         @project.projectEPC = RFGProjectStats["response"]["projectEPC"]
         
-        puts "********* saved stats"
+  #      puts "********* saved stats"
       
       
         # Get project targeting information
@@ -159,23 +201,23 @@ end
           @responsecode = response.code
           print "@responsecode: ", @responsecode
           puts
-          if @responsecode == 200 then
+#          if @responsecode == 200 
             RFGProjectTargets = JSON.parse(response.body)  
-          else
+#          else
             #do nothing
-          end
+#          end
         end  
       rescue StandardError  
         false
       end
       
-     #   print "RFGProjectTargets: ", RFGProjectTargets
-      #  puts
+#        print "RFGProjectTargets: ", RFGProjectTargets
+ #       puts
         
-      if @responsecode == 200 then
+ #     if @responsecode == 200 then
         
         @project.datapoints = RFGProjectTargets["response"]["datapoints"]
-        @project.lastModified = RFGProjectTargets["response"]["lastmodified"]
+        @project.lastModified = RFGProjectTargets["response"]["lastModified"]
         @project.filterMode = RFGProjectTargets["response"]["filtermode"]
         @project.quotaLimitBy = RFGProjectTargets["response"]["quotaLimitBy"]
         @project.excludeNonMatching = RFGProjectTargets["response"]["excludeNonMatching"]
@@ -204,13 +246,16 @@ end
           req.content_type = 'application/json'
           response = http.request req
           RFGProjectLink = JSON.parse(response.body)  
-        end       
+        end   
+        
+ #       print "********* Got Link: ", RFGProjectLink
+#        puts
       
         if RFGProjectLink["result"] == 0 then
           @project.link = RFGProjectLink["response"]["link"]
           @project.projectStillLive = true
           @project.save
-          print "************ New project saved: ", @project.rfg_id
+          print "************ Project saved: ", @project.rfg_id
           puts
         else
           @project.projectStillLive = false
@@ -219,26 +264,18 @@ end
           puts
         end
         
-      else
-        # project skipped
-      end # @responsecode != 200
+ #     else
+#      puts "project targets not available, @responsecode != 200"
+ #     end # @responsecode != 200
         
     else
-      # project skipped
-    end
+      puts "project skipped as it does not meet biz criteria or there has been no change to the project data since last sweep"
+    end # project skipped as it does not meet biz criteria or there has been no change to the project data since last sweep
   
     print "Current i: ", i
     puts
   end # do loop for all i
-  
-  
-  
-  
-  
-  
-  
-  
-  
+ 
   
   
   # Delete projects which are neither custom entered nor on the index list but are in local database
@@ -292,14 +329,14 @@ end
   print 'getRFGProjects: Time at end', timenow
   puts
   
-  if (timenow - starttime) > 1000 then 
+  if (timenow - starttime) > 300 then 
     print 'time elapsed since start =', (timenow - starttime), '- going to repeat immediately'
     puts
     timetorepeat = true
   else
-    print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 10 minutes since it typically takes under 10 mins to do a sweep'
+    print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 3 minutes'
     puts
-    sleep (10.minutes)
+    sleep (3.minutes)
     timetorepeat = true
   end
 
