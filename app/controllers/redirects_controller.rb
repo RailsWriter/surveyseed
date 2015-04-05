@@ -596,6 +596,7 @@ class RedirectsController < ApplicationController
                   @user.SupplierLink = @user.SupplierLink.drop(1)
                   @user.save
                   redirect_to @NextEntryLink
+                  return
            
 #                else
                 

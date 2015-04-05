@@ -3566,8 +3566,7 @@ class UsersController < ApplicationController
    end while @RadiumOnePostBack.code != 200
 
   else
-  end
-  
+  end  
   
   
   # Keep a count of Test completes on each Network

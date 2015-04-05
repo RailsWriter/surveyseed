@@ -30,6 +30,7 @@ end
 
 # Initialize timer outside of the repeat cycle to maintain ranking frequency
 @lastrankingtime = Time.now
+@lastrankingtimeforpoorsurveys = Time.now
 
 
 # Download the full allocations index
@@ -945,20 +946,20 @@ end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
       puts
   
   
-  
-  
-      # RANK the stack after every 20 minutes    
+      # RANK the stack after every 60 minutes    
            
 #      if (i == 30000) || ((Time.now - @lastrankingtime) >= 300000) then    
       
-      if (i == 1) || ((Time.now - @lastrankingtime) >= 2400) then    
+      if (i == 1) || ((Time.now - @lastrankingtime) >= 1800) then    
           
         @lastrankingtime = Time.now
         
-        print "******************** Last ranking time: ", @lastrankingtime
+        
+        print "******************** Last ranking time for better surveys: ", @lastrankingtime
         puts        
         
-        Survey.all.each do |toberankedsurvey|
+      #  Survey.all.each do |toberankedsurvey|
+        Survey.where("SurveyGrossRank < ?", 501).each do |toberankedsurvey|
     
           # Safety 1-95
           if (0 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 95) then
@@ -1300,7 +1301,7 @@ end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
           
           else # not in rank 401-500 range
           end # not in rank 301-400 range
-
+          
           # Poor (New+Conv=0) 401-500
           if (400 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 500) then
   
@@ -1415,6 +1416,29 @@ end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
           else # not in 301-400 rank range
           end # not in 301-400 rank range
 
+        toberankedsurvey.save!
+
+        print "Ranked survey number = ", toberankedsurvey.SurveyNumber
+        puts
+        
+        end # do for all toberankedsurvey 
+      else
+        # i is not 1 and it has not been 30 mins since last ranking, so do nothing
+      end # time for ranking
+      
+      print "******************** Last ranking time for better surveys: ", @lastrankingtime
+      puts
+      
+      if ((Time.now - @lastrankingtimeforpoorsurveys) >= 4800) then    
+
+        @lastrankingtimeforpoorsurveys = Time.now
+        
+        print "******************** Last ranking time for POOR surveys: ", @lastrankingtimeforpoorsurveys
+        puts  
+        
+        Survey.where("SurveyGrossRank > ?", 500).each do |toberankedsurvey|
+
+          
           # Bad 501-600
           if (500 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 600) then
     
@@ -1663,13 +1687,12 @@ end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
         puts
         
         end # do for all toberankedsurvey 
-        
-        
+      
       else
-        # i is not 1 and it has not been 20 mins since last ranking, so do nothing
+        # i is not 1 and it has not been 60 mins since last ranking, so do nothing
       end # time for ranking
       
-      print "******************** Last ranking time: ", @lastrankingtime
+      print "******************** Last ranking time for POOR surveys: ", @lastrankingtimeforpoorsurveys
       puts
            
 
