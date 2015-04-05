@@ -2423,7 +2423,7 @@ class UsersController < ApplicationController
     @RFGSupplierLinks = Array.new
     
               
-    RfgProject.where("country = ? AND projectStillLive =?", user_country, true).order(projectEPC: :desc).order(epc: :desc).each do |project|
+    RfgProject.where("country = ? AND state = ?", user_country, 2).order(projectEPC: :desc).order(epc: :desc).each do |project|
 
       if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects
         
@@ -3323,13 +3323,17 @@ class UsersController < ApplicationController
       puts "RFG is Back"
     else
       if (@RFGIsFront) then
-        if user.SupplierLink != nil then # i.e. FED surveys are included
-          @tmp = @RFGSupplierLinks + user.SupplierLink
-        else
-          @tmp = @RFGSupplierLinks
-        end
-        user.SupplierLink = @tmp
         puts "RFG is Front"
+        if user.SupplierLink == nil then
+          user.SupplierLink = @RFGSupplierLinks
+        else
+          if @RFGSupplierLinks == nil then
+            #do nothing
+          else
+            @tmp = user.SupplierLink
+            user.SupplierLink = @RFGSupplierLinks + @tmp
+          end
+        end
       else
         # do nothing and RFG will not be included
         puts "*************** RFG is not included"
@@ -3474,29 +3478,35 @@ class UsersController < ApplicationController
     end #if P2SisAttached 
 
     # Start the ride
-
-    if user.SupplierLink[0] == @p2sSupplierLink then
-      
-      print '*************** User will be sent to P2S router as no other surveys are available: ', user.SupplierLink[0]
-      puts
-      
-      @EntryLink = user.SupplierLink[0]
-      user.SupplierLink = user.SupplierLink.drop(1)
-      user.save
-      redirect_to @EntryLink
-      
-    else
-      
-      print '***************** User will be sent to this survey: ', user.SupplierLink[0]
-      puts
     
-      @EntryLink = user.SupplierLink[0]
-#      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
-      user.SupplierLink = user.SupplierLink.drop(1)
-      user.save
-      redirect_to @EntryLink
+    if user.SupplierLink.length == 0 then
+      redirect_to '/users/nosuccess'
+    else      
+
+      if user.SupplierLink[0] == @p2sSupplierLink then
       
-    end # if user.SupplierLink[0] == @p2sSupplierLink then
+        print '*************** User will be sent to P2S router as no other surveys are available: ', user.SupplierLink[0]
+        puts
+      
+        @EntryLink = user.SupplierLink[0]
+        user.SupplierLink = user.SupplierLink.drop(1)
+        user.save
+        redirect_to @EntryLink
+      
+      else
+      
+        print '***************** User will be sent to this survey: ', user.SupplierLink[0]
+        puts
+    
+        @EntryLink = user.SupplierLink[0]
+#      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
+        user.SupplierLink = user.SupplierLink.drop(1)
+        user.save
+        redirect_to @EntryLink
+      
+      end # if user.SupplierLink[0] == @p2sSupplierLink then
+      
+    end # if user.SupplierLink == nil
     
   end
   
