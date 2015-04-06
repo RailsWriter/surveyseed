@@ -950,7 +950,7 @@ end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
            
 #      if (i == 30000) || ((Time.now - @lastrankingtime) >= 300000) then    
       
-      if (i == 1) || ((Time.now - @lastrankingtime) >= 1800) then    
+      if (i == 1) || ((Time.now - @lastrankingtime) >= 3600) then    
           
         @lastrankingtime = Time.now
         
@@ -1429,7 +1429,7 @@ end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
       print "******************** Last ranking time for better surveys: ", @lastrankingtime
       puts
       
-      if ((Time.now - @lastrankingtimeforpoorsurveys) >= 4800) then    
+      if ((Time.now - @lastrankingtimeforpoorsurveys) >= 9600) then    
 
         @lastrankingtimeforpoorsurveys = Time.now
         

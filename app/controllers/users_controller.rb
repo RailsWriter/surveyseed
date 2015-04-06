@@ -3567,7 +3567,18 @@ class UsersController < ApplicationController
 
   else
   end  
-  
+    
+  if user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
+       
+    begin
+      @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+        rescue HTTParty::Error => e
+        puts 'HttParty::Error '+ e.message
+        retry
+    end while @SS2PostBack.code != 200
+    
+  else
+  end
   
   # Keep a count of Test completes on each Network
   
