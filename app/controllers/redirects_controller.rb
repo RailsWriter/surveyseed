@@ -65,7 +65,21 @@ class RedirectsController < ApplicationController
               print "********************* Extracted userid from RFG PID to be = ", params[:PID]
               puts
           
-              @rfg_redirect = true
+              
+              @user = User.find_by user_id: params[:PID]
+              
+              if params[:security] != @user.trap_question_2a_response then               
+                @rfg_redirect = false
+                print "**********************RFG HMAC did NOT match"
+                puts
+              else
+                @rfg_redirect = true
+                print "**********************RFG HMAC matched!"
+                puts
+              end
+              
+                            
+              
             else
               redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=0'
               return
@@ -246,7 +260,7 @@ class RedirectsController < ApplicationController
              
               # save attempt info in User and Survey tables
           
-              @user = User.find_by user_id: params[:PID]
+              @user = User.find_by user_id: params[:PID]              
 
               print '************** Suceess for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
               puts

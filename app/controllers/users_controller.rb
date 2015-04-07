@@ -2078,7 +2078,7 @@ class UsersController < ApplicationController
     if @RFGclient.status == "ACTIVE" then
       @rid = @RFGclient.netid+user.user_id
     
-      print "**************** RFG @rid = ", @rid
+      print "**************** Assigned RFG @rid = ", @rid
       puts
      
     
@@ -3226,7 +3226,7 @@ class UsersController < ApplicationController
     puts
       
       
-    # Assemble additional parameters valuses to pass with the entry link
+    # Assemble additional parameters values to pass with the entry link
       
     if user.children != nil then
       @RFGchildrenvalue = '&ChildrenAgeGender='+user.children[0]
@@ -3285,8 +3285,9 @@ class UsersController < ApplicationController
       print "************ RFGSupplierLinks List: ", @RFGSupplierLinks
       puts
       
+      
     else
-      # do nothing, no RFG surveys natch the user
+      # do nothing, no RFG surveys match the user
       puts "************ User did not match any available quota in RFG projects"
     end
     
@@ -3412,8 +3413,7 @@ class UsersController < ApplicationController
       
       p2s_jobtitle = [0, 14899, 14900, 14901, 14902, 14903, 14904, 14905, 14906, 14907, 14908, 14909]
       @p2s_jobtitle = p2s_jobtitle[user.jobtitle.to_i].to_s
-      
-      
+       
       p2s_children = [0, '', '', '', '', '', '', 6975, 6976, 6977, 6978, 6979, 6980, 6981, 6982, 6983, 6984, 6985, 6986, 6987, 6988, 6989, 6990, 6991, 6992, 6993, 6994, 6995, 6996, 6997, 6998, 6999, 7000, 7001, 7002, 7003, 7004, 7005]
       
       
@@ -3499,6 +3499,30 @@ class UsersController < ApplicationController
         puts
     
         @EntryLink = user.SupplierLink[0]
+        
+        if @EntryLink[10..12] == "vey" then
+        
+          puts "*********** Found RFG survey as @EntryLink"
+
+          @ParseUrl = @EntryLink.partition ("&rfg_id")
+          @split2 = "&rfg_id"+@ParseUrl[2]
+          
+          print "********************* Calculating HMAC for: ", @split2
+          puts
+        
+          # Since valid supplierlinks are available, let us compute rfghmac
+      
+          rfgSecretKey = 'BZ472UWaLhHO2AtyfeDgzPOTi0435puCjsgSR9D20wZUFBIt2OluFxg1aNW380zR'      
+          @rfgHmac = HMAC::MD5.new(rfgSecretKey).update(@split2)
+      
+          # using trap_question_2a_response as a temp place to record rfghmac
+          user.trap_question_2a_response = @rfgHmac
+        else
+          print "*********** RFG survey as @EntryLink NOT FOUND ", @EntryLink[10..12]
+          puts
+        end
+        
+        
 #      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
         user.SupplierLink = user.SupplierLink.drop(1)
         user.save
@@ -3532,81 +3556,93 @@ class UsersController < ApplicationController
     print '****************************** CID= ', user.clickid, ' NetId= ', user.netid
     puts
     
-  if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+    #Postback test complete
+    
+    if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
 
-    begin
-      @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-        rescue HTTParty::Error => e
-        puts 'HttParty::Error '+ e.message
-        retry
-    end while @FyberPostBack.code != 200
+      begin
+        @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+          rescue HTTParty::Error => e
+            puts 'HttParty::Error '+ e.message
+            retry
+          end while @FyberPostBack.code != 200
     
-  else
-  end
+    else
+    end
     
-  if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+    if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
        
-    begin
-      @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+      begin
+        @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
         rescue HTTParty::Error => e
         puts 'HttParty::Error '+ e.message
         retry
-    end while @SupersonicPostBack.code != 200
+      end while @SupersonicPostBack.code != 200
     
-  else
-  end  
+    else
+    end  
   
-  if user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
+    if user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
 
-   begin
-     @RadiumOnePostBack = HTTParty.post('panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+      begin
+        @RadiumOnePostBack = HTTParty.post('panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
        rescue HTTParty::Error => e
       puts 'HttParty::Error '+ e.message
        retry
-   end while @RadiumOnePostBack.code != 200
+     end while @RadiumOnePostBack.code != 200
 
-  else
-  end  
+    else
+    end  
     
-  if user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
+    if user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
        
-    begin
-      @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-        rescue HTTParty::Error => e
-        puts 'HttParty::Error '+ e.message
-        retry
-    end while @SS2PostBack.code != 200
+      begin
+        @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+          rescue HTTParty::Error => e
+            puts 'HttParty::Error '+ e.message
+            retry
+      end while @SS2PostBack.code != 200
     
-  else
-  end
+    else
+    end
   
-  # Keep a count of Test completes on each Network
+    # Keep a count of Test completes on each Network
   
-  puts "*************** Keeping track of Test completes on each network"
+    puts "*************** Keeping track of Test completes on each network"
   
  
-  @net = Network.find_by netid: user.netid
+    @net = Network.find_by netid: user.netid
 
-  if @net.Flag4 == nil then
-    @net.Flag4 = "1" 
-  else
-    @net.Flag4 = (@net.Flag4.to_i + 1).to_s
-  end
+    if @net.Flag4 == nil then
+      @net.Flag4 = "1" 
+    else
+      @net.Flag4 = (@net.Flag4.to_i + 1).to_s
+    end
   
-  @net.save
+    @net.save
   
   
-  # Save Test completed information by user
+    # Save Test completed information by user
   
-  if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
-    @net_name = "SuperSonic"
-  else
-  end
+    if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
+      @net_name = "Fyber"
+    else
+    end
   
-  if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
-    @net_name = "Fyber"
-  else
-  end
+    if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
+      @net_name = "SuperSonic"
+    else
+    end
+  
+    if user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
+      @net_name = "RadiumOne"
+    else
+    end
+  
+    if user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
+      @net_name = "SS2"
+    else
+    end 
     
     user.SurveysAttempted << 'TESTSURVEY'
     user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
