@@ -71,17 +71,17 @@ class RedirectsController < ApplicationController
               if params[:security] != @user.trap_question_2a_response then               
                 @rfg_redirect = false
                 print "**********************RFG HMAC did NOT match"
-                puts
+                
+                # security term this interaction
+                params[:status]=5
               else
                 @rfg_redirect = true
                 print "**********************RFG HMAC matched!"
                 puts
-              end
-              
-                            
+              end              
               
             else
-              redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=0'
+              redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=0b'
               return
             end
           end
