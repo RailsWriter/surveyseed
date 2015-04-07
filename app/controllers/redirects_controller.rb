@@ -68,7 +68,7 @@ class RedirectsController < ApplicationController
               
               @user = User.find_by user_id: params[:PID]
               
-              if params[:security] != @user.trap_question_2a_response then               
+              if params[:hash] != @user.trap_question_2a_response then               
                 @rfg_redirect = false
                 print "**********************RFG HMAC did NOT match"
                 puts
