@@ -3300,7 +3300,9 @@ class UsersController < ApplicationController
       print "----------------------> HMAC for @rid= ", @rfgHmac
       puts
     
-    
+     @rfgHmachex = HMAC::MD5.new(rfgSecretKey).update(@rid).hexdigest
+     print "----------------------> HEX HMAC for @rid= ", @rfgHmachex
+     puts
     
       
     else
