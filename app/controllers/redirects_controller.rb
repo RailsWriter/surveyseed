@@ -71,9 +71,14 @@ class RedirectsController < ApplicationController
               if params[:security] != @user.trap_question_2a_response then               
                 @rfg_redirect = false
                 print "**********************RFG HMAC did NOT match"
+                puts
+                print "Params[:security]= ", params[:security] and '@user.trap_question_2a_response= ', @user.trap_question_2a_response
+                puts
                 
                 # security term this interaction
                 params[:status]=5
+                print "**********************Set status = 5 for QTERM"
+                puts
               else
                 @rfg_redirect = true
                 print "**********************RFG HMAC matched!"
@@ -1046,7 +1051,7 @@ class RedirectsController < ApplicationController
       when "5"
         # QualityTerminationLink: https://www.ketsci.com/redirects/status?status=5&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
  
-        if params[:PID] == 'test' then
+        if (params[:PID] == 'test') || (@rfg_redirect == false) then
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=1'
         else
                   

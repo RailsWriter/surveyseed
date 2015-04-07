@@ -3513,7 +3513,7 @@ class UsersController < ApplicationController
           # Since valid supplierlinks are available, let us compute rfghmac
       
           rfgSecretKey = 'BZ472UWaLhHO2AtyfeDgzPOTi0435puCjsgSR9D20wZUFBIt2OluFxg1aNW380zR'      
-          @rfgHmac = HMAC::MD5.new(rfgSecretKey).update(@split2)
+          @rfgHmac = HMAC::MD5.new(rfgSecretKey).update(@split2).hexdigest
       
           # using trap_question_2a_response as a temp place to record rfghmac
           user.trap_question_2a_response = @rfgHmac
