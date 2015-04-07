@@ -3286,6 +3286,23 @@ class UsersController < ApplicationController
       puts
       
       
+      
+      
+      print "----------------------> Calculating HMAC for @rid: ", @rid
+      puts
+    
+      # Since valid supplierlinks are available, let us compute rfghmac
+  
+      rfgSecretKey = 'BZ472UWaLhHO2AtyfeDgzPOTi0435puCjsgSR9D20wZUFBIt2OluFxg1aNW380zR'      
+      # @rfgHmac = HMAC::MD5.new(rfgSecretKey).update(@split2).hexdigest
+      @rfgHmac = HMAC::MD5.new(rfgSecretKey).update(@rid)
+      
+      print "----------------------> HMAC for @rid= ", @rfgHmac
+      puts
+    
+    
+    
+      
     else
       # do nothing, no RFG surveys match the user
       puts "************ User did not match any available quota in RFG projects"
