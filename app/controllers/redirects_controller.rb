@@ -72,7 +72,7 @@ class RedirectsController < ApplicationController
                 @rfg_redirect = false
                 print "**********************RFG HMAC did NOT match"
                 puts
-                print "Params[:security]= ", params[:security] and '@user.trap_question_2a_response= ', @user.trap_question_2a_response
+                print "Params[:security]= ", params[:hash], 'and @user.trap_question_2a_response= ', @user.trap_question_2a_response
                 puts
                 
                 # security term this interaction
