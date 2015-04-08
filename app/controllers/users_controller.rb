@@ -1061,12 +1061,12 @@ class UsersController < ApplicationController
         puts "**************** RFG IS at the aHead of FED"
             
       else
-        if (net.Flag5 == "RFGISBACK") then
+        if (net.stackOrder == "RFGISBACK") then
           @RFGIsBack = true
           puts "**************** RFG IS at the Back of FED"
               
         else
-          if (net.Flag5 == "RFGISOFF") then
+          if (net.stackOrder == "RFGISOFF") then
             @RFGIsOff = true
           else
           end    
