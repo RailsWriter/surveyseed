@@ -2366,23 +2366,15 @@ class UsersController < ApplicationController
       
     if Network.where(netid: @netid).exists? then
       net = Network.find_by netid: @netid
-        
-        
-        
-        if net.payout == nil then
-          @currentpayout = 1.49 # ensures breakeven at $1.25 payout
-          @currentpayoutstr = "$"+@currentpayout.to_s
-        else
-          @currentpayout = net.payout  
-          @currentpayoutstr = "$"+@currentpayout.to_s
-        end
-      
-      
-      
-      
-      
-      
   
+      if net.payout == nil then
+        @currentpayout = 1.49 # ensures breakeven at $1.25 payout
+        @currentpayoutstr = "$"+@currentpayout.to_s
+      else
+        @currentpayout = net.payout  
+        @currentpayoutstr = "$"+@currentpayout.to_s
+      end
+       
       if net.RFG_US != nil then
         if (net.RFG_US == 0) && (user.country == "9") then
           @foundtopprojectswithquota = true
@@ -2415,8 +2407,7 @@ class UsersController < ApplicationController
       redirect_to '/users/nosuccess'
       return
     end
-    
-    
+        
     #Initialize an array to store qualified projects
     @RFGQualifiedProjects = Array.new
     @RFGProjectsWithQuota = Array.new
@@ -3217,14 +3208,12 @@ class UsersController < ApplicationController
       end # if foundtopprojects
       
     end # do all projects
-
-      
+    
     print '********** In total USER_ID: ', user.user_id, ' has Quota available for the RFG projects: ', @RFGProjectsWithQuota
     puts
       
     print '********** Total SUPPLIERLINKS for the RFG projects user has quota are: ', @RFGSupplierLinks
     puts
-      
       
     # Assemble additional parameters values to pass with the entry link
       
@@ -3239,8 +3228,7 @@ class UsersController < ApplicationController
     else
       @RFGchildrenvalue = ''
     end
-      
-      
+     
     if @RFGEmployment == nil then        
       @RFGEmployment = ''
     else
@@ -3254,9 +3242,7 @@ class UsersController < ApplicationController
     if @RFGEducationCA == nil then        
       @RFGEducationCA = ''
     else
-    end 
-     
-      
+    end      
       
     if user.country=="9" then 
       @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&age='+user.age+'&rfg2_14785='+user.householdincome+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+@RFGchildrenvalue
@@ -3284,33 +3270,10 @@ class UsersController < ApplicationController
       end
       print "************ RFGSupplierLinks List: ", @RFGSupplierLinks
       puts
-      
-      
-      
-      
-      print "----------------------> Calculating HMAC for @rid: ", @rid
-      puts
-    
-      # Since valid supplierlinks are available, let us compute rfghmac
-  
-      rfgSecretKey = 'BZ472UWaLhHO2AtyfeDgzPOTi0435puCjsgSR9D20wZUFBIt2OluFxg1aNW380zR'      
-      # @rfgHmac = HMAC::MD5.new(rfgSecretKey).update(@split2).hexdigest
-      @rfgHmac = HMAC::MD5.new(rfgSecretKey).update(@rid)
-      
-      print "----------------------> HMAC for @rid= ", @rfgHmac
-      puts
-    
-     @rfgHmachex = HMAC::MD5.new(rfgSecretKey).update(@rid).hexdigest
-     print "----------------------> HEX HMAC for @rid= ", @rfgHmachex
-     puts
-    
-      
     else
       # do nothing, no RFG surveys match the user
       puts "************ User did not match any available quota in RFG projects"
-    end
-    
-    
+    end      
     
     else
     # do nothing for RFG
@@ -3329,7 +3292,7 @@ class UsersController < ApplicationController
 
     # If user is blacklisted, then qterm
     if user.black_listed == true then
-      print '******************** UserID is BLACKLISTED: ', user.user_id
+      print '******************** Userride: UserID is BLACKLISTED: ', user.user_id
       puts
       redirect_to '/users/nosuccess'
       return
@@ -3517,31 +3480,7 @@ class UsersController < ApplicationController
         print '***************** User will be sent to this survey: ', user.SupplierLink[0]
         puts
     
-        @EntryLink = user.SupplierLink[0]
-        
-        if @EntryLink[10..12] == "vey" then
-        
-          puts "*********** Found RFG survey as @EntryLink"
-
-          @ParseUrl = @EntryLink.partition ("&rfg_id")
-          @split2 = "&rfg_id"+@ParseUrl[2]
-          
-          print "********************* Calculating HMAC for: ", @split2
-          puts
-        
-          # Since valid supplierlinks are available, let us compute rfghmac
-      
-          rfgSecretKey = 'BZ472UWaLhHO2AtyfeDgzPOTi0435puCjsgSR9D20wZUFBIt2OluFxg1aNW380zR'      
-          @rfgHmac = HMAC::MD5.new(rfgSecretKey).update(@split2).hexdigest
-      
-          # using trap_question_2a_response as a temp place to record rfghmac
-          user.trap_question_2a_response = @rfgHmac
-        else
-          print "*********** RFG survey as @EntryLink NOT FOUND ", @EntryLink[10..12]
-          puts
-        end
-        
-        
+        @EntryLink = user.SupplierLink[0]        
 #      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
         user.SupplierLink = user.SupplierLink.drop(1)
         user.save

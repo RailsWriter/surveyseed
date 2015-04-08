@@ -64,27 +64,37 @@ class RedirectsController < ApplicationController
               params[:tis] = '20'
               print "********************* Extracted userid from RFG PID to be = ", params[:PID]
               puts
-          
               
-              @user = User.find_by user_id: params[:PID]
-              
-              if params[:hash] != @user.trap_question_2a_response then               
+              @rfgUrl = request.original_url
+              @ParseUrl = @rfgUrl.partition ("?")                
+              @split2 = @ParseUrl[2]
+              @ParseAgain = @split2.partition ("&hash")
+              @plaintext = @ParseAgain[0]
+                
+              print "********************* Calculating HMAC for: ", @plaintext
+              puts
+      
+              rfgSecretKey = 'BZ472UWaLhHO2AtyfeDgzPOTi0435puCjsgSR9D20wZUFBIt2OluFxg1aNW380zR'      
+              @rfgHmac = HMAC::MD5.new(rfgSecretKey).update(@plaintext).hexdigest()
+      
+              if params[:hash] != @rfgHmac then              
                 @rfg_redirect = false
                 print "**********************RFG HMAC did NOT match"
                 puts
-                print "params[:hash]= ", params[:hash], ' @user.trap_question_2a_response= ', @user.trap_question_2a_response
+                print "params[:hash]= ", params[:hash], ' Calculated @rfgHmac= ', @rfgHmac
                 puts
                 
                 # security term this interaction
                 params[:status]="5"
-                print "**********************Set status = 5 for QTERM"
+                print "**********************Set params[:status] = 5 for QTERM"
                 puts
+                
               else
                 @rfg_redirect = true
                 print "**********************RFG HMAC matched!"
                 puts
-              end              
-              
+              end      
+               
             else
               redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=0b'
               return
@@ -95,8 +105,7 @@ class RedirectsController < ApplicationController
     else
       p '****************** Redirects: Signature verified **********************'
     end
-    
-    
+        
     # SurveyExactRank is a counter for failures+OQ
     # SampleTypeID is used to count OQ incidences
     
@@ -314,8 +323,8 @@ class RedirectsController < ApplicationController
               # Save completed project info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
           
             
-              @project.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
-              @project.save
+  #  @project.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
+  #  @project.save
 
               # Save (inverse of) TCR and reset counter for attempts at last complete
             
