@@ -2042,7 +2042,7 @@ class UsersController < ApplicationController
     
     @parsed_user_agent = UserAgent.parse(user.user_agent)
     
-    print "*************************************** RandFEDSurveys: User platform is: ", @parsed_user_agent.platform
+    print "*************************************** RankFEDSurveys: User platform is: ", @parsed_user_agent.platform
     puts
     
     if @parsed_user_agent.platform == 'iPhone' then
@@ -2698,12 +2698,12 @@ class UsersController < ApplicationController
         when "State (US)"
           @QualificationState = false
           (0..project.datapoints[m]["values"].length-1).each do |i|
-            if project.datapoints[m]["values"][i]["choice"] == @StatePrecode.to_i then
+            if project.datapoints[m]["values"][i]["choice"] == @statePrecode.to_i then
               @QualificationState = true
             else
             end
           end
-          print "User entered State: ", @StatePrecode
+          print "User entered State: ", @statePrecode
           puts
           print "Project qual State: ", project.datapoints[m]["values"]
           puts
@@ -3065,12 +3065,12 @@ class UsersController < ApplicationController
             when "State (US)"
               @QualificationState = false
               (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == @StatePrecode.to_i then
+                if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == @statePrecode.to_i then
                   @QualificationState = true
                 else
                 end
               end
-              print "User entered State: ", @StatePrecode
+              print "User entered State: ", @statePrecode
               puts
               print "Project qual State: ", project.quotas[j]["datapoints"][n]["values"]
               puts
