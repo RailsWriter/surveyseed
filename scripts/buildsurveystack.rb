@@ -6,7 +6,7 @@ require 'httparty'
 
 
 
-flag = 'stag'
+flag = 'prod'
 
 
 
