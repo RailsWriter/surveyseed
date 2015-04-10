@@ -38,6 +38,11 @@ class UsersController < ApplicationController
       clickid = params[:clickid]
       
       
+      @locale = Timeout::timeout(5) { Net::HTTP.get_response(URI.parse('http://ipinfo.io/country?ip=' + request.remote_ip )).body } rescue "US"  
+      print "--------------------------->> COUNTRY = ", @locale
+      puts
+      
+      
       # Keep track of clicks on each network as Flag2
       
       @SSnet = Network.find_by netid: netid
@@ -271,6 +276,7 @@ class UsersController < ApplicationController
     
     user.country=params[:country]
     user.save
+    
     if user.country=="9" then 
       redirect_to '/users/qq4_US'
     else
@@ -1084,8 +1090,7 @@ class UsersController < ApplicationController
         
     if net.FED_US != nil then
       if (net.FED_US == 0) && (user.country == "9") then
-        @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
-        # puts "**************** P2S IS at the Head"
+        @foundtopsurveyswithquota = true # true takes users to the next stackOrder
 
       else
         @fed_US = net.FED_US
@@ -1096,9 +1101,8 @@ class UsersController < ApplicationController
       
     if net.FED_CA != nil then
       if (net.FED_CA == 0) && (user.country == "6") then
-        @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
-        # puts "**************** P2S IS at the Head"
-
+        @foundtopsurveyswithquota = true # true takes users to the next stackOrder
+        
       else
         @fed_CA = net.FED_CA
       end        
@@ -1108,8 +1112,7 @@ class UsersController < ApplicationController
       
     if net.FED_AU != nil then
       if (net.FED_AU == 0) && (user.country == "5") then
-        @foundtopsurveyswithquota = true # true takes users to P2S directly, if set as HEAD
-        # puts "**************** P2S IS at the Head"
+        @foundtopsurveyswithquota = true # true takes users to the next stackOrder
 
       else
         @p2s_AU = net.FED_AU
@@ -1234,17 +1237,7 @@ class UsersController < ApplicationController
           puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after specified number of top ranked surveys with quota are found"
       
       
- #         (0..user.QualifiedSurveys.length-1).each do |j| #1
- # delete the j loop and move the section below into the before else clause of qualified surveys found        
-          
-#            @surveynumber = user.QualifiedSurveys[j]
-# delete above and use the survey number in Qualifications j-loop
-            
             @surveynumber = survey.SurveyNumber
-        
-        
-#            Survey.where( "SurveyNumber = ?", @surveynumber).each do |survey| #2
-    # delete the line above because we will be in the qualifications do loop for this survey number
 
 
             @NumberOfQuotas = survey.SurveyQuotas.length-1
@@ -1875,19 +1868,6 @@ class UsersController < ApplicationController
             
               end  # 6
             end #5 if there is quota specified in k = 0 (total) or more (other IDs)
-          
-          
-#           end  #2 End reviewing quotas of a |survey|
-# This end above is redundant since we did not need another survey loop in quotas - just used the one in quals.
-       
-#          end  #1 End j - going through the list of qualified surveys
-           # delete this j-loop end      
-        
-#        end #0 End 'if' user did qualify for any survey(s)
-    
-    # delete this end above because quota check makes this check redundant
-        
-        
         
         
       else

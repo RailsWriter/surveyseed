@@ -6,7 +6,7 @@ require 'httparty'
 
 
 
-flag = 'prod'
+flag = 'stag'
 
 
 
@@ -71,7 +71,7 @@ begin
     
     if (Survey.where("SurveyNumber = ?", offerwallresponse["Surveys"][i]["SurveyNumber"])).exists? == false then
     
-      if ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 5) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 6) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 7) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9)) && ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 17) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 19) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && ((offerwallresponse["Surveys"][i]["CPI"] == nil) || (offerwallresponse["Surveys"][i]["CPI"] > 0.99)) then
+      if ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 5) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 6) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9)) && ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 17) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 19) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && ((offerwallresponse["Surveys"][i]["CPI"] == nil) || (offerwallresponse["Surveys"][i]["CPI"] > 1.24)) then
 
         # Save key data for the NEW survey i
     
@@ -99,9 +99,7 @@ begin
         @survey.TCR = 0.0
         @survey.SurveyExactRank = 0
   
-#        SurveyName = offerwallresponse["Surveys"][i]["SurveyName"]
-        SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]
-        
+        SurveyNumber = offerwallresponse["Surveys"][i]["SurveyNumber"]      
   
         print '********************************************* PROCESSING i =', i
         puts
@@ -110,7 +108,6 @@ begin
         
    
         # Assign an initial ranks to the chosen new survey by its Conv or GCR (GEPC/CPI), if Conv=0. New surveys with Conv>0 are put in 201-300 and Conv=0 are in 401-500.
-        
 
         begin
           sleep(1)
@@ -208,8 +205,7 @@ begin
           @survey.QualificationDMAPreCodes = ["ALL"]
           @survey.QualificationStatePreCodes = ["ALL"]
           @survey.QualificationDivisionPreCodes = ["ALL"]          
-          @survey.QualificationRegionPreCodes = ["ALL"]
-          
+          @survey.QualificationRegionPreCodes = ["ALL"]          
           @survey.QualificationJobTitlePreCodes = ["ALL"]
           @survey.QualificationChildrenPreCodes = ["ALL"]
           
@@ -270,6 +266,27 @@ begin
                   else
                   end
                   @survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+                  
+                  
+                when 12345
+                  if flag == 'stag' then
+                    print 'ZIP_Canada: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+                when 12340
+                  if flag == 'stag' then
+                    print 'Fulcrum_ZIP_AU: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                
+            
+                
                 when 47
                   if flag == 'stag' then
                     print 'HISPANIC->Ethnicity: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
