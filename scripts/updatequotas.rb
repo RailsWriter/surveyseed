@@ -118,6 +118,10 @@ begin
           # Update GEPC and Conversion information for the Existing survey. Ranking script every 20 mins will use the data to update ranks.
           
           
+          # initialize failure count
+          failcount3 = 0
+          
+          
           begin
             sleep(1)
             print '**************************** GETTING GLOBAL STATS (GEPC) for EXISTING survey: ', @surveynumber
@@ -131,10 +135,17 @@ begin
               else
               end
             end
+            
+            # increment failure count
+            failcount3 = failcount3 + 1
+            print "failcount3 =", failcount3
+            puts
+            
+            
               rescue HTTParty::Error => e
               puts 'HttParty::Error '+ e.message
               retry
-          end while SurveyStatistics.code != 200
+          end while ((SurveyStatistics.code != 200) && (failcount3 < 10))
       
 
           if SurveyStatistics["SurveyStatistics"]["EffectiveEPC"] != nil then
@@ -251,6 +262,50 @@ begin
               else
               end
               survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+ 
+
+
+ 
+ 
+            when 12345
+              if flag == 'stag' then
+                print '---------------------->> ZIP_Canada: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+              
+            when 1015
+              if flag == 'prod' then
+                print '------------------->> Province/Territory_of_Canada: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              # survey.QualificationCAProvincePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+              survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+              
+            when 12340
+              if flag == 'prod' then
+                print '----------------->> Fulcrum_ZIP_AU: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+              
+         
+         
+            when 12394
+              if flag == 'prod' then
+                print '----------------->> Fulcrum_Region_AU_ISO: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              #survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes") 
+ 
+ 
+ 
+
+ 
             when 47
               if flag == 'stag' then
                 print 'HISPANIC->Ethnicity: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
@@ -613,6 +668,58 @@ puts
                   else
                   end
                   @newsurvey.QualificationZIPPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                
+                
+                
+                
+                
+                when 12345
+                  if flag == 'stag' then
+                    print '---------------------->> ZIP_Canada: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @newsurvey.QualificationZIPPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+                when 1015
+                  if flag == 'stag' then
+                    print '------------------->> Province/Territory_of_Canada: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  # @@newsurvey.QualificationCAProvincePreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  @newsurvey.QualificationHHCPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+                when 12340
+                  if flag == 'stag' then
+                    print '----------------->> Fulcrum_ZIP_AU: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @newsurvey.QualificationZIPPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+             
+             
+                when 12394
+                  if flag == 'stag' then
+                    print '----------------->> Fulcrum_Region_AU_ISO: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  #@@newsurvey.QualificationZIPPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 when 47
                   if flag == 'stag' then
                     print 'HISPANIC->Ethnicity: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")

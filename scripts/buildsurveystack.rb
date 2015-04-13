@@ -71,7 +71,9 @@ begin
     
     if (Survey.where("SurveyNumber = ?", offerwallresponse["Surveys"][i]["SurveyNumber"])).exists? == false then
     
-      if ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == nil ) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 5) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 6) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9)) && ((offerwallresponse["Surveys"][i]["StudyTypeID"] == nil ) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 17) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 19) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && ((offerwallresponse["Surveys"][i]["CPI"] == nil) || (offerwallresponse["Surveys"][i]["CPI"] > 1.24)) then
+      if ( ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == 5) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 6) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9)) && 
+        ((offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 17) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 19) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && 
+        ((offerwallresponse["Surveys"][i]["CPI"] > 1.49)) ) then
 
         # Save key data for the NEW survey i
     
@@ -270,21 +272,43 @@ begin
                   
                   
                 when 12345
-                  if flag == 'stag' then
-                    print 'ZIP_Canada: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  if flag == 'prod' then
+                    print '---------------------->> ZIP_Canada: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
                   @survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                   
+                when 1015
+                  if flag == 'prod' then
+                    print '------------------->> Province/Territory_of_Canada: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  # @survey.QualificationCAProvincePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  @survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
                 when 12340
-                  if flag == 'stag' then
-                    print 'Fulcrum_ZIP_AU: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  if flag == 'prod' then
+                    print '----------------->> Fulcrum_ZIP_AU: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
                   @survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+             
+             
+                when 12394
+                  if flag == 'stag' then
+                    print '----------------->> Fulcrum_Region_AU_ISO: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  #@survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 
+            
+            
+            
             
                 
                 when 47
@@ -358,7 +382,6 @@ begin
                   else
                   end
                   p '------------------------------------------------------------>> Rename HHComp to STANDARD_EMPLOYMENT: '
-               #  @survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                   @survey.QualificationEmploymentPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
                             
                 when 5729

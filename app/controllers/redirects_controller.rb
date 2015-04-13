@@ -163,107 +163,129 @@ class RedirectsController < ApplicationController
 
             print '******************* Suceess in P2S router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
             puts
-
-            @user.SurveysAttempted << 'P2S-2'
-            # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
             
-            if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
-              @net_name = "Fyber"
+            if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
+              print "************* Click Id already exists - do not postback again!"
+              puts
+      
             else
-            end  
             
-            if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
-              @net_name = "SuperSonic"
-            else
-            end       
+              @user.SurveysAttempted << 'P2S-2'
+              # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
             
-            if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
-              @net_name = "RadiumOne"
-            else
-            end
+              if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
+                @net_name = "Fyber"
+              else
+              end  
             
-            if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
-              @net_name = "SS2"
-            else
-            end
+              if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
+                @net_name = "SuperSonic"
+              else
+              end       
             
-            @user.SurveysCompleted[params[:PID]] = [Time.now, 'P2S', @user.clickid, @net_name]
-            @user.save
+              if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
+                @net_name = "RadiumOne"
+              else
+              end
             
-            print "*************** User.netid is: ", @user.netid
-            puts
+              if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
+                @net_name = "SS2"
+              else
+              end
+            
+              @user.SurveysCompleted[params[:PID]] = [Time.now, 'P2S', @user.clickid, @net_name]
+              @user.save
+            
+              print "*************** User.netid is: ", @user.netid
+              puts
               
-            # Postback the network about success with users clickid
-            if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+              # Postback the network about success with users clickid
+              if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
                 begin
                   @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                     rescue HTTParty::Error => e
                     puts 'HttParty::Error '+ e.message
                     retry
                 end while @FyberPostBack.code != 200
-            else
-            end
+              else
+              end
             
             
-            if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+              if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
        
-              begin
-                @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  rescue HTTParty::Error => e
-                  puts 'HttParty::Error '+ e.message
-                  retry
-              end while @SupersonicPostBack.code != 200
+                begin
+                  @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    rescue HTTParty::Error => e
+                      puts 'HttParty::Error '+ e.message
+                      retry
+                end while @SupersonicPostBack.code != 200
     
-            else
-            end
+              else
+              end
                         
             
-            if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
+              if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
      
-             begin
-               @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                 rescue HTTParty::Error => e
-                puts 'HttParty::Error '+ e.message
-                 retry
-             end while @RadiumOnePostBack.code != 200
+                begin
+                  @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                   rescue HTTParty::Error => e
+                     puts 'HttParty::Error '+ e.message
+                     retry
+                end while @RadiumOnePostBack.code != 200
   
-            else
-            end
+              else
+              end
                         
             
-            if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
+              if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
        
-              begin
-                @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  rescue HTTParty::Error => e
-                  puts 'HttParty::Error '+ e.message
-                  retry
-              end while @SS2PostBack.code != 200
+                begin
+                  @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    rescue HTTParty::Error => e
+                      puts 'HttParty::Error '+ e.message
+                      retry
+                    end while @SS2PostBack.code != 200
     
-            else
-            end
+              else
+              end
                      
             
-            # Keep a count of completes on Supersonic Network
+              # Keep a count of completes on Supersonic Network
             
-            puts "*************** Keeping track of completes on SS network"
+              puts "*************** Keeping track of completes on the corresponding network"
             
-           
-#            if @user.netid = "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
-            @net = Network.find_by netid: @user.netid
+              @net = Network.find_by netid: @user.netid
             
-            if @net.Flag3 == nil then
+              if @net.Flag3 == nil then
               
-              @net.Flag3 = "1" 
-              @net.save
+                @net.Flag3 = "1" 
+                @net.save
               
-            else
+              else
 
-              @net.Flag3 = (@net.Flag3.to_i + 1).to_s
-              @net.save
+                @net.Flag3 = (@net.Flag3.to_i + 1).to_s
+                @net.save
 
-            end
+              end
+              
+              
+              # Count P2S completes
+              
+              @P2Snet = Network.find_by netid: "2222"
+              if @P2Snet.Flag3 == nil then
+              
+                @P2Snet.Flag3 = "1" 
+                @P2Snet.save
+              
+              else
+              
+                @P2Snet.Flag3 = (@P2Snet.Flag3.to_i + 1).to_s
+                @P2Snet.save
+              
+              end
+                            
             
+            end # duplicate is false
              
             # Happy ending
             redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'    
@@ -276,7 +298,7 @@ class RedirectsController < ApplicationController
           
               @user = User.find_by user_id: params[:PID]              
 
-              print '************** Suceess for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+              print '************** Suceess for user_id/PID on RFG: ', params[:PID], ' CID: ', @user.clickid
               puts
           
               @user.SurveysAttempted << params[:tsfn]+'-2'
@@ -415,16 +437,32 @@ class RedirectsController < ApplicationController
               @net = Network.find_by netid: @user.netid
               if @net.Flag3 == nil then
               
-              @net.Flag3 = "1" 
-              @net.save
+                @net.Flag3 = "1" 
+                @net.save
               
-            else
+              else
               
-              @net.Flag3 = (@net.Flag3.to_i + 1).to_s
-              @net.save
+                @net.Flag3 = (@net.Flag3.to_i + 1).to_s
+                @net.save
               
-            end
-                     
+              end
+
+
+              # Count RFG completes
+              
+              @RFGnet = Network.find_by netid: "3333"
+              if @RFGnet.Flag3 == nil then
+              
+                @RFGnet.Flag3 = "1" 
+                @RFGnet.save
+              
+              else
+              
+                @RFGnet.Flag3 = (@RFGnet.Flag3.to_i + 1).to_s
+                @RFGnet.save
+              
+              end
+              
 
               # Happy ending
               redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'

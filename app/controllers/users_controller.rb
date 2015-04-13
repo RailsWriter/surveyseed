@@ -38,9 +38,16 @@ class UsersController < ApplicationController
       clickid = params[:clickid]
       
       
-      @locale = Timeout::timeout(5) { Net::HTTP.get_response(URI.parse('http://ipinfo.io/country?ip=' + request.remote_ip )).body } rescue "US"  
-      print "--------------------------->> COUNTRY = ", @locale
+      @locale1 = Timeout::timeout(5) { Net::HTTP.get_response(URI.parse('http://ipinfo.io/country?')).body }.chop
+      print "--------------------------->> COUNTRY = ", @locale1
       puts
+    
+      locale2 = Timeout::timeout(5) { Net::HTTP.get_response(URI.parse('http://api.hostip.info/country.php?ip=' + request.remote_ip )).body } rescue "US"
+      print "--------------------------->> COUNTRY = ", @locale2
+      puts
+      
+      
+      
       
       
       # Keep track of clicks on each network as Flag2
@@ -277,6 +284,17 @@ class UsersController < ApplicationController
     user.country=params[:country]
     user.save
     
+    @locale1 = Timeout::timeout(5) { Net::HTTP.get_response(URI.parse('http://ipinfo.io/country?')).body }.chop
+    print "--------------------------->> COUNTRY = ", @locale1
+    puts
+    
+    locale2 = Timeout::timeout(5) { Net::HTTP.get_response(URI.parse('http://api.hostip.info/country.php?ip=' + request.remote_ip )).body } rescue "US"
+    print "--------------------------->> COUNTRY = ", @locale2
+    puts
+    
+    
+    
+    
     if user.country=="9" then 
       redirect_to '/users/qq4_US'
     else
@@ -331,7 +349,7 @@ class UsersController < ApplicationController
     
     
     if params[:zip].empty? == false
-      user.ZIP=params[:zip].upcase
+      user.ZIP=params[:zip].upcase.slice(0..2)
       user.save
       redirect_to '/users/qq7_CA'
     else
@@ -720,9 +738,92 @@ class UsersController < ApplicationController
       @GenderPreCode = [ "1" ]
     else
       @GenderPreCode = [ "2" ]
-    end
+    end    
     
-    
+    if user.country == '6' then
+      print "--------------------------->>>>>> First character of CA postalcode = ", user.ZIP.slice(0)
+      puts
+      
+      case user.ZIP.slice(0)
+      when "T"
+        @provincePrecode = "1"
+        puts "Assigned Alberta @provincePrecode = 1"
+        
+      when "V"
+        @provincePrecode = "2"
+        puts "Assigned BC @provincePrecode = 2"
+        
+      when "R"
+        @provincePrecode = "3"
+        puts "Assigned MB @provincePrecode = 3"
+        
+      when "E"
+        @provincePrecode = "4"
+        puts "Assigned NB @provincePrecode = 4"
+        
+      when "A"
+        @provincePrecode = "5"
+        puts "Assigned NL @provincePrecode = 5"
+        
+      when "X"
+        @provincePrecode = "6"
+        puts "Assigned NT @provincePrecode = 6"
+        
+      when "B"
+        @provincePrecode = "7"
+        puts "Assigned NS @provincePrecode = 7"
+        
+        # when "X"  # X would become a duplicate. Nunavut is teh least populated province so this is it
+        # @provincePrecode = "8"
+        # puts "Assigned NU @provincePrecode = 8"
+        
+      when "K"
+        @provincePrecode = "9"
+        puts "Assigned ON @provincePrecode = 9"
+        
+      when "L"
+        @provincePrecode = "9"
+        puts "Assigned ON @provincePrecode = 9"
+        
+      when "M"
+        @provincePrecode = "9"
+        puts "Assigned ON @provincePrecode = 9"
+        
+      when "N"
+        @provincePrecode = "9"
+        puts "Assigned ON @provincePrecode = 9"
+        
+      when "P"
+        @provincePrecode = "9"
+        puts "Assigned ON @provincePrecode = 9"
+
+      when "C"
+        @provincePrecode = "10"
+        puts "Assigned PE @provincePrecode = 10"
+        
+      when "G"
+        @provincePrecode = "11"
+        puts "Assigned QC @provincePrecode = 11"
+        
+      when "H"
+        @provincePrecode = "11"
+        puts "Assigned QC @provincePrecode = 11"
+        
+      when "J"
+        @provincePrecode = "11"
+        puts "Assigned QC @provincePrecode = 11"
+        
+      when "S"
+        @provincePrecode = "12"
+        puts "Assigned SK @provincePrecode = 12"
+        
+      when "Y"
+        @provincePrecode = "13"
+        puts "Assigned YT @provincePrecode = 13"
+      end
+    else
+    end # country == 6
+           
     if user.country == '9' then
       @geo = UsGeo.find_by zip: user.ZIP
       
@@ -1142,7 +1243,7 @@ class UsersController < ApplicationController
       if @foundtopsurveyswithquota == false then  #3 false means not finished finding top surveys
         
 
-        if ( ((survey.CountryLanguageID == 5) || (survey.CountryLanguageID == 6)) &&          
+        if ( ((survey.CountryLanguageID == 5) &&        
           ( survey.SurveyStillLive ) && 
           (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
@@ -1156,6 +1257,26 @@ class UsersController < ApplicationController
           (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&
           (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationChildrenPreCodes.flatten).empty? == false)) &&
           ((survey.CPI == nil) || (survey.CPI >= @currentpayout)) ) ||
+          
+          
+          
+          ((survey.CountryLanguageID == 6) &&          
+          ( survey.SurveyStillLive ) && 
+          (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
+          (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
+          (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
+          (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ])) &&
+          (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ])) &&
+          (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ])) &&
+          (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ])) &&
+          (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ])) &&
+          (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ])) &&     
+          (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&
+          (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationChildrenPreCodes.flatten).empty? == false)) &&
+          (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ])) &&
+          ((survey.CPI == nil) || (survey.CPI >= @currentpayout)) ) ||
+       
+          
           
           ( (survey.CountryLanguageID == 9) &&          
           ( survey.SurveyStillLive ) && 
@@ -1174,7 +1295,7 @@ class UsersController < ApplicationController
           (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ])) && 
           (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ])) && 
           (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ])) &&         
-          ((survey.CPI == nil) || (survey.CPI >= @currentpayout)) )
+          ((survey.CPI == nil) || (survey.CPI >= @currentpayout)) ))
           
           then
           
@@ -1194,7 +1315,9 @@ class UsersController < ApplicationController
           @_jobtitle = (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ]))          
           @_children = (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children  & survey.QualificationChildrenPreCodes.flatten).empty? == false)) 
           @_children_logic = user.children & survey.QualificationChildrenPreCodes.flatten       
+          @_province_check = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ]))
           @_CPI_check = ((survey.CPI == nil) || (survey.CPI >= @currentpayout))
+          
 
         
           print '************ User QUALIFIED for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ..... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.employment, ' Std_Employment PreCode from survey: ', survey.QualificationEmploymentPreCodes, ' User Entered PIndustry: ', user.pindustry, ' PIndustry PreCode from survey: ', survey.QualificationPIndustryPreCodes, ' User Entered JobTitle: ', user.jobtitle, ' JobTitle PreCode from survey: ', survey.QualificationJobTitlePreCodes, ' User Entered Children: ', user.children, ' Children PreCodes from survey: ', survey.QualificationChildrenPreCodes, ' Network Payout: ', @currentpayout, ' CPI from survey: ', survey.CPI, ' SurveyStillAlive: ', survey.SurveyStillLive
@@ -1216,6 +1339,17 @@ class UsersController < ApplicationController
           puts
         else
         end
+        
+        if (survey.CountryLanguageID == 6) then
+          
+          @_province_check = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ]))
+          
+          print '************** CA Province match: ', @_province_check
+          puts
+        else
+        end
+        
+        
 
         user.QualifiedSurveys << survey.SurveyNumber
         
@@ -1888,6 +2022,7 @@ class UsersController < ApplicationController
         @_children = (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children  & survey.QualificationChildrenPreCodes.flatten).empty? == false)) 
         @_children_logic = user.children & survey.QualificationChildrenPreCodes.flatten  
         @_CPI_check = ((survey.CPI == nil) || (survey.CPI >= @currentpayout))
+        @_province_check = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ]))
 
         
         
@@ -1910,6 +2045,15 @@ class UsersController < ApplicationController
         else
         end
         
+        
+        if (survey.CountryLanguageID == 6) then
+          
+          @_province_check = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ]))
+          
+          print '************** CA Province match: ', @_province_check
+          puts
+        else
+        end
         
         
         if ((survey.CountryLanguageID == 5) || (survey.CountryLanguageID == 6)) && ( survey.QualificationZIPPreCodes.flatten != [ "ALL" ] ) then 
@@ -2006,7 +2150,7 @@ class UsersController < ApplicationController
       @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP+'&HISPANIC='+user.ethnicity+'&ETHNICITY='+user.race+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_US='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
     else
       if user.country=="6" then
-        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP.slice(0..2)+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
+        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
       else
         if user.country=="5" then
           @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
@@ -2394,7 +2538,7 @@ class UsersController < ApplicationController
     @RFGSupplierLinks = Array.new
     
               
-    RfgProject.where("country = ? AND state = ?", user_country, 2).order(projectEPC: :desc).order(epc: :desc).each do |project|
+    RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectEPC: :desc).each do |project|
 
       if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects
         
@@ -2419,9 +2563,10 @@ class UsersController < ApplicationController
         
           case project.datapoints[m]["name"]
           when "Age"
-            @QualificationAge = true
+            # logic: once found true then set to true
+            @QualificationAge = false
             (0..project.datapoints[m]["values"].length-1).each do |i|
-              @QualificationAge = (project.datapoints[m]["values"][i]["min"]..project.datapoints[m]["values"][i]["max"]).include?(user.age.to_i) && @QualificationAge
+              @QualificationAge = (project.datapoints[m]["values"][i]["min"]..project.datapoints[m]["values"][i]["max"]).include?(user.age.to_i) || @QualificationAge
             end
             print "User entered age: ", user.age
             puts
@@ -2783,9 +2928,10 @@ class UsersController < ApplicationController
                                         
               case project.quotas[j]["datapoints"][n]["name"]
               when "Age"
-                @QualificationAge = true
+                #logic: once found true then turn to true
+                @QualificationAge = false
                 (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                  @QualificationAge = (project.quotas[j]["datapoints"][n]["values"][i]["min"]..project.quotas[j]["datapoints"][n]["values"][i]["max"]).include?(user.age.to_i) && @QualificationAge
+                  @QualificationAge = (project.quotas[j]["datapoints"][n]["values"][i]["min"]..project.quotas[j]["datapoints"][n]["values"][i]["max"]).include?(user.age.to_i) || @QualificationAge
                 end
                 print "User entered age: ", user.age
                 puts
@@ -3282,8 +3428,14 @@ class UsersController < ApplicationController
     # FED or RFG go first
     
     if (@RFGIsBack) then
-      user.SupplierLink << @RFGSupplierLinks
-      puts "RFG is Back"
+      
+      if user.SupplierLink == nil then
+        user.SupplierLink = @RFGSupplierLinks
+      else      
+        user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
+        puts "RFG is Back"
+      end
+
     else
       if (@RFGIsFront) then
         puts "RFG is Front"
@@ -3456,14 +3608,15 @@ class UsersController < ApplicationController
         redirect_to @EntryLink
       
       else
-      
-        print '***************** User will be sent to this survey: ', user.SupplierLink[0]
-        puts
     
         @EntryLink = user.SupplierLink[0]        
 #      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
         user.SupplierLink = user.SupplierLink.drop(1)
         user.save
+        
+        print '***************** User will be sent to this @EntryLink: ', @EntryLink
+        puts
+        
         redirect_to @EntryLink
       
       end # if user.SupplierLink[0] == @p2sSupplierLink then
@@ -3491,102 +3644,109 @@ class UsersController < ApplicationController
   def p3action
     session_id = session.id
     user = User.find_by session_id: session_id
-    print '****************************** CID= ', user.clickid, ' NetId= ', user.netid
+    print '******************************Test SUCCESS for CID= ', user.clickid, ' NetId= ', user.netid
     puts
     
-    #Postback test complete
+    if user.SurveysCompleted.flatten(2).include? (user.clickid) then
+      print "************* Click Id already exists - do not postback again!"
+      puts
+      
+    else
+          
+      #Postback test complete
     
-    if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+      if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
 
-      begin
-        @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+        begin
+          @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
           rescue HTTParty::Error => e
             puts 'HttParty::Error '+ e.message
             retry
           end while @FyberPostBack.code != 200
     
-    else
-    end
+      else
+      end
     
-    if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+      if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
        
-      begin
-        @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-        rescue HTTParty::Error => e
-        puts 'HttParty::Error '+ e.message
-        retry
-      end while @SupersonicPostBack.code != 200
-    
-    else
-    end  
-  
-    if user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
-
-      begin
-        @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-       rescue HTTParty::Error => e
-      puts 'HttParty::Error '+ e.message
-       retry
-     end while @RadiumOnePostBack.code != 200
-
-    else
-    end  
-    
-    if user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
-       
-      begin
-        @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+        begin
+          @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
           rescue HTTParty::Error => e
             puts 'HttParty::Error '+ e.message
             retry
-      end while @SS2PostBack.code != 200
+          end while @SupersonicPostBack.code != 200
     
-    else
-    end
+      else
+      end  
   
-    # Keep a count of Test completes on each Network
-  
-    puts "*************** Keeping track of Test completes on each network"
-  
- 
-    @net = Network.find_by netid: user.netid
+      if user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
 
-    if @net.Flag4 == nil then
-      @net.Flag4 = "1" 
-    else
-      @net.Flag4 = (@net.Flag4.to_i + 1).to_s
-    end
-  
-    @net.save
-  
-  
-    # Save Test completed information by user
-  
-    if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
-      @net_name = "Fyber"
-    else
-    end
-  
-    if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
-      @net_name = "SuperSonic"
-    else
-    end
-  
-    if user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
-      @net_name = "RadiumOne"
-    else
-    end
-  
-    if user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
-      @net_name = "SS2"
-    else
-    end 
+        begin
+          @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+         rescue HTTParty::Error => e
+           puts 'HttParty::Error '+ e.message
+          retry
+        end while @RadiumOnePostBack.code != 200
+
+      else
+      end  
     
-    user.SurveysAttempted << 'TESTSURVEY'
-    user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
-    user.save
+      if user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
+       
+        begin
+          @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+            rescue HTTParty::Error => e
+              puts 'HttParty::Error '+ e.message
+            retry
+          end while @SS2PostBack.code != 200
+    
+      else
+      end
+  
+      # Keep a count of Test completes on each Network
+  
+      puts "*************** Track Test completes on each network"
+  
+      @net = Network.find_by netid: user.netid
+
+      if @net.Flag4 == nil then
+        @net.Flag4 = "1" 
+      else
+        @net.Flag4 = (@net.Flag4.to_i + 1).to_s
+      end
+  
+      @net.save
+  
+      # Save Test completed information by user
+  
+      if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
+        @net_name = "Fyber"
+      else
+      end
+  
+      if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
+        @net_name = "SuperSonic"
+      else
+      end
+  
+      if user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
+        @net_name = "RadiumOne"
+      else
+      end
+  
+      if user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
+        @net_name = "SS2"
+      else
+      end 
+    
+      user.SurveysAttempted << 'TESTSURVEY'
+      user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
+      user.save
+    
+    end # duplicate is false
     
     redirect_to '/users/successful'
+    
   end
 
 end
