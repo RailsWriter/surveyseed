@@ -176,9 +176,13 @@ begin
         @project.terminates = RFGProjectStats["response"]["terminates"]
         @project.quotasfull = RFGProjectStats["response"]["quotas"]
         @project.cr = RFGProjectStats["response"]["cr"]
-        if RFGProjectStats["response"]["epc"] == "0" then
+        if (RFGProjectStats["response"]["epc"] == "0") || (RFGProjectStats["response"]["epc"] == 0 ) then
+          print "-------------->>> (if) EPC is ", RFGProjectStats["response"]["epc"]
+          puts
           @project.epc = "$.00"
         else
+          print "-------------->>> (else) EPC is ", RFGProjectStats["response"]["epc"]
+          puts
           @project.epc = RFGProjectStats["response"]["epc"]
         end
         @project.projectCR = RFGProjectStats["response"]["projectCR"]
