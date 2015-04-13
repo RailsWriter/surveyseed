@@ -176,7 +176,11 @@ begin
         @project.terminates = RFGProjectStats["response"]["terminates"]
         @project.quotasfull = RFGProjectStats["response"]["quotas"]
         @project.cr = RFGProjectStats["response"]["cr"]
-        @project.epc = RFGProjectStats["response"]["epc"]
+        if RFGProjectStats["response"]["epc"] == "0" then
+          @project.epc = "$.00"
+        else
+          @project.epc = RFGProjectStats["response"]["epc"]
+        end
         @project.projectCR = RFGProjectStats["response"]["projectCR"]
         @project.projectEPC = RFGProjectStats["response"]["projectEPC"]
         

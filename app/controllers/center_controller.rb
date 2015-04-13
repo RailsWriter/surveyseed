@@ -109,7 +109,7 @@ class CenterController < ApplicationController
     
     def RFGProjects_US
       
-      @projects = RfgProject.where("country = ?", "US").order(projectEPC: :desc).order(epc: :desc).each
+      @projects = RfgProject.where("country = ?", "US").order(epc: :desc).order(projectEPC: :desc).each
     
       respond_to do |format|
         format.html # home.html.erb

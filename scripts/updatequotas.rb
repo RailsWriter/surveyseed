@@ -181,10 +181,6 @@ begin
           
 
       # By default all users are qualified
-      
-      # Change HHC to Employment
-      
-      
 
       survey.QualificationAgePreCodes = ["ALL"]
       survey.QualificationGenderPreCodes = ["ALL"]
@@ -207,8 +203,6 @@ begin
 
 
     # Update specific qualifications to be current information
-      
-      # Change HHC to Employment      
 
       if SurveyQualifications["SurveyQualification"]["Questions"] == nil then
         
@@ -369,8 +363,6 @@ begin
                 puts
               else
               end
-              p '------------------------------------------------------------>> Rename HHComp to STANDARD_EMPLOYMENT: '
-          #    survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
               survey.QualificationEmploymentPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
 
               
@@ -591,8 +583,6 @@ puts
           end while NewSurveyQualifications.code != 200
 
           # By default all users are qualified
-               
-          # Change HHC to Employment
     
           @newsurvey.QualificationAgePreCodes = ["ALL"]
           @newsurvey.QualificationGenderPreCodes = ["ALL"]
@@ -615,8 +605,6 @@ puts
           
           
           # Insert specific qualifications where required
-          
-          # Change HHC to Employment
 
           if NewSurveyQualifications["SurveyQualification"]["Questions"] == nil then
             puts '***************** SurveyQualifications or Questions is NIL'
@@ -783,8 +771,6 @@ puts
                     puts
                   else
                   end
-                  p '------------------------------------------------------------>> Rename HHComp to STANDARD_EMPLOYMENT: '
-                #  @newsurvey.QualificationHHCPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
                   @newsurvey.QualificationEmploymentPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                    
                   
