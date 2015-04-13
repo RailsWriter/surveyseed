@@ -3,6 +3,7 @@ class UsersController < ApplicationController
   require 'httparty'
   require 'mixpanel-ruby'
   require 'hmac-md5'
+  
 
   def new
     #    @user = User.new
@@ -37,12 +38,16 @@ class UsersController < ApplicationController
       netid = params[:netid]
       clickid = params[:clickid]
       
+      @country = request.location.country_code
+      print "--------------------------->> Geocoder COUNTRY = ", @country
+      puts
+      
       
       @locale1 = Timeout::timeout(5) { Net::HTTP.get_response(URI.parse('http://ipinfo.io/country?')).body }.chop
       print "--------------------------->> COUNTRY = ", @locale1
       puts
     
-      locale2 = Timeout::timeout(5) { Net::HTTP.get_response(URI.parse('http://api.hostip.info/country.php?ip=' + request.remote_ip )).body } rescue "US"
+      @locale2 = Timeout::timeout(5) { Net::HTTP.get_response(URI.parse('http://api.hostip.info/country.php?ip=' + request.remote_ip )).body } rescue "US"
       print "--------------------------->> COUNTRY = ", @locale2
       puts
       
