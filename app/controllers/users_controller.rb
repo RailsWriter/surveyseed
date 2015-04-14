@@ -1207,6 +1207,7 @@ class UsersController < ApplicationController
         else
           if (net.stackOrder == "RFGISOFF") then
             @RFGIsOff = true
+            puts "-------------------------->> **************** RFG IS OFF"
           else
           end    
         end
@@ -2223,7 +2224,7 @@ class UsersController < ApplicationController
     
     # Select RFG projects
     selectRfgProjects(session_id)  
-      
+        
   end # ranksurveys 
   
   def selectRfgProjects (session_id)
@@ -2231,7 +2232,7 @@ class UsersController < ApplicationController
     user=User.find_by session_id: session_id
     
     @RFGclient = Network.find_by name: "RFG"
-    if @RFGclient.status == "ACTIVE" then
+    if (@RFGclient.status == "ACTIVE") && (@RFGIsOff != true) then
       @rid = @RFGclient.netid+user.user_id
     
       print "**************** Assigned RFG @rid = ", @rid
@@ -3435,7 +3436,7 @@ class UsersController < ApplicationController
     
     else
     # do nothing for RFG
-    end # RFG status is ACTIVE
+    end # RFG status is ACTIVE / OFF
     
     
     # Begin the ride

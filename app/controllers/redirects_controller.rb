@@ -520,13 +520,6 @@ class RedirectsController < ApplicationController
 
               @survey = Survey.find_by SurveyNumber: params[:tsfn]
             
-            
- #             if (@survey == nil) then
-#              sleep(1)
- #             @survey = Survey.find_by SurveyNumber: params[:tsfn]
-#              puts " *********** Retried retrieving survey"
- #           else
-  #          end    
         
               print '************ Successfully completed survey:', @survey.SurveyNumber
               puts
