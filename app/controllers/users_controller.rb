@@ -38,9 +38,14 @@ class UsersController < ApplicationController
       netid = params[:netid]
       clickid = params[:clickid]
       
-      @country = request.location.country_code
-      print "--------------------------->> Geocoder COUNTRY = ", @country
-      puts
+      if (netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA") ||  (netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl") || (netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh") then
+        @country = "US"
+      else
+        
+        @country = request.location.country_code
+        print "--------------------------->> Geocoder COUNTRY = ", @country
+        puts
+      end
       
 
       if @country == "US" then
