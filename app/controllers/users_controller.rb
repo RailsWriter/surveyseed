@@ -38,37 +38,37 @@ class UsersController < ApplicationController
       netid = params[:netid]
       clickid = params[:clickid]
       
-      if (netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA") ||  (netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl") || (netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh") then
-        @country = "US"
-      else
+ #     if (netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA") ||  (netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl") || (netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh") then
+  #      @country = "US"
+  #    else
         
-        @country = request.location.country_code
-        print "--------------------------->> Geocoder COUNTRY = ", @country
-        puts
-      end
+  #      @country = request.location.country_code
+  #      print "--------------------------->> Geocoder COUNTRY = ", @country
+  #      puts
+   #   end
       
 
-      if @country == "US" then
-        @countryPrecode = "9"
-        print "--------------------------->> @countryPrecode = ", @countryPrecode
-        puts
-      else
-        if @country == "CA" then
-          @countryPrecode = "6"
-          print "--------------------------->> @countryPrecode = ", @countryPrecode
-          puts
-        else
-          if @country == "AU" then
-            @countryPrecode = "5"
-            print "--------------------------->> @countryPrecode = ", @countryPrecode
-            puts
-          else
-            @countryPrecode = "9"
-            print "--------------------------->> **** DEFAULT **** @countryPrecode = ", @countryPrecode
-            puts
-          end
-        end
-      end
+  #    if @country == "US" then
+  #      @countryPrecode = "9"
+  #      print "--------------------------->> @countryPrecode = ", @countryPrecode
+  #      puts
+  #    else
+  #      if @country == "CA" then
+  #        @countryPrecode = "6"
+  #        print "--------------------------->> @countryPrecode = ", @countryPrecode
+  #        puts
+  #      else
+  #        if @country == "AU" then
+  #          @countryPrecode = "5"
+  #          print "--------------------------->> @countryPrecode = ", @countryPrecode
+  #          puts
+  #        else
+  #          @countryPrecode = "9"
+  #          print "--------------------------->> **** DEFAULT **** @countryPrecode = ", @countryPrecode
+  #          puts
+  #        end
+  #      end
+  #    end
       
       
       # Keep track of clicks on each network as Flag2
@@ -239,29 +239,29 @@ class UsersController < ApplicationController
     if params[:color]=="Green" then
       user.save
       
-      if user.country=="9" then 
-        redirect_to '/users/qq4_US'
-      else
-        if user.country=="6" then
-          redirect_to '/users/qq4_CA'
-        else
-          if user.country=="5" then
-            redirect_to '/users/qq4_AU'
-          else
-            if user.country=="7" then
-              redirect_to '/users/qq4_IN'
-            else
-              if user.country=="0" then
-               redirect_to '/users/nosuccess'
-              else
-               redirect_to '/users/qq4_US'
-              end
-            end
-          end
-        end
-      end     
+#      if user.country=="9" then 
+#        redirect_to '/users/qq4_US'
+#      else
+#        if user.country=="6" then
+#          redirect_to '/users/qq4_CA'
+#        else
+#          if user.country=="5" then
+#            redirect_to '/users/qq4_AU'
+#          else
+#            if user.country=="7" then
+#              redirect_to '/users/qq4_IN'
+#            else
+#              if user.country=="0" then
+#               redirect_to '/users/nosuccess'
+#              else
+#               redirect_to '/users/qq4_US'
+#              end
+#            end
+#          end
+#        end
+#      end     
       
-      #redirect_to '/users/qq3'
+      redirect_to '/users/qq3'
     else
       user.watch_listed=true
       user.save
