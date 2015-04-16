@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150410194249) do
+ActiveRecord::Schema.define(version: 20150416054209) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -59,14 +59,14 @@ ActiveRecord::Schema.define(version: 20150410194249) do
     t.integer  "currentCompletes"
     t.boolean  "collectsPII"
     t.integer  "state"
-    t.text     "datapoints",         limit: 1000000
+    t.text     "datapoints",             limit: 1000000
     t.datetime "lastModified"
     t.string   "duplicationKey"
     t.integer  "filterMode"
     t.boolean  "isRecontact"
     t.string   "mobileOptimized"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.integer  "starts"
     t.integer  "completes"
     t.integer  "terminates"
@@ -77,9 +77,12 @@ ActiveRecord::Schema.define(version: 20150410194249) do
     t.string   "projectEPC"
     t.string   "quotaLimitBy"
     t.boolean  "excludeNonMatching"
-    t.text     "quotas",             limit: 1000000
+    t.text     "quotas",                 limit: 1000000
     t.string   "link"
     t.boolean  "projectStillLive"
+    t.integer  "NumberofAttempts"
+    t.integer  "AttemptsAtLastComplete"
+    t.text     "CompletedBy"
   end
 
   create_table "surveys", force: true do |t|
