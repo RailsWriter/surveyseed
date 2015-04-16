@@ -105,22 +105,6 @@ class CenterController < ApplicationController
     def show_users_IN
       @users = User.where("country = ?", '7').each
     end
-      
-    
-    def RFGProjects_US
-      
-      @projects = RfgProject.where("country = ?", "US").order(epc: :desc).order(projectEPC: :desc).each
-    
-      respond_to do |format|
-        format.html # home.html.erb
-        format.json { render json: @projects }
-      end      
-    end
-
-    def show_surveys_US
-      @projects = RfgProject.where("country = ?", "US").each  
-    end
-  
   
     def RFGProjects_CA
       
@@ -132,12 +116,27 @@ class CenterController < ApplicationController
       end      
     end
 
-    def show_surveys_CA
+    def show_projects_CA
       @projects = RfgProject.where("country = ?", "CA").each  
     end
     
     
     
+    def RFGProjects_US
+      
+      @projects = RfgProject.where("country = ?", "US").order(epc: :desc).order(projectEPC: :desc).each
+    
+      respond_to do |format|
+        format.html # home.html.erb
+        format.json { render json: @projects }
+      end      
+    end
+
+    def show_projects_US
+      @projects = RfgProject.where("country = ?", "US").each  
+    end
+    
+        
 #    def alllNets
       
 #      @networks = Network.where("status = ?", "ACTIVE").last(10).each
@@ -151,10 +150,5 @@ class CenterController < ApplicationController
 #    def show_networks
 #      @networks = Network.where("status = ?", "ACTIVE").each
 #    end
-    
-    
-    
-    
-    
-  
+   
 end

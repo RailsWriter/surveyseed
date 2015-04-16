@@ -9,6 +9,6 @@
 
 	<% @projects.each do |c| %>
 	    <li>
-	       <%= link_to c.rfg_id.to_s + '---' + c.id.to_s + '---' + c.country.to_s + '---' + c.epc.to_s + '-------' + c.cpi.to_s + '-----' + (c.projectEPC).to_s + '------------------' + (c.desiredCompletes - c.currentCompletes).to_s + '------------------' + c.created_at.to_date.to_s, :action =>'show_surveys_CA', :id =>c.id  -%>
+	       <%= link_to c.rfg_id.to_s + '---' + c.id.to_s + '---' + c.country.to_s + '---' + c.epc.to_s + '-------' + c.cpi.to_s + '-----' + (c.projectEPC).to_s + '------------------' + (c.desiredCompletes - c.currentCompletes).to_s + '------------------' + c.created_at.to_date.to_s + '------------------' + c.NumberofAttempts.to_s + '------------------' + c.AttemptsAtLastComplete.to_s, :action =>'show_projects_CA', :id =>c.id  -%>
 	    </li>
 	<% end %>
