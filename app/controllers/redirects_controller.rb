@@ -77,7 +77,7 @@ class RedirectsController < ApplicationController
               rfgSecretKey = 'BZ472UWaLhHO2AtyfeDgzPOTi0435puCjsgSR9D20wZUFBIt2OluFxg1aNW380zR'      
               @rfgHmac = HMAC::MD5.new(rfgSecretKey).update(@plaintext).hexdigest()
       
-              if params[:hash] != @rfgHmac then              
+              if params[:hash] != @rfgHmac then
                 @rfg_redirect = false
                 print "**********************RFG HMAC did NOT match"
                 puts
@@ -106,9 +106,7 @@ class RedirectsController < ApplicationController
       p '****************** Redirects: Signature verified **********************'
     end
         
-    # SurveyExactRank is a counter for failures+OQ
-    # SampleTypeID is used to count OQ incidences
-    
+    # SurveyExactRank is a counter for failures+OQ+Term on FED    
     
     case params[:status] 
           
@@ -342,45 +340,34 @@ class RedirectsController < ApplicationController
                  
               print '************ Successfully completed project:', @project.rfg_id
               puts
-              # Save completed project info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
-          
-            
-  #  @project.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
-  #  @project.save
-
-              # Save (inverse of) TCR and reset counter for attempts at last complete
-            
-        #      @survey.SurveyExactRank = @survey.SurveyExactRank + 1  # SurveyExactRank=Failure+OQ+Success count
-        #      @NumberofAttemptsSinceLastComplete = @survey.SurveyExactRank - @survey.NumberofAttemptsAtLastComplete
-        #      @survey.TCR = (1.0 / @NumberofAttemptsSinceLastComplete).round(3)
-
-        #      @survey.NumberofAttemptsAtLastComplete = @survey.SurveyExactRank
-            
-              # Move the just converted survey to F or S immediately, if it is already not there
-            
-        #      if (@survey.SurveyGrossRank > 200) then
+             
+              # Save completed project info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}            
+              @project.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
+  
+              # Save attempts counts
+              if (@project.NumberofAttempts == nil) then
+                @project.NumberofAttempts = 0
+              else
+              end
               
-        #      if (@survey.CPI > 1.49) then
-      
-        #        @survey.SurveyGrossRank = 201 - (@survey.TCR * 100)
-        #        print "**************** Assigned just converted survey to Fast: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
-        #        @survey.label = 'F: JUST CONVERTED'
-      
-        #      else
-      
-        #          @survey.SurveyGrossRank = 101 - (@survey.TCR * 100)
-        #          print "************** Assigned Just converted to Safety: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
-        #          @survey.label = 'S: JUST CONVERTED'
-        
-        #      end 
-
-        #    else
-
-              # the survey is already in F or S i.e. rank is <= 200. do nothing
-
-        #    end
-
-        #      @survey.save
+              if (@project.AttemptsAtLastComplete == nil) then
+                @project.AttemptsAtLastComplete = 0
+              else
+              end
+                            
+              @project.NumberofAttempts = @project.NumberofAttempts + 1
+              @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+              @project.AttemptsAtLastComplete = @project.NumberofAttempts
+              if @RFGAttemptsSinceLastComplete - @project.AttemptsAtLastComplete  > 20 then
+                @project.epc = "$.00"
+                @project.projectEPC = "$.00"
+              else
+              end
+              
+              print "Updating Attempts count for project in Success: ", @project.rfg_id
+              puts
+              @project.save
+  
 
               # Postback the network about success with users clickid
             
@@ -467,17 +454,6 @@ class RedirectsController < ApplicationController
               # Happy ending
               redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'
              
-             
-              
-          
-          
-          
-          
-          
-          
-          
-          
-          
               
             else # not a RFG project. it must be a FED survey
             
@@ -680,69 +656,55 @@ class RedirectsController < ApplicationController
               if params[:tsfn] != nil then
                 @user.SurveysAttempted << params[:tsfn]+'-3'                   
                 @user.save
-            
-            
-#                @project = RfgProject.find_by rfg_id: params[:tsfn]
+              else
+              end
               
-#                if (@project == nil) then
-#                  sleep(1)
-#                  @project = RfgProject.find_by rfg_id: params[:tsfn]
-#                  puts " *********** Retried retrieving project"
-                else
-                end
-                
-            
-                # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
-#                @survey.SurveyExactRank = @survey.SurveyExactRank + 1
-#                @survey.FailureCount = @survey.FailureCount + 1
-#                print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn], ' new ExactRank (Failure+OQ+Success) count= ', @survey.SurveyExactRank
-#                puts
+              # Save attempts counts by project
               
-#                @project.save
-            
-#              else # if params[tsfn] != nil
-#              end # if params[tsfn] != nil
+              @project = RfgProject.find_by rfg_id: params[:tsfn]
+              
+              if (@project.NumberofAttempts == nil) then
+                @project.NumberofAttempts = 0
+              else
+              end
+              
+              if (@project.AttemptsAtLastComplete == nil) then
+                @project.AttemptsAtLastComplete = 0
+              else
+              end              
+              
+              @project.NumberofAttempts = @project.NumberofAttempts + 1
+              @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+              #@project.AttemptsAtLastComplete = @project.NumberofAttempts
+              if @RFGAttemptsSinceLastComplete - @project.AttemptsAtLastComplete  > 20 then
+                @project.epc = "$.00"
+                @project.projectEPC = "$.00"
+              else
+              end
+              
+              print "Updating Attempts count for project in Fail: ", @project.rfg_id
+              puts  
+              @project.save
+
             
               # Give user chance to take another survey unless they do not qualify for any (other) survey
 
               if (@user.SupplierLink.empty? == false) then
-
-#                if (@user.SupplierLink.length == 1) then #P2S is the next link
-          
+                          
                   print 'User will be sent to this survey: ', @user.SupplierLink[0]
                   puts
                   @NextEntryLink = @user.SupplierLink[0]
                   @user.SupplierLink = @user.SupplierLink.drop(1)
                   @user.save
                   redirect_to @NextEntryLink
-           
-#                else 
-                
-#                print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-#                  print 'User will be sent to this project: ', @user.SupplierLink[0]
-#                  puts
-#                  @NextEntryLink = @user.SupplierLink[0]
-              #  @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-              #  @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
-#                  @user.SupplierLink = @user.SupplierLink.drop(1)
-#                  @user.save
-#                  redirect_to @NextEntryLink
-
-#                end
 
               else # if SupplierLink empty?
               
                 redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
               
               end # if SupplierLink empty?
-
-
-
-
-
               
-            else # must be FED
-            
+            else # must be FED            
             
               # save attempt info in User and Survey tables
               @user = User.find_by user_id: params[:PID]          
@@ -754,8 +716,7 @@ class RedirectsController < ApplicationController
               # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
               if params[:tsfn] != nil then
                 @user.SurveysAttempted << params[:tsfn]+'-3'                   
-                @user.save
-            
+                @user.save            
             
                 @survey = Survey.find_by SurveyNumber: params[:tsfn]
               
@@ -765,8 +726,7 @@ class RedirectsController < ApplicationController
                   puts " *********** Retried retrieving survey"
                 else
                 end
-                
-            
+                            
                 # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
                 @survey.SurveyExactRank = @survey.SurveyExactRank + 1
                 @survey.FailureCount = @survey.FailureCount + 1
@@ -781,56 +741,6 @@ class RedirectsController < ApplicationController
               # Give user chance to take another survey unless they do not qualify for any (other) survey
 
               if (@user.SupplierLink.empty? == false) then
-              
-              
-#              if @user.children != nil then
-#                @childrenvalue = '&Age_and_Gender_of_Child='+@user.children[0]
-#                if @user.children.length > 1 then
-#                  (1..@user.children.length-1).each do |i|
-#                    @childrenvalue = @childrenvalue+'&Age_and_Gender_of_Child='+@user.children[i]
-#                  end
-#                else
-#                end
-#              else
-#              end
-              
-  
-#              if @user.country=="9" then 
-#                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
-#              else
-#                if @user.country=="6" then
-#                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
-#                else
-#                  if @user.country=="5" then
-#                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
-#                  else
-#                    if @user.country=="7" then
-#                      @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
-#                    else
-#                      puts "*************************************** Redirects: Find out why country code is not correctly set"
-#                      @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
-#                      return
-#                    end
-#                  end
-#                end
-#              end
-  
-#              @redirects_parsed_user_agent = UserAgent.parse(@user.user_agent)
-    
-#              print "*************************************** Redirects: User platform is: ", @redirects_parsed_user_agent.platform
-#              puts
-    
-#              if @redirects_parsed_user_agent.platform == 'iPhone' then
-      
-#                @MS_is_mobile = '&MS_is_mobile=true'
-#                p "*************************************** Redirects: MS_is_mobile is set TRUE"
-      
-#              else
-#                @MS_is_mobile = '&MS_is_mobile=false'
-#                p "*************************************** Redirects: MS_is_mobile is set FALSE"
-      
-#              end
-
 
                 if (@user.SupplierLink.length == 1) then #P2S is the next link
           
@@ -842,13 +752,10 @@ class RedirectsController < ApplicationController
                   redirect_to @NextEntryLink
            
                 else
-                
-#                print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
+
                   print 'User will be sent to this survey: ', @user.SupplierLink[0]
                   puts
                   @NextEntryLink = @user.SupplierLink[0]
-#                @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-              #  @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
                   @user.SupplierLink = @user.SupplierLink.drop(1)
                   @user.save
                   redirect_to @NextEntryLink
@@ -903,28 +810,36 @@ class RedirectsController < ApplicationController
               puts          
           
               @user.SurveysAttempted << params[:tsfn]+'-4'
-              @user.save
-          
-          
-#              @survey = Survey.find_by SurveyNumber: params[:tsfn]
-            
-#              if (@survey == nil) then
-#                sleep(1)
-#                @survey = Survey.find_by SurveyNumber: params[:tsfn]
-#                puts " *********** Retried retrieving survey"
-#              else
-#              end    
-          
-              # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
+              @user.save    
 
-#              @survey.OverQuotaCount = @survey.OverQuotaCount + 1
 
-#              @survey.SurveyExactRank = @survey.SurveyExactRank + 1
-#              print '********************************* Unsuccessful attempts count raised by 1 following an OQ for survey number: ', params[:tsfn]
-#              puts
-            
-#              @survey.save
-            
+              
+              # Save attempts counts by project
+              @project = RfgProject.find_by rfg_id: params[:tsfn]
+              
+              if (@project.NumberofAttempts == nil) then
+                @project.NumberofAttempts = 0
+              else
+              end
+              
+              if (@project.AttemptsAtLastComplete == nil) then
+                @project.AttemptsAtLastComplete = 0
+              else
+              end
+              
+              @project.NumberofAttempts = @project.NumberofAttempts + 1
+              @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+              #@project.AttemptsAtLastComplete = @project.NumberofAttempts
+              if @RFGAttemptsSinceLastComplete - @project.AttemptsAtLastComplete  > 20 then
+                @project.epc = "$.00"
+                @project.projectEPC = "$.00"
+              else
+              end
+  
+              print "Updating Attempts count for project in OQ: ", @project.rfg_id
+              puts
+              @project.save
+
           
 
               # Give user chance to take another survey
@@ -939,30 +854,12 @@ class RedirectsController < ApplicationController
                 @user.SupplierLink = @user.SupplierLink.drop(1)
                 @user.save
                 redirect_to @NextEntryLink
-           
-#              else
-        
-        #      print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-#                print 'User will be sent to this survey: ', @user.SupplierLink[0]
-#                puts
-          #    @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
-#                @NextEntryLink = @user.SupplierLink[0]
-            #  @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
-#                @user.SupplierLink = @user.SupplierLink.drop(1)
-#                @user.save
-#                redirect_to @NextEntryLink
-#              end
-            
+                       
               else # if SupplierLink empty
             
                 redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
             
-              end # if SupplierLink empty
-            
-            
-            
-            
-            
+              end # if SupplierLink empty           
             
             else
               
@@ -1001,59 +898,6 @@ class RedirectsController < ApplicationController
               # Give user chance to take another survey
           
               if (@user.SupplierLink.empty? == false) then
-            
-            
-#          if @user.children != nil then
-#            @childrenvalue = '&Age_and_Gender_of_Child='+@user.children[0]
-#            if @user.children.length > 1 then
-#              (1..@user.children.length-1).each do |i|
-#                @childrenvalue = @childrenvalue+'&Age_and_Gender_of_Child='+@user.children[i]
-#              end
-#            else
-#            end
-#          else
-#          end
-            
-            
-            
-#            if @user.country=="9" then 
-#              @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP='+@user.ZIP+'&HISPANIC='+@user.ethnicity+'&ETHNICITY='+@user.race+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_US='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
-#            else
-#              if @user.country=="6" then
-#                @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&ZIP_Canada='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
-#              else
-#                if @user.country=="5" then
-#                  @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_AU='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
-#                else
-#                  if @user.country=="7" then
-#                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&Fulcrum_ZIP_IN='+@user.ZIP+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
-#                  else
-#                    puts "*************************************** Redirects: Find out why country code is not correctly set"
-#                    @RepeatAdditionalValues = '&AGE='+@user.age+'&GENDER='+@user.gender+'&STANDARD_EDUCATION='+@user.eduation+'&STANDARD_HHI_INT='+@user.householdincome+'&STANDARD_EMPLOYMENT='+@user.employment+'&STANDARD_INDUSTRY_PERSONAL='+@user.pindustry+'&STANDARD_JOB_TITLE='+@user.jobtitle+@childrenvalue
-#                    return
-#                  end
-#                end
-#              end
-#            end
-
-
-
-#            @redirects_parsed_user_agent = UserAgent.parse(@user.user_agent)
-    
-#            print "*************************************** UseRide: User platform is: ", @redirects_parsed_user_agent.platform
-#            puts
-    
-#            if @redirects_parsed_user_agent.platform == 'iPhone' then
-      
-#              @MS_is_mobile = '&MS_is_mobile=true'
-#              p "*************************************** UseRide: MS_is_mobile is set TRUE"
-      
-#            else
-#              @MS_is_mobile = '&MS_is_mobile=false'
-#              p "*************************************** UseRide: MS_is_mobile is set FALSE"
-      
-#            end
-
         
               if (@user.SupplierLink.length == 1) then #P2S is the next link
           
@@ -1066,12 +910,9 @@ class RedirectsController < ApplicationController
            
               else
         
-#              print 'User will be sent to this survey: ', @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
                 print 'User will be sent to this survey: ', @user.SupplierLink[0]
                 puts
-#              @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues+@MS_is_mobile
                 @NextEntryLink = @user.SupplierLink[0]
-            #  @NextEntryLink = @user.SupplierLink[0]+params[:PID]+@RepeatAdditionalValues
                 @user.SupplierLink = @user.SupplierLink.drop(1)
                 @user.save
                 redirect_to @NextEntryLink
@@ -1106,7 +947,32 @@ class RedirectsController < ApplicationController
           @user.save
           
           if @rfg_redirect then
-            # do nothing
+            
+            # Save attempts counts by project
+            @project = RfgProject.find_by rfg_id: params[:tsfn]
+            
+            if (@project.NumberofAttempts == nil) then
+              @project.NumberofAttempts = 0
+            else
+            end
+            
+            if (@project.AttemptsAtLastComplete == nil) then
+              @project.AttemptsAtLastComplete = 0
+            else
+            end
+            
+            @project.NumberofAttempts = @project.NumberofAttempts + 1
+            @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+            #@project.AttemptsAtLastComplete = @project.NumberofAttempts
+            if @RFGAttemptsSinceLastComplete - @project.AttemptsAtLastComplete  > 20 then
+              @project.epc = "$.00"
+              @project.projectEPC = "$.00"
+            else
+            end
+
+            print "Updating Attempts count for project in TERM: ", @project.rfg_id
+            puts
+            @project.save
             
           else # must be a FED redirect
             

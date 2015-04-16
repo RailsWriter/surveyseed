@@ -66,7 +66,7 @@ begin
       
       RfgProject.where( "rfg_id = ?", RFGProjectsIndex["response"]["projects"][i]["rfg_id"] ).each do |existingproject|
         @project=existingproject        
-        print '************ Processing an already EXISTING project:', @project.rfg_id
+        print '************ Processing an EXISTING project:', @project.rfg_id
         puts
         
         if RFGProjectsIndex["response"]["projects"][i]["lastModified"] == @project.lastModified then
