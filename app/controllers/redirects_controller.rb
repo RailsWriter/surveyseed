@@ -190,6 +190,11 @@ class RedirectsController < ApplicationController
                 @net_name = "SS2"
               else
               end
+              
+              if @user.netid == "T2Abd5433LLA785410lpH567" then 
+                @net_name = "TestNtk"
+              else
+              end
             
               @user.SurveysCompleted[params[:PID]] = [Time.now, 'P2S', @user.clickid, @net_name]
               @user.save
@@ -323,6 +328,11 @@ class RedirectsController < ApplicationController
                 @net_name = "SS2"
               else
               end
+              
+              if @user.netid == "T2Abd5433LLA785410lpH567" then 
+                @net_name = "TestNtk"
+              else
+              end
             
               @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'RFG', @user.clickid, @net_name]
               @user.save
@@ -356,13 +366,13 @@ class RedirectsController < ApplicationController
               end
                             
               @project.NumberofAttempts = @project.NumberofAttempts + 1
-              @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+              #@RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
               @project.AttemptsAtLastComplete = @project.NumberofAttempts
-              if @RFGAttemptsSinceLastComplete - @project.AttemptsAtLastComplete  > 20 then
-                @project.epc = "$.00"
-                @project.projectEPC = "$.00"
-              else
-              end
+              #if @RFGAttemptsSinceLastComplete  > 20 then
+               # @project.epc = "$.00"
+                #@project.projectEPC = "$.00"
+                #else
+                #end
               
               print "Updating Attempts count for project in Success: ", @project.rfg_id
               puts
@@ -486,6 +496,11 @@ class RedirectsController < ApplicationController
               
               if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
                 @net_name = "SS2"
+              else
+              end
+              
+              if @user.netid == "T2Abd5433LLA785410lpH567" then 
+                @net_name = "TestNtk"
               else
               end
               
@@ -666,21 +681,16 @@ class RedirectsController < ApplicationController
               if (@project.NumberofAttempts == nil) then
                 @project.NumberofAttempts = 0
               else
-              end
-              
-              if (@project.AttemptsAtLastComplete == nil) then
-                @project.AttemptsAtLastComplete = 0
-              else
-              end              
+              end         
               
               @project.NumberofAttempts = @project.NumberofAttempts + 1
-              @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+              #@RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
               #@project.AttemptsAtLastComplete = @project.NumberofAttempts
-              if @RFGAttemptsSinceLastComplete - @project.AttemptsAtLastComplete  > 20 then
-                @project.epc = "$.00"
-                @project.projectEPC = "$.00"
-              else
-              end
+             # if @RFGAttemptsSinceLastComplete  > 20 then
+              #  @project.epc = "$.00"
+               # @project.projectEPC = "$.00"
+              #else
+              #end
               
               print "Updating Attempts count for project in Fail: ", @project.rfg_id
               puts  
@@ -822,19 +832,14 @@ class RedirectsController < ApplicationController
               else
               end
               
-              if (@project.AttemptsAtLastComplete == nil) then
-                @project.AttemptsAtLastComplete = 0
-              else
-              end
-              
               @project.NumberofAttempts = @project.NumberofAttempts + 1
-              @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+              #@RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
               #@project.AttemptsAtLastComplete = @project.NumberofAttempts
-              if @RFGAttemptsSinceLastComplete - @project.AttemptsAtLastComplete  > 20 then
-                @project.epc = "$.00"
-                @project.projectEPC = "$.00"
-              else
-              end
+              #if @RFGAttemptsSinceLastComplete  > 20 then
+               # @project.epc = "$.00"
+              #  @project.projectEPC = "$.00"
+              # else
+              # end
   
               print "Updating Attempts count for project in OQ: ", @project.rfg_id
               puts
@@ -956,19 +961,14 @@ class RedirectsController < ApplicationController
             else
             end
             
-            if (@project.AttemptsAtLastComplete == nil) then
-              @project.AttemptsAtLastComplete = 0
-            else
-            end
-            
             @project.NumberofAttempts = @project.NumberofAttempts + 1
-            @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+           # @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
             #@project.AttemptsAtLastComplete = @project.NumberofAttempts
-            if @RFGAttemptsSinceLastComplete - @project.AttemptsAtLastComplete  > 20 then
-              @project.epc = "$.00"
-              @project.projectEPC = "$.00"
-            else
-            end
+          #  if @RFGAttemptsSinceLastComplete  > 20 then
+           #   @project.epc = "$.00"
+            #  @project.projectEPC = "$.00"
+            #else
+            #end
 
             print "Updating Attempts count for project in TERM: ", @project.rfg_id
             puts

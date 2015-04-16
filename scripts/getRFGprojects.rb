@@ -146,7 +146,7 @@ begin
     
     end # project exists?
     
-    print "-----------------> skipProject =", skipProject
+    print "************ skipProject =", skipProject
     puts
     if (skipProject == false) then
         command = { :command => "livealert/stats/1", :rfg_id => @project.rfg_id }.to_json        
@@ -177,16 +177,39 @@ begin
         @project.quotasfull = RFGProjectStats["response"]["quotas"]
         @project.cr = RFGProjectStats["response"]["cr"]
         if (RFGProjectStats["response"]["epc"] == "0") || (RFGProjectStats["response"]["epc"] == 0 ) then
-          print "-------------->>> (if) EPC is ", RFGProjectStats["response"]["epc"]
+          print "******* (if) EPC is ", RFGProjectStats["response"]["epc"]
           puts
           @project.epc = "$.00"
         else
-          print "-------------->>> (else) EPC is ", RFGProjectStats["response"]["epc"]
+          print "******* (else) EPC is ", RFGProjectStats["response"]["epc"]
           puts
           @project.epc = RFGProjectStats["response"]["epc"]
         end
         @project.projectCR = RFGProjectStats["response"]["projectCR"]
         @project.projectEPC = RFGProjectStats["response"]["projectEPC"]
+
+
+        
+        if (@project.NumberofAttempts == nil) then
+          @project.NumberofAttempts = 0
+        else
+        end
+        
+        if (@project.AttemptsAtLastComplete == nil) then
+          @project.AttemptsAtLastComplete = 0
+        else
+        end
+        
+        @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+        if @RFGAttemptsSinceLastComplete  > 20 then
+          
+          print "---------------------------------------->> Updating epc and GEPC to lower rank for: ", @project.rfg_id
+          puts
+          @project.epc = "$.00"
+          @project.projectEPC = "$.00"
+        else
+        end
+        
         
   #      puts "********* saved stats"
       
