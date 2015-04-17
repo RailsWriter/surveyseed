@@ -201,9 +201,9 @@ begin
         end
         
         @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
-        if @RFGAttemptsSinceLastComplete  > 20 then
+        if @RFGAttemptsSinceLastComplete  > 15 then
           
-          print "---------------------------------------->> Updating epc and GEPC to lower rank for: ", @project.rfg_id
+          print "---------------------------------------->> Updating epc and ProjectEPC to lower rank for: ", @project.rfg_id
           puts
           @project.epc = "$.00"
           @project.projectEPC = "$.00"

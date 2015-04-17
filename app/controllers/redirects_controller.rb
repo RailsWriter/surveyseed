@@ -5,6 +5,7 @@ class RedirectsController < ApplicationController
     require 'hmac-sha1'
     
     # Check if the response is valid by authenticating SHA-1 encrption
+    
     @SHA1key = 'uhstarvsuio765jalksrWE'
     @Url = request.original_url
     @ParsedUrl = @Url.partition ("oenc=")
@@ -141,7 +142,7 @@ class RedirectsController < ApplicationController
 #          redirect_to 'https://www.ketsci.com/redirects/default'
 #        end
 
-        end
+        end # if test
 
 
       when "2"
@@ -169,6 +170,7 @@ class RedirectsController < ApplicationController
             else
             
               @user.SurveysAttempted << 'P2S-2'
+              
               # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
             
               if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
@@ -191,10 +193,15 @@ class RedirectsController < ApplicationController
               else
               end
               
+              if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
+                @net_name = "Fyber2"
+              else
+              end
+              
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
               else
-              end
+              end             
             
               @user.SurveysCompleted[params[:PID]] = [Time.now, 'P2S', @user.clickid, @net_name]
               @user.save
@@ -213,7 +220,6 @@ class RedirectsController < ApplicationController
               else
               end
             
-            
               if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
        
                 begin
@@ -224,8 +230,7 @@ class RedirectsController < ApplicationController
                 end while @SupersonicPostBack.code != 200
     
               else
-              end
-                        
+              end            
             
               if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
      
@@ -239,7 +244,6 @@ class RedirectsController < ApplicationController
               else
               end
                         
-            
               if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
        
                 begin
@@ -248,6 +252,18 @@ class RedirectsController < ApplicationController
                       puts 'HttParty::Error '+ e.message
                       retry
                     end while @SS2PostBack.code != 200
+    
+              else
+              end
+              
+              if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then
+
+                begin
+                  @Fyber2PostBack = HTTParty.post('http://www2.balao.de/SPNcu?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  rescue HTTParty::Error => e
+                    puts 'HttParty::Error '+ e.message
+                    retry
+                  end while @Fyber2PostBack.code != 200
     
               else
               end
@@ -286,8 +302,7 @@ class RedirectsController < ApplicationController
                 @P2Snet.save
               
               end
-                            
-            
+                                        
             end # duplicate is false
              
             # Happy ending
@@ -326,6 +341,11 @@ class RedirectsController < ApplicationController
               
               if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
                 @net_name = "SS2"
+              else
+              end
+              
+              if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
+                @net_name = "Fyber2"
               else
               end
               
@@ -425,7 +445,19 @@ class RedirectsController < ApplicationController
                 end while @SS2PostBack.code != 200
     
               else
-              end                        
+              end   
+              
+              if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then
+
+                begin
+                  @Fyber2PostBack = HTTParty.post('http://www2.balao.de/SPNcu?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  rescue HTTParty::Error => e
+                    puts 'HttParty::Error '+ e.message
+                    retry
+                  end while @Fyber2PostBack.code != 200
+    
+              else
+              end                     
             
               # Keep a count of completes on all Networks
             
@@ -499,23 +531,25 @@ class RedirectsController < ApplicationController
               else
               end
               
+              if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
+                @net_name = "Fyber2"
+              else
+              end 
+              
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
               else
-              end
-              
+              end              
             
               @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], @user.clickid, @net_name]
               @user.save
             
-
               @survey = Survey.find_by SurveyNumber: params[:tsfn]
-            
-        
+                    
               print '************ Successfully completed survey:', @survey.SurveyNumber
               puts
-              # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}
-          
+              
+              # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
             
               @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
               @survey.save!
@@ -578,7 +612,7 @@ class RedirectsController < ApplicationController
               else
               end
               
-              if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then                 
+              if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
                   
                   begin
                     @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
@@ -601,13 +635,23 @@ class RedirectsController < ApplicationController
     
               else
               end
+              
+              if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then
+
+                begin
+                  @Fyber2PostBack = HTTParty.post('http://www2.balao.de/SPNcu?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  rescue HTTParty::Error => e
+                    puts 'HttParty::Error '+ e.message
+                    retry
+                  end while @Fyber2PostBack.code != 200
+    
+              else
+              end
                        
               # Keep a count of completes on all Networks
             
               puts "*************** Keeping track of completes on all networks"
-            
-           
-           
+                      
               @net = Network.find_by netid: @user.netid
               if @net.Flag3 == nil then
               
@@ -619,8 +663,7 @@ class RedirectsController < ApplicationController
               @net.Flag3 = (@net.Flag3.to_i + 1).to_s
               @net.save
               
-            end
-                     
+            end                     
 
               # Happy ending
               redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=3'
@@ -629,7 +672,7 @@ class RedirectsController < ApplicationController
             end # if RFG
           end # if P2S
         end # if test
-
+        
 
       when "3"
         # FailureLink: https://www.ketsci.com/redirects/status?status=3&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
