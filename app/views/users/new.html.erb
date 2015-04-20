@@ -4,10 +4,13 @@
 	<head>
 		<title>Users HTML5 theme</title>
 		<meta charset="utf-8" />	
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">		
 	</head>
 
+
+
 	<body class="body">
+				
 		<div class="header">
 			<center>
 				<h1>WELCOME !</h1>
@@ -32,7 +35,7 @@
 							<%= text_field_tag 'age', nil, maxlength: 2 %>
 							<%= label_tag(:age, 'yrs.') %><br><br>
 						</div>
-					
+												
 						<%= hidden_field_tag :clickid, params[:CID] %>
 						<%= hidden_field_tag :netid, params[:NID] %>
 						<%= hidden_field_tag :session_id, session.id %>
@@ -46,6 +49,9 @@
 					</fieldset>
 				<% end %>
 		</content>		
+		
+		
+		
 		<br>
 		<footer class="footer">
 			<center>

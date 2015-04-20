@@ -5,9 +5,27 @@
 		<title>Users HTML5 theme</title>
 		<meta charset="utf-8" />	
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<%= javascript_include_tag "rfg-fp" %>
 	</head>
 
 	<body class="body">
+		
+		<script type="text/javascript">
+			var fingerprint = new Fingerprint({canvas: true, ie_activex: true, screen_resolution: true}).get();
+		//	document.write(fingerprint);
+			
+			$.ajax({
+			  type    : 'POST',
+			  url     : "/users/capturefp", 
+			  data    : { fingerprint },
+			  success : function(data) { },
+			});
+			
+		</script>
+		
+		
+		
 		<div class="header">
 			<center>
 				<h1>Terms of Service</h1>

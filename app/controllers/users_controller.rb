@@ -14,13 +14,15 @@ class UsersController < ApplicationController
   
   def create
   end
-
-  def eval_age
+    
+  def eval_age  
 
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     if params[:age].empty? == false
       @age = params[:age]
+      print "**********AGE= ", @age
+      puts
     else
       redirect_to '/users/new'
       return
@@ -164,6 +166,25 @@ class UsersController < ApplicationController
       end
     end
   end
+
+  def capturefp
+
+    if params[:fingerprint].empty? == false      
+      @fp = params[:fingerprint].to_i
+      print "----------------->>>>>>>>>>>> fp: ", @fp
+      puts
+      redirect_to '/users/tos'
+    else
+      redirect_to '/users/tos'
+    end    
+    
+# ************** CREATE A NEW FIELD FOR FP INSTEAD OF BIRTH_MONTH ********** 
+    
+    user=User.find_by session_id: session.id
+    user.birth_month = @fp
+    user.save    
+    
+  end
   
   def sign_tos
 
@@ -206,7 +227,7 @@ class UsersController < ApplicationController
 #       return
 #     else
 #     end
-  end
+  end  
   
   def gender
     
@@ -1202,7 +1223,7 @@ class UsersController < ApplicationController
     if net.stackOrder != nil then
       if (net.stackOrder == "RFGISFRONT") then
         @RFGIsFront = true
-        puts "**************** RFG IS at the aHead of FED"
+        puts "**************** RFG IS ahead of FED"
             
       else
         if (net.stackOrder == "RFGISBACK") then
@@ -1212,7 +1233,7 @@ class UsersController < ApplicationController
         else
           if (net.stackOrder == "RFGISOFF") then
             @RFGIsOff = true
-            puts "-------------------------->> **************** RFG IS OFF"
+            puts "**************** RFG IS OFF"
           else
           end    
         end
@@ -1373,6 +1394,11 @@ class UsersController < ApplicationController
           @_State = (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ]))
           @_region = (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ]))
           @_Division = (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ]))        
+          
+          
+          
+          print '*********** User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ', survey.QualificationZIPPreCodes, 'DMA from DB: ', @DMARegionCode, ' DMA from Survey: ', survey.QualificationDMAPreCodes, 'Region from DB: ', @regionPrecode, ' Region from Survey: ', survey.QualificationRegionPreCodes, 'Division from DB: ', @divisionPrecode, ' Division from Survey: ', survey.QualificationDivisionPreCodes
+          puts          
           
           print '************** ZIP match: ', @_ZIP, ' DMA match: ', @_DMA, ' State match: ', @_State, ' Region match: ', @_region, ' Division match: ', @_Division
           puts
@@ -2084,7 +2110,7 @@ class UsersController < ApplicationController
           @_region = (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ]))
           @_Division = (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ]))
                     
-          print '************** ZIP match: ', @_ZIP, 'DMA match: ', @_DMA, ' State match: ', @_State, ' Region match: ', @_region, ' Division match: ', @_Division
+          print '************** ZIP match: ', @_ZIP, ' DMA match: ', @_DMA, ' State match: ', @_State, ' Region match: ', @_region, ' Division match: ', @_Division
           puts
         else
         end
@@ -2094,7 +2120,7 @@ class UsersController < ApplicationController
           @_ZIP = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP.slice(0..2) ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP.slice(0..2) ])
           @_province_check = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ]))
           
-          print '************** Sliced ZIP match: ', @_ZIP, 'CA Province match: ', @_province_check
+          print '************** Sliced ZIP match: ', @_ZIP, ' CA Province match: ', @_province_check
           puts
         else
         end
@@ -2517,6 +2543,9 @@ class UsersController < ApplicationController
       
     else
     end # if country = 9
+    
+    print "------------------------>>>>>>>>>>>>>>>>>> User geo credentials in RFG are - Zip: ", user.ZIP, " DMA: ", @DMARegionCode, " Region: ", @regionPrecode, " Division: ", @divisionPrecode
+    puts
          
     if user.country == '9' then
       user_country = "US"
@@ -3803,6 +3832,11 @@ class UsersController < ApplicationController
         @net_name = "SS2"
       else
       end 
+      
+      if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
+        @net_name = "Fyber2"
+      else
+      end
     
       user.SurveysAttempted << 'TESTSURVEY'
       user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]

@@ -38,6 +38,8 @@ end
 
 
 
+
+
 #secret = [secret].pack("H*")
 
 # Build secret hash to append as a param to URL
