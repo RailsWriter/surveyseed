@@ -360,14 +360,14 @@ begin
   print 'getRFGProjects: Time at end', timenow
   puts
   
-  if (timenow - starttime) > 300 then 
+  if (timenow - starttime) > 60 then 
     print 'time elapsed since start =', (timenow - starttime), '- going to repeat immediately'
     puts
     timetorepeat = true
   else
-    print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 3 minutes'
+    print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 1 minutes'
     puts
-    sleep (3.minutes)
+    sleep (1.minutes)
     timetorepeat = true
   end
 

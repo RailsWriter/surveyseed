@@ -2615,10 +2615,17 @@ class UsersController < ApplicationController
 
       if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects
         
+        
+        print "*************** Checking fingerprints for project number: ", project.rfg_id
+        puts
+        
+        
+        
+        
         print "*************** Checking qualifications for project number: ", project.rfg_id
         puts
         
-        # Initialize qualificatio parameters true. These are turned false if user does not qualify
+        # Initialize qualification parameters to true. These are turned false if user does not qualify
         @QualificationAge = true
         @QualificationGender = true
         @QualificationZip = true

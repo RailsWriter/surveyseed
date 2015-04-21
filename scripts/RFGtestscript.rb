@@ -16,11 +16,11 @@ secret = "8ef1fe91d92e0602648d157f981bb934"
 #command='{ "command" : "livealert/inventory/1", "country" : "CA"}'
 #command='{ "command" : "livealert/targeting/1", "rfg_id" : "RFG141754-002"}'
 #command = '{ "command" : "livealert/listDatapoints/1"}'
-command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2_AgeGenderChild"}'
+#command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2_AgeGenderChild"}'
 #command='{ "command" : "livealert/createLink/1", "rfg_id" : "RFG117241-010"}'
 #command='{ "command" : "livealert/stats/1", "rfg_id" : "RFG117241-010"}'
 #command='{ "command" : "livealert/log/1", "rfg_id" : "RFG117241-010"}'
-
+command = '{ "command" : "livealert/duplicateCheck/1", "rfg_id" : "RFG108677-024", "fingerprint" : 3825389918, "ip" : "166.78.136.138"}'
 
 
 time=Time.now.to_i
