@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150416054209) do
+ActiveRecord::Schema.define(version: 20150421043550) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -181,8 +181,8 @@ ActiveRecord::Schema.define(version: 20150416054209) do
     t.string   "eduation"
     t.integer  "householdcomp"
     t.string   "householdincome"
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.string   "session_id"
     t.string   "ip_address"
     t.string   "user_agent"
@@ -208,6 +208,7 @@ ActiveRecord::Schema.define(version: 20150416054209) do
     t.string   "employment"
     t.string   "jobtitle"
     t.text     "children"
+    t.integer  "fingerprint",                      limit: 8
   end
 
 end
