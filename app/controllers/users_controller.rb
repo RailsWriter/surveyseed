@@ -181,7 +181,7 @@ class UsersController < ApplicationController
 # ************** CREATE A NEW FIELD FOR FP INSTEAD OF BIRTH_MONTH ********** 
     
     user=User.find_by session_id: session.id
-    user.birth_month = @fp
+    user.fingerprint = @fp
     user.save    
     
   end
