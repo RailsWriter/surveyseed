@@ -2637,6 +2637,9 @@ class UsersController < ApplicationController
         @QualificationDMA = true
         @QualificationState = true
         @QualificationRegion = true
+        
+        @QualificationJobTitle = true
+        @QualificationEthnicity = true
      
         
         (0..project.datapoints.length-1).each do |m|
@@ -2794,8 +2797,8 @@ class UsersController < ApplicationController
               puts
                   
           when "Education (CA)"
-              @QualificationEducation = false
-              (0..project.datapoints[m]["values"].length-1).each do |i|
+            @QualificationEducation = false
+            (0..project.datapoints[m]["values"].length-1).each do |i|
               if (project.datapoints[m]["values"][i]["choice"] == 1) && (user.eduation.to_i == 1) then
                   @QualificationEducation = true
                   @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
@@ -2816,28 +2819,134 @@ class UsersController < ApplicationController
                 @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
-                    if (project.datapoints[m]["values"][i]["choice"] == 5) && ((user.eduation.to_i == 7) || (user.eduation.to_i == 8))  then
-                      @QualificationEducation = true
-                      @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
-                    else
+              if (project.datapoints[m]["values"][i]["choice"] == 5) && ((user.eduation.to_i == 7) || (user.eduation.to_i == 8))  then
+                @QualificationEducation = true
+                @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              if (project.datapoints[m]["values"][i]["choice"] == 6) && (user.eduation.to_i == 9) then
+                @QualificationEducation = true
+                @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end                    
+              if (project.datapoints[m]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 10) || (user.eduation.to_i == 11))  then
+                @QualificationEducation = true
+                @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+            end
+              
+            print "User entered Education: ", user.eduation
+            puts
+            print "Project qual Education: ", project.datapoints[m]["values"]
+            puts
+            print "@QualificationEducation: ", @QualificationEducation
+            puts
+
+
+
+
+
+
+                when "Job Title"
+                    @QualificationJobTitle = false
+                    (0..project.datapoints[m]["values"].length-1).each do |i|
+                                      
+                      if (project.datapoints[m]["values"][i]["choice"] == 2) && (user.jobtitle.to_i == 1) then
+                        @QualificationJobTitle = true
+                        @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
+                      else
+                      end
+                      if (project.datapoints[m]["values"][i]["choice"] == 3) && ((user.jobtitle.to_i == 2) ||  (user.jobtitle.to_i == 3)) then
+                        @QualificationJobTitle = true
+                        @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
+                      else
+                      end
+                      if (project.datapoints[m]["values"][i]["choice"] == 4) && (user.jobtitle.to_i == 4) then
+                        @QualificationJobTitle = true
+                        @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
+                      else
+                      end  
+                      if (project.datapoints[m]["values"][i]["choice"] > 4) then
+                        @QualificationJobTitle = true
+                        @RFGJobTitle = ''
+                      else
+                      end
+                                       
                     end
-                    if (project.datapoints[m]["values"][i]["choice"] == 6) && (user.eduation.to_i == 9) then
-                      @QualificationEducation = true
-                      @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
-                    else
-                    end                    
-                    if (project.datapoints[m]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 10) || (user.eduation.to_i == 11))  then
-                      @QualificationEducation = true
-                      @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
-                    else
-                    end
-                  end
-                  print "User entered Education: ", user.eduation
-                  puts
-                  print "Project qual Education: ", project.datapoints[m]["values"]
-                  puts
-                  print "@QualificationEducation: ", @QualificationEducation
-                  puts
+                    print "User entered JobTitle: ", user.jobtitle
+                    puts
+                    print "Project qual JobTitle: ", project.datapoints[m]["values"]
+                    puts
+                    print "@QualificationJobTitle: ", @QualificationJobTitle
+                    puts
+                    
+                    
+              
+            when "Ethnicity (US)"
+              @QualificationEthnicity = false
+              (0..project.datapoints[m]["values"].length-1).each do |i|
+                
+                # Remember in in FED and when reading user input we treat ethnicity input '113' as 'user.race'              
+                if (project.datapoints[m]["values"][i]["choice"] == 1) && (user.race.to_i == 2) then
+                  @QualificationEthnicity = true
+                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 2) && ( (user.race.to_i == 4) || (user.race.to_i == 5) || (user.race.to_i == 6) || (user.race.to_i == 7) || (user.race.to_i == 8) || (user.race.to_i == 9) || (user.race.to_i == 10) ) then
+                  @QualificationEthnicity = true
+                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 3) && (user.race.to_i == 1) then
+                  @QualificationEthnicity = true
+                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 4) && ( (user.race.to_i == 11) || (user.race.to_i == 12) || (user.race.to_i == 13) || (user.race.to_i == 14) ) then
+                  @QualificationEthnicity = true
+                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                # RFG 5 is for Latino - same as ethnicity in FED
+                if (project.datapoints[m]["values"][i]["choice"] == 5) && ( (user.ethnicity.to_i == 2) || (user.ethnicity.to_i == 3) || (user.ethnicity.to_i == 4) || (user.ethnicity.to_i == 5) || (user.ethnicity.to_i == 6) || (user.ethnicity.to_i == 7) || (user.ethnicity.to_i == 8) || (user.ethnicity.to_i == 9) || (user.ethnicity.to_i == 10) || (user.ethnicity.to_i == 11) || (user.ethnicity.to_i == 12) || (user.ethnicity.to_i == 13) || (user.ethnicity.to_i == 14) ) then
+                  @QualificationEthnicity = true
+                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 6) && (user.race.to_i == 3) then
+                  @QualificationEthnicity = true
+                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 7) && (user.race.to_i == 16) then
+                  @QualificationEthnicity = true
+                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                
+              end
+              print "User entered Ethnicity: ", user.race
+              puts
+              print "Project qual Ethnicity: ", project.datapoints[m]["values"]
+              puts
+              print "@QualificationEthnicity: ", @QualificationEthnicity
+              puts
+              print "@RFGEthnicity is set to: ", @RFGEthnicity
+              puts
+                
+                
+
+
+
+
+
+
+
+
+
+
+
                         
             when "Employment Status"
               @QualificationEmployment = false
@@ -2957,6 +3066,10 @@ class UsersController < ApplicationController
         puts
         print "Employment = ", (@QualificationEmployment)
         puts
+        print "JobTitle = ", (@QualificationJobTitle)
+        puts
+        print "Ethnicity = ", (@QualificationEthnicity)
+        puts
         print "Children = ", (@QualificationChildren)
         puts
         print "DMA = ", (@QualificationDMA)
@@ -2969,9 +3082,11 @@ class UsersController < ApplicationController
         
         
         
-        if ( (project.country == "CA") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) ) ||
+        
+        
+        if ( (project.country == "CA") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationJobTitle) && (@QualificationEthnicity) ) ||
           
-          ( (project.country == "US") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) )          
+          ( (project.country == "US") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) )          
           then
           
           @RFGQualifiedProjects << project.rfg_id
@@ -3454,10 +3569,21 @@ class UsersController < ApplicationController
     if @RFGEducationCA == nil then
       @RFGEducationCA = ''
     else
-    end      
+    end  
+    
+    if @RFGEthnicity == nil then
+      @RFGEthnicity = ''
+    else
+    end 
+    
+    if @RFGJobTitle == nil then
+      @RFGJobTitle = ''
+    else
+    end 
+        
       
     if user.country=="9" then 
-      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&age='+user.age+'&rfg2_14785='+user.householdincome+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+@RFGchildrenvalue
+      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&age='+user.age+'&rfg2_14785='+user.householdincome+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+@RFGchildrenvalue+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle
     else
       if user.country=="6" then
           @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&age='+user.age+'&educationCA='+@RFGEducationCA+'&rfg2_14887='+user.householdincome+'&employment='+@RFGEmployment+@RFGchildrenvalue
