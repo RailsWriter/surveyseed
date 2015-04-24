@@ -2656,6 +2656,8 @@ class UsersController < ApplicationController
 
           if @RFGFingerprint == nil then
             @duplicateFingerprint = false
+            
+            puts "----------->>>>>> @RFGFingerprint response returned by rfg server was nil ZZZZZZZZ"
           else
             
             print "******************* RFGFingerprint: ", @RFGFingerprint
@@ -2663,14 +2665,19 @@ class UsersController < ApplicationController
           
             if @RFGFingerprint["response"]["isDuplicate"] == true then
               @duplicateFingerprint = true
+              puts "----------->>>>>> @RFGFingerprint response returned by rfg server was true XXXXXXXX"
+              
             else
               @duplicateFingerprint = false
+              puts "----------->>>>>> @RFGFingerprint response returned by rfg server was false VVVVVVVVVV"
             end
           end      
           
         else
           # Force it to be not duplicate because it had no fingerprint
-          @duplicateFingerprint = false
+          @duplicateFingerprint = false          
+          puts "----------->>>>>> user fingerprint was nil CCCCCCCCC"
+          
         end
 
         if  @duplicateFingerprint == false then
