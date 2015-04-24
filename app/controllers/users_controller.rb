@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  require 'httparty'
+  # require 'httparty'
   require 'mixpanel-ruby'
   require 'hmac-md5'
   
@@ -1242,7 +1242,6 @@ class UsersController < ApplicationController
       @RFGIsOff = true
     end
     
-
     # Set the priority for P2S stack
         
     @foundtopsurveyswithquota = false   # false means not finished finding top FED surveys (set it to true if testing p2s)
@@ -2266,6 +2265,13 @@ class UsersController < ApplicationController
   
   def selectRfgProjects (session_id)
     
+    require 'digest/hmac'
+    require 'net/http'
+    require 'uri'
+    
+    apid = "54ef65c3e4b04d0ae6f9f4a7"
+    secret = "8ef1fe91d92e0602648d157f981bb934"
+    
     user=User.find_by session_id: session_id
     
     @RFGclient = Network.find_by name: "RFG"
@@ -2620,10 +2626,10 @@ class UsersController < ApplicationController
         print "*************** Checking for duplicate user fingerprint for project number: ", project.rfg_id
         puts
         
-        command = { :command => "livealert/duplicateCheck/1", :rfg_id => @project.rfg_id, :fingerprint : => user.fingerprint, :ip : => user.ip_address }.to_json
+        command = { :command => "livealert/duplicateCheck/1", :rfg_id => project.rfg_id, :fingerprint => user.fingerprint, :ip => user.ip_address }.to_json
         
         time=Time.now.to_i
-        hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.hex2bin, Digest::SHA1)
+        hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.scan(/../).map {|x| x.to_i(16).chr}.join, Digest::SHA1)
         uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
 
       begin
@@ -2632,23 +2638,23 @@ class UsersController < ApplicationController
           req.body = command
           req.content_type = 'application/json'
           response = http.request req
-          RFGFingerprint = JSON.parse(response.body)  
+          @RFGFingerprint = JSON.parse(response.body)  
         end
         
       rescue Net::ReadTimeout => e  
         puts e.message
       end
 
-        print "******************* RFGFingerprint: ", RFGFingerprint
+        print "******************* RFGFingerprint: ", @RFGFingerprint
         puts
 
-        if RFGFingerprint["response"]["isDuplicate"] == false then
+        if @RFGFingerprint["response"]["isDuplicate"] == false then
           
           
           
           
         
-        print "------------------------------------>>>>>>>>>> *************** This is not a duplicate fingerprint. Continue checking qualifications for project number: ", project.rfg_id
+        print "------------------------------------>>>>>>>>>> *************** This is not a duplicate fingerprint for this project. Continue checking qualifications for project number: ", project.rfg_id
         puts
         
         # Initialize qualification parameters to true. These are turned false if user does not qualify
