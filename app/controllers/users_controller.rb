@@ -2613,16 +2613,42 @@ class UsersController < ApplicationController
               
     RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectEPC: :desc).each do |project|
 
-      if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects
+      if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects       
         
         
-        print "*************** Checking fingerprints for project number: ", project.rfg_id
+        
+        print "*************** Checking for duplicate user fingerprint for project number: ", project.rfg_id
         puts
         
+        command = { :command => "livealert/duplicateCheck/1", :rfg_id => @project.rfg_id, :fingerprint : => user.fingerprint, :ip : => user.ip_address }.to_json
         
+        time=Time.now.to_i
+        hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.hex2bin, Digest::SHA1)
+        uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
+
+      begin
+        Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+          req = Net::HTTP::Post.new uri
+          req.body = command
+          req.content_type = 'application/json'
+          response = http.request req
+          RFGFingerprint = JSON.parse(response.body)  
+        end
         
+      rescue Net::ReadTimeout => e  
+        puts e.message
+      end
+
+        print "******************* RFGFingerprint: ", RFGFingerprint
+        puts
+
+        if RFGFingerprint["response"]["isDuplicate"] == false then
+          
+          
+          
+          
         
-        print "*************** Checking qualifications for project number: ", project.rfg_id
+        print "------------------------------------>>>>>>>>>> *************** This is not a duplicate fingerprint. Continue checking qualifications for project number: ", project.rfg_id
         puts
         
         # Initialize qualification parameters to true. These are turned false if user does not qualify
@@ -3079,11 +3105,7 @@ class UsersController < ApplicationController
         print "Region = ", (@QualificationRegion)
         puts
         
-        
-        
-        
-        
-        
+         
         if ( (project.country == "CA") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationJobTitle) && (@QualificationEthnicity) ) ||
           
           ( (project.country == "US") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) )          
@@ -3526,6 +3548,9 @@ class UsersController < ApplicationController
         end # Qualification check
         
       else
+      end # if isDuplicate
+ 
+      else
       end # if foundtopprojects
       
     end # do all projects
@@ -3580,7 +3605,6 @@ class UsersController < ApplicationController
       @RFGJobTitle = ''
     else
     end 
-        
       
     if user.country=="9" then 
       @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&age='+user.age+'&rfg2_14785='+user.householdincome+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+@RFGchildrenvalue+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle
