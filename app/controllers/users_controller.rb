@@ -173,16 +173,17 @@ class UsersController < ApplicationController
       @fp = params[:fingerprint].to_i
       print "----------------->>>>>>>>>>>> fp: ", @fp
       puts
+      
+      user=User.find_by session_id: session.id
+      user.fingerprint = @fp
+      user.save    
+      
       redirect_to '/users/tos'
     else
       redirect_to '/users/tos'
-    end    
+    end
     
-# ************** CREATE A NEW FIELD FOR FP INSTEAD OF BIRTH_MONTH ********** 
     
-    user=User.find_by session_id: session.id
-    user.fingerprint = @fp
-    user.save    
     
   end
   
@@ -2623,7 +2624,10 @@ class UsersController < ApplicationController
         
         
         
-        print "*************** Checking for duplicate user fingerprint for project number: ", project.rfg_id
+        print "--------------*************** Checking for duplicate user fingerprint for project number: ", project.rfg_id
+        puts
+        
+        print "--------------->>>>>>******************* user fingerprint: ", user.fingerprint
         puts
         
         command = { :command => "livealert/duplicateCheck/1", :rfg_id => project.rfg_id, :fingerprint => user.fingerprint, :ip => user.ip_address }.to_json
@@ -2648,7 +2652,7 @@ class UsersController < ApplicationController
         print "******************* RFGFingerprint: ", @RFGFingerprint
         puts
 
-        if @RFGFingerprint["response"]["isDuplicate"] == false then
+ #       if @RFGFingerprint["response"]["isDuplicate"] == false then
           
           
           
@@ -3553,8 +3557,8 @@ class UsersController < ApplicationController
           
         end # Qualification check
         
-      else
-      end # if isDuplicate
+ #     else
+  #    end # if isDuplicate
  
       else
       end # if foundtopprojects
