@@ -2627,32 +2627,53 @@ class UsersController < ApplicationController
         print "--------------*************** Checking for duplicate user fingerprint for project number: ", project.rfg_id
         puts
         
-        print "--------------->>>>>>******************* user fingerprint: ", user.fingerprint
-        puts
+        # lets assume the user is not a duplicate, typically
+        @duplicateFingerprint = false
         
-        command = { :command => "livealert/duplicateCheck/1", :rfg_id => project.rfg_id, :fingerprint => user.fingerprint, :ip => user.ip_address }.to_json
+        if user.fingerprint != nil then
         
-        time=Time.now.to_i
-        hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.scan(/../).map {|x| x.to_i(16).chr}.join, Digest::SHA1)
-        uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
+          print "--------------->>>>>>******************* user fingerprint: ", user.fingerprint
+          puts
+        
+          command = { :command => "livealert/duplicateCheck/1", :rfg_id => project.rfg_id, :fingerprint => user.fingerprint, :ip => user.ip_address }.to_json
+        
+          time=Time.now.to_i
+          hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.scan(/../).map {|x| x.to_i(16).chr}.join, Digest::SHA1)
+          uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
 
-      begin
-        Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
-          req = Net::HTTP::Post.new uri
-          req.body = command
-          req.content_type = 'application/json'
-          response = http.request req
-          @RFGFingerprint = JSON.parse(response.body)  
+          begin
+            Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+              req = Net::HTTP::Post.new uri
+              req.body = command
+              req.content_type = 'application/json'
+              response = http.request req
+              @RFGFingerprint = JSON.parse(response.body)  
+            end
+        
+          rescue Net::ReadTimeout => e  
+            puts e.message
+          end
+
+          if @RFGFingerprint == nil then
+            @duplicateFingerprint = false
+          else
+            
+            print "******************* RFGFingerprint: ", @RFGFingerprint
+            puts
+          
+            if @RFGFingerprint["response"]["isDuplicate"] == true then
+              @duplicateFingerprint = true
+            else
+              @duplicateFingerprint = false
+            end
+          end      
+          
+        else
+          # Force it to be not duplicate because it had no fingerprint
+          @duplicateFingerprint = false
         end
-        
-      rescue Net::ReadTimeout => e  
-        puts e.message
-      end
 
-        print "******************* RFGFingerprint: ", @RFGFingerprint
-        puts
-
- #       if @RFGFingerprint["response"]["isDuplicate"] == false then
+        if  @duplicateFingerprint == false then
           
           
           
@@ -3557,8 +3578,8 @@ class UsersController < ApplicationController
           
         end # Qualification check
         
- #     else
-  #    end # if isDuplicate
+      else
+      end # if isDuplicate
  
       else
       end # if foundtopprojects
