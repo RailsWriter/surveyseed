@@ -882,6 +882,12 @@ class UsersController < ApplicationController
       end
     else
     end # country == 6
+    
+    if @provincePrecode == nil then
+      # wild guess
+      @provincePrecode = 11
+    else
+    end
            
     if user.country == '9' then
       @geo = UsGeo.find_by zip: user.ZIP
@@ -2220,7 +2226,7 @@ class UsersController < ApplicationController
       @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP+'&HISPANIC='+user.ethnicity+'&ETHNICITY='+user.race+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_US='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue+'&STATE='+@statePrecode+'&DMA='+@DMARegionCode
     else
       if user.country=="6" then
-        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP.slice(0..2)+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue+'&Province='+@provincePrecode
+        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP.slice(0..2)+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue+'&Province\/Territory_of_Canada='+@provincePrecode
       else
         if user.country=="5" then
           @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue
@@ -2624,70 +2630,66 @@ class UsersController < ApplicationController
         
         
         
-        print "--------------*************** Checking for duplicate user fingerprint for project number: ", project.rfg_id
-        puts
-        
+#        print "--------------*************** Checking for duplicate user fingerprint for project number: ", project.rfg_id
+ #       puts
+  #      
         # lets assume the user is not a duplicate, typically
-        @duplicateFingerprint = false
+#        @duplicateFingerprint = false
         
-        if user.fingerprint != nil then
+#        if user.fingerprint != nil then
         
-          print "--------------->>>>>>******************* user fingerprint: ", user.fingerprint
-          puts
+#          print "--------------->>>>>>******************* user fingerprint: ", user.fingerprint
+#          puts
         
-          command = { :command => "livealert/duplicateCheck/1", :rfg_id => project.rfg_id, :fingerprint => user.fingerprint, :ip => user.ip_address }.to_json
-        
-          time=Time.now.to_i
-          hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.scan(/../).map {|x| x.to_i(16).chr}.join, Digest::SHA1)
-          uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
-
-          begin
-            Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
-              req = Net::HTTP::Post.new uri
-              req.body = command
-              req.content_type = 'application/json'
-              response = http.request req
-              @RFGFingerprint = JSON.parse(response.body)  
-            end
-        
-          rescue Net::ReadTimeout => e  
-            puts e.message
-          end
-
-          if @RFGFingerprint == nil then
-            @duplicateFingerprint = false
-            
-            puts "----------->>>>>> @RFGFingerprint response returned by rfg server was nil ZZZZZZZZ"
-          else
-            
-            print "******************* RFGFingerprint: ", @RFGFingerprint
-            puts
-          
-            if @RFGFingerprint["response"]["isDuplicate"] == true then
-              @duplicateFingerprint = true
-              puts "----------->>>>>> @RFGFingerprint response returned by rfg server was true XXXXXXXX"
-              
-            else
-              @duplicateFingerprint = false
-              puts "----------->>>>>> @RFGFingerprint response returned by rfg server was false VVVVVVVVVV"
-            end
-          end      
-          
-        else
+#          command = { :command => "livealert/duplicateCheck/1", :rfg_id => project.rfg_id, :fingerprint => user.fingerprint, :ip => user.ip_address }.to_json
+#        
+#          time=Time.now.to_i
+#          hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.scan(/../).map {|x| x.to_i(16).chr}.join, Digest::SHA1)
+#          uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
+#
+#         begin
+#            Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+ #             req = Net::HTTP::Post.new uri
+  #            req.body = command
+   #           req.content_type = 'application/json'
+    #          response = http.request req
+     #         @RFGFingerprint = JSON.parse(response.body)  
+      #      end
+       # 
+        #  rescue Net::ReadTimeout => e  
+         #   puts e.message
+          #end
+          #
+#          if @RFGFingerprint == nil then
+ #           @duplicateFingerprint = false
+  #          
+   #         puts "----------->>>>>> @RFGFingerprint response returned by rfg server was nil ZZZZZZZZ"
+    #      else
+     #       
+      #      print "******************* RFGFingerprint: ", @RFGFingerprint
+       #     puts
+        #  
+         #   if @RFGFingerprint["response"]["isDuplicate"] == true then
+          #    @duplicateFingerprint = true
+           #   puts "----------->>>>>> @RFGFingerprint response returned by rfg server was true XXXXXXXX"
+            #  
+#            else
+ #             @duplicateFingerprint = false
+  #            puts "----------->>>>>> @RFGFingerprint response returned by rfg server was false VVVVVVVVVV"
+   #         end
+    #      end      
+     #     
+      #  else
           # Force it to be not duplicate because it had no fingerprint
-          @duplicateFingerprint = false          
-          puts "----------->>>>>> user fingerprint was nil CCCCCCCCC"
+       #   @duplicateFingerprint = false          
+        #  puts "----------->>>>>> user fingerprint was nil CCCCCCCCC"
           
-        end
-
-        if  @duplicateFingerprint == false then
-          
-          
-          
-          
-        
-        print "------------------------------------>>>>>>>>>> *************** This is not a duplicate fingerprint for this project. Continue checking qualifications for project number: ", project.rfg_id
-        puts
+#        end
+#
+ #       if  @duplicateFingerprint == false then
+  #     
+   #     print "------------------------------------>>>>>>>>>> *************** This is not a duplicate fingerprint for this project. Continue checking qualifications for project number: ", project.rfg_id
+    #    puts
         
         # Initialize qualification parameters to true. These are turned false if user does not qualify
         @QualificationAge = true
@@ -3585,8 +3587,8 @@ class UsersController < ApplicationController
           
         end # Qualification check
         
-      else
-      end # if isDuplicate
+#      else
+ #     end # if isDuplicate
  
       else
       end # if foundtopprojects
