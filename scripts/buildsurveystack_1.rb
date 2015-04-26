@@ -33,7 +33,7 @@ end
 # Get any new offerwall surveys from Federated Sample
 
 begin
-# set timer to download every 10 mins
+# set timer to download every 20 mins
 
   starttime = Time.now
   print '************************************** BuildSurveyStack: Time at start', starttime
@@ -64,8 +64,8 @@ begin
   puts
   
   
+# With a $2.15 CPI from FED, a $1.50 max payout can be made.
 # Consider removing the CPI condition from builder and updater and only keep it in the user controller.
-# it is set to $1.49 as this enables $1 payout e.g. Fyber2 for CA and AUS surveys. 
 
   (0..totalavailablesurveys).each do |i|
     
@@ -96,7 +96,7 @@ begin
         
         @survey.FailureCount = 0
         @survey.OverQuotaCount = 0
-        # @survey.KEPC = 0.0
+        @survey.KEPC = 0.0
         @survey.NumberofAttemptsAtLastComplete = 0
         @survey.TCR = 0.0
         @survey.SurveyExactRank = 0
@@ -138,20 +138,16 @@ begin
 
         
         # Convert GEPC to GCR to give priority to CR over EPC.
-        if @survey.CPI >0 then
+        if @survey.CPI > 0 then
           @GCR = @survey.GEPC / @survey.CPI
         else
-          # hopefully rare exception to use GEPC for GCR, when CPI=0
-          print "------------>>>>>>> CPI was 0, so setting GCR = GEPC for SurveyNumber: ", SurveyNumber
-          puts
           @GCR = @survey.GEPC
         end
         
         
         if @survey.Conversion > 0 then
-          # rank the survey in 101-200 range
           
-            @survey.SurveyGrossRank = 101+(100-@survey.Conversion)
+            @survey.SurveyGrossRank = 201+(100-@survey.Conversion)
             print "Assigned Conv>0 survey rank: ", @survey.SurveyGrossRank
             puts
         
@@ -558,9 +554,9 @@ begin
         puts
         timetorepeat = true
       else
-        print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 10 minutes'
+        print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 20 minutes since it typically takes under 10 mins to do a sweep'
         puts
-        sleep (10.minutes)
+        sleep (20.minutes)
         timetorepeat = true
       end
 

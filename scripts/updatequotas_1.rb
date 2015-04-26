@@ -68,7 +68,6 @@ begin
 
   # Check if any survey has allocation remaining, and get current qualifications and current quota.
 
-
   (0..totalavailablesurveys).each do |i|
     @surveynumber = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"]
     if (Survey.where("SurveyNumber = ?", @surveynumber)).exists? then 
@@ -262,38 +261,38 @@ begin
  
  
             when 12345
-              #if flag == 'stag' then
+              if flag == 'stag' then
                 print '---------------------->> ZIP_Canada: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 puts
-                #else
-                #end
+              else
+              end
               survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
               
             when 1015
-              #if flag == 'prod' then
+              if flag == 'prod' then
                 print '------------------->> Province/Territory_of_Canada: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 puts
-                #else
-                #end
+              else
+              end
               # survey.QualificationCAProvincePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
               survey.QualificationHHCPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
               
             when 12340
-              #if flag == 'prod' then
+              if flag == 'prod' then
                 print '----------------->> Fulcrum_ZIP_AU: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 puts
-                #else
-                #end
+              else
+              end
               survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
               
          
          
             when 12394
-              #if flag == 'prod' then
+              if flag == 'prod' then
                 print '----------------->> Fulcrum_Region_AU_ISO: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                 puts
-                #else
-                #end
+              else
+              end
               #survey.QualificationZIPPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes") 
  
  
@@ -476,9 +475,9 @@ begin
         # Survey number does not exist. This is a NEW entry from allocation, get qualifications, quotas, and supplierlinks for it and create as new if the survey meets our biz requirements of countrylanguage, studytype, etc.        
 
  
-        if (((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9)) && ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 11) ||  (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23))) then
+        if (((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 7) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9)) && ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 11) ||  (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23))) then
       
-          print '***************************** Biz Criteria match: CountryLanguageID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) ||      (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9))
+          print '***************************** Biz Criteria match: CountryLanguageID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) ||      (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 7) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9))
           puts
 
           print '***************************** Biz Criteria Match: StudyTypeID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 11) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23))
@@ -508,7 +507,7 @@ puts
         
         @newsurvey.FailureCount = 0
         @newsurvey.OverQuotaCount = 0
-        # @newsurvey.KEPC = 0.0
+        @newsurvey.KEPC = 0.0
         @newsurvey.NumberofAttemptsAtLastComplete = 0
         @newsurvey.TCR = 0.0
         @newsurvey.SurveyExactRank = 0
@@ -757,7 +756,7 @@ puts
                   
                 when 1249
                   if flag == 'stag' then
-                    print '************* Age_and_Gender_of_Child: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print '----------------------------------------------------------------->> Age_and_Gender_of_Child: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
@@ -767,7 +766,7 @@ puts
                   
                 when 2189
                   if flag == 'stag' then
-                    print '***************** STANDARD_EMPLOYMENT: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print 'STANDARD_EMPLOYMENT: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
@@ -785,7 +784,7 @@ puts
                                
                 when 97
                   if flag == 'stag' then
-                    print '*********** DMA: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print 'DMA: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
@@ -793,7 +792,7 @@ puts
                   
                 when 96
                   if flag == 'stag' then
-                    print '*************** State: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print 'State: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
@@ -801,7 +800,7 @@ puts
                 
                 when 101
                   if flag == 'stag' then
-                    print '************* Division: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print 'Division: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
@@ -809,7 +808,7 @@ puts
                   
                 when 122
                   if flag == 'stag' then
-                    print '*************** Region: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print 'Region: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
@@ -904,9 +903,12 @@ puts
             
               rescue HTTParty::Error => e
                 puts 'HttParty::Error '+ e.message
+#             retry
+#            end while NewSupplierLink.code < 0
 
-            retry
-            end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
+
+retry
+end while ((NewSupplierLink.code != 200) && (@newfailcount < 10))
 
 
             if NewSupplierLink.code != 200 then
@@ -920,13 +922,14 @@ puts
               @newsurvey.SupplierLink = NewSupplierLink["SupplierLink"]
               
               if NewSupplierLink["SupplierLink"]["CPI"] == nil then
-                @newsurvey.CPI = 0.0
+                @newsurvey.SurveyStillLive = 0.0
               else                
                 @newsurvey.CPI = NewSupplierLink["SupplierLink"]["CPI"]   
               end
-                           
+             
+              
            
-              # Assign an initial gross rank to the NEW survey in 101-200 or 401-500 based on Conversion
+              # Assign an initial gross rank to the NEW survey in 201-200 or 401-500 based on Conversion
         
               begin
                 sleep(1)
@@ -972,7 +975,7 @@ puts
               
               if @newsurvey.Conversion > 0 then
           
-                  @newsurvey.SurveyGrossRank = 101+(100-@newsurvey.Conversion)
+                  @newsurvey.SurveyGrossRank = 201+(100-@newsurvey.Conversion)
                   print "Assigned Conv>0 survey rank: ", @newsurvey.SurveyGrossRank
                   puts
         
@@ -991,6 +994,7 @@ puts
                 end
 
               end          
+              
            
              
         # SAVE the new survey information in the database
@@ -1015,7 +1019,7 @@ puts
             print '******************************** This survey does not meet our biz requirements: ', IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"]
             puts
             
-            print '***************************** Biz Criteria Does NOT Match: CountryLanguageID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9))
+            print '***************************** Biz Criteria Does NOT Match: CountryLanguageID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 7) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9))
             puts
 
             print '***************************** Biz Criteria Does NOT Match: StudyTypeID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 11) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23))
@@ -1034,7 +1038,7 @@ puts
       puts
   
   
-      # RANK the stack after every 60 minutes    
+      # RANK the stack after every X minutes    
            
 #      if (i == 30000) || ((Time.now - @lastrankingtime) >= 300000) then    
       
@@ -1047,44 +1051,44 @@ puts
         puts        
         
       #  Survey.all.each do |toberankedsurvey|
-        Survey.where("SurveyGrossRank < ?", 501).each do |toberankedsurvey|
+        Survey.where("SurveyGrossRank < ?", 601).each do |toberankedsurvey|
     
-          # Fast Converters 1-95
+          # Safety 1-95
           if (0 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 95) then
     
-            # Only TCR > 0.066 surveys in this group. Surveys arrive in TCR order. If they do not perform move them to Bad.
+            # Only low CPI and TCR > 0.066 surveys in this group. Surveys arrive in TCR order. If they do not perform move them to Horrible.
 
             if (toberankedsurvey.TotalRemaining == 0) || ((Time.now - toberankedsurvey.created_at > 86400*5) && (toberankedsurvey.TCR < 0.05)) then
     
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
-                toberankedsurvey.label = 'D: Rem=0'
+                toberankedsurvey.label = 'D: Rem = 0'
     
               else
 
                 toberankedsurvey.SurveyGrossRank = 701+(100-toberankedsurvey.Conversion)
                 print "Assigned 0 Remaining / Old to Dead: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                 puts
-                toberankedsurvey.label = 'D: Rem=0'
+                toberankedsurvey.label = 'D: Rem = 0'
               end
   
             else            
     
               @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
     
-              if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 15) then  # worst than 6.6% conversion rate i.e. 15 more after they were moved out of New or other ranks
+              if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 15) then  # worst than 6.6% conversion rate i.e. 15 more after they were moved out of New
       
                 if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
-                  toberankedsurvey.SurveyGrossRank = 600
-                  toberankedsurvey.label = 'F->B: TCR<0.066'
-      
+                  toberankedsurvey.SurveyGrossRank = 700
+                  toberankedsurvey.label = 'H: CPI<1.5 and TCR<0.066'
+        
                 else
-    
-                  toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
-                  print "Assigned Fast survey to Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+
+                  toberankedsurvey.SurveyGrossRank = 601+(100-toberankedsurvey.Conversion)
+                  print "Assigned Safety survey to Horrible: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts
                   toberankedsurvey.TCR = 1.0 / @toberankedsurveyNumberofAttemptsSinceLastComplete
-                  toberankedsurvey.label = 'F->B: TCR<0.066'
+                  toberankedsurvey.label = 'H: CPI<1.5 and TCR<0.066'
                 end
       
               else
@@ -1093,13 +1097,13 @@ puts
                   toberankedsurvey.SurveyGrossRank = 1
                   print "Reposition Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts
-                  toberankedsurvey.label = 'F->F'
+                  toberankedsurvey.label = 'S: Repositioned'
                 else
                   
                   toberankedsurvey.SurveyGrossRank = 100 - (toberankedsurvey.TCR * 100)
                   print "Reposition Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts
-                  toberankedsurvey.label = 'F->F'
+                  toberankedsurvey.label = 'S: Repositioned'
                   
                 end
       
@@ -1107,21 +1111,22 @@ puts
       
             end # TotalRemaining
       
+
           else # not in 1-95 rank range
-          end # not in 1-95 rank range      
-          
+          end # not in 1-95 rank range
+  
           # Showcase 96-100
           if (95 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 100) then
             # do nothing. surveys are put here manually to give them quick exposure to traffic when network is ACTIVE or in SAFETY mode
           else
           end  # not in 96-100 range
 
-          # Brand New+Conv>0 101-200        
+          # Fast Converters 101-200        
           if (100 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 200) then
     
-            # This is the place for brand new surveys to be tested with first 10 hits. They move to Fast or Try more if they do not complete in 10. If they changed to Conv=0 then move them to Conv=0
-   
-            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*5) then
+            # Only high CPI and TCR > 0.066 (fast converters) in this group. Surveys arrive in TCR order. If they do not perform move them to Bad.          
+    
+            if (toberankedsurvey.TotalRemaining == 0) || ((Time.now - toberankedsurvey.created_at > 86400*5) && (toberankedsurvey.TCR < 0.05)) then
       
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
@@ -1135,112 +1140,44 @@ puts
                 toberankedsurvey.label = 'D: Rem = 0'
               end
     
-            else         
+            else
     
-              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.10) then # (1 in 10 hits)
-                
-                toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
-                print "Assigned From Conv>0 to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                toberankedsurvey.label = 'N->F: From Conv>0'
-      
-              else # Completes > 0 or TCR >= 0.1
-              end # Completes > 0 or TCR >= 0.1
+              @toberankedsurveyNumberofAttemptsSinceLastComplete = toberankedsurvey.SurveyExactRank - toberankedsurvey.NumberofAttemptsAtLastComplete
     
-              if (toberankedsurvey.CompletedBy.length == 0) then
+              if (@toberankedsurveyNumberofAttemptsSinceLastComplete > 15) then
       
-                if toberankedsurvey.CPI > 0 then
-                  @GCR = toberankedsurvey.GEPC / toberankedsurvey.CPI
+                if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
+                  toberankedsurvey.SurveyGrossRank = 600
+                  toberankedsurvey.label = 'F->B: TCR<0.066'
+        
                 else
-                  @GCR = toberankedsurvey.GEPC
+      
+                  toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
+                  print "Assigned Fast survey to Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  puts
+                  toberankedsurvey.TCR = 1.0 / @toberankedsurveyNumberofAttemptsSinceLastComplete
+                  toberankedsurvey.label = 'F->B: TCR<0.066'
                 end
-
-                if (toberankedsurvey.Conversion == 0) then
-            
-                  if (@GCR >= 1) then
-                    toberankedsurvey.SurveyGrossRank = 401
-                    print "Assigned a Conv>0 N->P: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                    puts 
-                    toberankedsurvey.label = 'N->P'
-       
-                  else
-        
-                    toberankedsurvey.SurveyGrossRank = 500-(100*@GCR)
-                    print "Assigned a Conv>0 N->P: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                    puts    
-                    toberankedsurvey.label = 'N->P'
-                  end
-                 
-                else # Conversion>0
-
-                    if (toberankedsurvey.SurveyExactRank > 10) then
-                
-                      if toberankedsurvey.Conversion == 0 then
-                        toberankedsurvey.SurveyGrossRank = 400
-                        print "Assigned Conv>0 to TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                        puts 
-                        toberankedsurvey.label = 'N->TM'
       
-                      else
-
-                        toberankedsurvey.SurveyGrossRank = 301+(100-toberankedsurvey.Conversion)
-                        print "Assigned Conv>0 to TM:", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                        puts
-                        toberankedsurvey.label = 'N->TM'
-                      end
-                        
-                    else # less than 10 hits
-            
-                      # do nothing until it gets 10 hits, reposition within 101-200 on same day or move to 201-300 ranks if older than a day
-
-                      if (Time.now - toberankedsurvey.created_at > 86400*1) then
-                        if toberankedsurvey.Conversion == 0 then
-                          toberankedsurvey.SurveyGrossRank = 300
-                          print "Repositioned Conv>0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                          puts 
-                          toberankedsurvey.label = 'N->G'
+              else
       
-                        else
-
-                          toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
-                          print "Repositioned Conv>0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                          puts
-                          toberankedsurvey.label = 'N->G'
-                        end
-                      
-                      else  
-                         
-                        if toberankedsurvey.Conversion == 0 then
-                          toberankedsurvey.SurveyGrossRank = 200
-                          print "Repositioned Conv>0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                          puts 
-                          toberankedsurvey.label = 'N: Repositioned'
+                toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
+                print "Reposition Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                puts
+                toberankedsurvey.label = 'F: Repositioned'
       
-                        else
-
-                          toberankedsurvey.SurveyGrossRank = 101+(100-toberankedsurvey.Conversion)
-                          print "Repositioned Conv>0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                          puts
-                          toberankedsurvey.label = 'N: Repositioned'
-                        end
-                        
-                      end # older than 24 hrs
-
-                    end # more than 10 hits on a GCR>=0.01
- 
-                end # Conversion=0
-        
-              else # completes = 0
-              end # completes = 0
-              
-            end  # TotalRemaining = 0
+              end
+    
+            end # TotalRemaining          
+    
 
           else # not in 101-200 rank range
           end # not in 101-200 rank range
 
-          # Good (Conv>0) 201-300
+          # Good (New+Conv>0) 201-300
           if (200 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 300) then
     
-            # This is the place for a day or older but good surveys to be tested with first 10 hits. They move to Fast or Try more if they do not complete in 10. If they changed to Conv=0 then move them to Conv=0
+            # This is the place for new surveys to be tested with first 10 hits. They move to Fast or Try more if they do not complete in 10. If they changed to Conv=0 then move them to Conv=0
    
             if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*5) then
       
@@ -1260,9 +1197,19 @@ puts
     
               if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.10) then # (1 in 10 hits)
       
-                toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
-                print "Assigned From Conv>0 to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                toberankedsurvey.label = 'G->F'
+                if (toberankedsurvey.CPI > 1.49) then
+      
+                  toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
+                  print "Assigned From Conv>0 to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  toberankedsurvey.label = 'G->F: From Conv>0'
+      
+                else
+      
+                    toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
+                    print "Assigned From Conv>0 to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    toberankedsurvey.label = 'G->S: From Conv>0'
+        
+                end 
       
               else # Completes > 0 or TCR >= 0.1
               end # Completes > 0 or TCR >= 0.1
@@ -1279,7 +1226,7 @@ puts
             
                   if (@GCR >= 1) then
                     toberankedsurvey.SurveyGrossRank = 401
-                    print "Assigned G->P: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    print "Assigned a Conv>0 to Poor: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                     puts 
                     toberankedsurvey.label = 'G->P'
        
@@ -1290,7 +1237,8 @@ puts
                     puts    
                     toberankedsurvey.label = 'G->P'
                   end
-                  
+            
+      
                 else # Conversion>0
 
                     if (toberankedsurvey.SurveyExactRank > 10) then
@@ -1318,14 +1266,14 @@ puts
                         toberankedsurvey.SurveyGrossRank = 300
                         print "Repositioned Conv>0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                         puts 
-                        toberankedsurvey.label = 'G->G'
+                        toberankedsurvey.label = 'G: Repositioned'
       
                       else
 
                         toberankedsurvey.SurveyGrossRank = 201+(100-toberankedsurvey.Conversion)
                         print "Repositioned Conv>0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                         puts
-                        toberankedsurvey.label = 'G->G'
+                        toberankedsurvey.label = 'G: Repositioned'
                       end
 
                     end # more than 10 hits on a GCR>=0.01
@@ -1363,10 +1311,21 @@ puts
       
               if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.066) then
       
-                toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
-                print "Assigned Try more survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                puts
-                toberankedsurvey.label = 'TM->F'
+                if (toberankedsurvey.CPI > 1.49) then
+      
+                  toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
+                  print "Assigned Try more survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  puts
+                  toberankedsurvey.label = 'TM->F'
+    
+                else   
+      
+                    toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
+                    print "Assigned Try more survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    puts
+                    toberankedsurvey.label = 'TM->S'
+        
+                end 
       
               else # Completes > 0 or TCR >= 0.066
               end # Completes > 0 or TCR >= 0.066
@@ -1389,7 +1348,7 @@ puts
                       toberankedsurvey.SurveyGrossRank = 301+(100-toberankedsurvey.Conversion)
                       print "Repositioned TM: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                       puts
-                      toberankedsurvey.label = 'TM->TM'
+                      toberankedsurvey.label = 'TM: Repositioned'
           
                   else # Conversion changed to = 0
                         
@@ -1432,13 +1391,14 @@ puts
      
             end  # TotalRemaining 
           
-          else
+          else # not in rank 401-500 range
           end # not in rank 301-400 range
           
           # Poor (New+Conv=0) 401-500
           if (400 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 500) then
   
-            # This is the place for new Conv=0 (Poor) surveys. If they make TCR>0.066 then move to Fast or Safety. Move to Bad if TCR<0.066 but more than 0. They move to Horrible if they do not complete in 10. If they turn GCR>=0.01 then move them to GCR>=0.01.    
+            # This is the place for new Conv=0 (Poor) surveys. If they make TCR>0.066 then move to Fast or Safety. Move to Bad if TCR<0.066 but more than 0. They move to Horrible if they do not complete in 10. If they turn GCR>=0.01 then move them to GCR>=0.01. 
+    
     
             if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*5) then
       
@@ -1458,14 +1418,24 @@ puts
     
               if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.066) then # (1 in 10 hits)
     
-                toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
-                print "Assigned Poor survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                toberankedsurvey.label = 'P->F'
+                if (toberankedsurvey.CPI > 1.49) then
+    
+                  toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
+                  print "Assigned Poor survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  toberankedsurvey.label = 'P->F: TCR>0.066'
+    
+                else   
+
+                    toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
+                    print "Assigned Poor survey to Safety: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    toberankedsurvey.label = 'P->S: TCR>0.066'
+      
+                end 
       
               else # Completes > 0 or TCR >= 0.066
               end # Completes > 0 or TCR >= 0.066
     
-              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.066) then
+              if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.066)
       
                 if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                   toberankedsurvey.SurveyGrossRank = 600
@@ -1514,14 +1484,14 @@ puts
                         toberankedsurvey.SurveyGrossRank = 401
                         print "Repositioned Poor: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                         puts 
-                        toberankedsurvey.label = 'P->P'
+                        toberankedsurvey.label = 'Poor: Repositioned'
        
                       else
         
                         toberankedsurvey.SurveyGrossRank = 500-(100*@GCR)
                         print "Poor: Repositioned: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                         puts    
-                        toberankedsurvey.label = 'P->P'
+                        toberankedsurvey.label = 'Poor: Repositioned'
               
                       end
              
@@ -1533,32 +1503,10 @@ puts
               end # completes = 0
    
             end  # TotalRemaining
+
     
-          else
-          end # not in 401-500 rank range
-
-        toberankedsurvey.save!
-
-        print "Ranked survey number = ", toberankedsurvey.SurveyNumber
-        puts
-        
-        end # do for all toberankedsurvey 
-      else
-        # i is not 1 and it has not been 30 mins since last ranking, so do nothing
-      end # time for ranking
-      
-      print "******************** Last ranking time for better surveys: ", @lastrankingtime
-      puts
-      
-      if ((Time.now - @lastrankingtimeforpoorsurveys) >= 9600) then    
-
-        @lastrankingtimeforpoorsurveys = Time.now
-        
-        print "******************** Last ranking time for POOR surveys: ", @lastrankingtimeforpoorsurveys
-        puts  
-        
-        Survey.where("SurveyGrossRank > ?", 500).each do |toberankedsurvey|
-
+          else # not in 301-400 rank range
+          end # not in 301-400 rank range
           
           # Bad 501-600
           if (500 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 600) then
@@ -1596,14 +1544,14 @@ puts
                   toberankedsurvey.SurveyGrossRank = 600
                   print "B: Repositioned: ", toberankedsurvey.SurveyGrossRank
                   puts
-                  toberankedsurvey.label = 'B->B'
+                  toberankedsurvey.label = 'B: Repositioned'
         
                 else
       
                   toberankedsurvey.SurveyGrossRank = 501+(100-toberankedsurvey.Conversion)
                   print "B: Repositioned: ", toberankedsurvey.SurveyGrossRank
                   puts
-                  toberankedsurvey.label = 'B->B'
+                  toberankedsurvey.label = 'B: Repositioned'
                 end
       
               else
@@ -1613,6 +1561,28 @@ puts
 
           else # not in rank 501-600 range
           end # not in rank 501-600 range
+
+        toberankedsurvey.save!
+
+        print "Ranked survey number = ", toberankedsurvey.SurveyNumber
+        puts
+        
+        end # do for all toberankedsurvey 
+      else
+        # i is not 1 and it has not been 30 mins since last ranking, so do nothing
+      end # time for ranking
+      
+      print "******************** Last ranking time for better surveys: ", @lastrankingtime
+      puts
+      
+      if ((Time.now - @lastrankingtimeforpoorsurveys) >= 9600) then    
+
+        @lastrankingtimeforpoorsurveys = Time.now
+        
+        print "******************** Last ranking time for POOR surveys: ", @lastrankingtimeforpoorsurveys
+        puts  
+        
+        Survey.where("SurveyGrossRank > ?", 600).each do |toberankedsurvey|
 
           # Horrible 601-700
           if (600 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 700) then
@@ -1637,9 +1607,18 @@ puts
 
               if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.066) then
       
-                toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100).to_i
-                print "Assigned Horrible survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                toberankedsurvey.label = 'H->F: TCR>0.066'
+                if toberankedsurvey.CPI > 1.49 then
+
+                  toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100).to_i
+                  print "Assigned Horrible survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  toberankedsurvey.label = 'H->F: TCR>0.066'
+        
+                else
+        
+                  toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100).to_i
+                  print "Assigned Horrible survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                  toberankedsurvey.label = 'H->S: TCR>0.066'
+                end
         
               else
               end
@@ -1674,14 +1653,14 @@ puts
       
                   if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                     toberankedsurvey.SurveyGrossRank = 700
-                    toberankedsurvey.label = 'H->H'
+                    toberankedsurvey.label = 'H: Repositioned'
         
                   else
       
                     toberankedsurvey.SurveyGrossRank = 601+(100-toberankedsurvey.Conversion)
                     print "Updated existing Horrible survey rank to: ", toberankedsurvey.SurveyGrossRank
                     puts
-                    toberankedsurvey.label = 'H->H'
+                    toberankedsurvey.label = 'H: Repositioned'
                   end
       
                 end # Conv, ALC conditions
@@ -1704,12 +1683,22 @@ puts
             else
           
                 if (toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR >= 0.066) then
+      
+                  if toberankedsurvey.CPI > 1.49 then
 
-                  toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
-                  print "Assigned Dead survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                  toberankedsurvey.label = 'D->F'
+                    toberankedsurvey.SurveyGrossRank = 201 - (toberankedsurvey.TCR * 100)
+                    print "Assigned Dead survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    toberankedsurvey.label = 'D->F: TCR>0.066'
         
-                else 
+                  else
+        
+                    toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
+                    print "Assigned Dead survey to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
+                    toberankedsurvey.label = 'D->S: TCR>0.066'
+                  end
+        
+                else
+            
                 end # Complete>0 & TCR >= 0.066
       
                 if ((toberankedsurvey.CompletedBy.length > 0) && (toberankedsurvey.TCR > 0) && (toberankedsurvey.TCR < 0.066)) then
@@ -1756,14 +1745,14 @@ puts
       
                     if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                       toberankedsurvey.SurveyGrossRank = 800
-                      toberankedsurvey.label = 'D->D'
+                      toberankedsurvey.label = 'D: Repositioned'
         
                     else
       
                       toberankedsurvey.SurveyGrossRank = 701+(100-toberankedsurvey.Conversion)
                       print "Updated existing Horrible survey rank to: ", toberankedsurvey.SurveyGrossRank
                       puts
-                      toberankedsurvey.label = 'D->D'
+                      toberankedsurvey.label = 'D: Repositioned'
                 
                     end
       

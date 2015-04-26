@@ -1252,7 +1252,6 @@ class UsersController < ApplicationController
     # Set the priority for P2S stack
         
     @foundtopsurveyswithquota = false   # false means not finished finding top FED surveys (set it to true if testing p2s)
-    # puts "**************** P2S is NOT at the Head"
         
     if net.FED_US != nil then
       if (net.FED_US == 0) && (user.country == "9") then
@@ -1291,7 +1290,7 @@ class UsersController < ApplicationController
       @topofstack = 1
     else
       # make top of Custom surveys as starting spot for picking qualified surveys
-      @topofstack = 96
+      @topofstack = 1
     end
 
     print "**************************** PoorConversion is turned: ", @poorconversion, ' Topofstack is: ', @topofstack
@@ -1304,7 +1303,7 @@ class UsersController < ApplicationController
 
 
     # Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
-    Survey.where("CountryLanguageID = ? AND SurveyGrossRank <= ?", @usercountry, 600).order( "SurveyGrossRank" ).each do |survey|
+    Survey.where("CountryLanguageID = ? AND SurveyGrossRank <= ?", @usercountry, 500).order( "SurveyGrossRank" ).each do |survey|
 
 
       if @foundtopsurveyswithquota == false then  #3 false means not finished finding top surveys
@@ -2164,9 +2163,6 @@ class UsersController < ApplicationController
     end
       
     
-    
-    
-    
      # If the user qualifies for one or more survey, send user to the top ranked survey first and repeat until success/failure/OT/QT
 #     @InferiorSupplierLink = Array.new
 
@@ -2626,8 +2622,9 @@ class UsersController < ApplicationController
               
     RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectEPC: :desc).each do |project|
 
-      if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects       
+      if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects     
         
+        if project.projectStillLive then
         
         
 #        print "--------------*************** Checking for duplicate user fingerprint for project number: ", project.rfg_id
@@ -3586,9 +3583,14 @@ class UsersController < ApplicationController
           puts
           
         end # Qualification check
-        
+
+
+
 #      else
  #     end # if isDuplicate
+ 
+      else
+      end # if projectStillLive
  
       else
       end # if foundtopprojects

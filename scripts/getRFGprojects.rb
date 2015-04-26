@@ -2,7 +2,6 @@ require 'digest/hmac'
 require 'net/http'
 require 'uri'
 
-
 class String
 	def hex2bin
 		scan(/../).map {|x| x.to_i(16).chr}.join
@@ -11,7 +10,6 @@ end
 
 apid = "54ef65c3e4b04d0ae6f9f4a7"
 secret = "8ef1fe91d92e0602648d157f981bb934"
-
 
 
 # Get any new offerwall surveys from Federated Sample
@@ -23,23 +21,11 @@ begin
   print '************************************** getRFGProjects: Time at start', starttime
   puts
 
-
-
-  #command='{ "command" : "test/copy/1", "data1" : "KETSCI TEST"}'
   command ='{ "command" : "livealert/inventory/1" }'
-  #command='{ "command" : "livealert/targeting/1", "rfg_id" : "RFG141754-002"}'
-  #command='{ "command" : "livealert/listDatapoints/1"}'
-  #command='{ "command" : "livealert/datapoint/1", "name" : "STANDARD_HHI_US"}'
-  #command='{ "command" : "livealert/createLink/1", "rfg_id" : "RFG117241-010"}'
-  #command='{ "command" : "livealert/stats/1", "rfg_id" : "RFG117241-010"}'
-  #command='{ "command" : "livealert/log/1", "rfg_id" : "RFG117241-010"}'
-
-
 
   time=Time.now.to_i
   hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.hex2bin, Digest::SHA1)
   uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
-
 
   Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
 	  req = Net::HTTP::Post.new uri
@@ -48,7 +34,6 @@ begin
 	  response = http.request req
     RFGProjectsIndex = JSON.parse(response.body)  
   end
-
 
   print "RFGProjectsIndex: ", RFGProjectsIndex["response"]["projects"]
   puts
@@ -89,7 +74,8 @@ begin
           @project.mobileOptimized = RFGProjectsIndex["response"]["projects"][i]["mobileOptimized"]
           @project.lastModified = RFGProjectsIndex["response"]["projects"][i]["lastModified"]
         
-          if RFGProjectsIndex["response"]["projects"][i]["state"] != 2 then
+          
+          if (RFGProjectsIndex["response"]["projects"][i]["state"] != 2) || (@project.desiredCompletes == @project.currentCompletes) then
             @project.projectStillLive = false
             skipProject = true # no need to update if no modifications
           else
@@ -130,7 +116,7 @@ begin
         print "********** Saved a New project available with project.rfg_id: ", @project.rfg_id
         puts
         
-        if @project.state != 2 then
+        if (@project.state != 2) || (@project.desiredCompletes == @project.currentCompletes) then
           @project.projectStillLive = false
           skipProject = true # no need to update if no modifications
         else
@@ -148,6 +134,7 @@ begin
     
     print "************ skipProject =", skipProject
     puts
+    
     if (skipProject == false) then
         command = { :command => "livealert/stats/1", :rfg_id => @project.rfg_id }.to_json        
 
@@ -307,7 +294,6 @@ begin
     puts
   end # do loop for all i
  
-  
   
   # Delete projects which are neither custom entered nor on the index list but are in local database
     
