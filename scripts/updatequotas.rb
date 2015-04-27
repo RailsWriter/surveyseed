@@ -975,6 +975,7 @@ puts
                   @newsurvey.SurveyGrossRank = 101+(100-@newsurvey.Conversion)
                   print "Assigned Conv>0 survey rank: ", @newsurvey.SurveyGrossRank
                   puts
+                  @newsurvey.label = 'N,C>0'
         
               else # Conv=0
         
@@ -982,12 +983,14 @@ puts
                   @newsurvey.SurveyGrossRank = 401
                   print "Assigned Conv=0 survey rank: ", @newsurvey.SurveyGrossRank, "GCR= ", @newGCR
                   puts
+                  @newsurvey.label = 'N,C=0'
              
                 else
             
                   @newsurvey.SurveyGrossRank = 500-(100*@newGCR)
                   print "Assigned Conv=0 survey rank: ", @newsurvey.SurveyGrossRank, "GCR= ", @newGCR
                   puts
+                  @newsurvey.label = 'N,C=0'
                 end
 
               end          
@@ -1076,7 +1079,7 @@ puts
       
                 if toberankedsurvey.Conversion == 0 then # to squeeze 101 conversion values in 100 levels
                   toberankedsurvey.SurveyGrossRank = 600
-                  toberankedsurvey.label = 'F->B: TCR<0.066'
+                  toberankedsurvey.label = 'F->B'
       
                 else
     
@@ -1084,7 +1087,7 @@ puts
                   print "Assigned Fast survey to Bad: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                   puts
                   toberankedsurvey.TCR = 1.0 / @toberankedsurveyNumberofAttemptsSinceLastComplete
-                  toberankedsurvey.label = 'F->B: TCR<0.066'
+                  toberankedsurvey.label = 'F->B'
                 end
       
               else
@@ -1141,7 +1144,7 @@ puts
                 
                 toberankedsurvey.SurveyGrossRank = 101 - (toberankedsurvey.TCR * 100)
                 print "Assigned From Conv>0 to Fast: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
-                toberankedsurvey.label = 'N->F: From Conv>0'
+                toberankedsurvey.label = 'N->F'
       
               else # Completes > 0 or TCR >= 0.1
               end # Completes > 0 or TCR >= 0.1
@@ -1213,14 +1216,14 @@ puts
                           toberankedsurvey.SurveyGrossRank = 200
                           print "Repositioned Conv>0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                           puts 
-                          toberankedsurvey.label = 'N: Repositioned'
+                          toberankedsurvey.label = 'N->N'
       
                         else
 
                           toberankedsurvey.SurveyGrossRank = 101+(100-toberankedsurvey.Conversion)
                           print "Repositioned Conv>0: ", toberankedsurvey.SurveyGrossRank, ' Survey number = ', toberankedsurvey.SurveyNumber
                           puts
-                          toberankedsurvey.label = 'N: Repositioned'
+                          toberankedsurvey.label = 'N->N'
                         end
                         
                       end # older than 24 hrs
@@ -1857,11 +1860,11 @@ puts
       print 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to repeat immediately'
       puts
       timetorepeat = true
-    else
+  else
       print 'QuotaUpdates: time elapsed since start =', (timenow - starttime), '- going to sleep for 5 minutes since it takes about 20 mins to do a sweep.'
       puts
       sleep (5.minutes)
       timetorepeat = true
-    end
+  end
 
 end while timetorepeat

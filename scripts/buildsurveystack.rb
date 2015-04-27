@@ -154,6 +154,7 @@ begin
             @survey.SurveyGrossRank = 101+(100-@survey.Conversion)
             print "Assigned Conv>0 survey rank: ", @survey.SurveyGrossRank
             puts
+            @survey.label = 'N,C>0'
         
         else # Conv=0
         
@@ -161,12 +162,14 @@ begin
             @survey.SurveyGrossRank = 401
             print "Assigned Conv=0 survey rank: ", @survey.SurveyGrossRank, "GCR= ", @GCR
             puts
+            @survey.label = 'N,C=0'
              
           else
             
             @survey.SurveyGrossRank = 500-(100*@GCR)
             print "Assigned Conv=0 survey rank: ", @survey.SurveyGrossRank, "GCR= ", @GCR
             puts
+            @survey.label = 'N,C=0'
           end
 
         end          
@@ -532,7 +535,7 @@ begin
             puts
             @survey.save
           else
-            print '************** This survey does not meet the CountryLanguageID, SurveyType, or CPI criteria.'
+            print '************** This unallocated/NEW survey does not meet the CountryLanguageID, SurveyType, or CPI criteria.'
             puts
             print '*********** At end i =', i, ' SurveyNumber = ', offerwallresponse["Surveys"][i]["SurveyNumber"]
             puts

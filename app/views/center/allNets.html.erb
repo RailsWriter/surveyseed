@@ -8,7 +8,7 @@
 
 	<% Network.where("status != ?", "DEAD").order(name: :asc).each do |c| %>
 	    <li>
-	       <%= link_to c.name.to_s + '------' + c.id.to_s + '-----' + c.netid.slice(0..3).to_s + '-----' + c.payout.to_s + '-------' + c.status.to_s + '-----------------------' + c.Flag2.to_s + '-------------------' + c.Flag3.to_s + '-------------------' + c.P2S_US.to_s + '-----' + c.P2S_CA.to_s + '-----' + c.P2S_AU.to_s + '---------------------' + c.FED_US.to_s + '-----' + c.FED_CA.to_s + '-----' + c.FED_AU.to_s + '------------------' + c.RFG_US.to_s + '-----' + c.RFG_CA.to_s + '-----' + c.stackOrder.to_s  -%>
+	       <%= link_to c.name.to_s + '------' + c.id.to_s + '-----' + c.netid.slice(0..2).to_s + '-----' + c.payout.to_s + '-------' + c.status.to_s + '-----------------------' + c.Flag2.to_s + '-------------------' + c.Flag3.to_s + '-------------------' + c.P2S_US.to_s + '-----' + c.P2S_CA.to_s + '-----' + c.P2S_AU.to_s + '---------------------' + c.FED_US.to_s + '-----' + c.FED_CA.to_s + '-----' + c.FED_AU.to_s + '------------------' + c.RFG_US.to_s + '-----' + c.RFG_CA.to_s + '-----' + c.stackOrder.to_s  -%>
 	    </li>
 		<br>
 	<% end %>

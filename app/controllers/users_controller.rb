@@ -766,9 +766,9 @@ class UsersController < ApplicationController
     if params[:children] != nil
       user.children=params[:children]
       user.save
-      print "______________________________________>>> user.children.flatten: ", user.children.flatten
+      print "****** user.children.flatten: ", user.children.flatten
       puts
-      print "______________________________________>>> user.children[0]: ", user.children[0]
+      print "******* user.children[0]: ", user.children[0]
       puts
       redirect_to '/users/qq12'
     else
@@ -885,7 +885,7 @@ class UsersController < ApplicationController
     
     if @provincePrecode == nil then
       # wild guess
-      @provincePrecode = 11
+      @provincePrecode = "11"
     else
     end
            
@@ -1384,6 +1384,7 @@ class UsersController < ApplicationController
           @_CPI_check = ((survey.CPI == nil) || (survey.CPI >= @currentpayout))
           
 
+          puts "---------------------------------->>>  Replace QualificationHHCPrecodes with CA_provincePrecodes column"
         
           print '************ User QUALIFIED for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ..... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.employment, ' Std_Employment PreCode from survey: ', survey.QualificationEmploymentPreCodes, ' User Entered PIndustry: ', user.pindustry, ' PIndustry PreCode from survey: ', survey.QualificationPIndustryPreCodes, ' User Entered JobTitle: ', user.jobtitle, ' JobTitle PreCode from survey: ', survey.QualificationJobTitlePreCodes, ' User Entered Children: ', user.children, ' Children PreCodes from survey: ', survey.QualificationChildrenPreCodes, ' Network Payout: ', @currentpayout, ' CPI from survey: ', survey.CPI, ' SurveyStillAlive: ', survey.SurveyStillLive
          
