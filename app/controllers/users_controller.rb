@@ -2626,69 +2626,7 @@ class UsersController < ApplicationController
       if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects     
         
         if project.projectStillLive then
-        
-        
-#        print "--------------*************** Checking for duplicate user fingerprint for project number: ", project.rfg_id
- #       puts
-  #      
-        # lets assume the user is not a duplicate, typically
-#        @duplicateFingerprint = false
-        
-#        if user.fingerprint != nil then
-        
-#          print "--------------->>>>>>******************* user fingerprint: ", user.fingerprint
-#          puts
-        
-#          command = { :command => "livealert/duplicateCheck/1", :rfg_id => project.rfg_id, :fingerprint => user.fingerprint, :ip => user.ip_address }.to_json
-#        
-#          time=Time.now.to_i
-#          hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.scan(/../).map {|x| x.to_i(16).chr}.join, Digest::SHA1)
-#          uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
-#
-#         begin
-#            Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
- #             req = Net::HTTP::Post.new uri
-  #            req.body = command
-   #           req.content_type = 'application/json'
-    #          response = http.request req
-     #         @RFGFingerprint = JSON.parse(response.body)  
-      #      end
-       # 
-        #  rescue Net::ReadTimeout => e  
-         #   puts e.message
-          #end
-          #
-#          if @RFGFingerprint == nil then
- #           @duplicateFingerprint = false
-  #          
-   #         puts "----------->>>>>> @RFGFingerprint response returned by rfg server was nil ZZZZZZZZ"
-    #      else
-     #       
-      #      print "******************* RFGFingerprint: ", @RFGFingerprint
-       #     puts
-        #  
-         #   if @RFGFingerprint["response"]["isDuplicate"] == true then
-          #    @duplicateFingerprint = true
-           #   puts "----------->>>>>> @RFGFingerprint response returned by rfg server was true XXXXXXXX"
-            #  
-#            else
- #             @duplicateFingerprint = false
-  #            puts "----------->>>>>> @RFGFingerprint response returned by rfg server was false VVVVVVVVVV"
-   #         end
-    #      end      
-     #     
-      #  else
-          # Force it to be not duplicate because it had no fingerprint
-       #   @duplicateFingerprint = false          
-        #  puts "----------->>>>>> user fingerprint was nil CCCCCCCCC"
-          
-#        end
-#
- #       if  @duplicateFingerprint == false then
-  #     
-   #     print "------------------------------------>>>>>>>>>> *************** This is not a duplicate fingerprint for this project. Continue checking qualifications for project number: ", project.rfg_id
-    #    puts
-        
+                
         # Initialize qualification parameters to true. These are turned false if user does not qualify
         @QualificationAge = true
         @QualificationGender = true
@@ -3000,16 +2938,6 @@ class UsersController < ApplicationController
               puts
                 
                 
-
-
-
-
-
-
-
-
-
-
 
                         
             when "Employment Status"
@@ -3508,28 +3436,28 @@ class UsersController < ApplicationController
                 
                 if project.quotas[j]["completesLeft"] > 0 then
               
-                @RFGQuotaIsAvailable = true
+                  @RFGQuotaIsAvailable = true
+                else
+                  # if previous quota was available then preserve that fact
+                  @RFGQuotaIsAvailable = false
+                  # @RFGQuotaFull = true
+                end
               else
-                # if previous quota was available then preserve that fact
-                @RFGQuotaIsAvailable = false
-                # @RFGQuotaFull = true
               end
-            else
-            end
               
               if ( (project.country == "US") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry )  && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationEducation) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion)  ) then
                 
                 if project.quotas[j]["completesLeft"] > 0 then
               
-                @RFGQuotaIsAvailable = true
-              else
-                # if previous quota was available then preserve that fact
-                @RFGQuotaIsAvailable = false
-                # @RFGQuotaFull = true
-              end
+                  @RFGQuotaIsAvailable = true
+                else
+                  # if previous quota was available then preserve that fact
+                  @RFGQuotaIsAvailable = false
+                  # @RFGQuotaFull = true
+                end
               
-            else
-            end
+              else
+              end
               
             end # reviewed all n nested qualifications of a quota
                            
@@ -3543,52 +3471,118 @@ class UsersController < ApplicationController
             puts
           end
           
-#           if @RFGQuotaFull == false then
+          
           if @RFGQuotaIsAvailable == true then
           
             print '********** USER_ID: ', user.user_id, ' has Quota for the RFG project: ', project.rfg_id
             puts
-
-            @RFGProjectsWithQuota << project.rfg_id
-            @RFGSupplierLinks << project.link+'&rfg_id='+project.rfg_id
+           
+            print "--------------*************** Checking for duplicate user fingerprint for project number: ", project.rfg_id
+            puts
+                  
+            # lets assume the user is not a duplicate, typically
+            @duplicateFingerprint = false
+        
+            if user.fingerprint != nil then
+        
+              print "--------------->>>>>>******************* user fingerprint: ", user.fingerprint
+              puts
+        
+              command = { :command => "livealert/duplicateCheck/1", :rfg_id => project.rfg_id, :fingerprint => user.fingerprint, :ip => user.ip_address }.to_json
+                    
+              time=Time.now.to_i
+              hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.scan(/../).map {|x| x.to_i(16).chr}.join, Digest::SHA1)
+              uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
+            
+              begin
+                Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+                  req = Net::HTTP::Post.new uri
+                  req.body = command
+                  req.content_type = 'application/json'
+                  response = http.request req
+                  @RFGFingerprint = JSON.parse(response.body)  
+                end
+                    
+                rescue Net::ReadTimeout => e  
+                puts e.message
+              end
+              
+              print "******************* RFGFingerprint 1, result: ", @RFGFingerprint, ' ', @RFGFingerprint["result"]
+              puts
+                      
+              if ((@RFGFingerprint == nil) || (@RFGFingerprint["result"] != 0))  then
+                @duplicateFingerprint = true            
+                puts "----------->>>>>> @RFGFingerprint response returned by rfg server was not valid. User will not be allowed to enter, ZZZZZZZZ"
+            
+              else
+                        
+                print "******************* RFGFingerprint 2, isDuplicate?: ", @RFGFingerprint, ' ', @RFGFingerprint["response"]["isDuplicate"]
+                puts
+                      
+                if @RFGFingerprint["response"]["isDuplicate"] == true then
+                  @duplicateFingerprint = true
+                  puts "----------->>>>>> @RFGFingerprint response returned by rfg server was true. User will not be allowed to enter, XXXXXXXX"             
+                else
+                  @duplicateFingerprint = false
+                  puts "----------->>>>>> @RFGFingerprint response returned by rfg server was false, User can enter VVVVVVVVVV"
+                end
+              
+              end      
+                 
+            else
+              # Force it to be not duplicate because it had no fingerprint
+              @duplicateFingerprint = false          
+              puts "----------->>>>>> user fingerprint was nil. User can enter, CCCCCCCCC"
+          
+            end # fingerprint == nil
+            
+            if  @duplicateFingerprint == false then
+                 
+              print "------------------------------------>>>>>>>>>> *************** This is not a duplicate user for this project. Add to list of projects for userride", project.rfg_id
+              puts
+            
+              @RFGProjectsWithQuota << project.rfg_id
+              @RFGSupplierLinks << project.link+'&rfg_id='+project.rfg_id
                         
             
-            if (user.country == '9') && (@RFGProjectsWithQuota.uniq.length >= @RFG_US) then
+              if (user.country == '9') && (@RFGProjectsWithQuota.uniq.length >= @RFG_US) then
           
-              @foundtopprojectswithquota = true
-        
-            else
-          
-              if (user.country == '6') && (@RFGProjectsWithQuota.uniq.length >= @RFG_CA) then
-            
                 @foundtopprojectswithquota = true
-          
+        
               else
           
-                #do nothing
-          
-              end
-        
-            end
+                if (user.country == '6') && (@RFGProjectsWithQuota.uniq.length >= @RFG_CA) then
             
+                  @foundtopprojectswithquota = true
+          
+                else
+          
+                  #do nothing
+          
+                end
+        
+              end              
+              
+            else
+            
+              print '-------------->>> DUPLICATE: Skip this project as User has already completed this project', project.rfg_id
+              puts
+          
+            end # if @duplicateFingerprint
             
           else
             
             print '********** USER_ID: ', user.user_id, ' DOES NOT HAVE ANY Quota available for the RFG projects: ', project.rfg_id
             puts
-          end
+          end # if quota available = true
           
-        else
+      else
           
-          print '************ User DID NOT QUALIFY for project number = ', project.rfg_id
-          puts
+        print '************ User DID NOT QUALIFY for project number = ', project.rfg_id
+        puts
           
-        end # Qualification check
+      end # Qualification check
 
-
-
-#      else
- #     end # if isDuplicate
  
       else
       end # if projectStillLive
@@ -3601,8 +3595,9 @@ class UsersController < ApplicationController
     print '********** In total USER_ID: ', user.user_id, ' has Quota available for the RFG projects: ', @RFGProjectsWithQuota
     puts
       
-    print '********** Total SUPPLIERLINKS for the RFG projects user has quota are: ', @RFGSupplierLinks
+    print '********** Total SUPPLIERLINKS for the RFG projects user has quota for, are: ', @RFGSupplierLinks
     puts
+      
       
     # Assemble additional parameters values to pass with the entry link
       
