@@ -148,7 +148,7 @@ begin
           req.body = command
           req.content_type = 'application/json'
           response = http.request req
-          RFGProjectStats = JSON.parse(response.body)  
+          RFGProjectStats = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil  
         end
         
       rescue Net::ReadTimeout => e  

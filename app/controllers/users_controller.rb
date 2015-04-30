@@ -75,16 +75,19 @@ class UsersController < ApplicationController
       
       # Keep track of clicks on each network as Flag2
       
-      @SSnet = Network.find_by netid: netid
-      if @SSnet.Flag2 == nil then
-        @SSnet.Flag2 = "1" 
-        @SSnet.save
+      if netid != nil then
+        @SSnet = Network.find_by netid: netid
+        if @SSnet.Flag2 == nil then
+          @SSnet.Flag2 = "1" 
+          @SSnet.save
+        else
+          @SSnet.Flag2 = (@SSnet.Flag2.to_i + 1).to_s
+          @SSnet.save
+        end
       else
-        @SSnet.Flag2 = (@SSnet.Flag2.to_i + 1).to_s
-        @SSnet.save
+        # can't record anything?
       end
-        
-     
+
       tracker.track(ip_address, 'Age')
       
       # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
@@ -2707,11 +2710,61 @@ class UsersController < ApplicationController
             print "@QualificationZip: ", @QualificationZip
             puts
             
-          when "STANDARD_HHI_US"
+          when "Household Income"
             @QualificationHhi = false
+            @RFGEHhi = ''
             (0..project.datapoints[m]["values"].length-1).each do |i|
-              if project.datapoints[m]["values"][i]["choice"] == user.householdincome.to_i then
+              if (project.datapoints[m]["values"][i]["choice"] == 1) && ( (user.householdincome.to_i == 1) || (user.householdincome.to_i == 2) || (user.householdincome.to_i == 3) ) then
                 @QualificationHhi = true
+                @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 2) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 5) ) then
+                @QualificationHhi = true
+                @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 3) && ( (user.householdincome.to_i == 6) || (user.householdincome.to_i == 7) || (user.householdincome.to_i == 8) || (user.householdincome.to_i == 9) || (user.householdincome.to_i == 10) ) then
+                @QualificationHhi = true
+                @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 4) && ( (user.householdincome.to_i == 11) || (user.householdincome.to_i == 12) || (user.householdincome.to_i == 13) || (user.householdincome.to_i == 14) || (user.householdincome.to_i == 15) ) then
+                @QualificationHhi = true
+                @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 5) && ( (user.householdincome.to_i == 16) || (user.householdincome.to_i == 17) || (user.householdincome.to_i == 18) || (user.householdincome.to_i == 19) || (user.householdincome.to_i == 20) ) then
+                @QualificationHhi = true
+                @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 6) && ( (user.householdincome.to_i == 21) || (user.householdincome.to_i == 22) ) then
+                @QualificationHhi = true
+                @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 7) && ( (user.householdincome.to_i == 23) || (user.householdincome.to_i == 24) ) then
+                @QualificationHhi = true
+                @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 8) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 25) ) then
+                @QualificationHhi = true
+                @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if ( (project.datapoints[m]["values"][i]["choice"] == 9) || (project.datapoints[m]["values"][i]["choice"] == 10) || (project.datapoints[m]["values"][i]["choice"] == 11) ) && (user.householdincome.to_i == 26) then
+                @QualificationHhi = true
+                @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
             end
@@ -2769,6 +2822,8 @@ class UsersController < ApplicationController
                 
           when "Education (US)"
               @QualificationEducation = false
+              @RFGEducationUS = ''
+              
               (0..project.datapoints[m]["values"].length-1).each do |i|
                 if (project.datapoints[m]["values"][i]["choice"] <= 7) && ((project.datapoints[m]["values"][i]["choice"] == user.eduation.to_i)) then
                   @QualificationEducation = true
@@ -2800,6 +2855,8 @@ class UsersController < ApplicationController
                   
           when "Education (CA)"
             @QualificationEducation = false
+            @RFGEducationCA = ''
+            
             (0..project.datapoints[m]["values"].length-1).each do |i|
               if (project.datapoints[m]["values"][i]["choice"] == 1) && (user.eduation.to_i == 1) then
                   @QualificationEducation = true
@@ -2852,6 +2909,8 @@ class UsersController < ApplicationController
 
                 when "Job Title"
                     @QualificationJobTitle = false
+                    @RFGJobTitle = ''
+                    
                     (0..project.datapoints[m]["values"].length-1).each do |i|
                                       
                       if (project.datapoints[m]["values"][i]["choice"] == 2) && (user.jobtitle.to_i == 1) then
@@ -2887,6 +2946,8 @@ class UsersController < ApplicationController
               
             when "Ethnicity (US)"
               @QualificationEthnicity = false
+              @RFGEthnicity = ''
+              
               (0..project.datapoints[m]["values"].length-1).each do |i|
                 
                 # Remember in in FED and when reading user input we treat ethnicity input '113' as 'user.race'              
@@ -2942,6 +3003,8 @@ class UsersController < ApplicationController
                         
             when "Employment Status"
               @QualificationEmployment = false
+              @RFGEmployment = ''
+              
               (0..project.datapoints[m]["values"].length-1).each do |i|
               if (project.datapoints[m]["values"][i]["choice"] == 1) && (user.employment.to_i == 10) then
                 @QualificationEmployment = true
@@ -3602,14 +3665,15 @@ class UsersController < ApplicationController
     # Assemble additional parameters values to pass with the entry link
       
     if user.children != nil then
-      if user.children[0] == "-3105" then
-        @RFGchildrenvalue = '&rfg2_1249='+'37'
+      if user.children.include?("-3105") then
+        @RFGchildrenvalue = '&ChildrenAgeGender=37'
+        
       else
         
-        @RFGchildrenvalue = '&rfg2_1249='+user.children[0]
+        @RFGchildrenvalue = '&ChildrenAgeGender='+user.children[0]
         if user.children.length > 1 then
           (1..user.children.length-1).each do |i|
-            @RFGchildrenvalue = @RFGchildrenvalue+'&rfg2_1249='+user.children[i]
+            @RFGchildrenvalue = @RFGchildrenvalue+'&ChildrenAgeGender='+user.children[i]
           end
         else
         end
@@ -3639,13 +3703,18 @@ class UsersController < ApplicationController
     else
     end 
     
+    if @RFGHhi == nil then
+      @RFGEHhi = ''
+    else
+    end 
+    
     if @RFGJobTitle == nil then
       @RFGJobTitle = ''
     else
     end 
       
     if user.country=="9" then 
-      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&age='+user.age+'&rfg2_14785='+user.householdincome+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+@RFGchildrenvalue+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle
+      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&age='+user.age+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+@RFGchildrenvalue+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle
     else
       if user.country=="6" then
           @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&age='+user.age+'&educationCA='+@RFGEducationCA+'&rfg2_14887='+user.householdincome+'&employment='+@RFGEmployment+@RFGchildrenvalue

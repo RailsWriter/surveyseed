@@ -320,9 +320,30 @@ class RedirectsController < ApplicationController
               puts
           
               @user.SurveysAttempted << params[:tsfn]+'-2'
+              
+              
+              
+              
+              
+              @project = RfgProject.find_by rfg_id: params[:tsfn]
             
-              # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
             
+              if (@project == nil) then
+                sleep(1)
+                @project = RfgProject.find_by rfg_id: params[:tsfn]
+                puts " *********** Retried retrieving project"
+              else
+              end    
+                 
+              print '************ Successfully completed project:', @project.rfg_id
+              puts
+              
+              
+              
+              
+              
+            
+              # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}            
             
               if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
                 @net_name = "Fyber"
@@ -354,22 +375,15 @@ class RedirectsController < ApplicationController
               else
               end
             
-              @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'RFG', @user.clickid, @net_name]
+             
+             
+             
+             
+              @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], @project.cpi, @user.clickid, @net_name]
               @user.save
               
               
-              @project = RfgProject.find_by rfg_id: params[:tsfn]
-            
-            
-              if (@project == nil) then
-                sleep(1)
-                @project = RfgProject.find_by rfg_id: params[:tsfn]
-                puts " *********** Retried retrieving project"
-              else
-              end    
-                 
-              print '************ Successfully completed project:', @project.rfg_id
-              puts
+              
              
               # Save completed project info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}            
               @project.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
@@ -564,27 +578,17 @@ class RedirectsController < ApplicationController
             
               # Move the just converted survey to F or S immediately, if it is already not there
             
-              if (@survey.SurveyGrossRank > 200) then
-              
-              if (@survey.CPI > 1.49) then
+              if (@survey.SurveyGrossRank > 100) then
       
-                @survey.SurveyGrossRank = 201 - (@survey.TCR * 100)
-                print "**************** Assigned just converted survey to Fast: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
-                @survey.label = 'F: JUST CONVERTED'
-      
+                @survey.SurveyGrossRank = 101 - (@survey.TCR * 100)
+                print "************** Assigned Just converted to Fast: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
+                @survey.label = 'JUST CONVERTED'
+
               else
-      
-                  @survey.SurveyGrossRank = 101 - (@survey.TCR * 100)
-                  print "************** Assigned Just converted to Safety: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
-                  @survey.label = 'S: JUST CONVERTED'
-        
-              end 
 
-            else
+                # the survey is already in F i.e. rank is <= 100. do nothing
 
-              # the survey is already in F or S i.e. rank is <= 200. do nothing
-
-            end
+              end
 
               @survey.save
 
