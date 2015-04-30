@@ -108,7 +108,7 @@ class CenterController < ApplicationController
   
     def RFGProjects_CA
       
-      @projects = RfgProject.where("country = ?", "CA").order(epc: :desc).order(projectEPC: :desc).each
+      @projects = RfgProject.where("country = ?", "CA").order(epc: :desc).order(projectCR: :desc).each
     
       respond_to do |format|
         format.html # home.html.erb
@@ -124,7 +124,7 @@ class CenterController < ApplicationController
     
     def RFGProjects_US
       
-      @projects = RfgProject.where("country = ?", "US").order(epc: :desc).order(projectEPC: :desc).each
+      @projects = RfgProject.where("country = ?", "US").order(epc: :desc).order(projectCR: :desc).each
     
       respond_to do |format|
         format.html # home.html.erb

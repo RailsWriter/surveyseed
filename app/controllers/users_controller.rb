@@ -2712,7 +2712,7 @@ class UsersController < ApplicationController
             
           when "Household Income"
             @QualificationHhi = false
-            @RFGEHhi = ''
+            @RFGHhi = ''
             (0..project.datapoints[m]["values"].length-1).each do |i|
               if (project.datapoints[m]["values"][i]["choice"] == 1) && ( (user.householdincome.to_i == 1) || (user.householdincome.to_i == 2) || (user.householdincome.to_i == 3) ) then
                 @QualificationHhi = true
@@ -3704,7 +3704,7 @@ class UsersController < ApplicationController
     end 
     
     if @RFGHhi == nil then
-      @RFGEHhi = ''
+      @RFGHhi = ''
     else
     end 
     
