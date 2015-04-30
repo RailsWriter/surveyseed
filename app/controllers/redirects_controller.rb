@@ -379,7 +379,7 @@ class RedirectsController < ApplicationController
              
              
              
-              @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], @project.cpi, @user.clickid, @net_name]
+              @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], @project.cpi, @user.clickid, @net_name, 'RFG']
               @user.save
               
               
