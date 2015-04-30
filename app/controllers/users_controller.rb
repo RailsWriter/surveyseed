@@ -2624,7 +2624,7 @@ class UsersController < ApplicationController
     @RFGSupplierLinks = Array.new
     
               
-    RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectCR: :desc).each do |project|
+    RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectEPC: :desc).each do |project|
 
       if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects     
         
