@@ -163,6 +163,7 @@ begin
         @project.terminates = RFGProjectStats["response"]["terminates"]
         @project.quotasfull = RFGProjectStats["response"]["quotas"]
         @project.cr = RFGProjectStats["response"]["cr"]
+        
         if (RFGProjectStats["response"]["epc"] == "0") || (RFGProjectStats["response"]["epc"] == 0 ) then
           print "******* (if) EPC is ", RFGProjectStats["response"]["epc"]
           puts

@@ -2697,74 +2697,59 @@ class UsersController < ApplicationController
             print "@QualificationZip: ", @QualificationZip
             puts
             
-          when "List of FSAs (CA)"
-            @QualificationZip = false
-            (0..project.datapoints[m]["values"].length-1).each do |i|
-              if (project.datapoints[m]["values"][i]["freelist"]).include?(user.ZIP.slice(0..2)) then 
-                @QualificationZip = true
-              else
-              end
-            end
-            print "User entered SLICED zip: ", user.ZIP.slice(0..2)
-            puts
-            print "Project qual zip: ", project.datapoints[m]["values"]
-            puts
-            print "@QualificationZip: ", @QualificationZip
-            puts
-            
           when "Household Income"
             @QualificationHhi = false
             @RFGHhi = ''
             (0..project.datapoints[m]["values"].length-1).each do |i|
-              if (project.datapoints[m]["values"][i]["choice"] == 1) && ( (user.householdincome.to_i == 1) || (user.householdincome.to_i == 2) || (user.householdincome.to_i == 3) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 1) && ( (user.householdincome.to_i == 1) || (user.householdincome.to_i == 2) || (user.householdincome.to_i == 3) || (user.householdincome.to_i == 27) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 2) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 5) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 2) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 5) || (user.householdincome.to_i == 27) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 3) && ( (user.householdincome.to_i == 6) || (user.householdincome.to_i == 7) || (user.householdincome.to_i == 8) || (user.householdincome.to_i == 9) || (user.householdincome.to_i == 10) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 3) && ( (user.householdincome.to_i == 6) || (user.householdincome.to_i == 7) || (user.householdincome.to_i == 8) || (user.householdincome.to_i == 9) || (user.householdincome.to_i == 10) || (user.householdincome.to_i == 27) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 4) && ( (user.householdincome.to_i == 11) || (user.householdincome.to_i == 12) || (user.householdincome.to_i == 13) || (user.householdincome.to_i == 14) || (user.householdincome.to_i == 15) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 4) && ( (user.householdincome.to_i == 11) || (user.householdincome.to_i == 12) || (user.householdincome.to_i == 13) || (user.householdincome.to_i == 14) || (user.householdincome.to_i == 15) || (user.householdincome.to_i == 27) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 5) && ( (user.householdincome.to_i == 16) || (user.householdincome.to_i == 17) || (user.householdincome.to_i == 18) || (user.householdincome.to_i == 19) || (user.householdincome.to_i == 20) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 5) && ( (user.householdincome.to_i == 16) || (user.householdincome.to_i == 17) || (user.householdincome.to_i == 18) || (user.householdincome.to_i == 19) || (user.householdincome.to_i == 20) || (user.householdincome.to_i == 27) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 6) && ( (user.householdincome.to_i == 21) || (user.householdincome.to_i == 22) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 6) && ( (user.householdincome.to_i == 21) || (user.householdincome.to_i == 22) || (user.householdincome.to_i == 27) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 7) && ( (user.householdincome.to_i == 23) || (user.householdincome.to_i == 24) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 7) && ( (user.householdincome.to_i == 23) || (user.householdincome.to_i == 24) || (user.householdincome.to_i == 27) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 8) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 25) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 8) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 25) || (user.householdincome.to_i == 27) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if ( (project.datapoints[m]["values"][i]["choice"] == 9) || (project.datapoints[m]["values"][i]["choice"] == 10) || (project.datapoints[m]["values"][i]["choice"] == 11) ) && (user.householdincome.to_i == 26) then
+              if ( (project.datapoints[m]["values"][i]["choice"] == 9) || (project.datapoints[m]["values"][i]["choice"] == 10) || (project.datapoints[m]["values"][i]["choice"] == 11) ) && ( (user.householdincome.to_i == 26) || (user.householdincome.to_i == 27) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
@@ -2777,28 +2762,405 @@ class UsersController < ApplicationController
             print "@QualificationHhi: ", @QualificationHhi
             puts
             
-          when "STANDARD_HHI_INT"
-            @QualificationHhi = false
-            (0..project.datapoints[m]["values"].length-1).each do |i|
-              if project.datapoints[m]["values"][i]["choice"] == user.householdincome.to_i then
-                @QualificationHhi = true
-              else
-              end
-            end
-            print "User entered HHI: ", user.householdincome
-            puts
-            print "Project qual HHI: ", project.datapoints[m]["values"]
-            puts
-            print "@QualificationHhi: ", @QualificationHhi
-            puts
+            # when "STANDARD_HHI_INT"
+            # @QualificationHhi = false
+            # (0..project.datapoints[m]["values"].length-1).each do |i|
+              # if project.datapoints[m]["values"][i]["choice"] == user.householdincome.to_i then
+                # @QualificationHhi = true
+                # else
+                # end
+            # end
+            # print "User entered HHI: ", user.householdincome
+            # puts
+            # print "Project qual HHI: ", project.datapoints[m]["values"]
+            # puts
+            # print "@QualificationHhi: ", @QualificationHhi
+            # puts
               
-          when "RFG2_Employment Industry Personal"
+          when "Employment Industry"
             @QualificationPindustry = false
+            @RFGPindustry = ''
+      
             (0..project.datapoints[m]["values"].length-1).each do |i|
-              if project.datapoints[m]["values"][i]["choice"] == user.pindustry.to_i then
+
+              if (project.datapoints[m]["values"][i]["choice"] == 1) && (user.pindustry.to_i == 1) then
                 @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 2) && (user.pindustry.to_i == 2) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 3) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 4) && (user.pindustry.to_i == 3) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 5) && (user.pindustry.to_i == 4) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 6) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 7) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 8) && (user.pindustry.to_i == 5) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 9) && (user.pindustry.to_i == 6) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 10) && (user.pindustry.to_i == 7) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 11) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 12) && (user.pindustry.to_i == 8) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 13) && (user.pindustry.to_i == 9) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 14) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 15) && (user.pindustry.to_i == 10) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 16) && (user.pindustry.to_i == 11) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 17) && (user.pindustry.to_i == 12) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 18) && (user.pindustry.to_i == 13) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 19) && (user.pindustry.to_i == 14) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 20) && (user.pindustry.to_i == 15) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 21) && (user.pindustry.to_i == 16) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 22) && (user.pindustry.to_i == 17) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 23) && (user.pindustry.to_i == 18) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 24) && (user.pindustry.to_i == 19) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 25) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 26) && (user.pindustry.to_i == 20) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 27) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 28) && (user.pindustry.to_i == 22) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 29) && (user.pindustry.to_i == 23) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 30) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 31) && (user.pindustry.to_i == 24) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 32) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 33) && (user.pindustry.to_i == 25) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 34) && (user.pindustry.to_i == 26) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 35) && (user.pindustry.to_i == 27) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 36) && (user.pindustry.to_i == 28) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 37) && (user.pindustry.to_i == 29) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 38) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 39) && (user.pindustry.to_i == 30) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 40) && (user.pindustry.to_i == 31) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 41) && (user.pindustry.to_i == 32) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 42) && (user.pindustry.to_i == 33) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 43) && (user.pindustry.to_i == 34) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 44) && (user.pindustry.to_i == 35) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 45) && (user.pindustry.to_i == 36) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 46) && (user.pindustry.to_i == 37) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 47) && (user.pindustry.to_i == 38) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 48) && (user.pindustry.to_i == 39) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 49) && (user.pindustry.to_i == 40) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 50) && (user.pindustry.to_i == 41) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 51) && (user.pindustry.to_i == 42) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 52) && (user.pindustry.to_i == 44) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 53) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 54) && (user.pindustry.to_i == 45) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 55) && (user.pindustry.to_i == 46) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 56) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 57) && (user.pindustry.to_i == 49) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 58) && (user.pindustry.to_i == 48) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 59) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 60) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 61) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 62) && ( (user.pindustry.to_i == 50) || (user.pindustry.to_i == 21) || (user.pindustry.to_i == 43) || (user.pindustry.to_i == 47) ) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 63) && (user.pindustry.to_i == 51) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+ 
             end
             print "User entered Pindustry: ", user.pindustry
             puts
@@ -2855,60 +3217,6 @@ class UsersController < ApplicationController
               print "@QualificationEducation: ", @QualificationEducation
               puts
                   
-          when "Education (CA)"
-            @QualificationEducation = false
-            @RFGEducationCA = ''
-            
-            (0..project.datapoints[m]["values"].length-1).each do |i|
-              if (project.datapoints[m]["values"][i]["choice"] == 1) && (user.eduation.to_i == 1) then
-                  @QualificationEducation = true
-                  @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
-              else
-              end 
-              if (project.datapoints[m]["values"][i]["choice"] == 2) && ((user.eduation.to_i == 2) || (user.eduation.to_i == 3)) then
-                @QualificationEducation = true
-                @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
-              else
-              end
-              if (project.datapoints[m]["values"][i]["choice"] == 3) && (user.eduation.to_i == 4) then
-                @QualificationEducation = true
-                @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
-              else
-              end
-              if (project.datapoints[m]["values"][i]["choice"] == 4) && ((user.eduation.to_i == 5) || (user.eduation.to_i == 6))  then
-                @QualificationEducation = true
-                @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
-              else
-              end
-              if (project.datapoints[m]["values"][i]["choice"] == 5) && ((user.eduation.to_i == 7) || (user.eduation.to_i == 8))  then
-                @QualificationEducation = true
-                @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
-              else
-              end
-              if (project.datapoints[m]["values"][i]["choice"] == 6) && (user.eduation.to_i == 9) then
-                @QualificationEducation = true
-                @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
-              else
-              end                    
-              if (project.datapoints[m]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 10) || (user.eduation.to_i == 11))  then
-                @QualificationEducation = true
-                @RFGEducationCA = project.datapoints[m]["values"][i]["choice"].to_s
-              else
-              end
-            end
-              
-            print "User entered Education: ", user.eduation
-            puts
-            print "Project qual Education: ", project.datapoints[m]["values"]
-            puts
-            print "@QualificationEducation: ", @QualificationEducation
-            puts
-
-
-
-
-
-
                 when "Job Title"
                     @QualificationJobTitle = false
                     @RFGJobTitle = ''
@@ -2920,7 +3228,7 @@ class UsersController < ApplicationController
                         @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
                       else
                       end
-                      if (project.datapoints[m]["values"][i]["choice"] == 3) && ((user.jobtitle.to_i == 2) ||  (user.jobtitle.to_i == 3)) then
+                      if (project.datapoints[m]["values"][i]["choice"] == 3) && ((user.jobtitle.to_i == 2) || (user.jobtitle.to_i == 3)) then
                         @QualificationJobTitle = true
                         @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
                       else
@@ -3103,7 +3411,7 @@ class UsersController < ApplicationController
         
         print " QUALIFICATIONS CRITERIA for: ", project.rfg_id
         puts
-        print "country = ", (project.country == "CA") || (project.country == "US")
+        print "country = ", (project.country == "US")
         puts
         print "cpi = ", (project.cpi > @currentpayoutstr)
         puts        
@@ -3137,10 +3445,7 @@ class UsersController < ApplicationController
         puts
         
          
-        if ( (project.country == "CA") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationJobTitle) && (@QualificationEthnicity) ) ||
-          
-          ( (project.country == "US") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) )          
-          then
+        if ( (project.country == "US") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) ) then
           
           @RFGQualifiedProjects << project.rfg_id
           
@@ -3150,7 +3455,7 @@ class UsersController < ApplicationController
 
           # Verify if there is a quota for the qualified user and if it is full
           
-          if project.quotas.length > 0 then          
+          if project.quotas.length > 0 then
             # @RFGQuotaIsAvailable = false # initialize quota availability as false, then check quotas to prove/disprove
            # @RFGQuotaFull = false
            
@@ -3220,67 +3525,51 @@ class UsersController < ApplicationController
                 print "@QualificationZip: ", @QualificationZip
                 puts
             
-              when "List of FSAs (CA)"
-                @QualificationZip = false
-                print "Project qual zip: ", project.quotas[j]["datapoints"][n]["values"]
-                puts
-                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["freelist"]).include?(user.ZIP.slice(0..2)) then 
-                    @QualificationZip = true
-                  else
-                  end
-                end
-                print "User entered SLICED zip: ", user.ZIP.slice(0..2)
-                puts
-                
-                print "@QualificationZip: ", @QualificationZip
-                puts
-            
               when "Household Income"
                 @QualificationHhi = false
                 (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
                      
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 1) && ( (user.householdincome.to_i == 1) || (user.householdincome.to_i == 2) || (user.householdincome.to_i == 3) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 1) && ( (user.householdincome.to_i == 1) || (user.householdincome.to_i == 2) || (user.householdincome.to_i == 3) || (user.householdincome.to_i == 27) ) then
                     @QualificationHhi = true
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 5) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 5) || (user.householdincome.to_i == 27) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3) && ( (user.householdincome.to_i == 6) || (user.householdincome.to_i == 7) || (user.householdincome.to_i == 8) || (user.householdincome.to_i == 9) || (user.householdincome.to_i == 10) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3) && ( (user.householdincome.to_i == 6) || (user.householdincome.to_i == 7) || (user.householdincome.to_i == 8) || (user.householdincome.to_i == 9) || (user.householdincome.to_i == 10) || (user.householdincome.to_i == 27) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) && ( (user.householdincome.to_i == 11) || (user.householdincome.to_i == 12) || (user.householdincome.to_i == 13) || (user.householdincome.to_i == 14) || (user.householdincome.to_i == 15) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) && ( (user.householdincome.to_i == 11) || (user.householdincome.to_i == 12) || (user.householdincome.to_i == 13) || (user.householdincome.to_i == 14) || (user.householdincome.to_i == 15) || (user.householdincome.to_i == 27) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && ( (user.householdincome.to_i == 16) || (user.householdincome.to_i == 17) || (user.householdincome.to_i == 18) || (user.householdincome.to_i == 19) || (user.householdincome.to_i == 20) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && ( (user.householdincome.to_i == 16) || (user.householdincome.to_i == 17) || (user.householdincome.to_i == 18) || (user.householdincome.to_i == 19) || (user.householdincome.to_i == 20) || (user.householdincome.to_i == 27) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && ( (user.householdincome.to_i == 21) || (user.householdincome.to_i == 22) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && ( (user.householdincome.to_i == 21) || (user.householdincome.to_i == 22) || (user.householdincome.to_i == 27) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && ( (user.householdincome.to_i == 23) || (user.householdincome.to_i == 24) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && ( (user.householdincome.to_i == 23) || (user.householdincome.to_i == 24) || (user.householdincome.to_i == 27) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 8) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 25) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 8) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 25) || (user.householdincome.to_i == 27) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if ( (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 9) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 10) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 11) ) && (user.householdincome.to_i == 26) then
+                  if ( (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 9) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 10) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 11) ) && ( (user.householdincome.to_i == 26) || (user.householdincome.to_i == 27) ) then
                     @QualificationHhi = true                    
                   else
                   end
@@ -3292,28 +3581,326 @@ class UsersController < ApplicationController
                 print "@QualificationHhi: ", @QualificationHhi
                 puts
             
-              when "STANDARD_HHI_INT"
-                @QualificationHhi = false
-                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                  if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == user.householdincome.to_i then
-                    @QualificationHhi = true
-                  else
-                  end
-                end
-                print "User entered HHI: ", user.householdincome
-                puts
-                print "Project quota HHI: ", project.quotas[j]["datapoints"][n]["values"]
-                puts
-                print "@QualificationHhi: ", @QualificationHhi
-                puts
               
-              when "RFG2_Employment Industry Personal"
+              when "Employment Industry"
                 @QualificationPindustry = false
+    
                 (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                  if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == user.pindustry.to_i then
+
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 1) && (user.pindustry.to_i == 1) then
                     @QualificationPindustry = true
                   else
                   end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) && (user.pindustry.to_i == 2) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) && (user.pindustry.to_i == 3) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && (user.pindustry.to_i == 4) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 8) && (user.pindustry.to_i == 5) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 9) && (user.pindustry.to_i == 6) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 10) && (user.pindustry.to_i == 7) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 11) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 12) && (user.pindustry.to_i == 8) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 13) && (user.pindustry.to_i == 9) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 14) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 15) && (user.pindustry.to_i == 10) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 16) && (user.pindustry.to_i == 11) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 17) && (user.pindustry.to_i == 12) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 18) && (user.pindustry.to_i == 13) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 19) && (user.pindustry.to_i == 14) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 20) && (user.pindustry.to_i == 15) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 21) && (user.pindustry.to_i == 16) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 22) && (user.pindustry.to_i == 17) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 23) && (user.pindustry.to_i == 18) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 24) && (user.pindustry.to_i == 19) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 25) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 26) && (user.pindustry.to_i == 20) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 27) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 28) && (user.pindustry.to_i == 22) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 29) && (user.pindustry.to_i == 23) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 30) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 31) && (user.pindustry.to_i == 24) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 32) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 33) && (user.pindustry.to_i == 25) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 34) && (user.pindustry.to_i == 26) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 35) && (user.pindustry.to_i == 27) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 36) && (user.pindustry.to_i == 28) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 37) && (user.pindustry.to_i == 29) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 38) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 39) && (user.pindustry.to_i == 30) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 40) && (user.pindustry.to_i == 31) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 41) && (user.pindustry.to_i == 32) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 42) && (user.pindustry.to_i == 33) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 43) && (user.pindustry.to_i == 34) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 44) && (user.pindustry.to_i == 35) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 45) && (user.pindustry.to_i == 36) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 46) && (user.pindustry.to_i == 37) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 47) && (user.pindustry.to_i == 38) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 48) && (user.pindustry.to_i == 39) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 49) && (user.pindustry.to_i == 40) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 50) && (user.pindustry.to_i == 41) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 51) && (user.pindustry.to_i == 42) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 52) && (user.pindustry.to_i == 44) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 53) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 54) && (user.pindustry.to_i == 45) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 55) && (user.pindustry.to_i == 46) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 56) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 57) && (user.pindustry.to_i == 49) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 58) && (user.pindustry.to_i == 48) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 59) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 60) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 61) && (user.pindustry.to_i == 50) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 62) && ( (user.pindustry.to_i == 50) || (user.pindustry.to_i == 21) || (user.pindustry.to_i == 43) || (user.pindustry.to_i == 47) ) then
+                    @QualificationPindustry = true
+                  else
+                  end
+            
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 63) && (user.pindustry.to_i == 51) then
+                    @QualificationPindustry = true
+                  else
+                  end                  
                 end
                 print "User entered Pindustry: ", user.pindustry
                 puts
@@ -3367,52 +3954,6 @@ class UsersController < ApplicationController
                   puts
                   print "@QualificationEducation: ", @QualificationEducation
                   puts
-                  
-              when "Education (CA)"
-                  @QualificationEducation = false
-                  (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 1) && (user.eduation.to_i == 1) then
-                      @QualificationEducation = true
-                      @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                  else
-                  end 
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) && ((user.eduation.to_i == 2) || (user.eduation.to_i == 3)) then
-                    @QualificationEducation = true
-                    @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                  else
-                  end
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3) && (user.eduation.to_i == 4) then
-                    @QualificationEducation = true
-                    @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                  else
-                  end
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) && ((user.eduation.to_i == 5) || (user.eduation.to_i == 6))  then
-                    @QualificationEducation = true
-                    @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                  else
-                  end
-                        if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && ((user.eduation.to_i == 7) || (user.eduation.to_i == 8))  then
-                          @QualificationEducation = true
-                          @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                        else
-                        end
-                        if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && (user.eduation.to_i == 9) then
-                          @QualificationEducation = true
-                          @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                        else
-                        end                    
-                        if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 10) || (user.eduation.to_i == 11))  then
-                          @QualificationEducation = true
-                          @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                        else
-                        end
-                      end
-                      print "User entered Education: ", user.eduation
-                      puts
-                      print "Project quota Education: ", project.quotas[j]["datapoints"][n]["values"]
-                      puts
-                      print "@QualificationEducation: ", @QualificationEducation
-                      puts
                         
                 when "Employment Status"
                   @QualificationEmployment = false
@@ -3506,12 +4047,13 @@ class UsersController < ApplicationController
               puts
               print "@QualificationRegion: ", @QualificationRegion
               puts          
+              
               end # case statement
               
               
               print " QUOTA AVAILABILITY CRITERIA for: ", project.rfg_id
               puts
-              print "country = ", (project.country == "CA") || (project.country == "US")
+              print "country = ", (project.country == "US")
               puts
               print "Age = ", (@QualificationAge)
               puts
@@ -3537,35 +4079,28 @@ class UsersController < ApplicationController
               puts
                             
               
-              if ( (project.country == "CA") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEducation ) && (@QualificationEmployment) && (@QualificationChildren) ) ||
+              if ( (project.country == "US") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry )  && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationEducation) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (project.quotas[j]["completesLeft"] > 0) ) then
               
-                ( (project.country == "US") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry )  && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationEducation) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion)  ) then
-                
-                if project.quotas[j]["completesLeft"] > 0 then
-              
-                  @RFGQuotaIsAvailable = true
-                  puts "******* Quota is available"
-                else
-                  # if previous quota was available then preserve that fact
-                  @RFGQuotaIsAvailable = false
-                  puts "******* No more Completes needed for this quota"
-                end
-              
+                @RFGQuotaIsAvailable = true
+                puts "******* Quota is available"
               else
+                # if previous quota was available then preserve that fact
+                @RFGQuotaIsAvailable = false || @RFGQuotaIsAvailable
               end
               
-            end # reviewed all n nested qualifications of a quota
+              
+              end # reviewed all n nested qualifications of a quota
                            
             end # all j quotas have been inspected
 
           else
-            @RFGQuotaIsAvailable = true
             
             print "************** Quota available: There are no quota restrictions"
             puts
+            
+            @RFGQuotaIsAvailable = true
           end
-          
-          
+                   
           if @RFGQuotaIsAvailable == true then
           
             print '********** USER_ID: ', user.user_id, ' has Quota for the RFG project: ', project.rfg_id
@@ -3670,16 +4205,15 @@ class UsersController < ApplicationController
             puts
           end # if quota available = true
           
-      else
+        else
           
-        print '************ User DID NOT QUALIFY for project number = ', project.rfg_id
-        puts
+          print '************ User DID NOT QUALIFY for project number = ', project.rfg_id
+          puts
           
-      end # Qualification check
-
+        end # Qualification check
  
-      else
-      end # if projectStillLive
+        else
+        end # if projectStillLive
  
       else
       end # if foundtopprojects
@@ -3688,8 +4222,7 @@ class UsersController < ApplicationController
     
     else
     end # country == 9
-    
-    
+       
     if user.country == "6" then  
               
     RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectEPC: :desc).each do |project|
@@ -3707,9 +4240,6 @@ class UsersController < ApplicationController
         @QualificationChildren = true
         @QualificationEducation = true
         @QualificationEmployment = true
-        @QualificationDMA = true
-        @QualificationState = true
-        @QualificationRegion = true
         
         @QualificationJobTitle = true
         @QualificationEthnicity = true
@@ -3748,21 +4278,6 @@ class UsersController < ApplicationController
             print "@QualificationGender: ", @QualificationGender
             puts
             
-          when "List of Zips"
-            @QualificationZip = false
-            (0..project.datapoints[m]["values"].length-1).each do |i|
-             if (project.datapoints[m]["values"][i]["freelist"]).include?(user.ZIP) then 
-               @QualificationZip = true
-             else
-             end
-            end
-            print "User entered zip: ", user.ZIP
-            puts
-            print "Project qual zip: ", project.datapoints[m]["values"]
-            puts
-            print "@QualificationZip: ", @QualificationZip
-            puts
-            
           when "List of FSAs (CA)"
             @QualificationZip = false
             (0..project.datapoints[m]["values"].length-1).each do |i|
@@ -3782,55 +4297,49 @@ class UsersController < ApplicationController
             @QualificationHhi = false
             @RFGHhi = ''
             (0..project.datapoints[m]["values"].length-1).each do |i|
-              if (project.datapoints[m]["values"][i]["choice"] == 1) && ( (user.householdincome.to_i == 1) || (user.householdincome.to_i == 2) || (user.householdincome.to_i == 3) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 1) && ( (user.householdincome.to_i == 1) || (user.householdincome.to_i == 18) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 2) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 5) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 2) && ( (user.householdincome.to_i == 2) || (user.householdincome.to_i == 3) || (user.householdincome.to_i == 18) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 3) && ( (user.householdincome.to_i == 6) || (user.householdincome.to_i == 7) || (user.householdincome.to_i == 8) || (user.householdincome.to_i == 9) || (user.householdincome.to_i == 10) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 3) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 5) || (user.householdincome.to_i == 6) || (user.householdincome.to_i == 7) || (user.householdincome.to_i == 8) || (user.householdincome.to_i == 18) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 4) && ( (user.householdincome.to_i == 11) || (user.householdincome.to_i == 12) || (user.householdincome.to_i == 13) || (user.householdincome.to_i == 14) || (user.householdincome.to_i == 15) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 4) && ( (user.householdincome.to_i == 9) || (user.householdincome.to_i == 10) || (user.householdincome.to_i == 18) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 5) && ( (user.householdincome.to_i == 16) || (user.householdincome.to_i == 17) || (user.householdincome.to_i == 18) || (user.householdincome.to_i == 19) || (user.householdincome.to_i == 20) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 5) && ( (user.householdincome.to_i == 11) || (user.householdincome.to_i == 12) || (user.householdincome.to_i == 18) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 6) && ( (user.householdincome.to_i == 21) || (user.householdincome.to_i == 22) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 6) && ( (user.householdincome.to_i == 13) || (user.householdincome.to_i == 14) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 7) && ( (user.householdincome.to_i == 23) || (user.householdincome.to_i == 24) ) then
+              if (project.datapoints[m]["values"][i]["choice"] == 7) && ( (user.householdincome.to_i == 15) || (user.householdincome.to_i == 16) || (user.householdincome.to_i == 18) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
               
-              if (project.datapoints[m]["values"][i]["choice"] == 8) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 25) ) then
-                @QualificationHhi = true
-                @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
-              else
-              end
-              
-              if ( (project.datapoints[m]["values"][i]["choice"] == 9) || (project.datapoints[m]["values"][i]["choice"] == 10) || (project.datapoints[m]["values"][i]["choice"] == 11) ) && (user.householdincome.to_i == 26) then
+              if ( (project.datapoints[m]["values"][i]["choice"] == 8) || (project.datapoints[m]["values"][i]["choice"] == 9) || (project.datapoints[m]["values"][i]["choice"] == 10) || (project.datapoints[m]["values"][i]["choice"] == 11) ) && ( (user.householdincome.to_i == 17) || (user.householdincome.to_i == 18) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
@@ -3843,28 +4352,391 @@ class UsersController < ApplicationController
             print "@QualificationHhi: ", @QualificationHhi
             puts
             
-          when "STANDARD_HHI_INT"
-            @QualificationHhi = false
-            (0..project.datapoints[m]["values"].length-1).each do |i|
-              if project.datapoints[m]["values"][i]["choice"] == user.householdincome.to_i then
-                @QualificationHhi = true
-              else
-              end
-            end
-            print "User entered HHI: ", user.householdincome
-            puts
-            print "Project qual HHI: ", project.datapoints[m]["values"]
-            puts
-            print "@QualificationHhi: ", @QualificationHhi
-            puts
               
-          when "RFG2_Employment Industry Personal"
+          when "Employment Industry"
             @QualificationPindustry = false
+            @RFGPindustry = ''
+      
             (0..project.datapoints[m]["values"].length-1).each do |i|
-              if project.datapoints[m]["values"][i]["choice"] == user.pindustry.to_i then
+
+              if (project.datapoints[m]["values"][i]["choice"] == 1) && (user.pindustry.to_i == 1) then
                 @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 2) && (user.pindustry.to_i == 2) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 3) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 4) && (user.pindustry.to_i == 3) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 5) && (user.pindustry.to_i == 4) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 6) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 7) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 8) && (user.pindustry.to_i == 5) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 9) && (user.pindustry.to_i == 6) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 10) && (user.pindustry.to_i == 7) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 11) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 12) && (user.pindustry.to_i == 8) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 13) && (user.pindustry.to_i == 9) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 14) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 15) && (user.pindustry.to_i == 10) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 16) && (user.pindustry.to_i == 11) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 17) && (user.pindustry.to_i == 12) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 18) && (user.pindustry.to_i == 13) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 19) && (user.pindustry.to_i == 14) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 20) && (user.pindustry.to_i == 15) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 21) && (user.pindustry.to_i == 16) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 22) && (user.pindustry.to_i == 17) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 23) && (user.pindustry.to_i == 18) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 24) && (user.pindustry.to_i == 19) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 25) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 26) && (user.pindustry.to_i == 20) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 27) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 28) && (user.pindustry.to_i == 22) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 29) && (user.pindustry.to_i == 23) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 30) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 31) && (user.pindustry.to_i == 24) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 32) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 33) && (user.pindustry.to_i == 25) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 34) && (user.pindustry.to_i == 26) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 35) && (user.pindustry.to_i == 27) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 36) && (user.pindustry.to_i == 28) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 37) && (user.pindustry.to_i == 29) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 38) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 39) && (user.pindustry.to_i == 30) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 40) && (user.pindustry.to_i == 31) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 41) && (user.pindustry.to_i == 32) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 42) && (user.pindustry.to_i == 33) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 43) && (user.pindustry.to_i == 34) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 44) && (user.pindustry.to_i == 35) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 45) && (user.pindustry.to_i == 36) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 46) && (user.pindustry.to_i == 37) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 47) && (user.pindustry.to_i == 38) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 48) && (user.pindustry.to_i == 39) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 49) && (user.pindustry.to_i == 40) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 50) && (user.pindustry.to_i == 41) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 51) && (user.pindustry.to_i == 42) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 52) && (user.pindustry.to_i == 44) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 53) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 54) && (user.pindustry.to_i == 45) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 55) && (user.pindustry.to_i == 46) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 56) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 57) && (user.pindustry.to_i == 49) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 58) && (user.pindustry.to_i == 48) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 59) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 60) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 61) && (user.pindustry.to_i == 50) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 62) && ( (user.pindustry.to_i == 50) || (user.pindustry.to_i == 21) || (user.pindustry.to_i == 43) || (user.pindustry.to_i == 47) ) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+              
+              if (project.datapoints[m]["values"][i]["choice"] == 63) && (user.pindustry.to_i == 51) then
+                @QualificationPindustry = true
+                @RFGPindustry = project.datapoints[m]["values"][i]["choice"].to_s
+              else
+              end
+ 
             end
             print "User entered Pindustry: ", user.pindustry
             puts
@@ -3872,6 +4744,7 @@ class UsersController < ApplicationController
             puts
             print "@QualificationPindustry: ", @QualificationPindustry
             puts
+          
                   
           when "Children Age and Gender"
               @QualificationChildren = false
@@ -3886,39 +4759,6 @@ class UsersController < ApplicationController
               print "Project qual Children: ", project.datapoints[m]["values"]
               puts
               print "@QualificationChildren: ", @QualificationChildren
-              puts
-                
-          when "Education (US)"
-              @QualificationEducation = false
-              @RFGEducationUS = ''
-              
-              (0..project.datapoints[m]["values"].length-1).each do |i|
-                if (project.datapoints[m]["values"][i]["choice"] <= 7) && ((project.datapoints[m]["values"][i]["choice"] == user.eduation.to_i)) then
-                  @QualificationEducation = true
-                  @RFGEducationUS = project.datapoints[m]["values"][i]["choice"].to_s
-                else
-                end                  
-                if (project.datapoints[m]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 8) || (user.eduation.to_i == 9) || (user.eduation.to_i == 10)) then
-                  @QualificationEducation = true
-                  @RFGEducationUS = project.datapoints[m]["values"][i]["choice"].to_s
-                else
-                end
-                if (project.datapoints[m]["values"][i]["choice"] == 8) && (user.eduation.to_i == 11) then
-                  @QualificationEducation = true
-                  @RFGEducationUS = project.datapoints[m]["values"][i]["choice"].to_s
-                else
-                end
-                if (project.datapoints[m]["values"][i]["choice"] == 9) && (user.eduation.to_i == 12) then
-                  @QualificationEducation = true
-                  @RFGEducationUS = project.datapoints[m]["values"][i]["choice"].to_s
-                else
-                end                    
-              end
-              print "User entered Education: ", user.eduation
-              puts
-              print "Project qual Education: ", project.datapoints[m]["values"]
-              puts
-              print "@QualificationEducation: ", @QualificationEducation
               puts
                   
           when "Education (CA)"
@@ -3971,10 +4811,6 @@ class UsersController < ApplicationController
             puts
 
 
-
-
-
-
                 when "Job Title"
                     @QualificationJobTitle = false
                     @RFGJobTitle = ''
@@ -4010,64 +4846,6 @@ class UsersController < ApplicationController
                     print "@QualificationJobTitle: ", @QualificationJobTitle
                     puts
                     
-                    
-              
-            when "Ethnicity (US)"
-              @QualificationEthnicity = false
-              @RFGEthnicity = ''
-              
-              (0..project.datapoints[m]["values"].length-1).each do |i|
-                
-                # Remember in in FED and when reading user input we treat ethnicity input '113' as 'user.race'              
-                if (project.datapoints[m]["values"][i]["choice"] == 1) && (user.race.to_i == 2) then
-                  @QualificationEthnicity = true
-                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
-                else
-                end
-                if (project.datapoints[m]["values"][i]["choice"] == 2) && ( (user.race.to_i == 4) || (user.race.to_i == 5) || (user.race.to_i == 6) || (user.race.to_i == 7) || (user.race.to_i == 8) || (user.race.to_i == 9) || (user.race.to_i == 10) ) then
-                  @QualificationEthnicity = true
-                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
-                else
-                end
-                if (project.datapoints[m]["values"][i]["choice"] == 3) && (user.race.to_i == 1) then
-                  @QualificationEthnicity = true
-                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
-                else
-                end
-                if (project.datapoints[m]["values"][i]["choice"] == 4) && ( (user.race.to_i == 11) || (user.race.to_i == 12) || (user.race.to_i == 13) || (user.race.to_i == 14) ) then
-                  @QualificationEthnicity = true
-                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
-                else
-                end
-                # RFG 5 is for Latino - same as ethnicity in FED
-                if (project.datapoints[m]["values"][i]["choice"] == 5) && ( (user.ethnicity.to_i == 2) || (user.ethnicity.to_i == 3) || (user.ethnicity.to_i == 4) || (user.ethnicity.to_i == 5) || (user.ethnicity.to_i == 6) || (user.ethnicity.to_i == 7) || (user.ethnicity.to_i == 8) || (user.ethnicity.to_i == 9) || (user.ethnicity.to_i == 10) || (user.ethnicity.to_i == 11) || (user.ethnicity.to_i == 12) || (user.ethnicity.to_i == 13) || (user.ethnicity.to_i == 14) ) then
-                  @QualificationEthnicity = true
-                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
-                else
-                end
-                if (project.datapoints[m]["values"][i]["choice"] == 6) && (user.race.to_i == 3) then
-                  @QualificationEthnicity = true
-                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
-                else
-                end
-                if (project.datapoints[m]["values"][i]["choice"] == 7) && (user.race.to_i == 16) then
-                  @QualificationEthnicity = true
-                  @RFGEthnicity = project.datapoints[m]["values"][i]["choice"].to_s
-                else
-                end
-                
-              end
-              print "User entered Ethnicity: ", user.race
-              puts
-              print "Project qual Ethnicity: ", project.datapoints[m]["values"]
-              puts
-              print "@QualificationEthnicity: ", @QualificationEthnicity
-              puts
-              print "@RFGEthnicity is set to: ", @RFGEthnicity
-              puts
-                
-                
-
                         
             when "Employment Status"
               @QualificationEmployment = false
@@ -4115,61 +4893,16 @@ class UsersController < ApplicationController
           print "Project qual Employment: ", project.datapoints[m]["values"]
           puts
           print "@QualificationEmployment: ", @QualificationEmployment
-          puts
-          
-        when "DMA (US)"
-          @QualificationDMA = false
-          (0..project.datapoints[m]["values"].length-1).each do |i|
-            if project.datapoints[m]["values"][i]["choice"] == @DMARegionCode.to_i then
-              @QualificationDMA = true
-            else
-            end
-          end
-          print "User entered DMA: ", @DMARegionCode
-          puts
-          print "Project qual DMA: ", project.datapoints[m]["values"]
-          puts
-          print "@QualificationDMA: ", @QualificationDMA
-          puts
-                    
-        when "State (US)"
-          @QualificationState = false
-          (0..project.datapoints[m]["values"].length-1).each do |i|
-            if project.datapoints[m]["values"][i]["choice"] == @statePrecode.to_i then
-              @QualificationState = true
-            else
-            end
-          end
-          print "User entered State: ", @statePrecode
-          puts
-          print "Project qual State: ", project.datapoints[m]["values"]
-          puts
-          print "@QualificationState: ", @QualificationState
-          puts
-          
-        when "Region (US)"
-          @QualificationRegion = false
-          (0..project.datapoints[m]["values"].length-1).each do |i|
-            if project.datapoints[m]["values"][i]["choice"] == @regionPrecode.to_i then
-              @QualificationRegion = true
-            else
-            end
-          end
-          print "User entered Region: ", @regionPrecode
-          puts
-          print "Project qual Region: ", project.datapoints[m]["values"]
-          puts
-          print "@QualificationRegion: ", @QualificationRegion
-          puts          
+          puts    
           
           
-        end # case statement
+          end # case statement
         end # do m
         
         
         print " QUALIFICATIONS CRITERIA for: ", project.rfg_id
         puts
-        print "country = ", (project.country == "CA") || (project.country == "US")
+        print "country = ", (project.country == "CA")
         puts
         print "cpi = ", (project.cpi > @currentpayoutstr)
         puts        
@@ -4195,18 +4928,9 @@ class UsersController < ApplicationController
         puts
         print "Children = ", (@QualificationChildren)
         puts
-        print "DMA = ", (@QualificationDMA)
-        puts
-        print "State = ", (@QualificationState)
-        puts
-        print "Region = ", (@QualificationRegion)
-        puts
         
          
-        if ( (project.country == "CA") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationJobTitle) && (@QualificationEthnicity) ) ||
-          
-          ( (project.country == "US") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) )          
-          then
+        if ( (project.country == "CA") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationJobTitle) && (@QualificationEthnicity) ) then
           
           @RFGQualifiedProjects << project.rfg_id
           
@@ -4216,7 +4940,7 @@ class UsersController < ApplicationController
 
           # Verify if there is a quota for the qualified user and if it is full
           
-          if project.quotas.length > 0 then          
+          if project.quotas.length > 0 then 
             # @RFGQuotaIsAvailable = false # initialize quota availability as false, then check quotas to prove/disprove
            # @RFGQuotaFull = false
            
@@ -4271,21 +4995,6 @@ class UsersController < ApplicationController
                 print "@QualificationGender: ", @QualificationGender
                 puts
             
-              when "List of Zips"
-                @QualificationZip = false
-                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                 if (project.quotas[j]["datapoints"][n]["values"][i]["freelist"]).include?(user.ZIP) then 
-                   @QualificationZip = true
-                 else
-                 end
-                end
-                print "User entered zip: ", user.ZIP
-                puts
-                print "Project quota zip: ", project.quotas[j]["datapoints"][n]["values"]
-                puts
-                print "@QualificationZip: ", @QualificationZip
-                puts
-            
               when "List of FSAs (CA)"
                 @QualificationZip = false
                 print "Project qual zip: ", project.quotas[j]["datapoints"][n]["values"]
@@ -4306,47 +5015,42 @@ class UsersController < ApplicationController
                 @QualificationHhi = false
                 (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
                      
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 1) && ( (user.householdincome.to_i == 1) || (user.householdincome.to_i == 2) || (user.householdincome.to_i == 3) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 1) && ( (user.householdincome.to_i == 1) || (user.householdincome.to_i == 18) ) then
                     @QualificationHhi = true
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 5) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) && ( (user.householdincome.to_i == 2) || (user.householdincome.to_i == 3) || (user.householdincome.to_i == 18) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3) && ( (user.householdincome.to_i == 6) || (user.householdincome.to_i == 7) || (user.householdincome.to_i == 8) || (user.householdincome.to_i == 9) || (user.householdincome.to_i == 10) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 5) || (user.householdincome.to_i == 6) || (user.householdincome.to_i == 7) || (user.householdincome.to_i == 8) || (user.householdincome.to_i == 18) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) && ( (user.householdincome.to_i == 11) || (user.householdincome.to_i == 12) || (user.householdincome.to_i == 13) || (user.householdincome.to_i == 14) || (user.householdincome.to_i == 15) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) && ( (user.householdincome.to_i == 9) || (user.householdincome.to_i == 10) || (user.householdincome.to_i == 18) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && ( (user.householdincome.to_i == 16) || (user.householdincome.to_i == 17) || (user.householdincome.to_i == 18) || (user.householdincome.to_i == 19) || (user.householdincome.to_i == 20) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && ( (user.householdincome.to_i == 11) || (user.householdincome.to_i == 12) || (user.householdincome.to_i == 18) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && ( (user.householdincome.to_i == 21) || (user.householdincome.to_i == 22) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && ( (user.householdincome.to_i == 13) || (user.householdincome.to_i == 14) || (user.householdincome.to_i == 18) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && ( (user.householdincome.to_i == 23) || (user.householdincome.to_i == 24) ) then
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && ( (user.householdincome.to_i == 15) || (user.householdincome.to_i == 16) || (user.householdincome.to_i == 18) ) then
                     @QualificationHhi = true                    
                   else
                   end
               
-                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 8) && ( (user.householdincome.to_i == 4) || (user.householdincome.to_i == 25) ) then
-                    @QualificationHhi = true                    
-                  else
-                  end
-              
-                  if ( (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 9) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 10) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 11) ) && (user.householdincome.to_i == 26) then
+                  if ( (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 8) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 9) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 10) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 11) ) && ( (user.householdincome.to_i == 17) || (user.householdincome.to_i == 18) ) then
                     @QualificationHhi = true                    
                   else
                   end
@@ -4357,29 +5061,327 @@ class UsersController < ApplicationController
                 puts
                 print "@QualificationHhi: ", @QualificationHhi
                 puts
-            
-              when "STANDARD_HHI_INT"
-                @QualificationHhi = false
-                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                  if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == user.householdincome.to_i then
-                    @QualificationHhi = true
-                  else
-                  end
-                end
-                print "User entered HHI: ", user.householdincome
-                puts
-                print "Project quota HHI: ", project.quotas[j]["datapoints"][n]["values"]
-                puts
-                print "@QualificationHhi: ", @QualificationHhi
-                puts
+                  
+                  
+                when "Employment Industry"
+                  @QualificationPindustry = false
+      
+                  (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 1) && (user.pindustry.to_i == 1) then
+                      @QualificationPindustry = true
+                    else
+                    end
               
-              when "RFG2_Employment Industry Personal"
-                @QualificationPindustry = false
-                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                  if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == user.pindustry.to_i then
-                    @QualificationPindustry = true
-                  else
-                  end
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) && (user.pindustry.to_i == 2) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) && (user.pindustry.to_i == 3) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && (user.pindustry.to_i == 4) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 8) && (user.pindustry.to_i == 5) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 9) && (user.pindustry.to_i == 6) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 10) && (user.pindustry.to_i == 7) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 11) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 12) && (user.pindustry.to_i == 8) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 13) && (user.pindustry.to_i == 9) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 14) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 15) && (user.pindustry.to_i == 10) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 16) && (user.pindustry.to_i == 11) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 17) && (user.pindustry.to_i == 12) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 18) && (user.pindustry.to_i == 13) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 19) && (user.pindustry.to_i == 14) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 20) && (user.pindustry.to_i == 15) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 21) && (user.pindustry.to_i == 16) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 22) && (user.pindustry.to_i == 17) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 23) && (user.pindustry.to_i == 18) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 24) && (user.pindustry.to_i == 19) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 25) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 26) && (user.pindustry.to_i == 20) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 27) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 28) && (user.pindustry.to_i == 22) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 29) && (user.pindustry.to_i == 23) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 30) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 31) && (user.pindustry.to_i == 24) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 32) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 33) && (user.pindustry.to_i == 25) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 34) && (user.pindustry.to_i == 26) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 35) && (user.pindustry.to_i == 27) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 36) && (user.pindustry.to_i == 28) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 37) && (user.pindustry.to_i == 29) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 38) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 39) && (user.pindustry.to_i == 30) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 40) && (user.pindustry.to_i == 31) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 41) && (user.pindustry.to_i == 32) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 42) && (user.pindustry.to_i == 33) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 43) && (user.pindustry.to_i == 34) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 44) && (user.pindustry.to_i == 35) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 45) && (user.pindustry.to_i == 36) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 46) && (user.pindustry.to_i == 37) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 47) && (user.pindustry.to_i == 38) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 48) && (user.pindustry.to_i == 39) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 49) && (user.pindustry.to_i == 40) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 50) && (user.pindustry.to_i == 41) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 51) && (user.pindustry.to_i == 42) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 52) && (user.pindustry.to_i == 44) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 53) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 54) && (user.pindustry.to_i == 45) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 55) && (user.pindustry.to_i == 46) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 56) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 57) && (user.pindustry.to_i == 49) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 58) && (user.pindustry.to_i == 48) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 59) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 60) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 61) && (user.pindustry.to_i == 50) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 62) && ( (user.pindustry.to_i == 50) || (user.pindustry.to_i == 21) || (user.pindustry.to_i == 43) || (user.pindustry.to_i == 47) ) then
+                      @QualificationPindustry = true
+                    else
+                    end
+              
+                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 63) && (user.pindustry.to_i == 51) then
+                      @QualificationPindustry = true
+                    else
+                    end                  
                 end
                 print "User entered Pindustry: ", user.pindustry
                 puts
@@ -4401,37 +5403,6 @@ class UsersController < ApplicationController
                   print "Project quota Children: ", project.quotas[j]["datapoints"][n]["values"]
                   puts
                   print "@QualificationChildren: ", @QualificationChildren
-                  puts
-                
-              when "Education (US)"
-                  @QualificationEducation = false
-                  (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] <= 7) && ((project.quotas[j]["datapoints"][n]["values"][i]["choice"] == user.eduation.to_i)) then
-                      @QualificationEducation = true
-                      @RFGEducationUS = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                    else
-                    end                  
-                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 8) || (user.eduation.to_i == 9) || (user.eduation.to_i == 10)) then
-                      @QualificationEducation = true
-                      @RFGEducationUS = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                    else
-                    end
-                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 8) && (user.eduation.to_i == 11) then
-                      @QualificationEducation = true
-                      @RFGEducationUS = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                    else
-                    end
-                    if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 9) && (user.eduation.to_i == 12) then
-                      @QualificationEducation = true
-                      @RFGEducationUS = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                    else
-                    end                    
-                  end
-                  print "User entered Education: ", user.eduation
-                  puts
-                  print "Project quota Education: ", project.quotas[j]["datapoints"][n]["values"]
-                  puts
-                  print "@QualificationEducation: ", @QualificationEducation
                   puts
                   
               when "Education (CA)"
@@ -4527,57 +5498,13 @@ class UsersController < ApplicationController
               puts
               print "@QualificationEmployment: ", @QualificationEmployment
               puts
-          
-            when "DMA (US)"
-              @QualificationDMA = false
-              (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == @DMARegionCode.to_i then
-                  @QualificationDMA = true
-                else
-                end
-              end
-              print "User entered DMA: ", @DMARegionCode
-              puts
-              print "Project quota DMA: ", project.quotas[j]["datapoints"][n]["values"]
-              puts
-              print "@QualificationDMA: ", @QualificationDMA
-              puts
-                    
-            when "State (US)"
-              @QualificationState = false
-              (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == @statePrecode.to_i then
-                  @QualificationState = true
-                else
-                end
-              end
-              print "User entered State: ", @statePrecode
-              puts
-              print "Project quota State: ", project.quotas[j]["datapoints"][n]["values"]
-              puts
-              print "@QualificationState: ", @QualificationState
-              puts
-          
-            when "Region (US)"
-              @QualificationRegion = false
-              (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == @regionPrecode.to_i then
-                  @QualificationRegion = true
-                else
-                end
-              end
-              print "User entered Region: ", @regionPrecode
-              puts
-              print "Project quota Region: ", project.quotas[j]["datapoints"][n]["values"]
-              puts
-              print "@QualificationRegion: ", @QualificationRegion
-              puts          
-              end # case statement
+              
+              end # case
               
               
               print " QUOTA AVAILABILITY CRITERIA for: ", project.rfg_id
               puts
-              print "country = ", (project.country == "CA") || (project.country == "US")
+              print "country = ", (project.country == "CA")
               puts
               print "Age = ", (@QualificationAge)
               puts
@@ -4595,42 +5522,28 @@ class UsersController < ApplicationController
               puts
               print "Children = ", (@QualificationChildren)
               puts
-              print "DMA = ", (@QualificationDMA)
-              puts
-              print "State = ", (@QualificationState)
-              puts
-              print "Region = ", (@QualificationRegion)
-              puts
                             
               
-              if ( (project.country == "CA") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEducation ) && (@QualificationEmployment) && (@QualificationChildren) ) ||
+              if ( (project.country == "CA") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEducation ) && (@QualificationEmployment) && (@QualificationChildren) && (project.quotas[j]["completesLeft"] > 0) ) then
               
-                ( (project.country == "US") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry )  && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationEducation) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion)  ) then
-                
-                if project.quotas[j]["completesLeft"] > 0 then
-              
-                  @RFGQuotaIsAvailable = true
-                  puts "******* Quota is available"
-                else
-                  # if previous quota was available then preserve that fact
-                  @RFGQuotaIsAvailable = false
-                  puts "******* No more Completes needed for this quota"
-                end
-              
+                @RFGQuotaIsAvailable = true
+                puts "******* Quota is available"
               else
+                # if previous quota was available then preserve that fact
+                @RFGQuotaIsAvailable = false || @RFGQuotaIsAvailable
               end
               
-            end # reviewed all n nested qualifications of a quota
+              end # reviewed all n nested qualifications of a quota
                            
             end # all j quotas have been inspected
 
-          else
-            @RFGQuotaIsAvailable = true
-            
+          else            
             print "************** Quota available: There are no quota restrictions"
             puts
-          end
-          
+            
+            @RFGQuotaIsAvailable = true
+            
+          end # quotaavailable?
           
           if @RFGQuotaIsAvailable == true then
           
@@ -4736,16 +5649,15 @@ class UsersController < ApplicationController
             puts
           end # if quota available = true
           
-      else
+        else
           
-        print '************ User DID NOT QUALIFY for project number = ', project.rfg_id
-        puts
+          print '************ User DID NOT QUALIFY for project number = ', project.rfg_id
+          puts
           
-      end # Qualification check
+        end # Qualification check
 
- 
-      else
-      end # if projectStillLive
+        else
+        end # if projectStillLive
  
       else
       end # if foundtopprojects
@@ -4813,12 +5725,17 @@ class UsersController < ApplicationController
       @RFGJobTitle = ''
     else
     end 
+    
+    if @RFGPindustry == nil then
+      @RFGPindustry = ''
+    else
+    end
       
     if user.country=="9" then 
-      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&age='+user.age+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+@RFGchildrenvalue+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle
+      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+@RFGchildrenvalue+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry
     else
       if user.country=="6" then
-          @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&age='+user.age+'&educationCA='+@RFGEducationCA+'&rfg2_14887='+user.householdincome+'&employment='+@RFGEmployment+@RFGchildrenvalue
+          @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+@RFGchildrenvalue+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry
       else
       end
     end    
