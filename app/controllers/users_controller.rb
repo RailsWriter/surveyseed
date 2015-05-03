@@ -1159,8 +1159,7 @@ class UsersController < ApplicationController
       
     else
     end # if country = 9
-    
-    
+        
     # Just in case user goes back to last qualification question and returns - this prevents the array from adding duplicates to previous list. Need to prevent back action across the board and then delete these to avaoid blank entries in these arrays.
     
     user.QualifiedSurveys = []
@@ -1475,7 +1474,27 @@ class UsersController < ApplicationController
               # Lets assume that quota is open for all users so add this survey number to user's ride
               print '************* No Total quota ID found. Assuming that quota is open for ALL users. Might want to change this to refuse this survey based on experience. This should typically NOT happen.'
               puts
-              user.SurveysWithMatchingQuota << @surveynumber
+              
+              
+              
+              
+              if (user.SurveysWithMatchingQuota.length == 0) then
+                user.SurveysWithMatchingQuota << @surveynumber
+              else
+                @inserted = false
+                (0..user.SurveysWithMatchingQuota.length-1).each do |i|
+                  @survey1 = Survey.where('SurveyNumber = ?', user.SurveysWithMatchingQuota[i]).first
+                  # @surveynumber is for survey
+                  if ((survey.BidIncidence > @survey1.BidIncidence) && (@inserted == false)) then
+                    user.SurveysWithMatchingQuota.insert(i, @surveynumber)
+                    @inserted = true
+                  else
+                  end
+                end
+              end
+              
+              
+              
           
               if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_US) then
             
@@ -2007,9 +2026,28 @@ class UsersController < ApplicationController
           
               if (@listofunmatchednestedquestionIDs.empty?) && (unnestedquotasexist) then
                 # Everytime (Quota ID set of l quetions) a quota matches, capture the surveynumber. Delete duplicates later
-                puts '****************** Adding the survey to the list of eligible surveys due to quota match'
-                user.SurveysWithMatchingQuota << @surveynumber
+                puts '****************** Adding the survey to the list of eligible surveys due to quota availability'
+                
+
+
+
+                if (user.SurveysWithMatchingQuota.length == 0) then
+                  user.SurveysWithMatchingQuota << @surveynumber
+                else
+                  @inserted = false
+                  (0..user.SurveysWithMatchingQuota.length-1).each do |i|
+                    survey1 = Survey.where('SurveyNumber = ?', user.SurveysWithMatchingQuota[i]).first
+                    # @surveynumber is for survey
+                    if ((survey.BidIncidence > survey1.BidIncidence) && (@inserted == false)) then
+                      user.SurveysWithMatchingQuota.insert(i, @surveynumber)
+                      @inserted = true
+                    else
+                    end
+                  end
+                end
             
+
+
             
                 if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_US) then
             
@@ -2051,8 +2089,31 @@ class UsersController < ApplicationController
               else #6
                 # NumberOfQuotas (k) is 0 i.e. there are no quotas specified but totalquotacount exists.
                 # The survey is open to All, provided there is need for respondents specified in Total
-                puts '************* Adding survey to list of eligible quotas even though no quotas specified but Totalquotaexists.'
-                user.SurveysWithMatchingQuota << @surveynumber
+                puts '************* Adding survey in order of IR to list of eligible quotas even though no quotas specified but Totalquotaexists.'
+
+
+                if (user.SurveysWithMatchingQuota.length == 0) then
+                  user.SurveysWithMatchingQuota << @surveynumber
+                else
+                  print "----------------->>>>>>>>>>>>> SurveysWithMatchingQuota: ", user.SurveysWithMatchingQuota
+                  puts
+                  
+                  @inserted = false
+                  (0..user.SurveysWithMatchingQuota.length-1).each do |i|
+                    s1 = Survey.where('SurveyNumber = ?', user.SurveysWithMatchingQuota[i]).first
+                    
+                    print "----------------->>>>>>>>>>>>> S1: ", s1.SurveyNumber
+                    puts
+                    
+                    # @surveynumber is for survey
+                    if ( ( survey.BidIncidence > s1.BidIncidence ) && (@inserted == false) ) then
+                      user.SurveysWithMatchingQuota.insert(i, @surveynumber)
+                      @inserted = true
+                    else
+                    end
+                  end
+                end
+                    
             
                 if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_US) then
             
@@ -2141,10 +2202,7 @@ class UsersController < ApplicationController
           puts
         else
         end
-          
-          
-          
-        
+                 
 
         end # if survey meets qualification criteria or not
       
@@ -2154,44 +2212,31 @@ class UsersController < ApplicationController
     end # do loop for all surveys in db
     
     
-    # Lets create the sequence of SupplierLinks refecting this priority of surveys and append the FED additional parameters
+    # Remove duplicate entries
       
     if (user.SurveysWithMatchingQuota.empty?) then
       p '******************** RankFEDSurveys: No Surveys matching quota were found in Fulcrum'
-#        redirect_to '/users/nosuccess'
-#        return
+
     else       
       user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
       print '*************** List of Fulcrum surveys where quota is available:', user.SurveysWithMatchingQuota
       puts
     end
-      
     
-     # If the user qualifies for one or more survey, send user to the top ranked survey first and repeat until success/failure/OT/QT
-#     @InferiorSupplierLink = Array.new
+    
+    
+   
+    
+    
+      
+    # Get SupplierLinks for matched surveys
 
     (0..user.SurveysWithMatchingQuota.length-1).each do |i| #do14
       @surveynumber = user.SurveysWithMatchingQuota[i]
       Survey.where( "SurveyNumber = ?", @surveynumber ).each do |survey| # do15
-
-        # Eliminate surveys with EPC < 0.1
-#        if survey.SurveyQuotaCalcTypeID != 5 then
-          user.SupplierLink[i] = survey.SupplierLink["LiveLink"]
-#        else        
-          # Store the link in a separate container
-#          @InferiorSupplierLink << survey.SupplierLink["LiveLink"]
-#          print "Skipping survey number: ", @surveynumber, 'since its EPC: is < 0.1: ', survey.SurveyQuotaCalcTypeID
-#          puts
-#        end
-      
+        user.SupplierLink[i] = survey.SupplierLink["LiveLink"]
       end #do15
     end #do14
-    
-    #Prevent a problem with userride if EPC < 0.1 eliminates ALL surveys
-
-#    user.SupplierLink = user.SupplierLink + @InferiorSupplierLink
-#    print '*********** USER HAS QUOTA FOR this list of Fulcrum surveys with EPC <0.1 moved to the end of the list:', user.SupplierLink
-#    puts
     
     
     # Remove any blank entries
@@ -2200,13 +2245,11 @@ class UsersController < ApplicationController
     else
     end
     
-    
     if (@netstatus == "INTTEST") then
       @PID = 'test'
     else
       @PID = user.user_id
     end
-    
     
     if user.children != nil then
       @childrenvalue = '&Age_and_Gender_of_Child='+user.children[0]
@@ -2218,9 +2261,7 @@ class UsersController < ApplicationController
       end
     else
       @childrenvalue = ''
-    end    
-    
-    
+    end  
     
     if user.country=="9" then 
       @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP+'&HISPANIC='+user.ethnicity+'&ETHNICITY='+user.race+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_US='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue+'&STATE='+@statePrecode+'&DMA='+@DMARegionCode
@@ -2265,7 +2306,7 @@ class UsersController < ApplicationController
     
     user.save
     
-    # Select RFG projects
+    # Select RFG projects next
     selectRfgProjects(session_id)  
         
   end # ranksurveys 
@@ -4170,8 +4211,25 @@ class UsersController < ApplicationController
               print "*************** This is not a duplicate user for this project. Add to list of projects for userride", project.rfg_id
               puts
             
-              @RFGProjectsWithQuota << project.rfg_id
-              @RFGSupplierLinks << project.link+'&rfg_id='+project.rfg_id
+            
+              
+              if (@RFGProjectsWithQuota.length == 0) then
+                @RFGProjectsWithQuota << project.rfg_id
+                @RFGSupplierLinks << project.link+'&rfg_id='+project.rfg_id
+              else
+                @inserted = false
+                (0..@RFGProjectsWithQuota.length-1).each do |i|
+                  project1 = RfgProject.where('rfg_id = ?', @RFGProjectsWithQuota[i]).first
+                  if ( (project.estimatedIR > project1.estimatedIR) && (@inserted == false) ) then
+                    @RFGProjectsWithQuota.insert(i, project.rfg_id)
+                    @RFGSupplierLinks.insert(i, project.link+'&rfg_id='+project.rfg_id)
+                    @inserted = true
+                  else
+                  end
+                end
+              end
+                            
+              
                         
             
               if (user.country == '9') && (@RFGProjectsWithQuota.uniq.length >= @RFG_US) then
@@ -5613,16 +5671,33 @@ class UsersController < ApplicationController
                  
               print "*************** This is not a duplicate user for this project. Add to list of projects for userride", project.rfg_id
               puts
+              
+              
             
-              @RFGProjectsWithQuota << project.rfg_id
-              @RFGSupplierLinks << project.link+'&rfg_id='+project.rfg_id
+              if (@RFGProjectsWithQuota.length == 0) then
+                @RFGProjectsWithQuota << project.rfg_id
+                @RFGSupplierLinks << project.link+'&rfg_id='+project.rfg_id
+              else
+                @inserted = false
+                (0..@RFGProjectsWithQuota.length-1).each do |i|
+                  @project1 = RfgProject.where('rfg_id = ?', @RFGProjectsWithQuota[i]).first
+                  if ( (project.estimatedIR > @project1.estimatedIR) && (@inserted == false) ) then
+                    @RFGProjectsWithQuota.insert(i, project.rfg_id)
+                    @RFGSupplierLinks.insert(i, project.link+'&rfg_id='+project.rfg_id)
+                    @inserted = true
+                  else
+                  end
+                end
+              end
+              
+              
                         
             
               if (user.country == '9') && (@RFGProjectsWithQuota.uniq.length >= @RFG_US) then
           
                 @foundtopprojectswithquota = true
         
-              else
+              else  
           
                 if (user.country == '6') && (@RFGProjectsWithQuota.uniq.length >= @RFG_CA) then
             
@@ -5767,7 +5842,7 @@ class UsersController < ApplicationController
     end # RFG status is ACTIVE / OFF
     
     
-    # Begin the ride
+    # Begin the ride next
     userride (session_id)      
         
   end #selectRfgProjects
