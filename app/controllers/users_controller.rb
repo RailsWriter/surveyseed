@@ -5672,8 +5672,6 @@ class UsersController < ApplicationController
               print "*************** This is not a duplicate user for this project. Add to list of projects for userride", project.rfg_id
               puts
               
-              
-            
               if (@RFGProjectsWithQuota.length == 0) then
                 @RFGProjectsWithQuota << project.rfg_id
                 @RFGSupplierLinks << project.link+'&rfg_id='+project.rfg_id
@@ -5689,27 +5687,12 @@ class UsersController < ApplicationController
                   end
                 end
               end
-              
-              
                         
-            
-              if (user.country == '9') && (@RFGProjectsWithQuota.uniq.length >= @RFG_US) then
-          
+              if (@RFGProjectsWithQuota.uniq.length >= @RFG_CA) then
                 @foundtopprojectswithquota = true
-        
               else  
-          
-                if (user.country == '6') && (@RFGProjectsWithQuota.uniq.length >= @RFG_CA) then
-            
-                  @foundtopprojectswithquota = true
-          
-                else
-          
-                  #do nothing
-          
-                end
-        
-              end              
+                #do nothing
+              end             
               
             else
             

@@ -12,7 +12,9 @@
 	<body class="body">
 		
 		<script type="text/javascript">
-			var fingerprint = new Fingerprint({canvas: true, ie_activex: true, screen_resolution: true}).get();
+			var fingerprint = new Fingerprint({canvas: true}).get();
+
+		//	var fingerprint = new Fingerprint({canvas: true, ie_activex: true, screen_resolution: true}).get();
 		//	document.write(fingerprint);
 			
 			$.ajax({
