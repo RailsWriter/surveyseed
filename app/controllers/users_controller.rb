@@ -773,12 +773,34 @@ class UsersController < ApplicationController
       puts
       print "******* user.children[0]: ", user.children[0]
       puts
-      redirect_to '/users/qq12'
+      redirect_to '/users/qq15'
     else
       redirect_to '/users/qq14'
     end
     
   end 
+  
+  def industriesaction  
+    
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+
+    user=User.find_by session_id: session.id
+    
+    tracker.track(user.ip_address, 'industries')
+    
+    if params[:industries] != nil
+      user.industries=params[:industries]
+      user.save
+      print "------------------->>>>****** user.industries.flatten: ", user.industries.flatten
+      puts
+      print "------------------->>>>>>******* user.industries[0]: ", user.industries[0]
+      puts
+      redirect_to '/users/qq12'
+    else
+      redirect_to '/users/qq15'
+    end
+    
+  end
   
   def pleasewait
     

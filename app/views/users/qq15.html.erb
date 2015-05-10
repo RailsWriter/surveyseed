@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<div class="header">
+			<center>
+				<h1>Industries</h1>
+			</center>
+		</header>
+		
+		<div class="content">
+			<center>
+				<p>Do you, or does anyone in your household, work in any of the following industries?</p>
+			</center>
+				
+				<%= form_tag("industriesaction", method: "post") do %>
+				<fieldset>
+				<div class="mybiglistinput">
+					
+					<label>
+					<%= check_box_tag 'industries[]', '1' %>
+				  		Accounting
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '2' %>
+				  		Advertising
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '3' %>
+				  		Agriculture/Fishing
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '4' %>
+				  		Architecture
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '5' %>
+				  		Automotive
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '6' %>
+				  		Aviation
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '7' %>
+				  		Banking/Financial
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '8' %>
+				  		Bio-Tech
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '9' %>
+				  		Brokerage
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '10' %>
+				  		Carpenting/Electrical installations/VVS
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '11' %>
+				  		Chemicals/Plastics/Rubber
+					</label><br>					
+					<label>
+					<%= check_box_tag 'industries[]', '12' %>
+				  		Communications/Information
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '13' %>
+				  		Computer Hardware
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '14' %>
+				  		Computer Reseller (software/hardware)
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '15' %>
+				  		Computer Software
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '16' %>
+				  		Construction
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '17' %>
+				  		Consulting
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '18' %>
+				  		Consumer Electronics
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '19' %>
+				  		Consumer Packaged Goods
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '20' %>
+				  		Education
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '21' %>
+				  		Energy/Utilities/Oil and Gas
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '22' %>
+				  		Engineering
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '23' %>
+				  		Environmental Services
+					</label><br>					
+					<label>
+					<%= check_box_tag 'industries[]', '24' %>
+				  		Fashion/Apparel
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '25' %>
+				  		Food/Beverage
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '26' %>
+				  		Government/Public Sector
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '27' %>
+				  		Healthcare
+					</label><br>
+					<%= check_box_tag 'industries[]', '28' %>
+				  		Hospitality/Tourism
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '29' %>
+				  		Human Resources
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '30' %>
+				  		Information Technology/IT
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '31' %>
+				  		Insurance
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '32' %>
+				  		Internet
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '33' %>
+				  		Legal/Law
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '34' %>
+				  		Manufacturing
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '35' %>
+				  		Market Research
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '36' %>
+				  		Marketing/Sales
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '37' %>
+				  		Media/Entertainment
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '38' %>
+				  		Military
+					</label><br>					
+					<label>
+					<%= check_box_tag 'industries[]', '39' %>
+				  		Non Profit/Social services
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '40' %>
+				  		Personal Services
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '41' %>
+				  		Pharmaceuticals
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '42' %>
+				  		Printing Publishing
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '43' %>
+				  		Public Relations
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '44' %>
+				  		Real Estate/Property
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '45' %>
+				  		Retail/Wholesale trade
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '46' %>
+				  		Security
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '47' %>
+				  		Shipping/Distribution
+					</label><br>
+					<label>
+					<%= check_box_tag 'industries[]', '48' %>
+				  		Telecommunications
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '49' %>
+				  		Transportation
+					</label><br>
+					<label>						
+					<%= check_box_tag 'industries[]', '50' %>
+				  		Other
+					</label><br>					
+					<label>
+					<%= check_box_tag 'industries[]', '51' %>
+				  		I don't work
+					</label><br><br>
+				</div>
+					
+				<div class="myinput">
+					<center>
+					<%= submit_tag "Next" %>
+					</center>
+				</div>
+			</fieldset>
+			<% end %>
+		</content>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('KetsciLogoSm.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>
