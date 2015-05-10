@@ -7,5 +7,6 @@ class User < ActiveRecord::Base
   serialize :SurveysCompleted, Hash
   
   serialize :children, Array
+  serialize :industries, Array
 
 end

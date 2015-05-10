@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150421043550) do
+ActiveRecord::Schema.define(version: 20150510074329) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -209,6 +209,7 @@ ActiveRecord::Schema.define(version: 20150421043550) do
     t.string   "jobtitle"
     t.text     "children"
     t.integer  "fingerprint",                      limit: 8
+    t.text     "industries"
   end
 
 end
