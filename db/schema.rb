@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150510074329) do
+ActiveRecord::Schema.define(version: 20150513061207) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(version: 20150510074329) do
     t.text     "QualificationDivisionPreCodes"
     t.text     "QualificationJobTitlePreCodes"
     t.text     "QualificationChildrenPreCodes"
+    t.text     "QualificationIndustriesPreCodes"
   end
 
   create_table "us_geos", force: true do |t|

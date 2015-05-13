@@ -217,6 +217,8 @@ begin
           @survey.QualificationRegionPreCodes = ["ALL"]          
           @survey.QualificationJobTitlePreCodes = ["ALL"]
           @survey.QualificationChildrenPreCodes = ["ALL"]
+          @survey.QualificationIndustriesPreCodes = ["ALL"]
+          
           
 
         # Insert specific qualifications where required
@@ -243,6 +245,7 @@ begin
             
             @survey.QualificationJobTitlePreCodes = ["ALL"]
             @survey.QualificationChildrenPreCodes = ["ALL"]
+            @survey.QualificationIndustriesPreCodes = ["ALL"]
             
             
           else
@@ -376,6 +379,21 @@ begin
                   else
                   end
                   @survey.QualificationChildrenPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes") 
+                  
+                  
+                  
+                  
+                when 643
+                  if flag == 'stag' then
+                    print '----------------------------------------------------------------->> STANDARD_INDUSTRY: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @survey.QualificationIndustriesPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes") 
+                  
+                  
+                  
+                  
                   
                   
 

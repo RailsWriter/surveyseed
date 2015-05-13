@@ -199,6 +199,7 @@ begin
       survey.QualificationJobTitlePreCodes = ["ALL"]
 
       survey.QualificationChildrenPreCodes = ["ALL"]
+      survey.QualificationIndustriesPreCodes = ["ALL"]      
       
 
 
@@ -224,6 +225,7 @@ begin
         survey.QualificationJobTitlePreCodes = ["ALL"]
         
         survey.QualificationChildrenPreCodes = ["ALL"]
+        survey.QualificationIndustriesPreCodes = ["ALL"]
         
         
        
@@ -354,6 +356,19 @@ begin
               else
               end
               survey.QualificationChildrenPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes") 
+              
+              
+            when 643
+              if flag == 'stag' then
+                print '----------------------------------------------------------------->> STANDARD_INDUSTRY: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                puts
+              else
+              end
+              survey.QualificationIndustriesPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes") 
+              
+              
+              
+              
 
 
 
@@ -601,6 +616,7 @@ puts
           @newsurvey.QualificationJobTitlePreCodes = ["ALL"]
 
           @newsurvey.QualificationChildrenPreCodes = ["ALL"]
+          @newsurvey.QualificationIndustriesPreCodes = ["ALL"]
           
           
           
@@ -625,6 +641,7 @@ puts
             @newsurvey.QualificationJobTitlePreCodes = ["ALL"]
 
             @newsurvey.QualificationChildrenPreCodes = ["ALL"]
+            @newsurvey.QualificationIndustriesPreCodes = ["ALL"]
             
             
           else
@@ -762,6 +779,18 @@ puts
                   else
                   end
                   @newsurvey.QualificationChildrenPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                  
+                  
+                when 643
+                  if flag == 'stag' then
+                    print '----------------------------------------------------------------->> STANDARD_INDUSTRY: ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("LogicalOperator"), ' ', NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    puts
+                  else
+                  end
+                  @newsurvey.QualificationIndustriesPreCodes = NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes") 
+                  
+                  
+                  
                   
                   
                   

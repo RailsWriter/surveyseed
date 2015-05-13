@@ -1325,7 +1325,6 @@ class UsersController < ApplicationController
     # change countrylanguageid setting to match user countryID only
     @usercountry = (user.country).to_i
 
-
     # Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
     Survey.where("CountryLanguageID = ? AND SurveyGrossRank <= ?", @usercountry, 500).order( "SurveyGrossRank" ).each do |survey|
 
@@ -2236,8 +2235,7 @@ class UsersController < ApplicationController
       end #3 if @foundtopsurveyswithquota == false
     
     end # do loop for all surveys in db
-    
-    
+        
     # Remove duplicate entries
       
     if (user.SurveysWithMatchingQuota.empty?) then
@@ -2248,8 +2246,7 @@ class UsersController < ApplicationController
       print '*************** List of Fulcrum surveys where quota is available:', user.SurveysWithMatchingQuota
       puts
     end
-    
-     
+         
     # Get SupplierLinks for matched surveys
 
     (0..user.SurveysWithMatchingQuota.length-1).each do |i| #do14
@@ -2284,7 +2281,7 @@ class UsersController < ApplicationController
     end  
     
     if user.industries != nil then
-      @industriesvalue = '&STANDARD_INDUSTRY='+user.indistries[0]
+      @industriesvalue = '&STANDARD_INDUSTRY='+user.industries[0]
       if user.industries.length > 1 then
         (1..user.industries.length-1).each do |i|
           @industriesvalue = @industriesvalue+'&STANDARD_INDUSTRY='+user.industries[i]
