@@ -1345,7 +1345,7 @@ class UsersController < ApplicationController
           (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ])) &&     
           (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&
           (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationChildrenPreCodes.flatten).empty? == false)) &&
-          (( survey.QualificationIndustriesPreCodes.empty? ) || ( survey.QualificationIndustriesPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationIndustriesPreCodes.flatten).empty? == false)) &&
+          (( survey.QualificationIndustriesPreCodes.empty? ) || ( survey.QualificationIndustriesPreCodes == [ "ALL" ] ) || (( user.industries & survey.QualificationIndustriesPreCodes.flatten).empty? == false)) &&
           ((survey.CPI == nil) || (survey.CPI >= @currentpayout)) ) ||
           
           
@@ -1364,7 +1364,7 @@ class UsersController < ApplicationController
           (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&
           (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationChildrenPreCodes.flatten).empty? == false)) &&
           (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ])) &&
-          (( survey.QualificationIndustriesPreCodes.empty? ) || ( survey.QualificationIndustriesPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationIndustriesPreCodes.flatten).empty? == false)) &&
+          (( survey.QualificationIndustriesPreCodes.empty? ) || ( survey.QualificationIndustriesPreCodes == [ "ALL" ] ) || (( user.industries & survey.QualificationIndustriesPreCodes.flatten).empty? == false)) &&
           ((survey.CPI == nil) || (survey.CPI >= @currentpayout)) ) ||
        
           
@@ -1386,7 +1386,7 @@ class UsersController < ApplicationController
           (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ])) && 
           (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ])) && 
           (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ])) &&
-          (( survey.QualificationIndustriesPreCodes.empty? ) || ( survey.QualificationIndustriesPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationIndustriesPreCodes.flatten).empty? == false)) &&         
+          (( survey.QualificationIndustriesPreCodes.empty? ) || ( survey.QualificationIndustriesPreCodes == [ "ALL" ] ) || (( user.industries & survey.QualificationIndustriesPreCodes.flatten).empty? == false)) &&         
           ((survey.CPI == nil) || (survey.CPI >= @currentpayout)) ))
           
           then
@@ -1406,8 +1406,8 @@ class UsersController < ApplicationController
           @_jobtitle = (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ]))          
           @_children = (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children  & survey.QualificationChildrenPreCodes.flatten).empty? == false)) 
           @_children_logic = (user.children & survey.QualificationChildrenPreCodes.flatten)
-          @_industries = (( survey.QualificationIndustriesPreCodes.empty? ) || ( survey.QualificationIndustriesPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationIndustriesPreCodes.flatten).empty? == false))
-          @_industries_logic = ( user.children & survey.QualificationIndustriesPreCodes.flatten)
+          @_industries = (( survey.QualificationIndustriesPreCodes.empty? ) || ( survey.QualificationIndustriesPreCodes == [ "ALL" ] ) || (( user.industries & survey.QualificationIndustriesPreCodes.flatten).empty? == false))
+          @_industries_logic = ( user.industries & survey.QualificationIndustriesPreCodes.flatten)
           @_CPI_check = ((survey.CPI == nil) || (survey.CPI >= @currentpayout))
           
 
@@ -2186,8 +2186,8 @@ class UsersController < ApplicationController
         @_jobtitle = (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ]))
         @_children = (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children  & survey.QualificationChildrenPreCodes.flatten).empty? == false)) 
         @_children_logic = user.children & survey.QualificationChildrenPreCodes.flatten  
-        @_industries = (( survey.QualificationIndustriesPreCodes.empty? ) || ( survey.QualificationIndustriesPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationIndustriesPreCodes.flatten).empty? == false))
-        @_industries_logic = ( user.children & survey.QualificationIndustriesPreCodes.flatten)
+        @_industries = (( survey.QualificationIndustriesPreCodes.empty? ) || ( survey.QualificationIndustriesPreCodes == [ "ALL" ] ) || (( user.industries & survey.QualificationIndustriesPreCodes.flatten).empty? == false))
+        @_industries_logic = ( user.industries & survey.QualificationIndustriesPreCodes.flatten)
         @_CPI_check = ((survey.CPI == nil) || (survey.CPI >= @currentpayout))
         
         
