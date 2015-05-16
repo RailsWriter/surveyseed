@@ -321,12 +321,7 @@ class RedirectsController < ApplicationController
           
               @user.SurveysAttempted << params[:tsfn]+'-2'
               
-              
-              
-              
-              
               @project = RfgProject.find_by rfg_id: params[:tsfn]
-            
             
               if (@project == nil) then
                 sleep(1)
@@ -338,11 +333,6 @@ class RedirectsController < ApplicationController
               print '************ Successfully completed project:', @project.rfg_id
               puts
               
-              
-              
-              
-              
-            
               # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}            
             
               if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
@@ -374,15 +364,10 @@ class RedirectsController < ApplicationController
                 @net_name = "TestNtk"
               else
               end
-            
              
              
-             
-             
-              @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], @project.cpi, @user.clickid, @net_name, 'RFG']
+              @user.SurveysCompleted[params[:PID]] = [params[:tsfn], Time.now, @project.cpi, @user.clickid, @net_name]
               @user.save
-              
-              
               
              
               # Save completed project info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}            
