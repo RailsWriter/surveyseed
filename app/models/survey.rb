@@ -21,6 +21,5 @@ class Survey < ActiveRecord::Base
 
   serialize :QualificationJobTitlePreCodes, Array
   serialize :QualificationChildrenPreCodes, Array
-  serialize :QualificationIndustriesPreCodes, Array
   
 end
