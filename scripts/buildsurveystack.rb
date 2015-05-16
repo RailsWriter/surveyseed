@@ -217,7 +217,7 @@ begin
           @survey.QualificationRegionPreCodes = ["ALL"]          
           @survey.QualificationJobTitlePreCodes = ["ALL"]
           @survey.QualificationChildrenPreCodes = ["ALL"]
-          @survey.QualificationIndustriesPreCodes = ["ALL"]
+        #  @survey.QualificationIndustriesPreCodes = ["ALL"]
           
           
 
@@ -245,7 +245,7 @@ begin
             
             @survey.QualificationJobTitlePreCodes = ["ALL"]
             @survey.QualificationChildrenPreCodes = ["ALL"]
-            @survey.QualificationIndustriesPreCodes = ["ALL"]
+        #    @survey.QualificationIndustriesPreCodes = ["ALL"]
             
             
           else
@@ -389,7 +389,7 @@ begin
                     puts
                   else
                   end
-                  @survey.QualificationIndustriesPreCodes = (SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")).to_a 
+              #    @survey.QualificationIndustriesPreCodes = (SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")).to_a 
                   
                   
                   

@@ -199,7 +199,7 @@ begin
       survey.QualificationJobTitlePreCodes = ["ALL"]
 
       survey.QualificationChildrenPreCodes = ["ALL"]
-      survey.QualificationIndustriesPreCodes = ["ALL"]      
+  #    survey.QualificationIndustriesPreCodes = ["ALL"]      
       
 
 
@@ -225,7 +225,7 @@ begin
         survey.QualificationJobTitlePreCodes = ["ALL"]
         
         survey.QualificationChildrenPreCodes = ["ALL"]
-        survey.QualificationIndustriesPreCodes = ["ALL"]
+   #     survey.QualificationIndustriesPreCodes = ["ALL"]
         
         
        
@@ -364,7 +364,7 @@ begin
                 puts
               else
               end
-              survey.QualificationIndustriesPreCodes = (SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")).to_a
+#              survey.QualificationIndustriesPreCodes = (SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")).to_a
               
               
               
@@ -616,7 +616,7 @@ puts
           @newsurvey.QualificationJobTitlePreCodes = ["ALL"]
 
           @newsurvey.QualificationChildrenPreCodes = ["ALL"]
-          @newsurvey.QualificationIndustriesPreCodes = ["ALL"]
+     #     @newsurvey.QualificationIndustriesPreCodes = ["ALL"]
           
           
           
@@ -641,7 +641,7 @@ puts
             @newsurvey.QualificationJobTitlePreCodes = ["ALL"]
 
             @newsurvey.QualificationChildrenPreCodes = ["ALL"]
-            @newsurvey.QualificationIndustriesPreCodes = ["ALL"]
+    #        @newsurvey.QualificationIndustriesPreCodes = ["ALL"]
             
             
           else
@@ -787,7 +787,7 @@ puts
                     puts
                   else
                   end
-                  @newsurvey.QualificationIndustriesPreCodes = (NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")).to_a 
+              #    @newsurvey.QualificationIndustriesPreCodes = (NewSurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")).to_a 
                   
                   
                   
