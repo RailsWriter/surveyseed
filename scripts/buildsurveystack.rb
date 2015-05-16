@@ -389,7 +389,7 @@ begin
                     puts
                   else
                   end
-                  @survey.QualificationIndustriesPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes") 
+                  @survey.QualificationIndustriesPreCodes = (SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")).to_a 
                   
                   
                   
