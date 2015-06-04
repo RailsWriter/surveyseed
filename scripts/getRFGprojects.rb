@@ -158,6 +158,13 @@ begin
    #     print "******************* RFGProjectStats: ", RFGProjectStats
   #      puts
 
+
+
+      if (RFGProjectStats == nil) then
+        puts "*******************RFGProjectStats is NIL"
+     
+      else
+
         @project.starts = RFGProjectStats["response"]["starts"]
         @project.completes = RFGProjectStats["response"]["completes"]
         @project.terminates = RFGProjectStats["response"]["terminates"]
@@ -176,7 +183,7 @@ begin
         @project.projectCR = RFGProjectStats["response"]["projectCR"]
         @project.projectEPC = RFGProjectStats["response"]["projectEPC"]
 
-
+      end
         
         if (@project.NumberofAttempts == nil) then
           @project.NumberofAttempts = 0
