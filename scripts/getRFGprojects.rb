@@ -152,7 +152,7 @@ begin
         end
         
       rescue Net::ReadTimeout => e  
-        puts e.message
+        puts "************** ------------>>>>>>>>>>Timeout due to connecting<<<<<<<<<<<<<-----------*******"
       end
 
    #     print "******************* RFGProjectStats: ", RFGProjectStats

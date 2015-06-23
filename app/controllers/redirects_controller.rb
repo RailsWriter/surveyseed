@@ -198,6 +198,11 @@ class RedirectsController < ApplicationController
               else
               end
               
+              if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
+                @net_name = "SS3"
+              else
+              end
+              
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
               else
@@ -267,9 +272,22 @@ class RedirectsController < ApplicationController
     
               else
               end
-                     
-            
-              # Keep a count of completes on Supersonic Network
+              
+              if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
+                # puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
+
+                begin
+                  @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                        rescue HTTParty::Error => e
+                          puts 'HttParty::Error '+ e.message
+                          retry
+                end while @SS3PostBack.code != 200
+    
+              else
+              end
+              
+                                 
+              # Keep a count of completes on each Network
             
               puts "*************** Keeping track of completes on the corresponding network"
             
@@ -346,7 +364,7 @@ class RedirectsController < ApplicationController
               end
               
               if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
-                @net_name = "Fyber"
+                @net_name = "RadiumOne"
               else
               end
               
@@ -359,6 +377,11 @@ class RedirectsController < ApplicationController
                 @net_name = "Fyber2"
               else
               end
+              
+              if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
+                @net_name = "SS3"
+              else
+              end           
               
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
@@ -456,7 +479,23 @@ class RedirectsController < ApplicationController
                   end while @Fyber2PostBack.code != 200
     
               else
-              end                     
+              end   
+              
+              
+              if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
+                #puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
+                
+                begin
+                  @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                        rescue HTTParty::Error => e
+                          puts 'HttParty::Error '+ e.message
+                          retry
+                end while @SS3PostBack.code != 200
+    
+              else
+              end
+                           
+                                
             
               # Keep a count of completes on all Networks
             
@@ -534,6 +573,14 @@ class RedirectsController < ApplicationController
                 @net_name = "Fyber2"
               else
               end 
+              
+              if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
+                @net_name = "SS3"
+              else
+              end  
+              
+              
+              
               
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
@@ -636,6 +683,22 @@ class RedirectsController < ApplicationController
     
               else
               end
+              
+              
+              
+              if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
+                # puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
+                
+                begin
+                  @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                        rescue HTTParty::Error => e
+                          puts 'HttParty::Error '+ e.message
+                          retry
+                end while @SS3PostBack.code != 200
+    
+              else
+              end
+              
                        
               # Keep a count of completes on all Networks
             

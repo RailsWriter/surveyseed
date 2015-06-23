@@ -1,4 +1,4 @@
-# This script updates old survey ranks to the new rankings assuing them to be old and give Try More status unless GEPC=5.
+# This script updates UsGeo table generated from the us_geo.csv to include region, regionPrecode, Division and DivisionPrecodes.
 
 UsGeo.all.each do |geo|
 
