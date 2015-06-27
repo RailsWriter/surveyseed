@@ -151,7 +151,7 @@ begin
           RFGProjectStats = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil
         end
        
-       rescue {} 
+       rescue
 #      rescue Net::ReadTimeout => e  
         puts "************** ------------>>>>>>>>>>Rescue in 155 due to {}<<<<<<<<<<<<<-----------*******"
 #        false
@@ -233,7 +233,7 @@ begin
           RFGProjectTargets = JSON.parse(response.body)
         end
 
-      rescue {}
+      rescue
         puts "************** ------------>>>>>>>>>>Rescue in 237 due to {}<<<<<<<<<<<<<-----------*******"
 #        false
         retry if (retries -= 1) > 0
