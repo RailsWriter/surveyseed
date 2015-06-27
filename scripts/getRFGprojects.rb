@@ -148,11 +148,14 @@ begin
           req.body = command
           req.content_type = 'application/json'
           response = http.request req
-          RFGProjectStats = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil  
+          RFGProjectStats = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil
         end
-        
-      rescue Net::ReadTimeout => e  
-        puts "************** ------------>>>>>>>>>>Timeout due to connecting<<<<<<<<<<<<<-----------*******"
+       
+       rescue {} 
+#      rescue Net::ReadTimeout => e  
+        puts "************** ------------>>>>>>>>>>Rescue in 155 due to {}<<<<<<<<<<<<<-----------*******"
+#        false
+        retry if (retries -= 1) > 0
       end
 
    #     print "******************* RFGProjectStats: ", RFGProjectStats
@@ -227,14 +230,13 @@ begin
           @responsecode = response.code
           print "@responsecode: ", @responsecode
           puts
-#          if @responsecode == 200 
-            RFGProjectTargets = JSON.parse(response.body)  
-#          else
-            #do nothing
-#          end
-        end  
-      rescue StandardError  
-        false
+          RFGProjectTargets = JSON.parse(response.body)
+        end
+
+      rescue {}
+        puts "************** ------------>>>>>>>>>>Rescue in 237 due to {}<<<<<<<<<<<<<-----------*******"
+#        false
+        retry if (retries -= 1) > 0
       end
       
 #        print "RFGProjectTargets: ", RFGProjectTargets
