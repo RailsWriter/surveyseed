@@ -21,8 +21,6 @@ class UsersController < ApplicationController
 
     if params[:age].empty? == false
       @age = params[:age]
-      print "**********AGE= ", @age
-      puts
     else
       redirect_to '/users/new'
       return
@@ -31,7 +29,6 @@ class UsersController < ApplicationController
      # Check for COPA eligibility
 
     if @age.to_i<13 then
-      p '********************* Entered age is < 13'
       redirect_to '/users/nosuccess'
     else  
       # Enter the user with the following credentials in our system or find user's record  
@@ -103,7 +100,7 @@ class UsersController < ApplicationController
 
       if (first_time_user) then
         # Create a new-user record
-        p '****************** EVAL_AGE: Creating new record for FIRST TIME USER'
+#        p '****************** EVAL_AGE: Creating new record for FIRST TIME USER'
         #  @user = User.new(user_params)
         @user = User.new
         @user.age = @age
@@ -111,7 +108,6 @@ class UsersController < ApplicationController
         @user.clickid = clickid
         @user.country = @countryPrecode
         
-#       @user.payout = should be extracted from advertiser id in call
         # Initialize user ride related lists. These protect from getting old lists, if the user restarts taking surveys in the same session after a long break. However, these get a blank entry on the list due to save action
         
         @user.QualifiedSurveys = Array.new
@@ -131,15 +127,13 @@ class UsersController < ApplicationController
         p @user
         redirect_to '/users/tos'
       else
-      end
-    
-    
+      end    
     
       # This DB call should be optimized by using the id of record already found before
       
       if (first_time_user==false) then
         user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
-        p user
+      #  p user
 
         # Why do I have to stop at first? Optimizes. But there should be not more than 1 entry.
 
@@ -174,8 +168,8 @@ class UsersController < ApplicationController
 
     if params[:fingerprint].empty? == false      
       @fp = params[:fingerprint].to_i
-      print "----------------->>>>>>>>>>>> fp: ", @fp
-      puts
+    #  print "----------------->>>>>>>>>>>> fp: ", @fp
+    #  puts
       
       user=User.find_by session_id: session.id
       user.fingerprint = @fp
@@ -192,12 +186,12 @@ class UsersController < ApplicationController
   
   def sign_tos
 
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+ #   tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
       
     user=User.find_by session_id: session.id
     user.tos=true
 
-    tracker.track(user.ip_address, 'TOS')
+ #   tracker.track(user.ip_address, 'TOS')
 
     # Update number of attempts in last 24 hrs record of the user
     if ( user.number_of_attempts_in_last_24hrs==nil ) then
@@ -220,6 +214,7 @@ class UsersController < ApplicationController
         redirect_to '/users/qq2'
       else
         # user has made too many attempts to take surveys
+        p '******* Too many attempts to take a survey ***********'
         redirect_to '/users/24hrsquotaexceeded'
       end
     end
@@ -253,12 +248,12 @@ class UsersController < ApplicationController
   
   def trap_question_1
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+  #  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
   
     
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'Trap Q1')
+  #  tracker.track(user.ip_address, 'Trap Q1')
     
     user.trap_question_1_response=params[:color]
     if params[:color]=="Green" then
@@ -383,12 +378,11 @@ class UsersController < ApplicationController
   
   def zip_US
 
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
-    
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'Zip')
+    # tracker.track(user.ip_address, 'Zip')
     
     if params[:zip].empty? == false
       user.ZIP=params[:zip]
@@ -402,13 +396,11 @@ class UsersController < ApplicationController
   
   def zip_CA
 
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
-    
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'CA_Zip')
-    
+    # tracker.track(user.ip_address, 'CA_Zip')
     
     if params[:zip].empty? == false
       user.ZIP=params[:zip].upcase
@@ -441,12 +433,11 @@ class UsersController < ApplicationController
   end
   
   def zip_AU
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
     
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'AU_Zip')
-    
+    # tracker.track(user.ip_address, 'AU_Zip')
 
     if params[:zip].empty? == false
       user.ZIP=params[:zip]
@@ -460,11 +451,11 @@ class UsersController < ApplicationController
   
   def ethnicity_US
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'ethnicity_US')
+    # tracker.track(user.ip_address, 'ethnicity_US')
     
     if params[:ethnicity] != nil
       user.ethnicity=params[:ethnicity]
@@ -623,11 +614,11 @@ class UsersController < ApplicationController
 
   def householdincome_US  
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'hhi_US')
+    # tracker.track(user.ip_address, 'hhi_US')
     
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
@@ -641,11 +632,11 @@ class UsersController < ApplicationController
 
   def householdincome_CA
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-     tracker.track(user.ip_address, 'hhi_CA')
+    # tracker.track(user.ip_address, 'hhi_CA')
     
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
@@ -677,11 +668,11 @@ class UsersController < ApplicationController
   
   def householdincome_AU  
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-     tracker.track(user.ip_address, 'hhi_AU')
+    # tracker.track(user.ip_address, 'hhi_AU')
     
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
@@ -704,11 +695,11 @@ class UsersController < ApplicationController
   
   def employment
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'employment')    
+    # tracker.track(user.ip_address, 'employment')    
     
     if params[:employment] != nil
   #    user.householdcomp=params[:employment]
@@ -724,11 +715,11 @@ class UsersController < ApplicationController
   
   def personalindustry  
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'pindustry')
+    # tracker.track(user.ip_address, 'pindustry')
     
     if params[:pindustry] != nil
       user.pindustry=params[:pindustry]
@@ -742,11 +733,11 @@ class UsersController < ApplicationController
   
   def jobtitleaction  
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'jobtitle')
+    # tracker.track(user.ip_address, 'jobtitle')
     
     if params[:jtitle] != nil
       user.jobtitle=params[:jtitle]
@@ -760,19 +751,19 @@ class UsersController < ApplicationController
   
   def childrenaction  
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'children')
+    # tracker.track(user.ip_address, 'children')
     
     if params[:children] != nil
       user.children=params[:children]
       user.save
-      print "****** user.children.flatten: ", user.children.flatten
-      puts
-      print "******* user.children[0]: ", user.children[0]
-      puts
+      # print "****** user.children.flatten: ", user.children.flatten
+      # puts
+      # print "******* user.children[0]: ", user.children[0]
+      # puts
       redirect_to '/users/qq15'
     else
       redirect_to '/users/qq14'
@@ -782,19 +773,19 @@ class UsersController < ApplicationController
   
   def industriesaction  
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'industries')
+    # tracker.track(user.ip_address, 'industries')
     
     if params[:industries] != nil
       user.industries=params[:industries]
       user.save
-      print "------------------->>>>****** user.industries.flatten: ", user.industries.flatten
-      puts
-      print "------------------->>>>>>******* user.industries[0]: ", user.industries[0]
-      puts
+      # print "------------------->>>>****** user.industries.flatten: ", user.industries.flatten
+      # puts
+      # print "------------------->>>>>>******* user.industries[0]: ", user.industries[0]
+      # puts
       redirect_to '/users/qq12'
     else
       redirect_to '/users/qq15'
@@ -3534,9 +3525,14 @@ class UsersController < ApplicationController
         puts
         print "Region = ", (@QualificationRegion)
         puts
+        print "MobileOptimized = ", (project.mobileOptimized == "confirmed")
+        puts
         
          
-        if ( (project.country == "US") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) ) then
+        if ( ( (project.country == "US") && (user.netid != "FmsuA567rw21345f54rrLLswaxzAHnms") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) ) || 
+           ( (project.country == "US") && (user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms") && (project.mobileOptimized == "confirmed") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) ) )
+          
+          then
           
           @RFGQualifiedProjects << project.rfg_id
           
@@ -4258,7 +4254,7 @@ class UsersController < ApplicationController
             
             if  @duplicateFingerprint == false then
                  
-              print "*************** This is not a duplicate user for this project. Add to list of projects for userride", project.rfg_id
+              print "*************** This is not a duplicate user for this project. Add to list of projects for userride ", project.rfg_id
               puts
             
             
@@ -4277,6 +4273,12 @@ class UsersController < ApplicationController
                   else
                   end
                 end
+                if (@inserted == false) then
+                  # insert it at the end since this new rfg_id project has the lowest IR
+                  @RFGProjectsWithQuota << project.rfg_id
+                  @RFGSupplierLinks << project.link+'&rfg_id='+project.rfg_id
+                else
+                end                  
               end
                             
               
@@ -6116,16 +6118,16 @@ class UsersController < ApplicationController
   def p3action
     session_id = session.id
     user = User.find_by session_id: session_id
-    print '******************************Test SUCCESS for CID= ', user.clickid, ' NetId= ', user.netid
-    puts
+    # print '******************************Test SUCCESS for CID= ', user.clickid, ' NetId= ', user.netid
+    # puts
     
     if user.SurveysCompleted.flatten(2).include? (user.clickid) then
-      print "************* Click Id already exists - do not postback again!"
-      puts
+      # print "************* Click Id already exists - do not postback again!"
+      # puts
       
     else
           
-      #Postback test complete
+      #Postback that the completed Test
     
       if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
 
@@ -6186,8 +6188,7 @@ class UsersController < ApplicationController
     
       else
       end
-      
-      
+         
       if user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
         # puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
 
@@ -6202,7 +6203,7 @@ class UsersController < ApplicationController
       end
       
   
-      # Keep an count of Test completes on each Network
+      # Keep a count of Test completes on each Network
   
       puts "*************** Track Test completes on each network"
   

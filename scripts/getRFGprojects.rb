@@ -12,7 +12,7 @@ apid = "54ef65c3e4b04d0ae6f9f4a7"
 secret = "8ef1fe91d92e0602648d157f981bb934"
 
 
-# Get any new offerwall surveys from Federated Sample
+# Get any new projects from RFG
 
 begin
 # set timer to download every 5 mins
@@ -27,13 +27,27 @@ begin
   hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.hex2bin, Digest::SHA1)
   uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
 
-  Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
-	  req = Net::HTTP::Post.new uri
-	  req.body = command
-	  req.content_type = 'application/json'
-	  response = http.request req
-    RFGProjectsIndex = JSON.parse(response.body)  
-  end
+  begin
+    Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+	    req = Net::HTTP::Post.new uri
+	    req.body = command
+	    req.content_type = 'application/json'
+	    response = http.request req
+      # RFGProjectsIndex = JSON.parse(response.body)  
+      RFGProjectsIndex = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil
+    end
+  
+    rescue StandardError
+    rescue Timeout::Error => e
+    puts "************** ------------>>>>>>>>>>Rescue in 36<<<<<<<<<<<<<-----------*******"
+    sleep(2)
+
+#      rescue Net::ReadTimeout => e
+#        false
+#        retry if (retries -= 1) > 0
+  end while RFGProjectsIndex == nil
+  
+  
 
   print "RFGProjectsIndex: ", RFGProjectsIndex["response"]["projects"]
   puts
@@ -151,11 +165,13 @@ begin
           RFGProjectStats = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil
         end
        
-       rescue
-#      rescue Net::ReadTimeout => e  
-        puts "************** ------------>>>>>>>>>>Rescue in 155 due to {}<<<<<<<<<<<<<-----------*******"
+        rescue StandardError
+        rescue Timeout::Error => e
+          puts "************** ------------>>>>>>>>>>Rescue in 154<<<<<<<<<<<<<----SLEEP(2)-------*******"
+#      rescue Net::ReadTimeout => e
 #        false
-        retry if (retries -= 1) > 0
+        sleep(2)
+        retry if (response.body.length <= 2)
       end
 
    #     print "******************* RFGProjectStats: ", RFGProjectStats
@@ -164,7 +180,7 @@ begin
 
 
       if (RFGProjectStats == nil) then
-        puts "*******************RFGProjectStats is NIL"
+        puts "*******************RFGProjectStats is NIL***********************"
      
       else
 
@@ -230,19 +246,25 @@ begin
           @responsecode = response.code
           print "@responsecode: ", @responsecode
           puts
-          RFGProjectTargets = JSON.parse(response.body)
+          RFGProjectTargets = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil
         end
+        
+        rescue StandardError
+        rescue Timeout::Error => e   
+          puts "************** ------------>>>>>>>>>>Rescue in 238<<<<<<<<<<<<<-----------*******" 
+          sleep(2)
+          retry if (response.body.length <= 2)
+      end 
 
-      rescue
-        puts "************** ------------>>>>>>>>>>Rescue in 237 due to {}<<<<<<<<<<<<<-----------*******"
-#        false
-        retry if (retries -= 1) > 0
-      end
-      
+            
 #        print "RFGProjectTargets: ", RFGProjectTargets
  #       puts
         
- #     if @responsecode == 200 then
+ 
+      if (RFGProjectTargets == nil) then
+        puts "*******************RFGProjectTargets is NIL******************"
+
+      else
         
         @project.datapoints = RFGProjectTargets["response"]["datapoints"]
         @project.lastModified = RFGProjectTargets["response"]["lastModified"]
@@ -257,8 +279,7 @@ begin
         else
           @project.projectStillLive = false
         end
-      
-      
+            
         # CreateLink for the project
       
         command = { :command => "livealert/createLink/1", :rfg_id => @project.rfg_id }.to_json
@@ -267,14 +288,22 @@ begin
         hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.hex2bin, Digest::SHA1)
         uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
 
-
-        Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
-          req = Net::HTTP::Post.new uri
-          req.body = command
-          req.content_type = 'application/json'
-          response = http.request req
-          RFGProjectLink = JSON.parse(response.body)  
-        end   
+        begin
+          Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+            req = Net::HTTP::Post.new uri
+            req.body = command
+            req.content_type = 'application/json'
+            response = http.request req
+            RFGProjectLink = JSON.parse(response.body)  
+          end   
+        
+        rescue StandardError
+        rescue Timeout::Error => e   
+          puts "************** ------------>>>>>>>>>>Rescue in 292<<<<<<<<<<<<<-----------*******" 
+          sleep(2)
+          retry if (response.body.length <= 2)
+        end 
+        
         
  #       print "********* Got Link: ", RFGProjectLink
 #        puts
@@ -294,7 +323,7 @@ begin
         
  #     else
 #      puts "project targets not available, @responsecode != 200"
- #     end # @responsecode != 200
+      end # RFGProjectTargets == nil
         
     else
       puts "project skipped as it does not meet biz criteria or there has been no change to the project data since last sweep"
