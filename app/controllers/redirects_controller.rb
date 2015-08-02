@@ -151,7 +151,7 @@ class RedirectsController < ApplicationController
         # save attempt info in User and Survey tables
 
         if params[:PID] == 'test' then
-          redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'
+          redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=0'
           
         else  
           if @p2s_redirect then
@@ -202,6 +202,11 @@ class RedirectsController < ApplicationController
                 @net_name = "SS3"
               else
               end
+              
+              if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
+                @net_name = "MemoLink"
+              else
+              end 
               
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
@@ -285,8 +290,7 @@ class RedirectsController < ApplicationController
     
               else
               end
-              
-                                 
+                                               
               # Keep a count of completes on each Network
             
               puts "*************** Keeping track of completes on the corresponding network"
@@ -324,7 +328,12 @@ class RedirectsController < ApplicationController
             end # duplicate is false
              
             # Happy ending
-            redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'    
+            
+            if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
+              redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=1'
+            else
+              redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'    
+            end            
         
           else # not a P2S project
             
@@ -380,6 +389,11 @@ class RedirectsController < ApplicationController
               
               if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
                 @net_name = "SS3"
+              else
+              end 
+              
+              if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
+                @net_name = "MemoLink"
               else
               end           
               
@@ -480,8 +494,7 @@ class RedirectsController < ApplicationController
     
               else
               end   
-              
-              
+                            
               if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
                 #puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
                 
@@ -495,8 +508,6 @@ class RedirectsController < ApplicationController
               else
               end
                            
-                                
-            
               # Keep a count of completes on all Networks
             
               puts "*************** Keeping track of completes on all networks"
@@ -530,13 +541,15 @@ class RedirectsController < ApplicationController
               
               end
               
-
               # Happy ending
-              redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'
-             
               
-            else # not a RFG project. it must be a FED survey
-            
+              if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
+                redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=2'
+              else
+                redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'
+              end        
+                           
+            else # not a RFG project. it must be a FED survey            
           
               # save attempt info in User and Survey tables
           
@@ -579,8 +592,10 @@ class RedirectsController < ApplicationController
               else
               end  
               
-              
-              
+              if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
+                @net_name = "MemoLink"
+              else
+              end              
               
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
@@ -683,9 +698,7 @@ class RedirectsController < ApplicationController
     
               else
               end
-              
-              
-              
+                          
               if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
                 # puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
                 
@@ -698,8 +711,7 @@ class RedirectsController < ApplicationController
     
               else
               end
-              
-                       
+                                     
               # Keep a count of completes on all Networks
             
               puts "*************** Keeping track of completes on all networks"
@@ -718,9 +730,12 @@ class RedirectsController < ApplicationController
             end                     
 
               # Happy ending
-              redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=3'
-
-
+              if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
+                redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=3'
+              else
+                redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=3'
+              end
+              
             end # if RFG
           end # if P2S
         end # if test
@@ -991,9 +1006,7 @@ class RedirectsController < ApplicationController
               print '********************************* Unsuccessful attempts count raised by 1 following an OQ for survey number: ', params[:tsfn]
               puts
             
-              @survey.save
-            
-          
+              @survey.save          
 
               # Give user chance to take another survey
           

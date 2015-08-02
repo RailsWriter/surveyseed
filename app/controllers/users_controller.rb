@@ -3,7 +3,6 @@ class UsersController < ApplicationController
   # require 'httparty'
   require 'mixpanel-ruby'
   require 'hmac-md5'
-  
 
   def new
     #    @user = User.new
@@ -4258,7 +4257,6 @@ class UsersController < ApplicationController
               puts
             
             
-              
               if (@RFGProjectsWithQuota.length == 0) then
                 @RFGProjectsWithQuota << project.rfg_id
                 @RFGSupplierLinks << project.link+'&rfg_id='+project.rfg_id
@@ -4280,9 +4278,7 @@ class UsersController < ApplicationController
                 else
                 end                  
               end
-                            
-              
-                        
+                
             
               if (user.country == '9') && (@RFGProjectsWithQuota.uniq.length >= @RFG_US) then
           
@@ -6190,19 +6186,15 @@ class UsersController < ApplicationController
       end
          
       if user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
-        # puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
-
         begin
           @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
           rescue HTTParty::Error => e
             puts 'HttParty::Error '+ e.message
             retry
-          end while @SS3PostBack.code != 200
-    
+          end while @SS3PostBack.code != 200    
       else
       end
-      
-  
+        
       # Keep a count of Test completes on each Network
   
       puts "*************** Track Test completes on each network"
@@ -6248,6 +6240,11 @@ class UsersController < ApplicationController
         @net_name = "SS3"
       else
       end
+      
+      if user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
+        @net_name = "MemoLink"
+      else
+      end
     
       user.SurveysAttempted << 'TESTSURVEY'
       user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
@@ -6255,7 +6252,12 @@ class UsersController < ApplicationController
     
     end # duplicate is false
     
-    redirect_to '/users/successful'
+    if user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
+      redirect_to '/users/successfulMML'
+    else
+      redirect_to '/users/successful'
+    end
+    
     
   end
 
