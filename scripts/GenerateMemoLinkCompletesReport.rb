@@ -9,7 +9,6 @@ CSV.open('MemoLinkcompletes', 'w') do |csv|
     puts
     if m.SurveysCompleted.length > 0 then
       if m.SurveysCompleted.flatten(2).include?("MemoLink") == true then
-        csv << m.created_at.to_s
         csv << m.SurveysCompleted.to_a.flatten
         puts "added a new row"
       else
