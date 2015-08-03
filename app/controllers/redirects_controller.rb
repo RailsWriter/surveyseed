@@ -403,7 +403,7 @@ class RedirectsController < ApplicationController
               end
              
              
-              @user.SurveysCompleted[params[:PID]] = [params[:tsfn], Time.now, @project.cpi, @user.clickid, @net_name]
+              @user.SurveysCompleted[params[:PID]] = [params[:tsfn], Time.now, 'RFG', @project.cpi, @user.clickid, @net_name]
               @user.save
               
              
@@ -602,7 +602,7 @@ class RedirectsController < ApplicationController
               else
               end              
             
-              @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], @user.clickid, @net_name]
+              @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'FED', @user.clickid, @net_name]
               @user.save
             
               @survey = Survey.find_by SurveyNumber: params[:tsfn]
