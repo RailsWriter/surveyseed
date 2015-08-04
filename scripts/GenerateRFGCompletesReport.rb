@@ -1,6 +1,6 @@
 require 'csv'
 
-CSV.open('RFGcompletes', 'w') do |csv|
+CSV.open('Reports/RFGcompletes', 'w') do |csv|
 #  csv << "Titles"
   User.where("created_at > ?", (Time.now.midnight - 31.day)).each do |m|
     print "created_at", m.created_at

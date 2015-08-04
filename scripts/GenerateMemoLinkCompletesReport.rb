@@ -1,6 +1,6 @@
 require 'csv'
 
-CSV.open('MemoLinkcompletes', 'w') do |csv|
+CSV.open('Reports/MemoLinkcompletes', 'w') do |csv|
 #  csv << "Titles"
   User.where("created_at > ?", (Time.now.midnight - 7.day)).each do |m|
     print "created_at", m.created_at
