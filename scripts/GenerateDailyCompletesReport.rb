@@ -5,7 +5,7 @@ begin
 
   CSV.open('Reports/Dailycompletes', 'a') do |csv|
     #  csv << "Titles"
-    User.where("created_at > ?", (Time.now.midnight - 91.day)).each do |m|
+    User.where("created_at > ?", (Time.now - 1.day)).each do |m|
       print "m.SurveysCompleted: ", m.SurveysCompleted
       puts
       if m.SurveysCompleted.length > 0 then
@@ -16,5 +16,6 @@ begin
     end
   end
   
+  puts "Going to sleep a day - yawn!"
   sleep (1440.minutes)
 end while timetorepeat
