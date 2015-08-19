@@ -2,10 +2,8 @@ require 'csv'
 
 CSV.open('Reports/MemoLinkcompletes', 'w') do |csv|
 #  csv << "Titles"
-  User.where("created_at > ?", (Time.now.midnight - 7.day)).each do |m|
-    print "created_at", m.created_at
+  User.where("created_at > ?", (Time.now - 7.days)).each do |m|
     print "m.SurveysCompleted: ", m.SurveysCompleted
-    print "m.SurveysCompleted.length: ", m.SurveysCompleted.length
     puts
     if m.SurveysCompleted.length > 0 then
       if m.SurveysCompleted.flatten(2).include?("MemoLink") == true then
