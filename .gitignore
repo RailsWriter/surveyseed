@@ -8,8 +8,8 @@
 /.bundle
 
 # Ignore local report files
-RFGCompletes
-MemoLinkCompletes
+RFGCompletes*
+MemoLinkCompletes*
 
 # Ignore the default SQLite database.
 /db/*.sqlite3

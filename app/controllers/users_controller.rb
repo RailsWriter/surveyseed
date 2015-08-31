@@ -815,37 +815,37 @@ class UsersController < ApplicationController
     end    
     
     if user.country == '6' then
-      print "--------------------------->>>>>> First character of CA postalcode = ", user.ZIP.slice(0)
-      puts
+#      print "--------------------------->>>>>> First character of CA postalcode = ", user.ZIP.slice(0)
+#      puts
       
       case user.ZIP.slice(0)
       when "T"
         @provincePrecode = "1"
-        puts "Assigned Alberta @provincePrecode = 1"
+#        puts "Assigned Alberta @provincePrecode = 1"
         
       when "V"
         @provincePrecode = "2"
-        puts "Assigned BC @provincePrecode = 2"
+#        puts "Assigned BC @provincePrecode = 2"
         
       when "R"
         @provincePrecode = "3"
-        puts "Assigned MB @provincePrecode = 3"
+#        puts "Assigned MB @provincePrecode = 3"
         
       when "E"
         @provincePrecode = "4"
-        puts "Assigned NB @provincePrecode = 4"
+#        puts "Assigned NB @provincePrecode = 4"
         
       when "A"
         @provincePrecode = "5"
-        puts "Assigned NL @provincePrecode = 5"
+#        puts "Assigned NL @provincePrecode = 5"
         
       when "X"
         @provincePrecode = "6"
-        puts "Assigned NT @provincePrecode = 6"
+#        puts "Assigned NT @provincePrecode = 6"
         
       when "B"
         @provincePrecode = "7"
-        puts "Assigned NS @provincePrecode = 7"
+#        puts "Assigned NS @provincePrecode = 7"
         
         # when "X"  # X would become a duplicate. Nunavut is teh least populated province so this is it
         # @provincePrecode = "8"
@@ -853,47 +853,47 @@ class UsersController < ApplicationController
         
       when "K"
         @provincePrecode = "9"
-        puts "Assigned ON @provincePrecode = 9"
+#        puts "Assigned ON @provincePrecode = 9"
         
       when "L"
         @provincePrecode = "9"
-        puts "Assigned ON @provincePrecode = 9"
+#        puts "Assigned ON @provincePrecode = 9"
         
       when "M"
         @provincePrecode = "9"
-        puts "Assigned ON @provincePrecode = 9"
+#        puts "Assigned ON @provincePrecode = 9"
         
       when "N"
         @provincePrecode = "9"
-        puts "Assigned ON @provincePrecode = 9"
+#        puts "Assigned ON @provincePrecode = 9"
         
       when "P"
         @provincePrecode = "9"
-        puts "Assigned ON @provincePrecode = 9"
+#        puts "Assigned ON @provincePrecode = 9"
 
       when "C"
         @provincePrecode = "10"
-        puts "Assigned PE @provincePrecode = 10"
+#        puts "Assigned PE @provincePrecode = 10"
         
       when "G"
         @provincePrecode = "11"
-        puts "Assigned QC @provincePrecode = 11"
+#        puts "Assigned QC @provincePrecode = 11"
         
       when "H"
         @provincePrecode = "11"
-        puts "Assigned QC @provincePrecode = 11"
+#        puts "Assigned QC @provincePrecode = 11"
         
       when "J"
         @provincePrecode = "11"
-        puts "Assigned QC @provincePrecode = 11"
+#        puts "Assigned QC @provincePrecode = 11"
         
       when "S"
         @provincePrecode = "12"
-        puts "Assigned SK @provincePrecode = 12"
+#        puts "Assigned SK @provincePrecode = 12"
         
       when "Y"
         @provincePrecode = "13"
-        puts "Assigned YT @provincePrecode = 13"
+#        puts "Assigned YT @provincePrecode = 13"
       end
     else
     end # country == 6
@@ -1316,14 +1316,14 @@ class UsersController < ApplicationController
     @usercountry = (user.country).to_i
 
     # Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
-    Survey.where("CountryLanguageID = ? AND SurveyGrossRank <= ?", @usercountry, 500).order( "SurveyGrossRank" ).each do |survey|
+    Survey.where("CountryLanguageID = ? AND SurveyGrossRank <= ? AND SurveyStillLive = ? AND CPI >= ?", @usercountry, 500, true, @currentpayout).order( "SurveyGrossRank" ).each do |survey|
 
 
       if @foundtopsurveyswithquota == false then  #3 false means not finished finding top surveys
         
 
         if ( ((survey.CountryLanguageID == 5) &&        
-          ( survey.SurveyStillLive ) && 
+#          ( survey.SurveyStillLive ) && 
           (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
           (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
@@ -1334,13 +1334,15 @@ class UsersController < ApplicationController
           (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ])) &&
           (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ])) &&     
           (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&
-          (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationChildrenPreCodes.flatten).empty? == false)) &&
-          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) ) ||
+          (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationChildrenPreCodes.flatten).empty? == false)) 
+#          &&
+#          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
+          ) ||
           
           
           
           ((survey.CountryLanguageID == 6) &&          
-          ( survey.SurveyStillLive ) && 
+#          ( survey.SurveyStillLive ) && 
           (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
           (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP.slice(0..2) ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP.slice(0..2) ])) &&
@@ -1352,14 +1354,16 @@ class UsersController < ApplicationController
           (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ])) &&     
           (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&
           (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationChildrenPreCodes.flatten).empty? == false)) &&
-          (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ])) &&
-          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) ) ||
+          (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ])) 
+#          &&
+#          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
+          ) ||
        
           
           
           ( (user.netid != "FmsuA567rw21345f54rrLLswaxzAHnms") &&
           (survey.CountryLanguageID == 9) &&          
-          ( survey.SurveyStillLive ) && 
+#          ( survey.SurveyStillLive ) && 
           (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
           (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
@@ -1374,14 +1378,16 @@ class UsersController < ApplicationController
           (( survey.QualificationDMAPreCodes.empty? ) || ( survey.QualificationDMAPreCodes.flatten == [ "ALL" ] ) || (([ @DMARegionCode ] & survey.QualificationDMAPreCodes.flatten) == [ @DMARegionCode ])) && 
           (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ])) && 
           (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ])) && 
-          (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ])) &&       
-          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) ) ||
+          (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ])) 
+#          &&       
+#          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
+          ) ||
           
                     
           
           ( (user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms") &&
           (survey.CountryLanguageID == 9) &&          
-          ( survey.SurveyStillLive ) && 
+#          ( survey.SurveyStillLive ) && 
           (survey.SurveyMobileConversion > 2) &&
           (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
@@ -1397,8 +1403,10 @@ class UsersController < ApplicationController
           (( survey.QualificationDMAPreCodes.empty? ) || ( survey.QualificationDMAPreCodes.flatten == [ "ALL" ] ) || (([ @DMARegionCode ] & survey.QualificationDMAPreCodes.flatten) == [ @DMARegionCode ])) && 
           (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ])) && 
           (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ])) && 
-          (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ])) &&    
-          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) ))
+          (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ])) 
+#          &&    
+#          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
+          ))
              
                     
           

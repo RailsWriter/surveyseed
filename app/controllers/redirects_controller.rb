@@ -213,7 +213,7 @@ class RedirectsController < ApplicationController
               else
               end             
             
-              @user.SurveysCompleted[params[:PID]] = [Time.now, 'P2S', @user.clickid, @net_name]
+              @user.SurveysCompleted[params[:PID]] = [Time.now, 'P2Ssurvey', 'P2S', '$1.25', @user.clickid, @net_name]
               @user.save
             
               print "*************** User.netid is: ", @user.netid
@@ -403,7 +403,7 @@ class RedirectsController < ApplicationController
               end
              
              
-              @user.SurveysCompleted[params[:PID]] = [params[:tsfn], Time.now, 'RFG', @project.cpi, @user.clickid, @net_name]
+              @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'RFG', @project.cpi, @user.clickid, @net_name]
               @user.save
               
              
@@ -601,14 +601,13 @@ class RedirectsController < ApplicationController
                 @net_name = "TestNtk"
               else
               end              
-            
-              @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'FED', @user.clickid, @net_name]
-              @user.save
-            
-              @survey = Survey.find_by SurveyNumber: params[:tsfn]
-                    
+ 
+              @survey = Survey.find_by SurveyNumber: params[:tsfn]                    
               print '************ Successfully completed survey:', @survey.SurveyNumber
               puts
+            
+              @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
+              @user.save
               
               # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
             
