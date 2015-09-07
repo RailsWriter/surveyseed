@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150516092948) do
+ActiveRecord::Schema.define(version: 20150906075406) do
 
   create_table "leads", force: true do |t|
     t.string   "name"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20150516092948) do
     t.integer  "RFG_US"
     t.integer  "RFG_CA"
     t.string   "stackOrder"
+    t.integer  "RFG_AU"
   end
 
   create_table "rfg_projects", force: true do |t|

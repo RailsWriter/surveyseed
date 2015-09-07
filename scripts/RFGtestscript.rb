@@ -13,10 +13,10 @@ apid = "54ef65c3e4b04d0ae6f9f4a7"
 secret = "8ef1fe91d92e0602648d157f981bb934"
 
 #command='{ "command" : "test/copy/1", "data1" : "KETSCI TEST"}'
-#command='{ "command" : "livealert/inventory/1", "country" : "CA"}'
-#command='{ "command" : "livealert/targeting/1", "rfg_id" : "RFG141754-002"}'
+#command='{ "command" : "livealert/inventory/1", "country" : "AU"}'
+command='{ "command" : "livealert/targeting/1", "rfg_id" : "RFG186337-001"}'
 #command = '{ "command" : "livealert/listDatapoints/1"}'
-command = '{ "command" : "livealert/datapoint/1", "name" : "Employment Industry"}'
+#command = '{ "command" : "livealert/datapoint/1", "name" : "Employment Industry"}'
 #command='{ "command" : "livealert/createLink/1", "rfg_id" : "RFG117241-010"}'
 #command='{ "command" : "livealert/stats/1", "rfg_id" : "RFG117241-010"}'
 #command='{ "command" : "livealert/log/1", "rfg_id" : "RFG117241-010"}'
@@ -35,9 +35,6 @@ Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
 	response = http.request req
 	puts response.body
 end
-
-
-
 
 
 #secret = [secret].pack("H*")

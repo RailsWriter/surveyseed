@@ -105,7 +105,7 @@ begin
     else
     
       puts '************ Processing a NEW project'
-      if ((RFGProjectsIndex["response"]["projects"][i]["country"] == "CA") || (RFGProjectsIndex["response"]["projects"][i]["country"] == "US")) &&
+      if ((RFGProjectsIndex["response"]["projects"][i]["country"] == "CA") || (RFGProjectsIndex["response"]["projects"][i]["country"] == "US") || (RFGProjectsIndex["response"]["projects"][i]["country"] == "AU")) &&
         ( RFGProjectsIndex["response"]["projects"][i]["cpi"] > "$0.99" ) then
       
         @project = RfgProject.new
