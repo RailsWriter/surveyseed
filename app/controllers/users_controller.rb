@@ -1515,7 +1515,7 @@ class UsersController < ApplicationController
                 totalquotaexists = true
               else #4
                 # Total NumberOfRespondent needed = 0 or Quota CPI < payout. No completes required
-                print '*****k=0******** No completes required - no quota available for this syurvey or QuotaCPI < payout. QuotaCPI= ', survey.SurveyQuotas[k]["QuotaCPI"]
+                print '*****k=0******** No completes required - no quota available for this syurvey or QuotaCPI < payout. QuotaCPI= ', survey.SurveyQuotas[0]["QuotaCPI"]
                 puts
               end #4
             else #3
