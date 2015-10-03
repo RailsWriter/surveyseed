@@ -1,14 +1,14 @@
 <h1>ALL NETWORKS</h1>
 
 
-<p>Showing all Networks at <%= Time.now.utc %></p>
+<p><%= Time.now.utc %></p>
 
 	
-	<h5>name -- DBid -- netid -- payout -- status -- Hits ---------------------- Completes --------------- P2S_US-CA-AU ---- FED_US-CA-AU ---- RFG_US-CA ----- stackOrder </h5>
+	<h5>name - DBid - netid - payout - status ---------- Hits ------------- Completes --------------- P2S_US-CA-AU ---- FED_US-CA-AU ---- RFG_US-CA-AU ----- stackOrder </h5>
 
 	<% Network.where("status != ?", "DEAD").order(name: :asc).each do |c| %>
 	    <li>
-	       <%= link_to c.name.to_s + '--' + c.id.to_s + '---' + c.netid.slice(0..2).to_s + '---' + c.payout.to_s + '--' + c.status.to_s + '--' + c.Flag2.to_s + '-------------------------------------------' + c.Flag3.to_s + '------------------------------------------------' + c.P2S_US.to_s + '--' + c.P2S_CA.to_s + '--' + c.P2S_AU.to_s + '----' + c.FED_US.to_s + '--' + c.FED_CA.to_s + '--' + c.FED_AU.to_s + '----' + c.RFG_US.to_s + '--' + c.RFG_CA.to_s + '-----' + c.stackOrder.to_s  -%>
+	       <%= link_to c.name.to_s + '--' + c.id.to_s + '---' + c.netid.slice(0..2).to_s + '---' + c.payout.to_s + '--' + c.status.to_s + '----------' + c.Flag2.to_s + '-----------------------------' + c.Flag3.to_s + '-------------------------------------' + c.P2S_US.to_s + '--' + c.P2S_CA.to_s + '--' + c.P2S_AU.to_s + '----' + c.FED_US.to_s + '--' + c.FED_CA.to_s + '--' + c.FED_AU.to_s + '----' + c.RFG_US.to_s + '--' + c.RFG_CA.to_s + '--' + c.RFG_AU.to_s + '-----' + c.stackOrder.to_s  -%>
 	    </li>
 		<br>
 	<% end %>

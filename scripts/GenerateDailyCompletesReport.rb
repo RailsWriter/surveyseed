@@ -17,7 +17,7 @@ begin
   end
   print "Number of completes in last 12 hrs: ", count
   puts
-  print "Current UTC ", Time.now, "and local time ", Time.now-7*60*60
+  print "Current UTC ", Time.now, " and local time ", Time.now-7*60*60
   puts
   sleep (0.minutes)
 end # while timetorepeat

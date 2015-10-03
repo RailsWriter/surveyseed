@@ -32,14 +32,12 @@ mixpanel.init("e5606382b5fdf6308a1aa86a678d6674");</script><!-- end Mixpanel -->
  
  <div id="aboutus">
 		 <h1><center> About Us </center></h1>
-			 <p2> Ketsci, Inc. is a market research technology and consulting company. Ketsci works with clients on market research and user data collection projects. We offer programmatic access to hard to reach speciality audiences in many parts of the world. We are different and more efficient than most sampling companies because we exclusively use a programmatic approach to market research projects - a methodology that began to be practiced in our industry only a few years ago.</p2>
-			 <p></p>
-			 <p2> If you are interested to run a survey, please <%= link_to "email", 'mailto:projectsmanagement@ketsci.com' %> us or use the form below to contact us.</p>
+			 <p2> Ketsci, Inc. is a market research technology and consulting company. Ketsci works with clients on market research and user data collection projects. We offer programmatic access to hard to reach speciality audiences in many parts of the world. We exclusively use a programmatic methodology to market research projects which began to be practiced in our industry only a few years ago. If you are interested to run a survey or want to join our network of consumers, please <%= link_to "email", 'mailto:projectsmanagement@ketsci.com' %> us or use the form below to contact us.</p>
  </div>
 
  <div id="contact">
     <div id="container3">
-		<center><h1>Contact us. We look forward to hearing from you!</h1>
+		<center><h1>We look forward to hearing from you!</h1>
 			<div id="p1"><h3><%= alert %></h3></div><br>
 			<%= form_for @lead do |f| %>	
 					<%= f.text_field :name, placeholder: "Name", :class => "input" %><br><br>
