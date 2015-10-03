@@ -1490,7 +1490,7 @@ class UsersController < ApplicationController
           puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after specified number of top ranked surveys with quota are found"
       
       
-            @surveynumber = survey.SurveyNumGber
+            @surveynumber = survey.SurveyNumber
 
 
             @NumberOfQuotas = survey.SurveyQuotas.length-1
