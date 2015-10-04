@@ -5,7 +5,7 @@ begin
   count=0
   CSV.open('Reports/Dailycompletes', 'a') do |csv|
     #  csv << "Titles"
-    User.where("created_at > ?", (Time.now - 720.minutes)).each do |m|
+    User.where("created_at > ?", (Time.now - 1440.minutes)).each do |m|
       if m.SurveysCompleted.length > 0 then
         csv << m.SurveysCompleted.to_a.flatten
 	      count=count+1
@@ -15,9 +15,11 @@ begin
       end
     end
   end
-  print "Number of completes in last 12 hrs: ", count
+  print "Number of completes in last 24 hrs: ", count
   puts
-  print "Current UTC ", Time.now, " and local time ", Time.now-7*60*60
+  print "Current UTC ", Time.now
+  puts
+  print "Local time ", Time.now-7*60*60
   puts
   sleep (0.minutes)
 end # while timetorepeat
