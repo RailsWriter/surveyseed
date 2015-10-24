@@ -3,6 +3,9 @@ class RedirectsController < ApplicationController
     
     require 'base64'
     require 'hmac-sha1'
+    require 'mixpanel-ruby'
+    
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
     
     # Check if the response is valid by authenticating SHA-1 encrption
     
@@ -747,7 +750,6 @@ class RedirectsController < ApplicationController
       
         if params[:PID] == 'test' then 
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
- 
         else # if test
           
           if @p2s_redirect then
@@ -763,7 +765,8 @@ class RedirectsController < ApplicationController
             @user.save        
             
             #Tell user that they were not matched in P2S due to Failure
-            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=5'
+            tracker.track(@user.ip_address, 'FL-3')
+            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
             
           else # not p2s redirect
                         
@@ -818,8 +821,8 @@ class RedirectsController < ApplicationController
                   redirect_to @NextEntryLink
 
               else # if SupplierLink empty?
-              
-                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
+                tracker.track(@user.ip_address, 'FL-4')
+                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=4'
               
               end # if SupplierLink empty?
               
@@ -882,8 +885,8 @@ class RedirectsController < ApplicationController
                 end
 
               else # if SupplierLink empty?
-              
-                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=4'
+                tracker.track(@user.ip_address, 'FL-5')
+                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=5'
               
               end # if SupplierLink empty?
               
@@ -915,8 +918,8 @@ class RedirectsController < ApplicationController
             @user.save  
             
             #Tell user that they were not matched due to OQ in P2S
-            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=5'
-
+            tracker.track(@user.ip_address, 'FL-6')
+            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
           else # not a p2sredirect
             
             if @rfg_redirect then
@@ -970,8 +973,8 @@ class RedirectsController < ApplicationController
                 redirect_to @NextEntryLink
                        
               else # if SupplierLink empty
-            
-                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
+                tracker.track(@user.ip_address, 'FL-7')
+                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=7'
             
               end # if SupplierLink empty           
             
@@ -1031,8 +1034,8 @@ class RedirectsController < ApplicationController
               end
             
               else # if SupplierLink empty
-            
-                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
+                tracker.track(@user.ip_address, 'FL-8')
+                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=8'
             
               end # if SupplierLink empty
             
@@ -1101,7 +1104,7 @@ class RedirectsController < ApplicationController
             @survey.save
             
           end # if RFG redirect
-
+          tracker.track(@user.ip_address, 'QT-2')
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=2'
           
         end # if test

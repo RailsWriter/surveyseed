@@ -1067,6 +1067,18 @@ puts
   
   
       # RANK the stack after every 60 minutes    
+      # Legend:
+      # 1-95 : Fast Converters
+      # 96-100 : Place for manually adding surveys for fast hits
+      # 101-200 : Brand New+Conv>0
+      # 201-300 : Try More
+      # 301-400 : Try another 5 attempts
+      # 401-500 : Poor (New+Conv=0)
+      # 501-600 : Bad
+      # 601-700 : Horrible
+      # 701-800 : Dead
+      # 801-900 : Ignore
+
            
 #      if (i == 30000) || ((Time.now - @lastrankingtime) >= 300000) then    
       
@@ -1084,9 +1096,10 @@ puts
           # Fast Converters 1-95
           if (0 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 95) then
     
-            # Only TCR > 0.066 surveys in this group. Surveys arrive in TCR order. If they do not perform move them to Bad.
+            # Only TCR > 0.066 surveys in this group. Surveys arrive in TCR order. If they do not perform move them to Bad. Move them out if 0 remaining or older than 4 days. They are moved to Bad (600+ if they do not convert in 1 in 15 hits. This is the top of the pile and should convert quicker.
 
-            if (toberankedsurvey.TotalRemaining == 0) || ((Time.now - toberankedsurvey.created_at > 86400*5) && (toberankedsurvey.TCR < 0.05)) then
+            #if (toberankedsurvey.TotalRemaining == 0) || ((Time.now - toberankedsurvey.created_at > 86400*4) && (toberankedsurvey.TCR < 0.06)) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
     
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
@@ -1153,7 +1166,7 @@ puts
     
             # This is the place for brand new surveys to be tested with first 10 hits. They move to Fast or Try more if they do not complete in 10. If they changed to Conv=0 then move them to Conv=0
    
-            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*5) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
       
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
@@ -1274,7 +1287,7 @@ puts
     
             # This is the place for a day or older but good surveys to be tested with first 10 hits. They move to Fast or Try more if they do not complete in 10. If they changed to Conv=0 then move them to Conv=0
    
-            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*5) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
       
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
@@ -1377,7 +1390,7 @@ puts
     
             # These surveys are here to get another 5 attempts (10 to 15). If they convert move them to Fast else take them to Horrible        
     
-            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*5) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
       
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
@@ -1472,7 +1485,7 @@ puts
   
             # This is the place for new Conv=0 (Poor) surveys. If they make TCR>0.066 then move to Fast or Safety. Move to Bad if TCR<0.066 but more than 0. They move to Horrible if they do not complete in 10. If they turn GCR>=0.01 then move them to GCR>=0.01.    
     
-            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*5) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
       
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
@@ -1582,7 +1595,7 @@ puts
       print "******************** Last ranking time for better surveys: ", @lastrankingtime
       puts
       
-      if ((Time.now - @lastrankingtimeforpoorsurveys) >= 9600) then    
+      if ((Time.now - @lastrankingtimeforpoorsurveys) >= 36000) then    
 
         @lastrankingtimeforpoorsurveys = Time.now
         
@@ -1597,7 +1610,7 @@ puts
     
             # These are surveys that were good earlier but have fizzled to 0 < TCR < 0.066. The bad converters with TCR < 0.066 are also here. Ordered by Conversion. If their TCR becomes > 0.066 move them to Fast.
     
-            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*5) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
       
                 if toberankedsurvey.Conversion == 0 then
                   toberankedsurvey.SurveyGrossRank = 800
@@ -1651,7 +1664,7 @@ puts
 
              # These are surveys which have seen moree than 15 attempts without a complete, if GCR>=0.01 or 10 attempts if GCR<0.01. Ordered by Conversion. If they do start converting then move them to appropriate buckets. Low CPI surveys that fizzle also land up here.
     
-            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*5) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
       
               if toberankedsurvey.Conversion == 0 then
                 toberankedsurvey.SurveyGrossRank = 800
@@ -1729,7 +1742,7 @@ puts
           # Dead 701-800
           if (700 < toberankedsurvey.SurveyGrossRank) && (toberankedsurvey.SurveyGrossRank <= 800) then
     
-            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*5) then
+            if (toberankedsurvey.TotalRemaining == 0) || (Time.now - toberankedsurvey.created_at > 86400*4) then
       
               # do nothing about it - stays dead
     

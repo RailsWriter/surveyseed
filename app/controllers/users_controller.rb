@@ -28,6 +28,8 @@ class UsersController < ApplicationController
      # Check for COPA eligibility
 
     if @age.to_i<13 then
+      ip_address = request.remote_ip
+      tracker.track(ip_address, 'NS<13')
       redirect_to '/users/nosuccess'
     else  
       # Enter the user with the following credentials in our system or find user's record  
@@ -7363,6 +7365,8 @@ class UsersController < ApplicationController
        
   def userride (session_id)
     
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    
     user = User.find_by session_id: session_id
     @PID = user.user_id
 
@@ -7370,6 +7374,7 @@ class UsersController < ApplicationController
     if user.black_listed == true then
       print '******************** Userride: UserID is BLACKLISTED: ', user.user_id
       puts
+      tracker.track(user.ip_address, 'NS_BL')
       redirect_to '/users/nosuccess'
       return
     else
