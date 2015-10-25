@@ -4161,6 +4161,11 @@ class UsersController < ApplicationController
               
               end # case statement
               
+              if (project.quotas[j]["completesLeft"].exists && (project.quotas[j]["completesLeft"] <= 0)) then
+                @QuotaCompletesLeft = false
+              else
+                @QuotaCompletesLeft = true
+              end
               
               print " QUOTA AVAILABILITY CRITERIA for: ", project.rfg_id
               puts
@@ -4188,9 +4193,10 @@ class UsersController < ApplicationController
               puts
               print "Region = ", (@QualificationRegion)
               puts
-                            
+              print "CompletesLeft = ", (@QuotaCompletesLeft)
+              puts          
               
-              if ( (project.country == "US") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry )  && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationEducation) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (project.quotas[j]["completesLeft"] > 0) ) then
+              if ( (project.country == "US") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry )  && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationEducation) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QuotaCompletesLeft) ) then
               
                 @RFGQuotaIsAvailable = true
                 puts "******* Quota is available"
