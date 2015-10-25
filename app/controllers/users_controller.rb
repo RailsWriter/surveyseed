@@ -75,15 +75,19 @@ class UsersController < ApplicationController
       
       if netid != nil then
         @SSnet = Network.find_by netid: netid
-        if @SSnet.Flag2 == nil then
-          @SSnet.Flag2 = "1" 
-          @SSnet.save
+        if @SSnet == nil then
+          print "************************************ Bad NetworkId ********************"
         else
-          @SSnet.Flag2 = (@SSnet.Flag2.to_i + 1).to_s
-          @SSnet.save
+          if @SSnet.Flag2 == nil then
+            @SSnet.Flag2 = "1" 
+            @SSnet.save
+          else
+            @SSnet.Flag2 = (@SSnet.Flag2.to_i + 1).to_s
+            @SSnet.save
+          end
         end
       else
-        # can't record anything?
+        print "************************************ No NetworkId ********************"
       end
 
       tracker.track(ip_address, 'Age')
@@ -4161,10 +4165,14 @@ class UsersController < ApplicationController
               
               end # case statement
               
-              if (project.quotas[j]["completesLeft"].exists && (project.quotas[j]["completesLeft"] <= 0)) then
-                @QuotaCompletesLeft = false
-              else
+              if project.quotas[j]["completesLeft"] == nil then
                 @QuotaCompletesLeft = true
+              else 
+                if (project.quotas[j]["completesLeft"] > 0) then
+                  @QuotaCompletesLeft = true
+                else
+                  @QuotaCompletesLeft = false
+                end
               end
               
               print " QUOTA AVAILABILITY CRITERIA for: ", project.rfg_id
