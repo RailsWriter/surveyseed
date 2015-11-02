@@ -1,11 +1,9 @@
 class UsersController < ApplicationController
 
-  # require 'httparty'
   require 'mixpanel-ruby'
   require 'hmac-md5'
 
   def new
-    #    @user = User.new
   end
 
   def show
@@ -1195,7 +1193,7 @@ class UsersController < ApplicationController
       net = Network.find_by netid: @netid
         
       if net.payout == nil then
-        @currentpayout = 1.49 
+        @currentpayout = 1.90 # assumes this is the minimum payout for FED surveys across networks including the 30% fees
       else
         @currentpayout = net.payout  
       end
@@ -2678,10 +2676,10 @@ class UsersController < ApplicationController
       net = Network.find_by netid: @netid
   
       if net.payout == nil then
-        @currentpayout = 1.49 # ensures breakeven at $1.25 payout
+        @currentpayout = 1.25 # assumes $1.25 as minimum payout value across the networks for RFG projects
         @currentpayoutstr = "$"+@currentpayout.to_s
       else
-        @currentpayout = net.payout  
+        @currentpayout = 1.25 # change back to net.payout or create new RFG payout field  
         @currentpayoutstr = "$"+@currentpayout.to_s
       end
        
@@ -3327,11 +3325,11 @@ class UsersController < ApplicationController
               print "@QualificationEducation: ", @QualificationEducation
               puts
                   
-                when "Job Title"
-                    @QualificationJobTitle = false
-                    @RFGJobTitle = ''
+            when "Job Title"
+                @QualificationJobTitle = false
+                @RFGJobTitle = ''
                     
-                    (0..project.datapoints[m]["values"].length-1).each do |i|
+                (0..project.datapoints[m]["values"].length-1).each do |i|
                                       
                       if (project.datapoints[m]["values"][i]["choice"] == 2) && (user.jobtitle.to_i == 1) then
                         @QualificationJobTitle = true
@@ -3355,12 +3353,12 @@ class UsersController < ApplicationController
                       end
                                        
                     end
-                    # print "User entered JobTitle: ", user.jobtitle
-                    # puts
-                    # print "Project qual JobTitle: ", project.datapoints[m]["values"]
-                    # puts
-                    print "@QualificationJobTitle: ", @QualificationJobTitle
-                    puts
+                # print "User entered JobTitle: ", user.jobtitle
+                # puts
+                # print "Project qual JobTitle: ", project.datapoints[m]["values"]
+                # puts
+                print "@QualificationJobTitle: ", @QualificationJobTitle
+                puts
                     
                     
               
@@ -3418,8 +3416,6 @@ class UsersController < ApplicationController
               print "@RFGEthnicity is set to: ", @RFGEthnicity
               puts
                 
-                
-
                         
             when "Employment Status"
               @QualificationEmployment = false
@@ -3482,7 +3478,22 @@ class UsersController < ApplicationController
           # print "Project qual DMA: ", project.datapoints[m]["values"]
           # puts
           print "@QualificationDMA: ", @QualificationDMA
-          puts
+          puts         
+          
+        when "County (US)"
+          @QualificationCounty = false
+          (0..project.datapoints[m]["values"].length-1).each do |i|
+            if project.datapoints[m]["values"][i]["choice"] == @County.to_i then
+              @QualificationCounty = true
+            else
+            end
+          end
+          # print "County for user zipcode: ", @County
+          # puts
+          # print "Project qual County: ", project.datapoints[m]["values"]
+          # puts
+          print "@QualificationCounty: ", @QualificationCounty
+          puts          
                     
         when "State (US)"
           @QualificationState = false

@@ -267,6 +267,14 @@ begin
       else
         
         @project.datapoints = RFGProjectTargets["response"]["datapoints"]
+        
+        print "************+++++++++++++=====================datapoints in targeting API received: ", RFGProjectTargets["response"]["datapoints"], "******============================"
+        puts
+        
+        print "************+++++++++++++=====================datapoints in targeting API saved as @project.datapoints: ", @project.datapoints, "******============================"
+        puts
+        
+        
         @project.lastModified = RFGProjectTargets["response"]["lastModified"]
         @project.filterMode = RFGProjectTargets["response"]["filtermode"]
         @project.quotaLimitBy = RFGProjectTargets["response"]["quotaLimitBy"]

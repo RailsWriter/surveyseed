@@ -7,7 +7,7 @@ begin
     #  csv << "Titles"
     User.where("created_at > ?", (Time.now - 1440.minutes)).each do |m|
       if m.SurveysCompleted.length > 0 then
-        csv << m.SurveysCompleted.to_a.flatten
+        csv << [m.country, m.SurveysCompleted.to_a.flatten]
 	      count=count+1
 	      print m.SurveysCompleted
       	puts

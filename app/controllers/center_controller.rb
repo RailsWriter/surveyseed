@@ -120,8 +120,6 @@ class CenterController < ApplicationController
       @projects = RfgProject.where("country = ?", "CA").each  
     end
     
-    
-    
     def RFGProjects_US
       
       @projects = RfgProject.where("country = ?", "US").order(epc: :desc).order(projectCR: :desc).each
@@ -134,7 +132,22 @@ class CenterController < ApplicationController
 
     def show_projects_US
       @projects = RfgProject.where("country = ?", "US").each  
+    end  
+    
+    def RFGProjects_AU
+      
+      @projects = RfgProject.where("country = ?", "AU").order(epc: :desc).order(projectCR: :desc).each
+    
+      respond_to do |format|
+        format.html # home.html.erb
+        format.json { render json: @projects }
+      end      
     end
+
+    def show_projects_AU
+      @projects = RfgProject.where("country = ?", "AU").each  
+    end
+    
     
         
 #    def alllNets

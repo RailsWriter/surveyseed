@@ -5,10 +5,10 @@
 
 	<p> Block: SurveyId - Co - OQ - Conversion --- Rem -- CPI -- GEPC
 	
-	<h5>SNumber ------------------ Block ----------------------- Rank ----- Attempts --- ALC ------ TCR(%) ------ Completes ------------ Label ------------ Created -------- NTK -------- TLC</h5>
+	<h5>SNumber ------------------ Block ----------------------- Rank ----- Attempts --- ALC ----- TCR(%) ----- Completes ---------- Label ---------- Created ------ NTK ------ TLC</h5>
 
 	<% @surveys.each do |c| %>
 	    <li>
-	       <%= link_to c.SurveyNumber.to_s + '---' + c.id.to_s + '---' + c.CountryLanguageID.to_s + '---' + c.OverQuotaCount.to_s + '---' + c.Conversion.to_s + '-------' + c.TotalRemaining.to_s + '-----' + c.CPI.to_s + '-----' + (c.GEPC).round(3).to_s + '----------------' + c.SurveyGrossRank.to_s + '--------------' + c.SurveyExactRank.to_s + '------------' + c.NumberofAttemptsAtLastComplete.to_s + '------------' + (c.TCR*100).round(1).to_s + '------------------' + c.CompletedBy.length.to_s + '--------------' + c.label.to_s + '--------------' + c.created_at.to_date.to_s + '------------------' + c.CompletedBy.flatten(2).at(4).to_s + '------------------' + c.CompletedBy.flatten(2).at(1).to_s, :action =>'show_surveys_CA', :id =>c.id  -%>
+	       <%= link_to c.SurveyNumber.to_s + '---' + c.id.to_s + '---' + c.CountryLanguageID.to_s + '---' + c.OverQuotaCount.to_s + '---' + c.Conversion.to_s + '-------' + c.TotalRemaining.to_s + '-----' + c.CPI.to_s + '-----' + (c.GEPC).round(3).to_s + '----------------' + c.SurveyGrossRank.to_s + '--------------' + c.SurveyExactRank.to_s + '------------' + c.NumberofAttemptsAtLastComplete.to_s + '-----------' + (c.TCR*100).round(1).to_s + '--------------' + c.CompletedBy.length.to_s + '-----------' + c.label.to_s + '-----------' + c.created_at.to_date.to_s + '--------------' + c.CompletedBy.flatten(2).at(4).to_s + '--------------' + c.CompletedBy.flatten(2).at(1).to_s, :action =>'show_surveys_CA', :id =>c.id  -%>
 	    </li>
 	<% end %>
