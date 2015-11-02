@@ -2265,11 +2265,11 @@ class UsersController < ApplicationController
     # Remove duplicate entries
       
     if (user.SurveysWithMatchingQuota.empty?) then
-      p '******************** RankFEDSurveys: No Surveys matching quota were found in Fulcrum'
+      p '--------------******************** RankFEDSurveys: No Surveys matching quota were found in Fulcrum ***************--------'
 
     else       
       user.SurveysWithMatchingQuota = user.SurveysWithMatchingQuota.uniq
-      print '*************** List of Fulcrum surveys where quota is available:', user.SurveysWithMatchingQuota
+      print '-----------------*************** List of Fulcrum surveys where quota is available *************************-----------:', user.SurveysWithMatchingQuota
       puts
     end
          
@@ -7371,7 +7371,7 @@ class UsersController < ApplicationController
       (0..@RFGSupplierLinks.length-1).each do |i|
         @RFGSupplierLinks[i] = @RFGSupplierLinks[i]+@RFGAdditionalValues+@MS_is_mobile
       end
-      print "************ RFGSupplierLinks List: ", @RFGSupplierLinks
+      print "--------------************ RFGSupplierLinks List *********************-----------------: ", @RFGSupplierLinks
       puts
     else
       # do nothing, no RFG surveys match the user
@@ -7571,7 +7571,7 @@ class UsersController < ApplicationController
       user.save
 
     else
-      puts "********************** P2S is not attached"
+      puts "-------------------********************** P2S is not attached ********************------------------------"
     end #if P2SisAttached 
 
     # Start the ride
