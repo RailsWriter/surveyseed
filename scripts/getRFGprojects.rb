@@ -268,8 +268,8 @@ begin
         
         @project.datapoints = RFGProjectTargets["response"]["datapoints"]
         
-        print "************+++++++++++++=====================datapoints in targeting API received: ", RFGProjectTargets["response"]["datapoints"], "******============================"
-        puts
+        #print "************+++++++++++++=====================datapoints in targeting API received: ", RFGProjectTargets["response"]["datapoints"], "******============================"
+        #puts
         
         print "************+++++++++++++=====================datapoints in targeting API saved as @project.datapoints: ", @project.datapoints, "******============================"
         puts
@@ -342,7 +342,7 @@ begin
   end # do loop for all i
  
   
-  # Delete projects which are neither custom entered nor on the index list but are in local database
+  # Delete projects which are neither custom entered, nor on the index list, or are not in state==2 but are in local database
     
   projectsnottobedeleted = Array.new
   listofprojectnumbers = Array.new
@@ -352,18 +352,20 @@ begin
     listofprojectnumbers << oldproject.rfg_id
     # print '************* Investigating Project Number from the dbase: ', listofprojectnumbers
     # puts
-      
-    (0..NumberOfProjects-1).each do |k|
-      if RFGProjectsIndex["response"]["projects"][k]["rfg_id"] == oldproject.rfg_id then
-          #          print 'Marked a project to be ALIVE: ', oldproject.rfg_id
-          #          puts     
-        projectsnottobedeleted << oldproject.rfg_id
-      else
-        # do nothing
-      end # if
-        #         print 'looping list of allocationsurveys, count:', k
-        #         puts
-    end # do k
+    if oldproject.state == 2 then  
+      (0..NumberOfProjects-1).each do |k|
+        if RFGProjectsIndex["response"]["projects"][k]["rfg_id"] == oldproject.rfg_id then
+            #          print 'Marked a project to be ALIVE: ', oldproject.rfg_id
+            #          puts     
+          projectsnottobedeleted << oldproject.rfg_id
+        else
+          # do nothings
+        end # if
+          #         print 'looping list of allocationsurveys, count:', k
+          #         puts
+      end # do k
+    else
+    end # state==2
   end # do oldproject
      
   # print '******************** List of all projects in DB', listofprojectnumbers
