@@ -3276,6 +3276,9 @@ class UsersController < ApplicationController
             puts
             print "@QualificationPindustry: ", @QualificationPindustry
             puts
+
+
+# Needs to be fixed as Min/Max qualification criteria for Children per Isaac's email
                   
           when "Children Age and Gender"
               @QualificationChildren = false
@@ -3480,20 +3483,20 @@ class UsersController < ApplicationController
           print "@QualificationDMA: ", @QualificationDMA
           puts         
           
-        when "County (US)"
-          @QualificationCounty = false
-          (0..project.datapoints[m]["values"].length-1).each do |i|
-            if project.datapoints[m]["values"][i]["choice"] == @County.to_i then
-              @QualificationCounty = true
-            else
-            end
-          end
-          # print "County for user zipcode: ", @County
-          # puts
-          # print "Project qual County: ", project.datapoints[m]["values"]
-          # puts
-          print "@QualificationCounty: ", @QualificationCounty
-          puts          
+        # when "County (US)"
+#           @QualificationCounty = false
+#           (0..project.datapoints[m]["values"].length-1).each do |i|
+#             if project.datapoints[m]["values"][i]["choice"] == @County.to_i then
+#               @QualificationCounty = true
+#             else
+#             end
+#           end
+#           # print "County for user zipcode: ", @County
+#           # puts
+#           # print "Project qual County: ", project.datapoints[m]["values"]
+#           # puts
+#           print "@QualificationCounty: ", @QualificationCounty
+#           puts
                     
         when "State (US)"
           @QualificationState = false
@@ -4035,6 +4038,8 @@ class UsersController < ApplicationController
                 print "@QualificationPindustry: ", @QualificationPindustry
                 puts
                   
+# Needs to be fixed as Min/Max qualification criteria for Children per Isaac's email
+
               when "Children Age and Gender"
                   @QualificationChildren = false
                   (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
@@ -4901,6 +4906,7 @@ class UsersController < ApplicationController
             # print "@QualificationPindustry: ", @QualificationPindustry
             # puts
           
+# Needs to be fixed as Min/Max qualification criteria for Children per Isaac's email
                   
           when "Children Age and Gender"
               @QualificationChildren = false
@@ -6346,7 +6352,7 @@ class UsersController < ApplicationController
             # print "@QualificationPindustry: ", @QualificationPindustry
             # puts
           
-                  
+# Needs to be fixed as Min/Max per Isaac's email
           when "Children Age and Gender"
               @QualificationChildren = false
               (0..project.datapoints[m]["values"].length-1).each do |i|
