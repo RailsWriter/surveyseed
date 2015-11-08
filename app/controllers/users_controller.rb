@@ -3275,25 +3275,51 @@ class UsersController < ApplicationController
             print "Project qual Pindustry: ", project.datapoints[m]["values"]
             puts
             print "@QualificationPindustry: ", @QualificationPindustry
-            puts
-
-
-# Needs to be fixed as Min/Max qualification criteria for Children per Isaac's email
-                  
-          when "Children Age and Gender"
+            puts                  
+          
+          when "Children"
+            @QualificationChildren = false
+            y=1
+            if user.children.include?("-3105") then
               @QualificationChildren = false
-              (0..project.datapoints[m]["values"].length-1).each do |i|
-                if ((project.datapoints[m]["values"][i]["choice"].to_s & user.children).empty? == false) then
-                  @QualificationChildren = true
-                else
+            else
+              (0..user.children.length-1).each do |c|
+                (0..project.datapoints[m]["values"].length-1).each do |i|
+                  if (project.datapoints[m]["values"][i]["unit"]!=nil) then
+                    if (project.datapoints[m]["values"][i]["unit"]==0) then 
+                      y=1
+                    else
+                      y=12
+                    end
+                  else
+                    y=1
+                  end
+                  @QualificationChildren = (((project.datapoints[m]["values"][i]["min"]..project.datapoints[m]["values"][i]["max"]).include?(((user.children[c].to_f/2).round)*y)) && ((project.datapoints[m]["values"][i]["gender"] == nil) || (user.children[c].to_i % 2==project.datapoints[m]["values"][i]["gender"].to_i % 2))) || @QualificationChildren
                 end
               end
+            end
+            print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User entered Children: ", user.children
+            puts
+            print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project qual Children: ", project.datapoints[m]["values"]
+            puts
+            print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> @QualificationChildren: ", @QualificationChildren
+            puts    
+          
+          
+          # when "Children Age and Gender"
+#               @QualificationChildren = false
+#               (0..project.datapoints[m]["values"].length-1).each do |i|
+#                 if ((project.datapoints[m]["values"][i]["choice"].to_s & user.children).empty? == false) then
+#                   @QualificationChildren = true
+#                 else
+#                 end
+#               end
               # print "User entered Children: ", user.children
               # puts
               # print "Project qual Children: ", project.datapoints[m]["values"]
               # puts
-              print "@QualificationChildren: ", @QualificationChildren
-              puts
+              # print "@QualificationChildren: ", @QualificationChildren
+#               puts
                 
           when "Education (US)"
               @QualificationEducation = false
@@ -3710,7 +3736,6 @@ class UsersController < ApplicationController
                 print "@QualificationHhi: ", @QualificationHhi
                 puts
             
-              
               when "Employment Industry"
                 @QualificationPindustry = false
     
@@ -4038,22 +4063,49 @@ class UsersController < ApplicationController
                 print "@QualificationPindustry: ", @QualificationPindustry
                 puts
                   
-# Needs to be fixed as Min/Max qualification criteria for Children per Isaac's email
-
-              when "Children Age and Gender"
+              when "Children"
+                @QualificationChildren = false
+                y=1
+                if user.children.include?("-3105") then
                   @QualificationChildren = false
-                  (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                    if ((project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s & user.children).empty? == false) then
-                      @QualificationChildren = true
-                    else
+                else
+                  (0..user.children.length-1).each do |c|
+                    (0..project.quotas[j].datapoints[n]["values"].length-1).each do |i|
+                      if (project.quotas[j].datapoints[n]["values"][i]["unit"]!=nil) then
+                        if (project.quotas[j].datapoints[n]["values"][i]["unit"]==0) then 
+                          y=1
+                        else
+                          y=12
+                        end
+                      else
+                        y=1
+                      end
+                      @QualificationChildren = (((project.quotas[j].datapoints[n]["values"][i]["min"]..project.quotas[j].datapoints[n]["values"][i]["max"]).include?(((user.children[c].to_f/2).round)*y)) && ((project.quotas[j].datapoints[n]["values"][i]["gender"] == nil) || (user.children[c].to_i % 2==project.quotas[j].datapoints[n]["values"][i]["gender"].to_i % 2))) || @QualificationChildren
                     end
                   end
-                  # print "User entered Children: ", user.children
-                  # puts
-                  # print "Project quota Children: ", project.quotas[j]["datapoints"][n]["values"]
-                  # puts
-                  print "@QualificationChildren: ", @QualificationChildren
-                  puts
+                end
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User entered Children: ", user.children
+                puts
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project qual Children: ", project.quotas[j].datapoints[n]["values"]
+                puts
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> @QualificationChildren: ", @QualificationChildren
+                puts    
+              
+              
+              # when "Children Age and Gender"
+#                   @QualificationChildren = false
+#                   (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+#                     if ((project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s & user.children).empty? == false) then
+#                       @QualificationChildren = true
+#                     else
+#                     end
+#                   end
+#                   # print "User entered Children: ", user.children
+#                   # puts
+#                   # print "Project quota Children: ", project.quotas[j]["datapoints"][n]["values"]
+#                   # puts
+#                   print "@QualificationChildren: ", @QualificationChildren
+#                   puts
                 
               when "Education (US)"
                   @QualificationEducation = false
@@ -4908,20 +4960,48 @@ class UsersController < ApplicationController
           
 # Needs to be fixed as Min/Max qualification criteria for Children per Isaac's email
                   
-          when "Children Age and Gender"
+            when "Children"
               @QualificationChildren = false
-              (0..project.datapoints[m]["values"].length-1).each do |i|
-                if ((project.datapoints[m]["values"][i]["choice"].to_s & user.children).empty? == false) then
-                  @QualificationChildren = true
-                else
+              y=1
+              if user.children.include?("-3105") then
+                @QualificationChildren = false
+              else
+                (0..user.children.length-1).each do |c|
+                  (0..project.datapoints[m]["values"].length-1).each do |i|
+                    if (project.datapoints[m]["values"][i]["unit"]!=nil) then
+                      if (project.datapoints[m]["values"][i]["unit"]==0) then 
+                        y=1
+                      else
+                        y=12
+                      end
+                    else
+                      y=1
+                    end
+                    @QualificationChildren = (((project.datapoints[m]["values"][i]["min"]..project.datapoints[m]["values"][i]["max"]).include?(((user.children[c].to_f/2).round)*y)) && ((project.datapoints[m]["values"][i]["gender"] == nil) || (user.children[c].to_i % 2==project.datapoints[m]["values"][i]["gender"].to_i % 2))) || @QualificationChildren
+                  end
                 end
               end
-              # print "User entered Children: ", user.children
-              # puts
-              # print "Project qual Children: ", project.datapoints[m]["values"]
-              # puts
-              # print "@QualificationChildren: ", @QualificationChildren
-              # puts
+              print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User entered Children: ", user.children
+              puts
+              print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project qual Children: ", project.datapoints[m]["values"]
+              puts
+              print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> @QualificationChildren: ", @QualificationChildren
+              puts   
+  
+          # when "Children Age and Gender"
+#               @QualificationChildren = false
+#               (0..project.datapoints[m]["values"].length-1).each do |i|
+#                 if ((project.datapoints[m]["values"][i]["choice"].to_s & user.children).empty? == false) then
+#                   @QualificationChildren = true
+#                 else
+#                 end
+#               end
+#               # print "User entered Children: ", user.children
+#               # puts
+#               # print "Project qual Children: ", project.datapoints[m]["values"]
+#               # puts
+#               # print "@QualificationChildren: ", @QualificationChildren
+#               # puts
                   
           when "Education (CA)"
             @QualificationEducation = false
@@ -4973,40 +5053,40 @@ class UsersController < ApplicationController
             # puts
 
 
-                when "Job Title"
-                    @QualificationJobTitle = false
-                    @RFGJobTitle = ''
-                    
-                    (0..project.datapoints[m]["values"].length-1).each do |i|
-                                      
-                      if (project.datapoints[m]["values"][i]["choice"] == 2) && (user.jobtitle.to_i == 1) then
-                        @QualificationJobTitle = true
-                        @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
-                      else
-                      end
-                      if (project.datapoints[m]["values"][i]["choice"] == 3) && ((user.jobtitle.to_i == 2) ||  (user.jobtitle.to_i == 3)) then
-                        @QualificationJobTitle = true
-                        @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
-                      else
-                      end
-                      if (project.datapoints[m]["values"][i]["choice"] == 4) && (user.jobtitle.to_i == 4) then
-                        @QualificationJobTitle = true
-                        @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
-                      else
-                      end  
-                      if (project.datapoints[m]["values"][i]["choice"] > 4) then
-                        @QualificationJobTitle = true
-                        @RFGJobTitle = ''
-                      else
-                      end
-                                       
-                    end
-                    # print "User entered JobTitle: ", user.jobtitle
-                    # puts
-                    # print "Project qual JobTitle: ", project.datapoints[m]["values"]
-                    # puts
-                    # print "@QualificationJobTitle: ", @QualificationJobTitle
-                    # puts
+          when "Job Title"
+              @QualificationJobTitle = false
+              @RFGJobTitle = ''
+              
+              (0..project.datapoints[m]["values"].length-1).each do |i|
+                                
+                if (project.datapoints[m]["values"][i]["choice"] == 2) && (user.jobtitle.to_i == 1) then
+                  @QualificationJobTitle = true
+                  @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 3) && ((user.jobtitle.to_i == 2) ||  (user.jobtitle.to_i == 3)) then
+                  @QualificationJobTitle = true
+                  @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 4) && (user.jobtitle.to_i == 4) then
+                  @QualificationJobTitle = true
+                  @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end  
+                if (project.datapoints[m]["values"][i]["choice"] > 4) then
+                  @QualificationJobTitle = true
+                  @RFGJobTitle = ''
+                else
+                end
+                                 
+              end
+              # print "User entered JobTitle: ", user.jobtitle
+              # puts
+              # print "Project qual JobTitle: ", project.datapoints[m]["values"]
+              # puts
+              # print "@QualificationJobTitle: ", @QualificationJobTitle
+              # puts
                     
                         
             when "Employment Status"
@@ -5551,21 +5631,50 @@ class UsersController < ApplicationController
                 # puts
                 # print "@QualificationPindustry: ", @QualificationPindustry
                 # puts
-                  
-              when "Children Age and Gender"
+              
+              when "Children"
+                @QualificationChildren = false
+                y=1
+                if user.children.include?("-3105") then
                   @QualificationChildren = false
-                  (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                    if ((project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s & user.children).empty? == false) then
-                      @QualificationChildren = true
-                    else
+                else
+                  (0..user.children.length-1).each do |c|
+                    (0..project.quotas[j].datapoints[n]["values"].length-1).each do |i|
+                      if (project.quotas[j].datapoints[n]["values"][i]["unit"]!=nil) then
+                        if (project.quotas[j].datapoints[n]["values"][i]["unit"]==0) then 
+                          y=1
+                        else
+                          y=12
+                        end
+                      else
+                        y=1
+                      end
+                      @QualificationChildren = (((project.quotas[j].datapoints[n]["values"][i]["min"]..project.quotas[j].datapoints[n]["values"][i]["max"]).include?(((user.children[c].to_f/2).round)*y)) && ((project.quotas[j].datapoints[n]["values"][i]["gender"] == nil) || (user.children[c].to_i % 2==project.quotas[j].datapoints[n]["values"][i]["gender"].to_i % 2))) || @QualificationChildren
                     end
                   end
-                  # print "User entered Children: ", user.children
-                  # puts
-                  # print "Project quota Children: ", project.quotas[j]["datapoints"][n]["values"]
-                  # puts
-                  # print "@QualificationChildren: ", @QualificationChildren
-                  # puts
+                end
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User entered Children: ", user.children
+                puts
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project qual Children: ", project.quotas[j].datapoints[n]["values"]
+                puts
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> @QualificationChildren: ", @QualificationChildren
+                puts    
+              
+             
+              # when "Children Age and Gender"
+#                   @QualificationChildren = false
+#                   (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+#                     if ((project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s & user.children).empty? == false) then
+#                       @QualificationChildren = true
+#                     else
+#                     end
+#                   end
+#                   # print "User entered Children: ", user.children
+#                   # puts
+#                   # print "Project quota Children: ", project.quotas[j]["datapoints"][n]["values"]
+#                   # puts
+#                   # print "@QualificationChildren: ", @QualificationChildren
+#                   # puts
                   
               when "Education (CA)"
                   @QualificationEducation = false
@@ -5590,28 +5699,28 @@ class UsersController < ApplicationController
                     @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
                   else
                   end
-                        if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && ((user.eduation.to_i == 7) || (user.eduation.to_i == 8))  then
-                          @QualificationEducation = true
-                          @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                        else
-                        end
-                        if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && (user.eduation.to_i == 9) then
-                          @QualificationEducation = true
-                          @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                        else
-                        end                    
-                        if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 10) || (user.eduation.to_i == 11))  then
-                          @QualificationEducation = true
-                          @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                        else
-                        end
-                      end
-                      # print "User entered Education: ", user.eduation
-                      # puts
-                      # print "Project quota Education: ", project.quotas[j]["datapoints"][n]["values"]
-                      # puts
-                      # print "@QualificationEducation: ", @QualificationEducation
-                      # puts
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && ((user.eduation.to_i == 7) || (user.eduation.to_i == 8))  then
+                    @QualificationEducation = true
+                    @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && (user.eduation.to_i == 9) then
+                    @QualificationEducation = true
+                    @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end                    
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 10) || (user.eduation.to_i == 11))  then
+                    @QualificationEducation = true
+                    @RFGEducationCA = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end
+                end
+                # print "User entered Education: ", user.eduation
+                # puts
+                # print "Project quota Education: ", project.quotas[j]["datapoints"][n]["values"]
+                # puts
+                # print "@QualificationEducation: ", @QualificationEducation
+                # puts
                         
                 when "Employment Status"
                   @QualificationEmployment = false
@@ -5958,8 +6067,7 @@ class UsersController < ApplicationController
             # puts
             # print "@QualificationHhi: ", @QualificationHhi
             # puts
-            
-              
+                          
           when "Employment Industry"
             @QualificationPindustry = false
             @RFGPindustry = ''
@@ -6351,22 +6459,49 @@ class UsersController < ApplicationController
             # puts
             # print "@QualificationPindustry: ", @QualificationPindustry
             # puts
-          
-# Needs to be fixed as Min/Max per Isaac's email
-          when "Children Age and Gender"
+                    
+          when "Children"
+            @QualificationChildren = false
+            y=1
+            if user.children.include?("-3105") then
               @QualificationChildren = false
-              (0..project.datapoints[m]["values"].length-1).each do |i|
-                if ((project.datapoints[m]["values"][i]["choice"].to_s & user.children).empty? == false) then
-                  @QualificationChildren = true
-                else
+            else
+              (0..user.children.length-1).each do |c|
+                (0..project.datapoints[m]["values"].length-1).each do |i|
+                  if (project.datapoints[m]["values"][i]["unit"]!=nil) then
+                    if (project.datapoints[m]["values"][i]["unit"]==0) then 
+                      y=1
+                    else
+                      y=12
+                    end
+                  else
+                    y=1
+                  end
+                  @QualificationChildren = (((project.datapoints[m]["values"][i]["min"]..project.datapoints[m]["values"][i]["max"]).include?(((user.children[c].to_f/2).round)*y)) && ((project.datapoints[m]["values"][i]["gender"] == nil) || (user.children[c].to_i % 2==project.datapoints[m]["values"][i]["gender"].to_i % 2))) || @QualificationChildren
                 end
               end
-              # print "User entered Children: ", user.children
-              # puts
-              # print "Project qual Children: ", project.datapoints[m]["values"]
-              # puts
-              # print "@QualificationChildren: ", @QualificationChildren
-              # puts
+            end
+            print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User entered Children: ", user.children
+            puts
+            print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project qual Children: ", project.datapoints[m]["values"]
+            puts
+            print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> @QualificationChildren: ", @QualificationChildren
+            puts          
+          
+          # when "Children Age and Gender"
+#               @QualificationChildren = false
+#               (0..project.datapoints[m]["values"].length-1).each do |i|
+#                 if ((project.datapoints[m]["values"][i]["choice"].to_s & user.children).empty? == false) then
+#                   @QualificationChildren = true
+#                 else
+#                 end
+#               end
+#               # print "User entered Children: ", user.children
+#               # puts
+#               # print "Project qual Children: ", project.datapoints[m]["values"]
+#               # puts
+#               # print "@QualificationChildren: ", @QualificationChildren
+#               # puts
                   
           when "Education (AU)"
             @QualificationEducation = false
@@ -6418,40 +6553,40 @@ class UsersController < ApplicationController
             # puts
 
 
-                when "Job Title"
-                    @QualificationJobTitle = false
+            when "Job Title"
+                @QualificationJobTitle = false
+                @RFGJobTitle = ''
+                
+                (0..project.datapoints[m]["values"].length-1).each do |i|
+                                  
+                  if (project.datapoints[m]["values"][i]["choice"] == 2) && (user.jobtitle.to_i == 1) then
+                    @QualificationJobTitle = true
+                    @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
+                  else
+                  end
+                  if (project.datapoints[m]["values"][i]["choice"] == 3) && ((user.jobtitle.to_i == 2) ||  (user.jobtitle.to_i == 3)) then
+                    @QualificationJobTitle = true
+                    @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
+                  else
+                  end
+                  if (project.datapoints[m]["values"][i]["choice"] == 4) && (user.jobtitle.to_i == 4) then
+                    @QualificationJobTitle = true
+                    @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
+                  else
+                  end  
+                  if (project.datapoints[m]["values"][i]["choice"] > 4) then
+                    @QualificationJobTitle = true
                     @RFGJobTitle = ''
-                    
-                    (0..project.datapoints[m]["values"].length-1).each do |i|
-                                      
-                      if (project.datapoints[m]["values"][i]["choice"] == 2) && (user.jobtitle.to_i == 1) then
-                        @QualificationJobTitle = true
-                        @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
-                      else
-                      end
-                      if (project.datapoints[m]["values"][i]["choice"] == 3) && ((user.jobtitle.to_i == 2) ||  (user.jobtitle.to_i == 3)) then
-                        @QualificationJobTitle = true
-                        @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
-                      else
-                      end
-                      if (project.datapoints[m]["values"][i]["choice"] == 4) && (user.jobtitle.to_i == 4) then
-                        @QualificationJobTitle = true
-                        @RFGJobTitle = project.datapoints[m]["values"][i]["choice"].to_s
-                      else
-                      end  
-                      if (project.datapoints[m]["values"][i]["choice"] > 4) then
-                        @QualificationJobTitle = true
-                        @RFGJobTitle = ''
-                      else
-                      end
-                                       
-                    end
-                    # print "User entered JobTitle: ", user.jobtitle
-                    # puts
-                    # print "Project qual JobTitle: ", project.datapoints[m]["values"]
-                    # puts
-                    # print "@QualificationJobTitle: ", @QualificationJobTitle
-                    # puts
+                  else
+                  end
+                                   
+                end
+                # print "User entered JobTitle: ", user.jobtitle
+                # puts
+                # print "Project qual JobTitle: ", project.datapoints[m]["values"]
+                # puts
+                # print "@QualificationJobTitle: ", @QualificationJobTitle
+                # puts
                     
                         
             when "Employment Status"
@@ -6459,48 +6594,48 @@ class UsersController < ApplicationController
               @RFGEmployment = ''
               
               (0..project.datapoints[m]["values"].length-1).each do |i|
-              if (project.datapoints[m]["values"][i]["choice"] == 1) && (user.employment.to_i == 10) then
-                @QualificationEmployment = true
-                @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
-              else
-              end 
-                      if (project.datapoints[m]["values"][i]["choice"] == 2) && (user.employment.to_i == 2) then
-                        @QualificationEmployment = true
-                        @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
-                      else
-                      end
-                      if (project.datapoints[m]["values"][i]["choice"] == 3) && (user.employment.to_i == 1) then
-                        @QualificationEmployment = true
-                        @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
-                      else
-                      end
-                      if (project.datapoints[m]["values"][i]["choice"] == 4) && (user.employment.to_i == 7)  then
-                        @QualificationEmployment = true
-                        @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
-                      else
-                      end
-                      if (project.datapoints[m]["values"][i]["choice"] == 5) && (user.employment.to_i == 9)  then
-                        @QualificationEmployment = true
-                        @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
-                      else
-                      end
-                      if (project.datapoints[m]["values"][i]["choice"] == 6) && ((user.employment.to_i == 3) || (user.employment.to_i == 4)) then
-                        @QualificationEmployment = true
-                        @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
-                      else
-                      end                    
-                      if (project.datapoints[m]["values"][i]["choice"] == 7) && (user.employment.to_i == 8)  then
-                        @QualificationEmployment = true
-                        @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
-                      else
-                      end
-                    end
-          # print "User entered Employment: ", user.employment
-          # puts
-          # print "Project qual Employment: ", project.datapoints[m]["values"]
-          # puts
-          # print "@QualificationEmployment: ", @QualificationEmployment
-          # puts
+                if (project.datapoints[m]["values"][i]["choice"] == 1) && (user.employment.to_i == 10) then
+                  @QualificationEmployment = true
+                  @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end 
+                if (project.datapoints[m]["values"][i]["choice"] == 2) && (user.employment.to_i == 2) then
+                  @QualificationEmployment = true
+                  @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 3) && (user.employment.to_i == 1) then
+                  @QualificationEmployment = true
+                  @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 4) && (user.employment.to_i == 7)  then
+                  @QualificationEmployment = true
+                  @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 5) && (user.employment.to_i == 9)  then
+                  @QualificationEmployment = true
+                  @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+                if (project.datapoints[m]["values"][i]["choice"] == 6) && ((user.employment.to_i == 3) || (user.employment.to_i == 4)) then
+                  @QualificationEmployment = true
+                  @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end                    
+                if (project.datapoints[m]["values"][i]["choice"] == 7) && (user.employment.to_i == 8)  then
+                  @QualificationEmployment = true
+                  @RFGEmployment = project.datapoints[m]["values"][i]["choice"].to_s
+                else
+                end
+              end
+              # print "User entered Employment: ", user.employment
+              # puts
+              # print "Project qual Employment: ", project.datapoints[m]["values"]
+              # puts
+              # print "@QualificationEmployment: ", @QualificationEmployment
+              # puts
           
           
           end # case statement
@@ -6997,20 +7132,48 @@ class UsersController < ApplicationController
                 # print "@QualificationPindustry: ", @QualificationPindustry
                 # puts
                   
-              when "Children Age and Gender"
+              when "Children"
+                @QualificationChildren = false
+                y=1
+                if user.children.include?("-3105") then
                   @QualificationChildren = false
-                  (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
-                    if ((project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s & user.children).empty? == false) then
-                      @QualificationChildren = true
-                    else
+                else
+                  (0..user.children.length-1).each do |c|
+                    (0..project.quotas[j].datapoints[n]["values"].length-1).each do |i|
+                      if (project.quotas[j].datapoints[n]["values"][i]["unit"]!=nil) then
+                        if (project.quotas[j].datapoints[n]["values"][i]["unit"]==0) then 
+                          y=1
+                        else
+                          y=12
+                        end
+                      else
+                        y=1
+                      end
+                      @QualificationChildren = (((project.quotas[j].datapoints[n]["values"][i]["min"]..project.quotas[j].datapoints[n]["values"][i]["max"]).include?(((user.children[c].to_f/2).round)*y)) && ((project.quotas[j].datapoints[n]["values"][i]["gender"] == nil) || (user.children[c].to_i % 2==project.quotas[j].datapoints[n]["values"][i]["gender"].to_i % 2))) || @QualificationChildren
                     end
                   end
-                  # print "User entered Children: ", user.children
-                  # puts
-                  # print "Project quota Children: ", project.quotas[j]["datapoints"][n]["values"]
-                  # puts
-                  # print "@QualificationChildren: ", @QualificationChildren
-                  # puts
+                end
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User entered Children: ", user.children
+                puts
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project qual Children: ", project.quotas[j].datapoints[n]["values"]
+                puts
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> @QualificationChildren: ", @QualificationChildren
+                puts    
+                
+              # when "Children Age and Gender"
+#                   @QualificationChildren = false
+#                   (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+#                     if ((project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s & user.children).empty? == false) then
+#                       @QualificationChildren = true
+#                     else
+#                     end
+#                   end
+#                   # print "User entered Children: ", user.children
+#                   # puts
+#                   # print "Project quota Children: ", project.quotas[j]["datapoints"][n]["values"]
+#                   # puts
+#                   # print "@QualificationChildren: ", @QualificationChildren
+#                   # puts
                   
               when "Education (AU)"
                   @QualificationEducation = false
@@ -7285,21 +7448,21 @@ class UsersController < ApplicationController
       
     # Assemble additional parameters values to pass with the entry link
       
-    if user.children != nil then
-      if user.children.include?("-3105") then
-        @RFGchildrenvalue = '&ChildrenAgeGender=37&children=false'        
-      else
-        @RFGchildrenvalue = '&children=true&ChildrenAgeGender='+user.children[0]
-        if user.children.length > 1 then
-          (1..user.children.length-1).each do |i|
-            @RFGchildrenvalue = @RFGchildrenvalue+'&ChildrenAgeGender='+user.children[i]
-          end
-        else
-        end      
-      end
-    else
-      @RFGchildrenvalue = ''
-    end
+    # if user.children != nil then
+#       if user.children.include?("-3105") then
+#         @RFGchildrenvalue = '&ChildrenAgeGender=37&children=false'
+#       else
+#         @RFGchildrenvalue = '&children=true&ChildrenAgeGender='+user.children[0]
+#         if user.children.length > 1 then
+#           (1..user.children.length-1).each do |i|
+#             @RFGchildrenvalue = @RFGchildrenvalue+'&ChildrenAgeGender='+user.children[i]
+#           end
+#         else
+#         end
+#       end
+#     else
+#       @RFGchildrenvalue = ''
+#     end
         
     if user.age != nil then
       @RFGbirthday = (Time.now.year.to_i - user.age.to_i).to_s + "-" + Random.rand(12).to_s + "-" + Random.rand(30).to_s
@@ -7350,13 +7513,13 @@ class UsersController < ApplicationController
     end
       
     if user.country=="9" then 
-      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+@RFGchildrenvalue+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
+      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
     else
       if user.country=="6" then
-          @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+@RFGchildrenvalue+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
+          @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
       else
         if user.country=="5" then
-            @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationAU='+@RFGEducationAU+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+@RFGchildrenvalue+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
+            @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationAU='+@RFGEducationAU+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
         else
         end
       end
