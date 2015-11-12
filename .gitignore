@@ -10,7 +10,7 @@
 # Ignore local report files
 RFGCompletes*
 MemoLinkCompletes*
-/scripts/GenerateDailyCompletesReport.rb
+#/scripts/GenerateDailyCompletesReport.rb
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
