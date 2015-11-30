@@ -37,7 +37,13 @@ Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
   CountyList = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil
 end
 
-print "First choice:", CountyList["response"]["answers"][3]["en-US"]
+print "Number of couties: ", CountyList["response"]["answers"].length
+puts
+# print "Choice: ", CountyList["response"]["answers"][2055]["en-US"]
+# puts
+print "State = ", CountyList["response"]["answers"][1494]["en-US"][0..1]
+puts
+print "County = ", CountyList["response"]["answers"][1494]["en-US"][3..-1]
 puts
 
 #secret = [secret].pack("H*")

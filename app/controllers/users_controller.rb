@@ -2391,6 +2391,7 @@ class UsersController < ApplicationController
         @DMARegionCode = "0"
         @regionPrecode = "0"
         @dividionPrecode = "0"
+        @rfgCountyChoice = 0
         puts "NotApplicable PreCodes Used for INVALID ZIPCODE"
         
       else
@@ -2398,6 +2399,7 @@ class UsersController < ApplicationController
         @DMARegionCode = @geo.DMARegionCode
         @regionPrecode = @geo.regionPrecode
         @divisionPrecode = @geo.divisionPrecode
+        @rfgCountyChoice = @geo.estimated_population
         
         case @geo.State
         when "NotApplicable"
@@ -2734,7 +2736,7 @@ class UsersController < ApplicationController
     
     if user.country == "9" then  
               
-    RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectCR: :desc).each do |project|
+    RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectEPC: :desc).each do |project|
 
       if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects     
         
@@ -2749,6 +2751,7 @@ class UsersController < ApplicationController
         @QualificationChildren = true
         @QualificationEducation = true
         @QualificationEmployment = true
+        @QualificationCounty = true
         @QualificationDMA = true
         @QualificationState = true
         @QualificationRegion = true
@@ -3494,6 +3497,21 @@ class UsersController < ApplicationController
           print "@QualificationEmployment: ", @QualificationEmployment
           puts
           
+        when "County (US)"
+          @QualificationCounty = false
+          (0..project.datapoints[m]["values"].length-1).each do |i|
+            if project.datapoints[m]["values"][i]["choice"] == @rfgCountyChoice then
+              @QualificationCounty = true
+            else
+            end
+          end
+          print "--------------------------------->>>>>>>>> County for user zipcode: ", @rfgCountyChoice
+          puts
+          print "--------------------------------->>>>>>>>> Project qual County: ", project.datapoints[m]["values"]
+          puts
+          print "@QualificationCounty: ", @QualificationCounty
+          puts
+          
         when "DMA (US)"
           @QualificationDMA = false
           (0..project.datapoints[m]["values"].length-1).each do |i|
@@ -3508,21 +3526,6 @@ class UsersController < ApplicationController
           # puts
           print "@QualificationDMA: ", @QualificationDMA
           puts         
-          
-        # when "County (US)"
-#           @QualificationCounty = false
-#           (0..project.datapoints[m]["values"].length-1).each do |i|
-#             if project.datapoints[m]["values"][i]["choice"] == @County.to_i then
-#               @QualificationCounty = true
-#             else
-#             end
-#           end
-#           # print "County for user zipcode: ", @County
-#           # puts
-#           # print "Project qual County: ", project.datapoints[m]["values"]
-#           # puts
-#           print "@QualificationCounty: ", @QualificationCounty
-#           puts
                     
         when "State (US)"
           @QualificationState = false
@@ -3587,6 +3590,8 @@ class UsersController < ApplicationController
         puts
         print "Children = ", (@QualificationChildren)
         puts
+        print "County = ", (@QualificationCounty)
+        puts
         print "DMA = ", (@QualificationDMA)
         puts
         print "State = ", (@QualificationState)
@@ -3597,8 +3602,8 @@ class UsersController < ApplicationController
         puts
         
          
-        if ( ( (project.country == "US") && (user.netid != "FmsuA567rw21345f54rrLLswaxzAHnms") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) ) || 
-           ( (project.country == "US") && (user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms") && (project.mobileOptimized == "confirmed") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) ) )
+        if ( ( (project.country == "US") && (user.netid != "FmsuA567rw21345f54rrLLswaxzAHnms") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationCounty) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) ) || 
+           ( (project.country == "US") && (user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms") && (project.mobileOptimized == "confirmed") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationCounty) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) ) )
           
           then
           
@@ -3629,6 +3634,7 @@ class UsersController < ApplicationController
               @QualificationChildren = true
               @QualificationEducation = true
               @QualificationEmployment = true
+              @QualificationCounty = true
               @QualificationDMA = true
               @QualificationState = true
               @QualificationRegion = true
@@ -3645,7 +3651,7 @@ class UsersController < ApplicationController
                 # puts
                 # print "Project quota age: ", project.quotas[j]["datapoints"][n]["values"]
                 # puts
-                print "@QualificationAge: ", @QualificationAge
+                print "Quota for @QualificationAge: ", @QualificationAge
                 puts
             
               when "Gender"
@@ -3662,7 +3668,7 @@ class UsersController < ApplicationController
                 # puts
                 # print "Project quota gender: ", project.quotas[j]["datapoints"][n]["values"]
                 # puts
-                print "@QualificationGender: ", @QualificationGender
+                print "Quota for @QualificationGender: ", @QualificationGender
                 puts
             
               when "List of Zips"
@@ -3677,7 +3683,7 @@ class UsersController < ApplicationController
                 # puts
                 # print "Project quota zip: ", project.quotas[j]["datapoints"][n]["values"]
                 # puts
-                print "@QualificationZip: ", @QualificationZip
+                print "Quota for @QualificationZip: ", @QualificationZip
                 puts
             
               when "Household Income"
@@ -3733,7 +3739,7 @@ class UsersController < ApplicationController
                 # puts
                 # print "Project HHI quota: ", project.quotas[j]["datapoints"][n]["values"]
                 # puts
-                print "@QualificationHhi: ", @QualificationHhi
+                print "Quota for @QualificationHhi: ", @QualificationHhi
                 puts
             
               when "Employment Industry"
@@ -4060,7 +4066,7 @@ class UsersController < ApplicationController
                 # puts
                 # print "Project quota Pindustry: ", project.quotas[j]["datapoints"][n]["values"]
                 # puts
-                print "@QualificationPindustry: ", @QualificationPindustry
+                print "Quota for @QualificationPindustry: ", @QualificationPindustry
                 puts
                   
               when "Children"
@@ -4086,9 +4092,9 @@ class UsersController < ApplicationController
                 end
                 print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User entered Children: ", user.children
                 puts
-                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project qual Children: ", project.quotas[j].datapoints[n]["values"]
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project quota Children: ", project.quotas[j].datapoints[n]["values"]
                 puts
-                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> @QualificationChildren: ", @QualificationChildren
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Quota for @QualificationChildren: ", @QualificationChildren
                 puts    
               
               
@@ -4135,7 +4141,7 @@ class UsersController < ApplicationController
                   # puts
                   # print "Project quota Education: ", project.quotas[j]["datapoints"][n]["values"]
                   # puts
-                  print "@QualificationEducation: ", @QualificationEducation
+                  print "Quota for @QualificationEducation: ", @QualificationEducation
                   puts
                         
                 when "Employment Status"
@@ -4183,9 +4189,24 @@ class UsersController < ApplicationController
               # puts
               # print "Project quota Employment: ", project.quotas[j]["datapoints"][n]["values"]
               # puts
-              print "@QualificationEmployment: ", @QualificationEmployment
+              print "Quota for @QualificationEmployment: ", @QualificationEmployment
               puts
           
+            when "County (US)"
+              @QualificationCounty = false
+              (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                if project.quotas[j]["datapoints"][n]["values"][i]["choice"] == @rfgCountyChoice then
+                  @QualificationCounty = true
+                else
+                end
+              end
+              print "--------------------------------->>>>>>>>> County for user zipcode quota: ", @rfgCountyChoice
+              puts
+              print "--------------------------------->>>>>>>>> Project quota County: ", project.quotas[j]["datapoints"][n]["values"]
+              puts
+              print "Quota for @QualificationCounty: ", @QualificationCounty
+              puts
+            
             when "DMA (US)"
               @QualificationDMA = false
               (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
@@ -4198,7 +4219,7 @@ class UsersController < ApplicationController
               # puts
               # print "Project quota DMA: ", project.quotas[j]["datapoints"][n]["values"]
               # puts
-              print "@QualificationDMA: ", @QualificationDMA
+              print "Quota for @QualificationDMA: ", @QualificationDMA
               puts
                     
             when "State (US)"
@@ -4213,7 +4234,7 @@ class UsersController < ApplicationController
               # puts
               # print "Project quota State: ", project.quotas[j]["datapoints"][n]["values"]
               # puts
-              print "@QualificationState: ", @QualificationState
+              print "Quota for @QualificationState: ", @QualificationState
               puts
           
             when "Region (US)"
@@ -4228,7 +4249,7 @@ class UsersController < ApplicationController
               # puts
               # print "Project quota Region: ", project.quotas[j]["datapoints"][n]["values"]
               # puts
-              print "@QualificationRegion: ", @QualificationRegion
+              print "Quota for @QualificationRegion: ", @QualificationRegion
               puts          
               
               end # case statement
@@ -4263,6 +4284,8 @@ class UsersController < ApplicationController
               puts
               print "Children = ", (@QualificationChildren)
               puts
+              print "County = ", (@QualificationCounty)
+              puts
               print "DMA = ", (@QualificationDMA)
               puts
               print "State = ", (@QualificationState)
@@ -4272,7 +4295,7 @@ class UsersController < ApplicationController
               print "CompletesLeft = ", (@QuotaCompletesLeft)
               puts          
               
-              if ( (project.country == "US") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry )  && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationEducation) && (@QualificationChildren) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QuotaCompletesLeft) ) then
+              if ( (project.country == "US") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry )  && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationEducation) && (@QualificationChildren) && (@QualificationCounty) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QuotaCompletesLeft) ) then
               
                 @RFGQuotaIsAvailable = true
                 puts "******* Quota is available"
@@ -5200,11 +5223,7 @@ class UsersController < ApplicationController
               @QualificationPindustry = true
               @QualificationChildren = true
               @QualificationEducation = true
-              @QualificationEmployment = true
-              @QualificationDMA = true
-              @QualificationState = true
-              @QualificationRegion = true
-              
+              @QualificationEmployment = true              
                                         
               case project.quotas[j]["datapoints"][n]["name"]
               when "Age"
@@ -5217,7 +5236,7 @@ class UsersController < ApplicationController
                 # puts
                 # print "Project quota age: ", project.quotas[j]["datapoints"][n]["values"]
                 # puts
-                # print "@QualificationAge: ", @QualificationAge
+                # print "Quota for @QualificationAge: ", @QualificationAge
                 # puts
             
               when "Gender"
@@ -5234,7 +5253,7 @@ class UsersController < ApplicationController
                 # puts
                 # print "Project quota gender: ", project.quotas[j]["datapoints"][n]["values"]
                 # puts
-                # print "@QualificationGender: ", @QualificationGender
+                # print "Quota for @QualificationGender: ", @QualificationGender
                 # puts
             
               when "List of FSAs (CA)"
@@ -5250,7 +5269,7 @@ class UsersController < ApplicationController
                 # print "User entered SLICED zip: ", user.ZIP.slice(0..2)
                 # puts
                 #
-                # print "@QualificationZip: ", @QualificationZip
+                # print "Quota for @QualificationZip: ", @QualificationZip
                 # puts
             
               when "Household Income"
@@ -5301,7 +5320,7 @@ class UsersController < ApplicationController
                 # puts
                 # print "Project HHI quota: ", project.quotas[j]["datapoints"][n]["values"]
                 # puts
-                # print "@QualificationHhi: ", @QualificationHhi
+                # print "Quota for @QualificationHhi: ", @QualificationHhi
                 # puts
                   
                   
@@ -5629,7 +5648,7 @@ class UsersController < ApplicationController
                 # puts
                 # print "Project quota Pindustry: ", project.quotas[j]["datapoints"][n]["values"]
                 # puts
-                # print "@QualificationPindustry: ", @QualificationPindustry
+                # print "Quota for @QualificationPindustry: ", @QualificationPindustry
                 # puts
               
               when "Children"
@@ -5655,9 +5674,9 @@ class UsersController < ApplicationController
                 end
                 print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User entered Children: ", user.children
                 puts
-                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project qual Children: ", project.quotas[j].datapoints[n]["values"]
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project quota Children: ", project.quotas[j].datapoints[n]["values"]
                 puts
-                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> @QualificationChildren: ", @QualificationChildren
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Quota for @QualificationChildren: ", @QualificationChildren
                 puts    
               
              
@@ -5719,7 +5738,7 @@ class UsersController < ApplicationController
                 # puts
                 # print "Project quota Education: ", project.quotas[j]["datapoints"][n]["values"]
                 # puts
-                # print "@QualificationEducation: ", @QualificationEducation
+                # print "Quota for @QualificationEducation: ", @QualificationEducation
                 # puts
                         
                 when "Employment Status"
@@ -5767,7 +5786,7 @@ class UsersController < ApplicationController
               # puts
               # print "Project quota Employment: ", project.quotas[j]["datapoints"][n]["values"]
               # puts
-              # print "@QualificationEmployment: ", @QualificationEmployment
+              # print "Quota for @QualificationEmployment: ", @QualificationEmployment
               # puts
               
               end # case
@@ -6701,10 +6720,6 @@ class UsersController < ApplicationController
               @QualificationChildren = true
               @QualificationEducation = true
               @QualificationEmployment = true
-              @QualificationDMA = true
-              @QualificationState = true
-              @QualificationRegion = true
-              
                                         
               case project.quotas[j]["datapoints"][n]["name"]
               when "Age"
@@ -6717,7 +6732,7 @@ class UsersController < ApplicationController
                 puts
                 print "Project quota age: ", project.quotas[j]["datapoints"][n]["values"]
                 puts
-                print "@QualificationAge: ", @QualificationAge
+                print "Quota for @QualificationAge: ", @QualificationAge
                 puts
             
               when "Gender"
@@ -6734,7 +6749,7 @@ class UsersController < ApplicationController
                 puts
                 print "Project quota gender: ", project.quotas[j]["datapoints"][n]["values"]
                 puts
-                print "@QualificationGender: ", @QualificationGender
+                print "Quota for @QualificationGender: ", @QualificationGender
                 puts
             
               # when "List of FSAs (AU)"
@@ -6750,7 +6765,7 @@ class UsersController < ApplicationController
 #                 print "User entered SLICED zip: ", user.ZIP.slice(0..2)
 #                 puts
 #
-#                 print "@QualificationZip: ", @QualificationZip
+#                 print "Quota for @QualificationZip: ", @QualificationZip
 #                 puts
             
               when "Household Income"
@@ -6801,7 +6816,7 @@ class UsersController < ApplicationController
                 # puts
                 # print "Project HHI quota: ", project.quotas[j]["datapoints"][n]["values"]
                 # puts
-                # print "@QualificationHhi: ", @QualificationHhi
+                # print "Quota for @QualificationHhi: ", @QualificationHhi
                 # puts
                   
                   
@@ -7129,7 +7144,7 @@ class UsersController < ApplicationController
                 # puts
                 # print "Project quota Pindustry: ", project.quotas[j]["datapoints"][n]["values"]
                 # puts
-                # print "@QualificationPindustry: ", @QualificationPindustry
+                # print "Quota for @QualificationPindustry: ", @QualificationPindustry
                 # puts
                   
               when "Children"
@@ -7155,9 +7170,9 @@ class UsersController < ApplicationController
                 end
                 print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User entered Children: ", user.children
                 puts
-                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project qual Children: ", project.quotas[j].datapoints[n]["values"]
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project quota Children: ", project.quotas[j].datapoints[n]["values"]
                 puts
-                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> @QualificationChildren: ", @QualificationChildren
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Quota for @QualificationChildren: ", @QualificationChildren
                 puts    
                 
               # when "Children Age and Gender"
@@ -7218,7 +7233,7 @@ class UsersController < ApplicationController
                       # puts
                       # print "Project quota Education: ", project.quotas[j]["datapoints"][n]["values"]
                       # puts
-                      # print "@QualificationEducation: ", @QualificationEducation
+                      # print "Quota for @QualificationEducation: ", @QualificationEducation
                       # puts
                         
                 when "Employment Status"
@@ -7266,7 +7281,7 @@ class UsersController < ApplicationController
               # puts
               # print "Project quota Employment: ", project.quotas[j]["datapoints"][n]["values"]
               # puts
-              # print "@QualificationEmployment: ", @QualificationEmployment
+              # print "Quota for @QualificationEmployment: ", @QualificationEmployment
               # puts
               
               end # case
