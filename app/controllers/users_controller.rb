@@ -2340,7 +2340,7 @@ class UsersController < ApplicationController
     print "*************************************** RankFEDSurveys: User platform is: ", @parsed_user_agent.platform
     puts
     
-    if @parsed_user_agent.platform == 'iPhone' then
+    if (@parsed_user_agent.platform == 'iPhone') || (@parsed_user_agent.platform.include? "Android") then
       
       @MS_is_mobile = '&MS_is_mobile=true'
       p "*************************************** UserRide: MS_is_mobile is set TRUE"
@@ -2382,7 +2382,6 @@ class UsersController < ApplicationController
       print "**************** Assigned RFG @rid = ", @rid
       puts
      
-    
     if user.country == '9' then
       @geo = UsGeo.find_by zip: user.ZIP
       
@@ -2648,13 +2647,13 @@ class UsersController < ApplicationController
           puts
         end # case
         
+        print "------------------------>>>>>>>>>>>>>>>>>> User geo credentials in RFG are - Zip: ", user.ZIP, " DMA: ", @DMARegionCode, " Region: ", @regionPrecode, " Division: ", @divisionPrecode
+        puts
+        
       end # if @geo = nil
-      
+           
     else
-    end # if country = 9
-    
-    print "------------------------>>>>>>>>>>>>>>>>>> User geo credentials in RFG are - Zip: ", user.ZIP, " DMA: ", @DMARegionCode, " Region: ", @regionPrecode, " Division: ", @divisionPrecode
-    puts
+    end # if country = 9    
          
     if user.country == '9' then
       user_country = "US"
@@ -2745,6 +2744,7 @@ class UsersController < ApplicationController
         # Initialize qualification parameters to true. These are turned false if user does not qualify
         @QualificationAge = true
         @QualificationGender = true
+        @QualificationComputer = true
         @QualificationZip = true
         @QualificationHhi = true
         @QualificationPindustry = true
@@ -2791,6 +2791,22 @@ class UsersController < ApplicationController
             # print "Project qual gender: ", project.datapoints[m]["values"]
             # puts
             print "@QualificationGender: ", @QualificationGender
+            puts
+            
+            
+          when "Computer Check"
+            @QualificationComputer = false
+            (0..project.datapoints[m]["values"].length-1).each do |i|
+             if ((((project.datapoints[m]["values"][i]["choice"] == 1) || (project.datapoints[m]["values"][i]["choice"] == 2) || (project.datapoints[m]["values"][i]["choice"] == 4) || (project.datapoints[m]["values"][i]["choice"] == 5)) && (@MS_is_mobile == '&MS_is_mobile=false')) || (((project.datapoints[m]["values"][i]["choice"] == 3)) && (@MS_is_mobile == '&MS_is_mobile=true'))) then 
+               @QualificationComputer = true
+             else
+             end
+            end
+            print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>User computer type: ", @MS_is_mobile
+            puts
+            print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Project qualified computer types: ", project.datapoints[m]["values"]
+            puts
+            print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>@QualificationComputer: ", @QualificationComputer
             puts
             
           when "List of Zips"
@@ -3574,6 +3590,8 @@ class UsersController < ApplicationController
         puts
         print "Gender = ", (@QualificationGender)
         puts
+        print "Computer = ", (@QualificationComputer)
+        puts
         print "Zip = ", (@QualificationZip)
         puts
         print "HHI = ", (@QualificationHhi)
@@ -3602,8 +3620,8 @@ class UsersController < ApplicationController
         puts
         
          
-        if ( ( (project.country == "US") && (user.netid != "FmsuA567rw21345f54rrLLswaxzAHnms") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationCounty) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) ) || 
-           ( (project.country == "US") && (user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms") && (project.mobileOptimized == "confirmed") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationCounty) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) ) )
+        if ( ( (project.country == "US") && (user.netid != "FmsuA567rw21345f54rrLLswaxzAHnms") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && (@QualificationComputer) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationCounty) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) ) || 
+           ( (project.country == "US") && (user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms") && (project.mobileOptimized == "confirmed") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && (@QualificationComputer) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationCounty) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QualificationJobTitle) && (@QualificationEthnicity) ) )
           
           then
           
@@ -3628,6 +3646,7 @@ class UsersController < ApplicationController
               # Assume quota per qualifications is available. These are turned false if user does not qualify
               @QualificationAge = true
               @QualificationGender = true
+              @QualificationComputer = true
               @QualificationZip = true
               @QualificationHhi = true
               @QualificationPindustry = true
@@ -3670,6 +3689,22 @@ class UsersController < ApplicationController
                 # puts
                 print "Quota for @QualificationGender: ", @QualificationGender
                 puts
+                
+              when "Computer Check"
+                @QualificationComputer = false
+                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                 if ((((project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 1) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5)) && (@MS_is_mobile == '&MS_is_mobile=false')) || (((project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3)) && (@MS_is_mobile == '&MS_is_mobile=true'))) then 
+                   @QualificationComputer = true
+                 else
+                 end
+                end
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>User computer type: ", @MS_is_mobile
+                puts
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Project quota for computer types: ", project.quotas[j]["datapoints"][n]["values"]
+                puts
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>@QualificationComputer: ", @QualificationComputer
+                puts
+                
             
               when "List of Zips"
                 @QualificationZip = false
@@ -4272,6 +4307,8 @@ class UsersController < ApplicationController
               puts
               print "Gender = ", (@QualificationGender)
               puts
+              print "Computer = ", (@QualificationComputer)
+              puts
               print "Zip = ", (@QualificationZip)
               puts
               print "HHI = ", (@QualificationHhi)
@@ -4295,7 +4332,7 @@ class UsersController < ApplicationController
               print "CompletesLeft = ", (@QuotaCompletesLeft)
               puts          
               
-              if ( (project.country == "US") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry )  && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationEducation) && (@QualificationChildren) && (@QualificationCounty) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QuotaCompletesLeft) ) then
+              if ( (project.country == "US") && ( @QualificationAge ) && ( @QualificationGender ) && (@QualificationComputer) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry )  && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationEducation) && (@QualificationChildren) && (@QualificationCounty) && (@QualificationDMA) && (@QualificationState) && (@QualificationRegion) && (@QuotaCompletesLeft) ) then
               
                 @RFGQuotaIsAvailable = true
                 puts "******* Quota is available"
@@ -4470,6 +4507,7 @@ class UsersController < ApplicationController
         # Initialize qualification parameters to true. These are turned false if user does not qualify
         @QualificationAge = true
         @QualificationGender = true
+        @QualificationComputer = true
         @QualificationZip = true
         @QualificationHhi = true
         @QualificationPindustry = true
@@ -4513,6 +4551,24 @@ class UsersController < ApplicationController
            #  puts
            #  print "@QualificationGender: ", @QualificationGender
            #  puts
+           
+           
+         when "Computer Check"
+           @QualificationComputer = false
+           (0..project.datapoints[m]["values"].length-1).each do |i|
+            if ((((project.datapoints[m]["values"][i]["choice"] == 1) || (project.datapoints[m]["values"][i]["choice"] == 2) || (project.datapoints[m]["values"][i]["choice"] == 4) || (project.datapoints[m]["values"][i]["choice"] == 5)) && (@MS_is_mobile == '&MS_is_mobile=false')) || (((project.datapoints[m]["values"][i]["choice"] == 3)) && (@MS_is_mobile == '&MS_is_mobile=true'))) then 
+              @QualificationComputer = true
+            else
+            end
+           end
+           print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>User computer type: ", @MS_is_mobile
+           puts
+           print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Project qualified computer types: ", project.datapoints[m]["values"]
+           puts
+           print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>@QualificationComputer: ", @QualificationComputer
+           puts
+           
+           
             
           when "List of FSAs (CA)"
             @QualificationZip = false
@@ -5177,6 +5233,8 @@ class UsersController < ApplicationController
         puts
         print "Gender = ", (@QualificationGender)
         puts
+        print "Computer = ", (@QualificationComputer)
+        puts
         print "Zip = ", (@QualificationZip)
         puts
         print "HHI = ", (@QualificationHhi)
@@ -5195,7 +5253,7 @@ class UsersController < ApplicationController
         puts
         
          
-        if ( (project.country == "CA") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationJobTitle) && (@QualificationEthnicity) ) then
+        if ( (project.country == "CA") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && (@QualificationComputer) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationJobTitle) && (@QualificationEthnicity) ) then
           
           @RFGQualifiedProjects << project.rfg_id
           
@@ -5218,6 +5276,7 @@ class UsersController < ApplicationController
               # Assume quota per qualifications is available. These are turned false if user does not qualify
               @QualificationAge = true
               @QualificationGender = true
+              @QualificationComputer = true
               @QualificationZip = true
               @QualificationHhi = true
               @QualificationPindustry = true
@@ -5255,6 +5314,24 @@ class UsersController < ApplicationController
                 # puts
                 # print "Quota for @QualificationGender: ", @QualificationGender
                 # puts
+                
+                
+              when "Computer Check"
+                @QualificationComputer = false
+                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                 if ((((project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 1) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5)) && (@MS_is_mobile == '&MS_is_mobile=false')) || (((project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3)) && (@MS_is_mobile == '&MS_is_mobile=true'))) then 
+                   @QualificationComputer = true
+                 else
+                 end
+                end
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>User computer type: ", @MS_is_mobile
+                puts
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Project quota for computer types: ", project.quotas[j]["datapoints"][n]["values"]
+                puts
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>@QualificationComputer: ", @QualificationComputer
+                puts
+                
+                
             
               when "List of FSAs (CA)"
                 @QualificationZip = false
@@ -5800,6 +5877,8 @@ class UsersController < ApplicationController
               puts
               print "Gender = ", (@QualificationGender)
               puts
+              print "Computer = ", (@QualificationComputer)
+              puts
               print "Zip = ", (@QualificationZip)
               puts
               print "HHI = ", (@QualificationHhi)
@@ -5814,7 +5893,7 @@ class UsersController < ApplicationController
               puts
                             
               
-              if ( (project.country == "CA") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEducation ) && (@QualificationEmployment) && (@QualificationChildren) && (project.quotas[j]["completesLeft"] > 0) ) then
+              if ( (project.country == "CA") && ( @QualificationAge ) && ( @QualificationGender ) && (@QualificationComputer) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEducation ) && (@QualificationEmployment) && (@QualificationChildren) && (project.quotas[j]["completesLeft"] > 0) ) then
               
                 @RFGQuotaIsAvailable = true
                 puts "******* Quota is available"
@@ -5969,6 +6048,7 @@ class UsersController < ApplicationController
         # Initialize qualification parameters to true. These are turned false if user does not qualify
         @QualificationAge = true
         @QualificationGender = true
+        @QualificationComputer = true
         @QualificationZip = true
         @QualificationHhi = true
         @QualificationPindustry = true
@@ -6012,6 +6092,24 @@ class UsersController < ApplicationController
             # puts
             # print "@QualificationGender: ", @QualificationGender
             # puts
+            
+            
+          when "Computer Check"
+            @QualificationComputer = false
+            (0..project.datapoints[m]["values"].length-1).each do |i|
+             if ((((project.datapoints[m]["values"][i]["choice"] == 1) || (project.datapoints[m]["values"][i]["choice"] == 2) || (project.datapoints[m]["values"][i]["choice"] == 4) || (project.datapoints[m]["values"][i]["choice"] == 5)) && (@MS_is_mobile == '&MS_is_mobile=false')) || (((project.datapoints[m]["values"][i]["choice"] == 3)) && (@MS_is_mobile == '&MS_is_mobile=true'))) then 
+               @QualificationComputer = true
+             else
+             end
+            end
+            print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>User computer type: ", @MS_is_mobile
+            puts
+            print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Project qualified computer types: ", project.datapoints[m]["values"]
+            puts
+            print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>@QualificationComputer: ", @QualificationComputer
+            puts
+            
+            
             
           # when "List of FSAs (AU)"
 #             @QualificationZip = false
@@ -6673,6 +6771,8 @@ class UsersController < ApplicationController
         puts
         print "Gender = ", (@QualificationGender)
         puts
+        print "Computer = ", (@QualificationComputer)
+        puts
         print "Zip = ", (@QualificationZip)
         puts
         print "HHI = ", (@QualificationHhi)
@@ -6691,7 +6791,7 @@ class UsersController < ApplicationController
         puts
         
          
-        if ( (project.country == "AU") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationJobTitle) && (@QualificationEthnicity) ) then
+        if ( (project.country == "AU") && ( project.projectStillLive ) && (project.cpi > @currentpayoutstr) && ( @QualificationAge ) && ( @QualificationGender ) && (@QualificationComputer) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEmployment ) && (@QualificationChildren) && (@QualificationJobTitle) && (@QualificationEthnicity) ) then
           
           @RFGQualifiedProjects << project.rfg_id
           
@@ -6714,6 +6814,7 @@ class UsersController < ApplicationController
               # Assume quota per qualifications is available. These are turned false if user does not qualify
               @QualificationAge = true
               @QualificationGender = true
+              @QualificationComputer = true
               @QualificationZip = true
               @QualificationHhi = true
               @QualificationPindustry = true
@@ -6751,6 +6852,24 @@ class UsersController < ApplicationController
                 puts
                 print "Quota for @QualificationGender: ", @QualificationGender
                 puts
+                
+                
+              when "Computer Check"
+                @QualificationComputer = false
+                (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                 if ((((project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 1) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) || (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5)) && (@MS_is_mobile == '&MS_is_mobile=false')) || (((project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3)) && (@MS_is_mobile == '&MS_is_mobile=true'))) then 
+                   @QualificationComputer = true
+                 else
+                 end
+                end
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>User computer type: ", @MS_is_mobile
+                puts
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Project quota for computer types: ", project.quotas[j]["datapoints"][n]["values"]
+                puts
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>@QualificationComputer: ", @QualificationComputer
+                puts
+                
+                
             
               # when "List of FSAs (AU)"
 #                 @QualificationZip = false
@@ -7295,6 +7414,8 @@ class UsersController < ApplicationController
               puts
               print "Gender = ", (@QualificationGender)
               puts
+              print "Computer = ", (@QualificationComputer)
+              puts
               print "Zip = ", (@QualificationZip)
               puts
               print "HHI = ", (@QualificationHhi)
@@ -7309,7 +7430,7 @@ class UsersController < ApplicationController
               puts
                             
               
-              if ( (project.country == "AU") && ( @QualificationAge ) && ( @QualificationGender ) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEducation ) && (@QualificationEmployment) && (@QualificationChildren) && (project.quotas[j]["completesLeft"] > 0) ) then
+              if ( (project.country == "AU") && ( @QualificationAge ) && ( @QualificationGender ) && (@QualificationComputer) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEducation ) && (@QualificationEmployment) && (@QualificationChildren) && (project.quotas[j]["completesLeft"] > 0) ) then
               
                 @RFGQuotaIsAvailable = true
                 puts "******* Quota is available"
@@ -7891,6 +8012,19 @@ class UsersController < ApplicationController
           end while @SS3PostBack.code != 200    
       else
       end
+      
+      if user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
+
+        begin
+          @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+         rescue HTTParty::Error => e
+           puts 'HttParty::Error '+ e.message
+          retry
+        end while @RadiumOnePostBack.code != 200
+
+      else
+      end  
+      
         
       # Keep a count of Test completes on each Network
   
@@ -7940,6 +8074,11 @@ class UsersController < ApplicationController
       
       if user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
         @net_name = "MemoLink"
+      else
+      end
+      
+      if user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
+        @net_name = "RadiumOne2"
       else
       end
     

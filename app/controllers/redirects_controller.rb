@@ -211,11 +211,16 @@ class RedirectsController < ApplicationController
               else
               end 
               
+              if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
+                @net_name = "RadiumOne2"
+              else
+              end         
+            
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
               else
-              end             
-            
+              end    
+                            
               @user.SurveysCompleted[params[:PID]] = [Time.now, 'P2Ssurvey', 'P2S', '$1.25', @user.clickid, @net_name]
               @user.save
             
@@ -291,6 +296,18 @@ class RedirectsController < ApplicationController
                           retry
                 end while @SS3PostBack.code != 200
     
+              else
+              end
+              
+              if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
+     
+                begin
+                  @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                   rescue HTTParty::Error => e
+                     puts 'HttParty::Error '+ e.message
+                     retry
+                end while @RadiumOnePostBack.code != 200
+  
               else
               end
                                                
@@ -400,11 +417,15 @@ class RedirectsController < ApplicationController
               else
               end           
               
+              if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
+                @net_name = "RadiumOne2"
+              else
+              end
+              
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
               else
               end
-             
              
               @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'RFG', @project.cpi, @user.clickid, @net_name]
               @user.save
@@ -510,6 +531,18 @@ class RedirectsController < ApplicationController
     
               else
               end
+              
+              if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
+     
+                begin
+                  @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                   rescue HTTParty::Error => e
+                     puts 'HttParty::Error '+ e.message
+                     retry
+                  end while @RadiumOnePostBack.code != 200
+  
+              else
+              end
                            
               # Keep a count of completes on all Networks
             
@@ -598,7 +631,12 @@ class RedirectsController < ApplicationController
               if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
                 @net_name = "MemoLink"
               else
-              end              
+              end   
+              
+              if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
+                @net_name = "RadiumOne2"
+              else
+              end           
               
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
@@ -711,6 +749,18 @@ class RedirectsController < ApplicationController
                           retry
                 end while @SS3PostBack.code != 200
     
+              else
+              end
+              
+              if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
+                  
+                  begin
+                    @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                     rescue HTTParty::Error => e
+                       puts 'HttParty::Error '+ e.message
+                       retry
+                  end while @RadiumOnePostBack.code != 200
+  
               else
               end
                                      
