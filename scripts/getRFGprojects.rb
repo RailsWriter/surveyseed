@@ -68,9 +68,9 @@ begin
         print '************ Processing an EXISTING project:', @project.rfg_id
         puts
         
-        if RFGProjectsIndex["response"]["projects"][i]["lastModified"] == @project.lastModified then
-          skipProject = true # no need to update if no modifications
-        else
+        # if RFGProjectsIndex["response"]["projects"][i]["lastModified"] == @project.lastModified then
+#           skipProject = true # no need to update if no modifications
+#         else
           
           @project.title = RFGProjectsIndex["response"]["projects"][i]["title"]
           @project.cpi = RFGProjectsIndex["response"]["projects"][i]["cpi"]
@@ -98,7 +98,7 @@ begin
           
           @project.save
         
-        end # if lastModified
+        # end # if lastModified
         
       end # do existingproject
       
@@ -106,7 +106,7 @@ begin
     
       puts '************ Processing a NEW project'
       if ((RFGProjectsIndex["response"]["projects"][i]["country"] == "CA") || (RFGProjectsIndex["response"]["projects"][i]["country"] == "US") || (RFGProjectsIndex["response"]["projects"][i]["country"] == "AU")) &&
-        ( RFGProjectsIndex["response"]["projects"][i]["cpi"] > "$0.99" ) then
+        ( RFGProjectsIndex["response"]["projects"][i]["cpi"] > "$1.24" ) then
       
         @project = RfgProject.new
         @project.rfg_id = RFGProjectsIndex["response"]["projects"][i]["rfg_id"]
