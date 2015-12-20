@@ -1877,7 +1877,8 @@ puts
   #   This section is there to remove old dead surveys.
     
   Survey.all.each do |oldsurvey| #do21
-    if surveysnottobedeleted.include? (oldsurvey.SurveyNumber) then
+    # if surveysnottobedeleted.include? (oldsurvey.SurveyNumber) then
+    if ((oldsurvey.SurveyGrossRank < 700) || (!oldsurvey.SurveyGrossRank > 800)) && (surveysnottobedeleted.include? (oldsurvey.SurveyNumber)) then
      # do nothing
     else
       if oldsurvey.SurveySID == "DONOTDELETE" then
