@@ -68,7 +68,6 @@ begin
 
   # Check if any survey has allocation remaining, and get current qualifications and current quota.
 
-
   (0..totalavailablesurveys).each do |i|
     @surveynumber = IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["SurveyNumber"]
     if (Survey.where("SurveyNumber = ?", @surveynumber)).exists? then 
@@ -487,11 +486,11 @@ begin
       
       end # do the survey block
       
-      else
-        # Survey number does not exist. This is a NEW entry from allocation, get qualifications, quotas, and supplierlinks for it and create as new if the survey meets our biz requirements of countrylanguage, studytype, etc.        
+    else
+      # Survey number does not exist. This is a NEW entry from allocation, get qualifications, quotas, and supplierlinks for it and create as new if the survey meets our biz requirements of countrylanguage, studytype, etc.        
 
  
-        if (((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9)) && ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 11) ||  (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23))) then
+      if (((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9)) && ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == nil ) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 1) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 11) ||  (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 13) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 14) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 15) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 16) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 17) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 19) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 21) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["StudyTypeID"] == 23))) then
       
           print '***************************** Biz Criteria match: CountryLanguageID match is True or False: ', ((IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == nil ) ||      (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 5) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 6) || (IndexofAllocatedSurveys["SupplierAllocationSurveys"][i]["CountryLanguageID"] == 9))
           puts
@@ -1061,36 +1060,35 @@ puts
         end # download a new survey if the new survey qualifies for being suitable from countrylanguageID, studytypeID, and BidLOI criteria
 
 
-      end # if @surveynumber exists  
-      print '******************* Updating totalavailablesurveys at count i = ', i   
-      puts
+    end # if @surveynumber exists  
+    print '******************* Updating totalavailablesurveys at count i = ', i   
+    puts
   
+  end # do loop of totalavailablesurveys (i)
   
-      # RANK the stack after every 60 minutes    
-      # Legend:
-      # 1-95 : Fast Converters
-      # 96-100 : Place for manually adding surveys for fast hits
-      # 101-200 : Brand New+Conv>0
-      # 201-300 : Try More
-      # 301-400 : Try another 5 attempts
-      # 401-500 : Poor (New+Conv=0)
-      # 501-600 : Bad
-      # 601-700 : Horrible
-      # 701-800 : Dead
-      # 801-900 : Ignore
+  # RANK the stack after every 60 minutes    
+  # Legend:
+  # 1-95 : Fast Converters
+  # 96-100 : Place for manually adding surveys for fast hits
+  # 101-200 : Brand New+Conv>0
+  # 201-300 : Try More
+  # 301-400 : Try another 5 attempts
+  # 401-500 : Poor (New+Conv=0)
+  # 501-600 : Bad
+  # 601-700 : Horrible
+  # 701-800 : Dead
+  # 801-900 : Ignore
 
            
 #      if (i == 30000) || ((Time.now - @lastrankingtime) >= 300000) then    
       
-      if (i == 1) || ((Time.now - @lastrankingtime) >= 3600) then    
-          
-        @lastrankingtime = Time.now
+      # if (i == 1) || ((Time.now - @lastrankingtime) >= 3600) then
+     #
+     #    @lastrankingtime = Time.now
+     #
+     #    print "******************** Last ranking time for better surveys: ", @lastrankingtime
+     #    puts     
         
-        
-        print "******************** Last ranking time for better surveys: ", @lastrankingtime
-        puts        
-        
-      #  Survey.all.each do |toberankedsurvey|
         Survey.where("SurveyGrossRank < ?", 501).each do |toberankedsurvey|
     
           # Fast Converters 1-95
@@ -1588,19 +1586,19 @@ puts
         puts
         
         end # do for all toberankedsurvey 
-      else
-        # i is not 1 and it has not been 30 mins since last ranking, so do nothing
-      end # time for ranking
+      # else
+#         # i is not 1 and it has not been 30 mins since last ranking, so do nothing
+#       end # time for ranking
       
-      print "******************** Last ranking time for better surveys: ", @lastrankingtime
-      puts
+      # print "******************** Last ranking time for better surveys: ", @lastrankingtime
+#       puts
       
-      if ((Time.now - @lastrankingtimeforpoorsurveys) >= 36000) then    
-
-        @lastrankingtimeforpoorsurveys = Time.now
-        
-        print "******************** Last ranking time for POOR surveys: ", @lastrankingtimeforpoorsurveys
-        puts  
+      # if ((Time.now - @lastrankingtimeforpoorsurveys) >= 36000) then
+#
+#         @lastrankingtimeforpoorsurveys = Time.now
+#
+#         print "******************** Last ranking time for POOR surveys: ", @lastrankingtimeforpoorsurveys
+#         puts 
         
         Survey.where("SurveyGrossRank > ?", 500).each do |toberankedsurvey|
 
@@ -1835,15 +1833,15 @@ puts
         
         end # do for all toberankedsurvey 
       
-      else
-        # i is not 1 and it has not been 60 mins since last ranking, so do nothing
-      end # time for ranking
-      
-      print "******************** Last ranking time for POOR surveys: ", @lastrankingtimeforpoorsurveys
-      puts
+      # else
+#         # i is not 1 and it has not been 60 mins since last ranking, so do nothing
+#       end # time for ranking
+#
+#       print "******************** Last ranking time for POOR surveys: ", @lastrankingtimeforpoorsurveys
+#       puts
            
 
-  end # do loop of totalavailablesurveys (i)
+  # end # do loop of totalavailablesurveys (i)
     
   # Delete surveys which are neither custom entered nor on the allocation list but are in local database
     
