@@ -106,9 +106,13 @@ begin
         
         # First check if there are any completes needed.
         
-        survey.TotalRemaining = @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
+        if @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] == nil then 
+          survey.TotalRemaining = 0 
+        else
+          survey.TotalRemaining = @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
+        end
 
-        if ((@SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0) && (failcount1 < 10)) then
+        if ((survey.TotalRemaining > 0) && (failcount1 < 10)) then
           
           print "********************* There is total remaining allocation for this EXISTING survey number: ", @surveynumber, ' in the amount of: ', @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
           puts
@@ -118,8 +122,7 @@ begin
           
           
           # initialize failure count
-          failcount3 = 0
-          
+          failcount3 = 0          
           
           begin
             sleep(1)
@@ -568,12 +571,19 @@ puts
               retry
           end while ((@NewSupplierAllocations.code != 200) && (failcount2 < 10))
 
-          if ((@NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] > 0) && (failcount2 < 10)) then
+          if @NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] == nil then 
+            @newsurvey.TotalRemaining = 0 
+          else
+            @newsurvey.TotalRemaining = @NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
+          end
+
+
+          if ((@newsurvey.TotalRemaining > 0) && (failcount2 < 10)) then
           
             print '********************* There is total remaining allocation for this NEW survey number: ', SurveyNumber, ' in the amount of: ', @NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
             puts
             
-            @newsurvey.TotalRemaining = @NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
+            # @newsurvey.TotalRemaining = @NewSupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"]
 
         
       # Get Survey Qualifications Information by SurveyNumber
