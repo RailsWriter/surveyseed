@@ -1320,7 +1320,7 @@ class UsersController < ApplicationController
     @usercountry = (user.country).to_i
 
     # Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
-    Survey.where("CountryLanguageID = ? AND SurveyGrossRank <= ? AND SurveyStillLive = ? AND CPI >= ?", @usercountry, 500, true, @currentpayout).order( "SurveyGrossRank" ).each do |survey|
+    Survey.where("CountryLanguageID = ? AND SurveyGrossRank < ? AND SurveyStillLive = ? AND CPI >= ?", @usercountry, 400, true, @currentpayout).order( "SurveyGrossRank" ).each do |survey|
 
 
       if @foundtopsurveyswithquota == false then  #3 false means not finished finding top surveys
