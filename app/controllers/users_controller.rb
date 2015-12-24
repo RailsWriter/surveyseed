@@ -127,7 +127,6 @@ class UsersController < ApplicationController
         @user.number_of_attempts_in_last_24hrs=1
         @user.attempts_time_stamps_array = [Time.now]
         @user.save
-        p @user
         redirect_to '/users/tos'
       else
       end    
@@ -160,7 +159,6 @@ class UsersController < ApplicationController
           user.attempts_time_stamps_array = user.attempts_time_stamps_array + [Time.now]
           user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
           user.save
-          p user
           redirect_to '/users/tos'
         end
       end
@@ -803,6 +801,9 @@ class UsersController < ApplicationController
     user=User.find_by session_id: session.id
     
     tracker.track(user.ip_address, 'pleasewait')    
+    
+    print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time 2 start FED search: ", Time.now
+    puts
     
     ranksurveysforuser(session.id)
     
@@ -2358,6 +2359,9 @@ class UsersController < ApplicationController
     # Save the survey numbers that the user meets the qualifications and quota requirements for in this user's record of database in rank order
     
     user.save
+    
+    print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time 3 End FED search: ", Time.now
+    puts
     
     # Select RFG projects next
     selectRfgProjects(session_id)  
@@ -7687,6 +7691,8 @@ class UsersController < ApplicationController
     # do nothing for RFG
     end # RFG status is ACTIVE / OFF
     
+    print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time 4 End RFG selection: ", Time.now
+    puts
     
     # Begin the ride next
     userride (session_id)      
