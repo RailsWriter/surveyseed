@@ -331,7 +331,7 @@ class RedirectsController < ApplicationController
               
               
               # Count P2S completes
-              
+                            
               @P2Snet = Network.find_by netid: "2222"
               if @P2Snet.Flag3 == nil then
               
@@ -348,6 +348,8 @@ class RedirectsController < ApplicationController
             end # duplicate is false
              
             # Happy ending
+            
+            tracker.track(@user.ip_address, 'P2S_Completes')
             
             if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
               redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=1'
@@ -579,6 +581,8 @@ class RedirectsController < ApplicationController
               
               # Happy ending
               
+              tracker.track(@user.ip_address, 'RFG_Completes')
+              
               if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
                 redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=2'
               else
@@ -782,6 +786,9 @@ class RedirectsController < ApplicationController
             end                     
 
               # Happy ending
+              
+              tracker.track(@user.ip_address, 'FED_Completes')
+              
               if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
                 redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=3'
               else
