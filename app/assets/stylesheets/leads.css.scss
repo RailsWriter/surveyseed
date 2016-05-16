@@ -19,19 +19,24 @@
 		background-color:white;
 	}
 	
+	p5 {
+		font-weight: 200;
+		font-size: 50px;		
+	}
+
 	h1 {
-		font-weight: 100;
-		font-size: 20px;			
+		font-weight: 110;
+		font-size: 20px;		
 	}
 	
 	p {
 		font-weight: 100;
-		font-size: 15px;
+		font-size: 20px;
 	}
 
 	p1 {
 		font-weight: 100;
-		font-size: 15px;
+		font-size: 20px;
 		color: white;
 	}
 	
@@ -67,27 +72,35 @@
   	}
 	
 	#aboutus {
-		height: 525px;
+		height: 475px;
 		padding-top: 10px;
 		padding-left:20px;
-		background-color: white;
-		font-weight: 150;
-		font-size: 20px;
+		background-color: ivory;
 	}
+
+	#research {
+			height: 500px;
+			padding-top: 10px;
+			padding-left:100px;
+			padding-right:100px;
+			background-color: white;
+			font-weight: 150;
+			font-size: 30px;
+		}
 	
 	#monetize {
-			height: 225px;
+			height: 475px;
 			padding-top: 10px;
 			padding-left:100px;
 			padding-right:100px;
 			background-color: beige;
 			font-weight: 150;
-			font-size: 20px;
+			font-size: 30px;
 		}
 	
 	p2 {
 		font-weight: 75;
-		font-size: 15px;
+		font-size: 18px;
 	}
 	
 	#container2 {
@@ -114,7 +127,7 @@
 	    width: 90%;
 		font-weight: 10;
 		font-size: 6px;
-	    color: white;
+	    color: black;
         font-family: Roboto, helvetica, arial, sans-serif;
 	    background-color: transparent;
 	}
@@ -174,6 +187,16 @@
 		color: white;
 		font-family: Roboto, helvetica, arial, sans-serif;
 	}
+
+	#left_col {
+		   float:left;
+		   width:350px;
+		}
+
+		#right_col {
+		   float:right;
+		   width:150px;
+		}
 	
 	@media only screen and (max-width: 600px) {
 		
@@ -200,22 +223,32 @@
 		}
 		
 		#aboutus {
-			height: 480px;
+			height: 400px;
 			padding-top: 10px;
 			padding-left:20px;
+			background-color: ivory;
+			font-weight: 150;
+			font-size: 30px;
+		}
+
+		#research {
+			height: 425px;
+			padding-top: 10px;
+			padding-left:100px;
+			padding-right:100px;
 			background-color: white;
 			font-weight: 150;
 			font-size: 30px;
 		}
 		
 		#monetize {
-				height: 225px;
+				height: 400px;
 				padding-top: 10px;
 				padding-left:100px;
 				padding-right:100px;
 				background-color: beige;
 				font-weight: 150;
-				font-size: 20px;
+				font-size: 30px;
 			}
 	
 		p2 {
@@ -249,7 +282,7 @@
 		
 		#left_col {
 		   float:left;
-		   width:250px;
+		   width:400px;
 		}
 
 		#right_col {
@@ -275,14 +308,24 @@
 	  	}
 		
 		#aboutus {
-			height: 260px;
+			height: 225px;
 			padding-top: 15px;
 			padding-left:20px;
-			background-color: white;
+			background-color: ivory;
 			font-weight: 150;
 			font-size: 30px;
 		}
 		
+		#research {
+			height: 250px;
+			padding-top: 10px;
+			padding-left:100px;
+			padding-right:100px;
+			background-color: white;
+			font-weight: 150;
+			font-size: 30px;
+		}
+
 		#monetize {
 				height: 225px;
 				padding-top: 10px;
@@ -290,7 +333,7 @@
 				padding-right:100px;
 				background-color: beige;
 				font-weight: 150;
-				font-size: 20px;
+				font-size: 30px;
 			}
 		
 		#container2 {
@@ -348,7 +391,7 @@
 		
 		#left_col {
 		   float:left;
-		   width:250px;
+		   width:450px;
 		}
 
 		#right_col {
@@ -377,9 +420,9 @@
 				height: 295px;
 				padding-top: 15px;
 				padding-left:50px;
-				background-color: white;
+				background-color: ivory;
 				font-weight: 100;
-				font-size: 10px;
+				font-size: 30px;
 			}
 			
 			#container2 {

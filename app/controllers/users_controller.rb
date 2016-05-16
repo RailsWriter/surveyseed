@@ -809,7 +809,14 @@ class UsersController < ApplicationController
     
   end
   
+  # start to rankfedsurveys
+
   def ranksurveysforuser (session_id)
+
+    require 'base64'
+    require 'hmac-sha1'
+    @SHA1key = 'uhstarvsuio765jalksrWE'
+
 
     user=User.find_by session_id: session_id
     
@@ -2353,8 +2360,24 @@ class UsersController < ApplicationController
     end
     
     (0..user.SupplierLink.length-1).each do |i|
-      user.SupplierLink[i] = user.SupplierLink[i]+@PID+@AdditionalValues+@MS_is_mobile
-    end    
+#      user.SupplierLink[i] = user.SupplierLink[i]+@PID+@AdditionalValues+@MS_is_mobile
+
+      @BaseLink = user.SupplierLink[i]+@PID+@AdditionalValues+@MS_is_mobile+"&"
+
+      # do SHA-1 encryption to all links here
+
+      @SHA1Signature = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseLink).digest).strip
+  #    p 'Signature 1 =', @SHA1Signature  
+      @SHA1Signature = @SHA1Signature.gsub '+', '-'
+  #    p 'Signature 2 =', @SHA1Signature
+      @SHA1Signature = @SHA1Signature.gsub '/', '_'
+  #    p 'Signature 3 =', @SHA1Signature
+      @SHA1Signature= @SHA1Signature.gsub '=', ''
+  #    p 'Signature 4 =', @SHA1Signature
+
+      user.SupplierLink[i] = @BaseLink+"ienc="+@SHA1Signature
+
+    end   # do SupplierLink   
     
     # Save the survey numbers that the user meets the qualifications and quota requirements for in this user's record of database in rank order
     
@@ -2366,7 +2389,7 @@ class UsersController < ApplicationController
     # Select RFG projects next
     selectRfgProjects(session_id)  
         
-  end # ranksurveys 
+  end # end rankfedsurveys
   
   def selectRfgProjects (session_id)
     

@@ -106,6 +106,7 @@ begin
         
         # First check if there are any completes needed.
         
+# FIX THIS if SupplierAllocations is NIL
         if @SupplierAllocations["SupplierAllocationSurvey"]["OfferwallTotalRemaining"] == nil then 
           survey.TotalRemaining = 0 
         else
