@@ -1203,7 +1203,9 @@ class UsersController < ApplicationController
       if net.payout == nil then
         @currentpayout = 1.90 # assumes this is the minimum payout for FED surveys across networks including the 30% fees
       else
-        @currentpayout = net.payout  
+        @currentpayout = 1.3*net.payout # FED CPI must be higher than net.payout + 30% of survey CPI. This approximation with 30% of net.payout is a good approximation.
+        p '****************************** minimum payout for FED set to: ', @currentpayout
+        puts
       end
              
              
@@ -1214,6 +1216,7 @@ class UsersController < ApplicationController
       else
         if (net.status == "INACTIVE") then
           p '****************************** ACCESS FROM AN INACTIVE NETWOK DENIED'
+          puts
           redirect_to '/users/nosuccess'
           return
         else
@@ -1322,7 +1325,7 @@ class UsersController < ApplicationController
     print "**************************** PoorConversion is turned: ", @poorconversion, ' Topofstack is: ', @topofstack
     puts
 
-    puts "**************************** STARTING SEARCH FOR SURVEYS USER QUALIFIES FOR"
+    puts "**************************** STARTING SEARCH FOR FED SURVEYS USER QUALIFIES FOR"
     
     # change countrylanguageid setting to match user countryID only
     @usercountry = (user.country).to_i
@@ -1499,7 +1502,7 @@ class UsersController < ApplicationController
           # Look through the survey this user is qualified for, to check if there is quota available. Quota numbers can be read as Maximum or upper limit allowed for a qualification e.g. ages 20-24 quota of 30 and ages 25-30 quota of 50 is the upper limit on both of the groups. The code should first find if the number of respondents in the quota teh respondent falls in has need for more respondents. When a quota is split into parts then respondent must fall into at least one of them.
       
       
-          puts "********************* STARTING To SEARCH if QUOTA is available for this user in the surveys user is Qualified. Stop after specified number of top ranked surveys with quota are found"
+          puts "********************* STARTING To SEARCH if QUOTA is available for this user in the FED surveys user is Qualified. Stop after specified number of top ranked surveys with quota are found"
       
       
             @surveynumber = survey.SurveyNumber
@@ -2268,7 +2271,7 @@ class UsersController < ApplicationController
       else
       end #3 if @foundtopsurveyswithquota == false
     
-    end # do loop for all surveys in db
+    end # do loop for all surveys in Surveys db
         
     # Remove duplicate entries
       
@@ -2364,7 +2367,7 @@ class UsersController < ApplicationController
 
       @BaseLink = user.SupplierLink[i]+@PID+@AdditionalValues+@MS_is_mobile+"&"
 
-      # do SHA-1 encryption to all links here
+      # Add SHA-1 encryption to all links here
 
       @SHA1Signature = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseLink).digest).strip
   #    p 'Signature 1 =', @SHA1Signature  
@@ -2379,17 +2382,582 @@ class UsersController < ApplicationController
 
     end   # do SupplierLink   
     
-    # Save the survey numbers that the user meets the qualifications and quota requirements for in this user's record of database in rank order
+    # Save the FED survey numbers that the user meets the qualifications and quota requirements for in this user's record of database in rank order
     
     user.save
     
     print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time 3 End FED search: ", Time.now
     puts
     
-    # Select RFG projects next
-    selectRfgProjects(session_id)  
+    # Select Adhoc surveys next
+    selectAdhocSurveys(session_id)  
         
   end # end rankfedsurveys
+
+
+
+  def selectAdhocSurveys(session_id)
+    
+    require 'digest/hmac'
+    require 'net/http'
+    require 'uri'
+    
+    user=User.find_by session_id: session_id
+    
+    @adhocClient = Network.find_by name: "ADHOC"
+    if (@adhocClient.status == "ACTIVE") then
+      @adhocNetId = @adhocClient.netid
+      print "**************** Assigned ADHOC @adhocNetId = ", @adhocNetId
+      puts
+
+#       if user.gender == '1' then
+#         @GenderPreCode = [ "1" ]
+#       else
+#         @GenderPreCode = [ "2" ]
+#       end    
+    
+#       if user.country == '6' then
+# #      print "--------------------------->>>>>> First character of CA postalcode = ", user.ZIP.slice(0)
+# #      puts
+      
+#         case user.ZIP.slice(0)
+#         when "T"
+#           @provincePrecode = "1"
+# #         puts "Assigned Alberta @provincePrecode = 1"
+        
+#         when "V"
+#           @provincePrecode = "2"
+# #         puts "Assigned BC @provincePrecode = 2"
+        
+#         when "R"
+#           @provincePrecode = "3"
+# #         puts "Assigned MB @provincePrecode = 3"
+        
+#         when "E"
+#           @provincePrecode = "4"
+# #         puts "Assigned NB @provincePrecode = 4"
+        
+#         when "A"
+#           @provincePrecode = "5"
+# #         puts "Assigned NL @provincePrecode = 5"
+        
+#         when "X"
+#           @provincePrecode = "6"
+# #         puts "Assigned NT @provincePrecode = 6"
+        
+#         when "B"
+#         @provincePrecode = "7"
+# #        puts "Assigned NS @provincePrecode = 7"
+        
+#         # when "X"  # X would become a duplicate. Nunavut is teh least populated province so this is it
+#         # @provincePrecode = "8"
+#         # puts "Assigned NU @provincePrecode = 8"
+        
+#         when "K"
+#           @provincePrecode = "9"
+# #         puts "Assigned ON @provincePrecode = 9"
+        
+#         when "L"
+#           @provincePrecode = "9"
+# #         puts "Assigned ON @provincePrecode = 9"
+        
+#         when "M"
+#           @provincePrecode = "9"
+# #        puts "Assigned ON @provincePrecode = 9"
+        
+#         when "N"
+#           @provincePrecode = "9"
+# #        puts "Assigned ON @provincePrecode = 9"
+        
+#         when "P"
+#           @provincePrecode = "9"
+# #        puts "Assigned ON @provincePrecode = 9"
+
+#         when "C"
+#           @provincePrecode = "10"
+# #        puts "Assigned PE @provincePrecode = 10"
+        
+#         when "G"
+#           @provincePrecode = "11"
+# #         puts "Assigned QC @provincePrecode = 11"
+        
+#         when "H"
+#           @provincePrecode = "11"
+# #         puts "Assigned QC @provincePrecode = 11"
+        
+#         when "J"
+#           @provincePrecode = "11"
+# #         puts "Assigned QC @provincePrecode = 11"
+        
+#         when "S"
+#           @provincePrecode = "12"
+# #         puts "Assigned SK @provincePrecode = 12"
+        
+#         when "Y"
+#           @provincePrecode = "13"
+# #         puts "Assigned YT @provincePrecode = 13"
+#       end
+#     else
+#     end # country == 6
+    
+#     if @provincePrecode == nil then
+#       # wild guess
+#       @provincePrecode = "11"
+#     else
+#     end
+           
+#     if user.country == '9' then
+#       @geo = UsGeo.find_by zip: user.ZIP
+      
+#       if @geo == nil then
+#         @statePrecode = "0"
+#         @DMARegionCode = "0"
+#         @regionPrecode = "0"
+#         @dividionPrecode = "0"
+#         puts "NotApplicable PreCodes Used for INVALID ZIPCODE"
+        
+#       else
+      
+#         @DMARegionCode = @geo.DMARegionCode
+#         @regionPrecode = @geo.regionPrecode
+#         @divisionPrecode = @geo.divisionPrecode
+        
+#         case @geo.State
+#         when "NotApplicable"
+#           @statePrecode = "0"
+#           print "NotApplicable PreCode Used for: ", @geo.State
+#           puts
+#         when "Alabama"
+#           @statePrecode = "1"
+#           print "Alabama PreCode Used for: ", @geo.State
+#           puts
+#         when "Alaska"
+#           @statePrecode = "2"
+#           print "Alaska PreCode Used for: ", @geo.State
+#           puts
+#         when "Arizona"
+#           @statePrecode = "3"
+#           print "Arizona PreCode Used for: ", @geo.State
+#           puts
+#         when "Arkansas"
+#           @statePrecode = "4"
+#           print "Arkansas PreCode Used for: ", @geo.State
+#           puts
+#         when "California"
+#           @statePrecode = "5"
+#           print "California PreCode Used for: ", @geo.State
+#           puts
+#         when "Colorado"
+#           @statePrecode = "6"
+#           print "Colorado PreCode Used for: ", @geo.State
+#           puts
+#         when "Connecticut"
+#           @statePrecode = "7"
+#           print "Connecticut PreCode Used for: ", @geo.State
+#           puts
+#         when "Delaware"
+#           @statePrecode = "8"
+#           print "Delaware PreCode Used for: ", @geo.State
+#           puts
+#         when "DistrictofColumbia"
+#           @statePrecode = "9"
+#           print "DistrictofColumbia PreCode Used for: ", @geo.State
+#           puts
+#         when "Florida"
+#           @statePrecode = "10"
+#           print "Florida PreCode Used for: ", @geo.State
+#           puts
+#         when "Georgia"
+#           @statePrecode = "11"
+#           print "Georgia PreCode Used for: ", @geo.State
+#           puts
+#         when "Hawaii"
+#           @statePrecode = "12"
+#           print "Hawaii PreCode Used for: ", @geo.State
+#           puts
+#         when "Idaho"
+#           @statePrecode = "13"
+#           print "Idaho PreCode Used for: ", @geo.State
+#           puts
+#         when "Illinois"
+#           @statePrecode = "14"
+#           print "Illinois PreCode Used for: ", @geo.State
+#           puts
+#         when "Indiana"
+#           @statePrecode = "15"
+#           print "Indiana PreCode Used for: ", @geo.State
+#           puts
+#         when "Iowa"
+#           @statePrecode = "16"
+#           print "Iowa PreCode Used for: ", @geo.State
+#           puts
+#         when "Kansas"
+#           @statePrecode = "17"
+#           print "Kansas PreCode Used for: ", @geo.State
+#           puts
+#         when "Kentucky"
+#           @statePrecode = "18"
+#           print "Kentucky PreCode Used for: ", @geo.State
+#           puts
+#         when "Louisiana"
+#           @statePrecode = "19"
+#           print "Louisiana PreCode Used for: ", @geo.State
+#           puts
+#         when "Maine"
+#           @statePrecode = "20"
+#           print "Maine PreCode Used for: ", @geo.State
+#           puts
+#         when "Maryland"
+#           @statePrecode = "21"
+#           print "Maryland PreCode Used for: ", @geo.State
+#           puts
+#         when "Massachusetts"
+#           @statePrecode = "22"
+#           print "Massachusetts PreCode Used for: ", @geo.State
+#           puts
+#         when "Michigan"
+#           @statePrecode = "23"
+#           print "Michigan PreCode Used for: ", @geo.State
+#           puts
+#         when "Minnesota"
+#           @statePrecode = "24"
+#           print "Minnesota PreCode Used for: ", @geo.State
+#           puts
+#         when "Mississippi"
+#           @statePrecode = "25"
+#           print "Mississippi PreCode Used for: ", @geo.State
+#           puts
+#         when "Missouri"
+#           @statePrecode = "26"
+#           print "Missouri PreCode Used for: ", @geo.State
+#           puts
+#         when "Montana"
+#           @statePrecode = "27"
+#           print "Montana PreCode Used for: ", @geo.State
+#           puts
+#         when "Nebraska"
+#           @statePrecode = "28"
+#           print "Nebraska PreCode Used for: ", @geo.State
+#           puts
+#         when "Nevada"
+#           @statePrecode = "29"
+#           print "Nevada PreCode Used for: ", @geo.State
+#           puts
+#         when "NewHampshire"
+#           @statePrecode = "30"
+#           print "NewHampshire PreCode Used for: ", @geo.State
+#           puts
+#         when "NewJersey"
+#           @statePrecode = "31"
+#           print "NewJersey PreCode Used for: ", @geo.State
+#           puts
+#         when "NewMexico"
+#           @statePrecode = "32"
+#           print "NewMexico PreCode Used for: ", @geo.State
+#           puts
+#         when "NewYork"
+#           @statePrecode = "33"
+#           print "NewYork PreCode Used for: ", @geo.State
+#           puts
+#         when "NorthCarolina"
+#           @statePrecode = "34"
+#           print "NorthCarolina PreCode Used for: ", @geo.State
+#           puts
+#         when "NorthDakota"
+#           @statePrecode = "35"
+#           print "NorthDakota PreCode Used for: ", @geo.State
+#           puts
+#         when "Ohio"
+#           @statePrecode = "36"
+#           print "Ohio PreCode Used for: ", @geo.State
+#           puts
+#         when "Oklahoma"
+#           @statePrecode = "37"
+#           print "Oklahoma PreCode Used for: ", @geo.State
+#           puts
+#         when "Oregon"
+#           @statePrecode = "38"
+#           print "Oregon PreCode Used for: ", @geo.State
+#           puts
+#         when "Pennsylvania"
+#           @statePrecode = "39"
+#           print "Pennsylvania PreCode Used for: ", @geo.State
+#           puts
+#         when "RhodeIsland"
+#           @statePrecode = "40"
+#           print "RhodeIsland PreCode Used for: ", @geo.State
+#           puts
+#         when "SouthCarolina"
+#           @statePrecode = "41"
+#           print "SouthCarolina PreCode Used for: ", @geo.State
+#           puts
+#         when "SouthDakota"
+#           @statePrecode = "42"
+#           print "SouthDakota PreCode Used for: ", @geo.State
+#           puts
+#         when "Tennessee"
+#           @statePrecode = "43"
+#           print "Tennessee PreCode Used for: ", @geo.State
+#           puts
+#         when "Texas"
+#           @statePrecode = "44"
+#           print "Texas PreCode Used for: ", @geo.State
+#           puts
+#         when "Utah"
+#           @statePrecode = "45"
+#           print "Utah PreCode Used for: ", @geo.State
+#           puts
+#         when "Vermont"
+#           @statePrecode = "46"
+#           print "Vermont PreCode Used for: ", @geo.State
+#           puts
+#         when "Virginia"
+#           @statePrecode = "47"
+#             print "Virginia PreCode Used for: ", @geo.State
+#             puts
+#         when "Washington"
+#           @statePrecode = "48"
+#           print "Washington PreCode Used for: ", @geo.State
+#           puts
+#         when "WestVirginia"
+#           @statePrecode = "49"
+#           print "WestVirginia PreCode Used for: ", @geo.State
+#           puts
+#         when "Wisconsin"
+#           @statePrecode = "50"
+#           print "Wisconsin PreCode Used for: ", @geo.State
+#           puts
+#         when "Wyoming"
+#           @statePrecode = "51"
+#           print "Wyoming PreCode Used for: ", @geo.State
+#           puts
+# #      when "NotApplicable"
+# #        @statePrecode = "52"
+# #        print "NotApplicable PreCode Used for: ", @geo.State
+# #        puts
+#         when "AmericanSamoa"
+#           @statePrecode = "53"
+#           print "AmericanSamoa PreCode Used for: ", @geo.State
+#           puts
+#         when "FederatedStatesofMicronesia"
+#           @statePrecode = "54"
+#           print "FederatedStatesofMicronesia PreCode Used for: ", @geo.State
+#           puts
+#         when "Guam"
+#           @statePrecode = "55"
+#           print "Guam PreCode Used for: ", @geo.State
+#           puts
+#         when "MarshallIslands"
+#           @statePrecode = "56"
+#           print "MarshallIslands PreCode Used for: ", @geo.State
+#           puts
+#         when "NorthernMarinaIslands"
+#           @statePrecode = "57"
+#           print "NorthernMarinaIslands PreCode Used for: ", @geo.State
+#           puts
+#         when "Palau"
+#           @statePrecode = "58"
+#           print "Palau PreCode Used for: ", @geo.State
+#           puts
+#         when "PuertoRico"
+#           @statePrecode = "59"
+#           print "PuertoRico PreCode Used for: ", @geo.State
+#           puts
+#         when "VirginIslands"
+#           @statePrecode = "60"
+#           print "VirginIslands PreCode Used for: ", @geo.State
+#           puts
+#         end # case
+        
+#       end # if @geo = nil
+      
+#     else
+#     end # if country = 9
+
+
+    #Initialize an array to store qualified Adhoc surveys
+    @adhocQualifiedSurveys = Array.new
+    @adhocSurveysWithQuota = Array.new
+    @adhocSupplierLinks = Array.new
+
+    # Validate user network and get/set payout info.
+
+    @netid = user.netid      
+    if Network.where(netid: @netid).exists? then
+      net = Network.find_by netid: @netid
+        
+      if net.payout == nil then
+        @currentpayout = 1.25 # assumes this is the minimum payout of $1.25 across networks. There is no extra cost.
+      else
+        @currentpayout = net.payout
+        p '****************************** minimum payout for ADHOC set to: ', @currentpayout
+        puts
+      end
+    else
+      # Bad netid, Network is not known
+      p '****************************** ACCESS FROM AN UNRECOGNIZED NETWOK DENIED'
+      redirect_to '/users/nosuccess'
+      return
+    end
+    
+    puts "**************************** STARTING SEARCH FOR ADHOC SURVEYS which USER QUALIFIES FOR"
+    
+    #Prints for testing code
+
+    print '???????????????????????????????????------------------------>>>> Assumed instance variables Codes in ADHOC survey selection for Gender: ', @GenderPreCode, ' DMA: ', @DMARegionCode, ' State: ', @statePrecode, ' Region: ', @regionPrecode, ' Division: ',@divisionPrecode
+    puts
+
+
+    # change countrylanguageid setting to match user countryID only
+    @usercountry = (user.country).to_i
+
+    # Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
+    Adhoc.where("CountryLanguageID = ? AND SurveyStillLive = ? AND CPI >= ?", @usercountry, true, @currentpayout).each do |survey|        
+
+      if (((survey.CountryLanguageID == 5) &&        
+#          ( survey.SurveyStillLive ) && 
+          (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
+          (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
+          (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
+          (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ])) &&
+          (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ])) &&
+          (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ])) &&
+          (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ])) &&
+          (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ])) &&
+          (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ])) &&     
+          (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&
+          (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationChildrenPreCodes.flatten).empty? == false)) 
+#          &&
+#          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
+          ) ||
+          
+          
+          
+          ((survey.CountryLanguageID == 6) &&          
+#          ( survey.SurveyStillLive ) && 
+          (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
+          (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
+          (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP.slice(0..2) ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP.slice(0..2) ])) &&
+          (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ])) &&
+          (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ])) &&
+          (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ])) &&
+          (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ])) &&
+          (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ])) &&
+          (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ])) &&     
+          (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&
+          (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationChildrenPreCodes.flatten).empty? == false)) &&
+          (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ])) 
+#          &&
+#          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
+          ) ||
+       
+          
+          
+          ( (survey.CountryLanguageID == 9) &&          
+#          ( survey.SurveyStillLive ) && 
+          (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
+          (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
+          (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
+          (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ])) &&
+          (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ])) &&
+          (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ])) &&
+          (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ])) &&
+          (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ])) &&
+          (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ])) && 
+          (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&                    
+          (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children  & survey.QualificationChildrenPreCodes.flatten).empty? == false)) &&                             
+          (( survey.QualificationDMAPreCodes.empty? ) || ( survey.QualificationDMAPreCodes.flatten == [ "ALL" ] ) || (([ @DMARegionCode ] & survey.QualificationDMAPreCodes.flatten) == [ @DMARegionCode ])) && 
+          (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ])) && 
+          (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ])) && 
+          (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ])) 
+#          &&       
+#          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
+          ))         
+          
+          then
+          
+        
+          #Prints for testing code
+
+          @_gender = ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
+          @_age = ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
+          @_age_value = [user.age] & survey.QualificationAgePreCodes.flatten
+          @_race = (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ]))
+          @_ethnicity= (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ]))
+          @_education= (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ]))
+          @_HHI= (( survey.QualificationHHIPreCodes.empty? ) || ( survey.QualificationHHIPreCodes.flatten == [ "ALL" ] ) || (([ user.householdincome ] & survey.QualificationHHIPreCodes.flatten) == [ user.householdincome ]))
+          @_employment = (( survey.QualificationEmploymentPreCodes.empty? ) || ( survey.QualificationEmploymentPreCodes.flatten == [ "ALL" ] ) || (([ user.employment ] & survey.QualificationEmploymentPreCodes.flatten) == [ user.employment ]))
+          @_pindustry = (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ]))
+          @_jobtitle = (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ]))          
+          @_children = (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children  & survey.QualificationChildrenPreCodes.flatten).empty? == false)) 
+          @_children_logic = (user.children & survey.QualificationChildrenPreCodes.flatten)
+         # @_industries = (( survey.QualificationIndustriesPreCodes.empty? ) || ( survey.QualificationIndustriesPreCodes.flatten == [ "ALL" ] ) || (( user.industries & survey.QualificationIndustriesPreCodes.flatten).empty? == false))
+         # @_industries_logic = ( user.industries & survey.QualificationIndustriesPreCodes)
+          @_CPI_check = ((survey.CPI == nil) || (survey.CPI >= @currentpayout))
+          
+
+          puts "---------------------------------->>>  Replace QualificationHHCPrecodes with CA_provincePrecodes column"
+        
+          print '************ User QUALIFIED for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ..... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.employment, ' Std_Employment PreCode from survey: ', survey.QualificationEmploymentPreCodes, ' User Entered PIndustry: ', user.pindustry, ' PIndustry PreCode from survey: ', survey.QualificationPIndustryPreCodes, ' User Entered JobTitle: ', user.jobtitle, ' JobTitle PreCode from survey: ', survey.QualificationJobTitlePreCodes, ' User Entered Children: ', user.children, ' Children PreCodes from survey: ', survey.QualificationChildrenPreCodes, ' User Entered Industries: ', user.industries, ' Industries PreCodes from survey: ....', ' Network Payout: ', @currentpayout, ' CPI from survey: ', survey.CPI, ' SurveyStillAlive: ', survey.SurveyStillLive
+         
+        puts
+        
+        print '************* Gender match: ', @_gender, ' Age match: ', @_age, ' Age_logic value: ', @_age_value, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment, ' PIndustry match: ', @_pindustry, ' JobTitle match: ', @_jobtitle, ' Children match: ', @_children, ' Children_logic value: ', @_children_logic,  ' Industries match: ', @_industries, ' Industries_logic value: ', @_industries_logic, ' CPI check: ', @_CPI_check
+        puts
+        
+
+        if (survey.CountryLanguageID == 9) then
+          @_ZIP = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
+          @_DMA = (( survey.QualificationDMAPreCodes.empty? ) || ( survey.QualificationDMAPreCodes.flatten == [ "ALL" ] ) || (([ @DMARegionCode ] & survey.QualificationDMAPreCodes.flatten) == [ @DMARegionCode ]))
+          @_State = (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ]))
+          @_region = (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ]))
+          @_Division = (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ]))        
+          
+          
+          
+          print '*********** User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ', survey.QualificationZIPPreCodes, 'DMA from DB: ', @DMARegionCode, ' DMA from Survey: ', survey.QualificationDMAPreCodes, 'Region from DB: ', @regionPrecode, ' Region from Survey: ', survey.QualificationRegionPreCodes, 'Division from DB: ', @divisionPrecode, ' Division from Survey: ', survey.QualificationDivisionPreCodes
+          puts          
+          
+          print '************** ZIP match: ', @_ZIP, ' DMA match: ', @_DMA, ' State match: ', @_State, ' Region match: ', @_region, ' Division match: ', @_Division
+          puts
+        else
+        end
+        
+        if (survey.CountryLanguageID == 6) then
+          @_ZIP = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP.slice(0..2) ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP.slice(0..2) ])
+          @_province_check = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ]))
+          
+          print '************** ZIP slice match: ', @_ZIP, 'CA Province match: ', @_province_check
+          puts
+        else
+        end
+        
+        
+        @adhocSupplierLinks << survey.Link+@adhocNetId+survey.SurveyNumber+user.user_id
+        
+        print '********** This USER_ID: ', user.user_id, ' has QUALIFIED for the following Adhoc survey : ', survey.SurveyNumber
+        puts
+        
+        print '********** In total This USER_ID: ', user.user_id, ' has created for the following survey Links: ', @adhocSupplierLinks
+        puts
+            
+      else
+        # No qualified Adhoc surveys found for if qualification conditions
+      end
+
+    end # do loop for all Adhoc surveys in db
+
+  else
+    print "***************** Adhoc surveys are not ACTIVE ************************"
+    puts
+  end # If Adhoc surveys are ACTIVE
+
+# Select RFG projects next
+  selectRfgProjects(session_id)  
+        
+  end # end selectAdhocSurveys
+
+
   
   def selectRfgProjects (session_id)
     
@@ -2707,8 +3275,10 @@ class UsersController < ApplicationController
         @currentpayout = 1.25 # assumes $1.25 as minimum payout value across the networks for RFG projects
         @currentpayoutstr = "$"+@currentpayout.to_s
       else
-        @currentpayout = 1.25 # change back to net.payout or create new RFG payout field  
+        @currentpayout = net.payout # RFG CPI includes 10% extra payout 
         @currentpayoutstr = "$"+@currentpayout.to_s
+        p '****************************** minimum payout for RFG set to: ', @currentpayout
+        puts
       end
        
       if net.RFG_US != nil then
@@ -7714,7 +8284,7 @@ class UsersController < ApplicationController
     # do nothing for RFG
     end # RFG status is ACTIVE / OFF
     
-    print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time 4 End RFG selection: ", Time.now
+    print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time-4 End RFG selection: ", Time.now
     puts
     
     # Begin the ride next
@@ -7739,37 +8309,78 @@ class UsersController < ApplicationController
     else
     end
        
-    # FED or RFG go first
+    # Order Adhoc, FED and RFG surveys
     
     if (@RFGIsBack) then
-      
+      puts "RFG is Back"
       if user.SupplierLink == nil then
-        user.SupplierLink = @RFGSupplierLinks
+        if @adhocSupplierLinks == nil then
+          user.SupplierLink = @RFGSupplierLinks
+          puts "RFG is Back-1 but no ADHOC or FED surveys are available"
+        else
+          user.SupplierLink = @adhocSupplierLinks
+          user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
+          puts "RFG is Back-2"
+        end
       else      
-        user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
-        puts "RFG is Back"
+        if @adhocSupplierLinks == nil then
+          user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
+          puts "RFG is Back-3"
+        else
+          @tmp1 = adhocSupplierLinks + user.SupplierLink
+          user.SupplierLink = @tmp1 + @RFGSupplierLinks
+          puts "RFG is Back-4"
+        end
       end
-
     else
       if (@RFGIsFront) then
         puts "RFG is Front"
         if user.SupplierLink == nil then
-          user.SupplierLink = @RFGSupplierLinks
+          if @adhocSupplierLinks == nil then
+            user.SupplierLink = @RFGSupplierLinks
+            puts "RFG is Front-1"
+          else
+            user.SupplierLink = @adhocSupplierLinks
+            user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
+            puts "RFG is Front-2"
+          end
         else
           if @RFGSupplierLinks == nil then
-            #do nothing
+            if @adhocSupplierLinks == nil then
+              puts "RFG is Front-3 but no RFG or ADHOC surveys available"
+            else
+              @tmp2 = user.SupplierLink
+              user.SupplierLink = @adhocSupplierLinks + @tmp2
+              puts "RFG is Front-4 but no RFG surveys available"
+            end
+
           else
-            @tmp = user.SupplierLink
-            user.SupplierLink = @RFGSupplierLinks + @tmp
+            if @adhocSupplierLinks == nil then
+              @tmp3 = user.SupplierLink
+              user.SupplierLink = @RFGSupplierLinks + @tmp3
+              puts "RFG is Front-5"
+            else
+              @tmp4 = adhocSupplierLinks + RFGSupplierLinks
+              @tmp5 = user.SupplierLink
+              user.SupplierLink = @tmp4 + @tmp5
+              puts "RFG is Front-6"
+            end
           end
         end
       else
-        # do nothing and RFG will not be included
-        puts "*************** RFG is not included"
+        puts "*************** RFG is not included *********"
+        if @adhocSupplierLinks == nil then
+          # do nothing, only FED surveys are available
+          puts "RFG not Included-1"
+        else
+          @tmp6 = user.SupplierLink
+          user.SupplierLink = @adhocSupplierLinks + @tmp6
+          puts "RFG not Included-2"
+        end
       end
     end
     
-    # Save the order of FED and RFG
+    # Save the order of ADHOC, FED and RFG
     
     user.save
     
@@ -7970,7 +8581,7 @@ class UsersController < ApplicationController
       
     else
           
-      #Postback that the completed Test
+      #Postback that the Test completed 
     
       if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
 

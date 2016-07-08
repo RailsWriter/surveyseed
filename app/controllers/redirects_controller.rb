@@ -12,23 +12,25 @@ class RedirectsController < ApplicationController
     @SHA1key = 'uhstarvsuio765jalksrWE'
     @Url = request.original_url
     @ParsedUrl = @Url.partition ("oenc=")
-#    print '@BaseUrl=', @ParsedUrl[0]
-#    puts 
-#    print '@Signature =', @ParsedUrl[2]   
-#    puts
+    # print '@BaseUrl=', @ParsedUrl[0]
+    # puts 
+    # print '@Signature =', @ParsedUrl[2]   
+    # puts
+
     @BaseUrl = @ParsedUrl[0]
     @Signature = @ParsedUrl[2]
     @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
-#    p 'Validate 1 =', @validateSHA1hash  
+    # p 'Validate 1 =', @validateSHA1hash  
     @validateSHA1hash = @validateSHA1hash.gsub '+', '-'
-#    p 'Validate 2 =', @validateSHA1hash
+    # p 'Validate 2 =', @validateSHA1hash
     @validateSHA1hash = @validateSHA1hash.gsub '/', '_'
-#    p 'Validate 3 =', @validateSHA1hash
+    # p 'Validate 3 =', @validateSHA1hash
     @validateSHA1hash= @validateSHA1hash.gsub '=', ''
-#    p 'Validate 4 =', @validateSHA1hash
+    # p 'Validate 4 =', @validateSHA1hash
     
     @p2s_redirect = false # set to false as a flag. changes to true if it is a P2S redirect
     @rfg_redirect = false # set to false as a flag. changes to true if it is a RFG redirect
+    @adhoc_redirect = false # set to false as a flag. changes to true if it is a ADHOC redirect
     
     if params[:PID] == nil then
       params[:PID] = "PlaceHolder"
@@ -53,13 +55,15 @@ class RedirectsController < ApplicationController
           
         else
           if params[:PID][0..3] == "1111" then
-            @partial = params[:PID].sub "1111", ''
-            params[:tsfn] = @partial[0..3]
-            params[:PID] = @partial.sub params[:tsfn], ''
-            params[:tis] = '20'
+            @partial = params[:PID].sub "1111", '' # Adhoc surveys have 1111 as suffix
+            params[:tsfn] = @partial[0..3] # ADHOC surveys must have a 4 digit survey number which apprears immediately after 1111.
+            params[:PID] = @partial.sub params[:tsfn], '' # Remaining PID is actual user.user_id
+            params[:tis] = '20' # Assign arbitrary length of survey as 20 mins.
             
-            print "********************* Extracted userid from KETSCI ADHOC survey to be = ", params[:PID], ' for Survey Number= ', params[:tsfn]
+            print "********************* Extracted userid from ADHOC survey to be = ", params[:PID], ' for Survey Number= ', params[:tsfn]
             puts
+
+            @adhoc_redirect = true
           else
             
             if params[:rid][0..3] == "3333" then
@@ -115,8 +119,7 @@ class RedirectsController < ApplicationController
     case params[:status] 
           
       when "1"
-        # DefaultLink: https://www.ketsci.com/redirects/status?status=1&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
-        
+        # DefaultLink: https://www.ketsci.com/redirects/status?status=1&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]        
         p 'Redirected to Default'
         
         if params[:PID] == 'test' then 
@@ -128,34 +131,29 @@ class RedirectsController < ApplicationController
           print '*********** In *Default* for user_id: ', params[:PID], ' CID: ', @user.clickid
           puts
         
-        # Is there anything to save from the attempt info in User and Survey tables?
-        # params[:tsfn] was being returned empty in one run period.
-        
-        @user.SurveysAttempted << params[:tsfn]+'-1'
-        @user.save
-        
-        # User lands up here if anything unclear happens in the ride. Best course seems to be to send the user back to very begining to start over.
-        redirect_to 'https://www.ketsci.com/redirects/default'
+          # Is there anything to save from the attempt info in User and Survey tables?
+          # params[:tsfn] was being returned empty in one run period.
+          
+          @user.SurveysAttempted << params[:tsfn]+'-1'
+          @user.save
+          
+          # User lands up here if anything unclear happens in the ride. Best course seems to be to send the user back to very begining to start over.
+          redirect_to 'https://www.ketsci.com/redirects/default'
 
-#       Fix this to route the user to take other surveys       
-#        if (User.where("user_id = ?", params[:PID])).exists? then
-#          @user = User.find_by user_id: params[:PID]
-#          redirect_to 'https://www.ketsci.com/users/new'+'?NID='+@user.netid+'&CID='+@user.clickid
-#        else
-#          redirect_to 'https://www.ketsci.com/redirects/default'
-#        end
-
+          # Fix this to route the user to take other surveys       
+          # if (User.where("user_id = ?", params[:PID])).exists? then
+          #   @user = User.find_by user_id: params[:PID]
+          #   redirect_to 'https://www.ketsci.com/users/new'+'?NID='+@user.netid+'&CID='+@user.clickid
+          # else
+          #   redirect_to 'https://www.ketsci.com/redirects/default'
+          # end
         end # if test
-
 
       when "2"
         # SuccessLink: https://www.ketsci.com/redirects/status?status=2&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]&cost=[%COST%]
-        
         # save attempt info in User and Survey tables
-
         if params[:PID] == 'test' then
-          redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=0'
-          
+          redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=0'         
         else  
           if @p2s_redirect then
             
@@ -355,10 +353,8 @@ class RedirectsController < ApplicationController
               redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=1'
             else
               redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'    
-            end            
-        
-          else # not a P2S project
-            
+            end                    
+          else # not a P2S project. Try RFG next            
             if @rfg_redirect then
              
               # save attempt info in User and Survey tables
@@ -588,218 +584,413 @@ class RedirectsController < ApplicationController
               else
                 redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'
               end        
-                           
-            else # not a RFG project. it must be a FED survey            
-          
-              # save attempt info in User and Survey tables
-          
-              @user = User.find_by user_id: params[:PID]
+            else # not a RFG project. Try ADHOC next
+              if @adhoc_redirect then
+                # save attempt info in User and Survey tables
+              
+                @user = User.find_by user_id: params[:PID]
 
-              print '************** Suceess for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
-              puts
-          
-              @user.SurveysAttempted << params[:tsfn]+'-2'
-            
-              # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
-            
-              if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
-                @net_name = "Fyber"
-              else
-              end
-                           
-              if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
-                @net_name = "SuperSonic"
-              else
-              end
-            
-              if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
-                @net_name = "RadiumOne"
-              else
-              end
-              
-              if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
-                @net_name = "SS2"
-              else
-              end
-              
-              if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
-                @net_name = "Fyber2"
-              else
-              end 
-              
-              if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
-                @net_name = "SS3"
-              else
-              end  
-              
-              if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
-                @net_name = "MemoLink"
-              else
-              end   
-              
-              if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
-                @net_name = "RadiumOne2"
-              else
-              end           
-              
-              if @user.netid == "T2Abd5433LLA785410lpH567" then 
-                @net_name = "TestNtk"
-              else
-              end              
- 
-              @survey = Survey.find_by SurveyNumber: params[:tsfn]                    
-              print '************ Successfully completed survey:', @survey.SurveyNumber
-              puts
-            
-              @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
-              @user.save
-              
-              # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
-            
-              @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
-              @survey.save!
-
-              # Save (inverse of) TCR and reset counter for attempts at last complete
-            
-              @survey.SurveyExactRank = @survey.SurveyExactRank + 1  # SurveyExactRank=Failure+OQ+Success count
-              @NumberofAttemptsSinceLastComplete = @survey.SurveyExactRank - @survey.NumberofAttemptsAtLastComplete
-              @survey.TCR = (1.0 / @NumberofAttemptsSinceLastComplete).round(3)
-
-              @survey.NumberofAttemptsAtLastComplete = @survey.SurveyExactRank
-            
-              # Move the just converted survey to F or S immediately, if it is already not there
-            
-              if (@survey.SurveyGrossRank > 100) then
-      
-                @survey.SurveyGrossRank = 101 - (@survey.TCR * 100)
-                print "************** Assigned Just converted to Fast: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
-                @survey.label = 'JUST CONVERTED'
-
-              else
-
-                # the survey is already in F i.e. rank is <= 100. do nothing
-
-              end
-
-              @survey.save
-
-              # Postback the network about success with users clickid
-            
-              if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
-                begin
-                  @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  rescue HTTParty::Error => e
-                    puts 'HttParty::Error '+ e.message
-                    retry
-                  end while @FyberPostBack.code != 200
-               else
-              end
-                       
-              if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
-       
-                begin
-                  @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                    rescue HTTParty::Error => e
-                      puts 'HttParty::Error '+ e.message
-                      retry
-                  end while @SupersonicPostBack.code != 200
-    
-              else
-              end
-              
-              if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
-                  
-                  begin
-                    @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                     rescue HTTParty::Error => e
-                       puts 'HttParty::Error '+ e.message
-                       retry
-                  end while @RadiumOnePostBack.code != 200
-  
-              else
-              end
-              
-              if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
-       
-                begin
-                  @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                    rescue HTTParty::Error => e
-                    puts 'HttParty::Error '+ e.message
-                    retry
-                end while @SS2PostBack.code != 200
-    
-              else
-              end
-              
-              if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then
-
-                begin
-                  @Fyber2PostBack = HTTParty.post('http://www2.balao.de/SPNcu?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  rescue HTTParty::Error => e
-                    puts 'HttParty::Error '+ e.message
-                    retry
-                  end while @Fyber2PostBack.code != 200
-    
-              else
-              end
-                          
-              if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
-                # puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
+                print '******************* Suceess in ADHOC router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+                puts
                 
-                begin
-                  @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
+                  print "************* Click Id already exists - do not postback again!"
+                  puts          
+                else
+                
+                  @user.SurveysAttempted << 'ADHOC-2'
+                  
+                  # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
+                
+                  if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
+                    @net_name = "Fyber"
+                  else
+                  end  
+                
+                  if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
+                    @net_name = "SuperSonic"
+                  else
+                  end       
+                
+                  if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
+                    @net_name = "RadiumOne"
+                  else
+                  end
+                
+                  if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
+                    @net_name = "SS2"
+                  else
+                  end
+                  
+                  if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
+                    @net_name = "Fyber2"
+                  else
+                  end
+                  
+                  if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
+                    @net_name = "SS3"
+                  else
+                  end
+                  
+                  if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
+                    @net_name = "MemoLink"
+                  else
+                  end 
+                  
+                  if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
+                    @net_name = "RadiumOne2"
+                  else
+                  end         
+                
+                  if @user.netid == "T2Abd5433LLA785410lpH567" then 
+                    @net_name = "TestNtk"
+                  else
+                  end    
+
+
+                  @survey = Adhoc.find_by SurveyNumber: params[:tsfn]                    
+                  print '************ Successfully completed ADHOC survey:', @survey.SurveyNumber
+                  puts
+                
+                  @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'ADHOC', @survey.CPI, @user.clickid, @net_name]
+                  @user.save
+                  
+                  # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
+                
+                  @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
+                  @survey.save!
+
+                  print "*************** User.netid is: ", @user.netid
+                  puts
+                  
+                  # Postback the network about success with users clickid
+                  if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+                    begin
+                      @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                        rescue HTTParty::Error => e
+                        puts 'HttParty::Error '+ e.message
+                        retry
+                    end while @FyberPostBack.code != 200
+                  else
+                  end
+                
+                  if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+           
+                    begin
+                      @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                         rescue HTTParty::Error => e
                           puts 'HttParty::Error '+ e.message
                           retry
-                end while @SS3PostBack.code != 200
-    
-              else
-              end
+                    end while @SupersonicPostBack.code != 200
+        
+                  else
+                  end            
+                
+                  if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
+         
+                    begin
+                      @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                       rescue HTTParty::Error => e
+                         puts 'HttParty::Error '+ e.message
+                         retry
+                    end while @RadiumOnePostBack.code != 200
+      
+                  else
+                  end
+                            
+                  if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
+           
+                    begin
+                      @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                        rescue HTTParty::Error => e
+                          puts 'HttParty::Error '+ e.message
+                          retry
+                        end while @SS2PostBack.code != 200
+        
+                  else
+                  end
+                  
+                  if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then
+
+                    begin
+                      @Fyber2PostBack = HTTParty.post('http://www2.balao.de/SPNcu?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      rescue HTTParty::Error => e
+                        puts 'HttParty::Error '+ e.message
+                        retry
+                      end while @Fyber2PostBack.code != 200
+        
+                  else
+                  end
+                  
+                  if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
+                    # puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
+
+                    begin
+                      @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                            rescue HTTParty::Error => e
+                              puts 'HttParty::Error '+ e.message
+                              retry
+                    end while @SS3PostBack.code != 200
+        
+                  else
+                  end
+                  
+                  if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
+         
+                    begin
+                      @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                       rescue HTTParty::Error => e
+                         puts 'HttParty::Error '+ e.message
+                         retry
+                    end while @RadiumOnePostBack.code != 200      
+                  else
+                  end
+                                                   
+                  # Keep a count of completes on each Network
+                
+                  puts "*************** Keeping track of completes on the corresponding network"
+                
+                  @net = Network.find_by netid: @user.netid
+                
+                  if @net.Flag3 == nil then                 
+                    @net.Flag3 = "1" 
+                    @net.save                  
+                  else
+                    @net.Flag3 = (@net.Flag3.to_i + 1).to_s
+                    @net.save
+                  end
+                  
+                  # Count ADHOC completes
+                                
+                  @Adhocnet = Network.find_by netid: "1111"
+                  if @Adhocnet.Flag3 == nil then
+                  
+                    @Adhocnet.Flag3 = "1" 
+                    @Adhocnet.save                  
+                  else
+                  
+                    @Adhocnet.Flag3 = (@Adhocnet.Flag3.to_i + 1).to_s
+                    @Adhocnet.save 
+                  end                                            
+                end # duplicate is false                 
+                # Happy ending
+                
+                tracker.track(@user.ip_address, 'ADHOC_Completes')
+                if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
+                  redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=1'
+                else
+                  redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'    
+                end                
+              else # not a P2S or RFG or ADHOC project. it must be a FED survey            
+          
+                # save attempt info in User and Survey tables
+          
+                @user = User.find_by user_id: params[:PID]
+
+                print '************** Suceess for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+                puts
+          
+                @user.SurveysAttempted << params[:tsfn]+'-2'
+            
+                # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
+            
+                if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
+                  @net_name = "Fyber"
+                else
+                end
+                           
+                if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
+                  @net_name = "SuperSonic"
+                else
+                end
+            
+                if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
+                  @net_name = "RadiumOne"
+                else
+                end
               
-              if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
+                if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
+                  @net_name = "SS2"
+                else
+                end
+                
+                if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
+                  @net_name = "Fyber2"
+                else
+                end 
+                
+                if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
+                  @net_name = "SS3"
+                else
+                end  
+                
+                if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
+                  @net_name = "MemoLink"
+                else
+                end   
+                
+                if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
+                  @net_name = "RadiumOne2"
+                else
+                end           
+                
+                if @user.netid == "T2Abd5433LLA785410lpH567" then 
+                  @net_name = "TestNtk"
+                else
+                end              
+   
+                @survey = Survey.find_by SurveyNumber: params[:tsfn]                    
+                print '************ Successfully completed survey:', @survey.SurveyNumber
+                puts
+              
+                @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
+                @user.save
+                
+                # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
+              
+                @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
+                @survey.save!
+
+                # Save (inverse of) TCR and reset counter for attempts at last complete
+              
+                @survey.SurveyExactRank = @survey.SurveyExactRank + 1  # SurveyExactRank=Failure+OQ+Success count
+                @NumberofAttemptsSinceLastComplete = @survey.SurveyExactRank - @survey.NumberofAttemptsAtLastComplete
+                @survey.TCR = (1.0 / @NumberofAttemptsSinceLastComplete).round(3)
+
+                @survey.NumberofAttemptsAtLastComplete = @survey.SurveyExactRank
+              
+                # Move the just converted survey to F or S immediately, if it is already not there
+              
+                if (@survey.SurveyGrossRank > 100) then
+        
+                  @survey.SurveyGrossRank = 101 - (@survey.TCR * 100)
+                  print "************** Assigned Just converted to Fast: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
+                  @survey.label = 'JUST CONVERTED'
+
+                else
+
+                  # the survey is already in F i.e. rank is <= 100. do nothing
+
+                end
+
+                @survey.save
+
+                # Postback the network about success with users clickid
+              
+                if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+                  begin
+                    @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    rescue HTTParty::Error => e
+                      puts 'HttParty::Error '+ e.message
+                      retry
+                    end while @FyberPostBack.code != 200
+                 else
+                end
+                         
+                if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+         
+                  begin
+                    @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      rescue HTTParty::Error => e
+                        puts 'HttParty::Error '+ e.message
+                        retry
+                    end while @SupersonicPostBack.code != 200
+      
+                else
+                end
+                
+                if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
+                    
+                    begin
+                      @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                       rescue HTTParty::Error => e
+                         puts 'HttParty::Error '+ e.message
+                         retry
+                    end while @RadiumOnePostBack.code != 200
+    
+                else
+                end
+                
+                if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
+         
+                  begin
+                    @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      rescue HTTParty::Error => e
+                      puts 'HttParty::Error '+ e.message
+                      retry
+                  end while @SS2PostBack.code != 200
+      
+                else
+                end
+                
+                if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then
+
+                  begin
+                    @Fyber2PostBack = HTTParty.post('http://www2.balao.de/SPNcu?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    rescue HTTParty::Error => e
+                      puts 'HttParty::Error '+ e.message
+                      retry
+                    end while @Fyber2PostBack.code != 200
+      
+                else
+                end
+                            
+                if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
+                  # puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
                   
                   begin
-                    @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                     rescue HTTParty::Error => e
-                       puts 'HttParty::Error '+ e.message
-                       retry
-                  end while @RadiumOnePostBack.code != 200
-  
-              else
-              end
-                                     
-              # Keep a count of completes on all Networks
-            
-              puts "*************** Keeping track of completes on all networks"
-                      
-              @net = Network.find_by netid: @user.netid
-              if @net.Flag3 == nil then
+                    @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                          rescue HTTParty::Error => e
+                            puts 'HttParty::Error '+ e.message
+                            retry
+                  end while @SS3PostBack.code != 200
+      
+                else
+                end
+                
+                if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
+                    
+                    begin
+                      @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                       rescue HTTParty::Error => e
+                         puts 'HttParty::Error '+ e.message
+                         retry
+                    end while @RadiumOnePostBack.code != 200
+    
+                else
+                end
+                                       
+                # Keep a count of completes on all Networks
               
-              @net.Flag3 = "1" 
-              @net.save
-              
-            else
-              
-              @net.Flag3 = (@net.Flag3.to_i + 1).to_s
-              @net.save
-              
-            end                     
+                puts "*************** Keeping track of completes on all networks"
+                        
+                @net = Network.find_by netid: @user.netid
+                if @net.Flag3 == nil then
+                
+                @net.Flag3 = "1" 
+                @net.save
+                
+                else
+                
+                @net.Flag3 = (@net.Flag3.to_i + 1).to_s
+                @net.save
+                
+                end                     
 
-              # Happy ending
-              
-              tracker.track(@user.ip_address, 'FED_Completes')
-              
-              if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
-                redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=3'
-              else
-                redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=3'
-              end
-              
+                # Happy ending
+                
+                tracker.track(@user.ip_address, 'FED_Completes')
+                
+                if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
+                  redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=3'
+                else
+                  redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=3'
+                end              
+              end # if ADHOC
             end # if RFG
           end # if P2S
         end # if test
         
-
       when "3"
         # FailureLink: https://www.ketsci.com/redirects/status?status=3&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
         # FED uses this link when user is under age or they do not qualify for the survey they attempted. However since Ketsci eliminates those users already, this user
@@ -807,8 +998,7 @@ class RedirectsController < ApplicationController
       
         if params[:PID] == 'test' then 
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=2'
-        else # if test
-          
+        else # if test          
           if @p2s_redirect then
             
             # save attempt info in User and Survey tables
@@ -823,10 +1013,8 @@ class RedirectsController < ApplicationController
             
             #Tell user that they were not matched in P2S due to Failure
             tracker.track(@user.ip_address, 'FL-3')
-            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
-            
-          else # not p2s redirect
-                        
+            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'            
+          else # not p2s redirect                        
             if @rfg_redirect then
               
               # save attempt info in User and RfgOroject tables
@@ -882,86 +1070,148 @@ class RedirectsController < ApplicationController
                 redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=4'
               
               end # if SupplierLink empty?
-              
-            else # must be FED            
+            else # Not RFG. Try Adhoc
+              if @adhoc_redirect then
+                
+                # save attempt info in User and Survey tables
+                @user = User.find_by user_id: params[:PID]          
             
-              # save attempt info in User and Survey tables
-              @user = User.find_by user_id: params[:PID]          
-          
-              print 'Status = Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
-              puts
-
-              # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
-              # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
-              if params[:tsfn] != nil then
-                @user.SurveysAttempted << params[:tsfn]+'-3'                   
-                @user.save            
-            
-                @survey = Survey.find_by SurveyNumber: params[:tsfn]
-              
-                if (@survey == nil) then
-                  sleep(1)
-                  @survey = Survey.find_by SurveyNumber: params[:tsfn]
-                  puts " *********** Retried retrieving survey"
-                else
-                end
-                            
-                # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
-                @survey.SurveyExactRank = @survey.SurveyExactRank + 1
-                @survey.FailureCount = @survey.FailureCount + 1
-                print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn], ' new ExactRank (Failure+OQ+Success) count= ', @survey.SurveyExactRank
+                print 'Status = Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
                 puts
+
+                # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
+                # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
+                if params[:tsfn] != nil then
+                  @user.SurveysAttempted << params[:tsfn]+'-3'                   
+                  @user.save            
               
-                @survey.save
-            
-              else # if params[tsfn] != nil
-              end # if params[tsfn] != nil
-            
-              # Give user chance to take another survey unless they do not qualify for any (other) survey
-
-              if (@user.SupplierLink.empty? == false) then
-
-                if (@user.SupplierLink.length == 1) then #P2S is the next link
-          
-                  print 'User will be sent to this p2s survey: ', @user.SupplierLink[0]
+                  @survey = Adhoc.find_by SurveyNumber: params[:tsfn]
+                
+                  if (@survey == nil) then
+                    sleep(1)
+                    @survey = Adhoc.find_by SurveyNumber: params[:tsfn]
+                    puts " *********** Retried retrieving Adhoc survey"
+                  else
+                  end
+                              
+                  # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
+                  If @survey.FailureCount == nil then
+                    @survey.FailureCount = 1
+                  else
+                    @survey.FailureCount = @survey.FailureCount + 1
+                  end
+                  print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for adhoc survey number: ', params[:tsfn], ' Failurecount= ', @survey.FailureCount
                   puts
-                  @NextEntryLink = @user.SupplierLink[0]
-                  @user.SupplierLink = @user.SupplierLink.drop(1)
-                  @user.save
-                  redirect_to @NextEntryLink
-           
-                else
+                
+                  @survey.save
+              
+                else # if params[tsfn] != nil
+                end # if params[tsfn] != nil
+              
+                # Give user chance to take another survey unless they do not qualify for any (other) survey
 
-                  print 'User will be sent to this fed or rfg survey: ', @user.SupplierLink[0]
+                if (@user.SupplierLink.empty? == false) then
+
+                  if (@user.SupplierLink.length == 1) then #P2S is the next link
+            
+                    print 'User will be sent to this p2s survey: ', @user.SupplierLink[0]
+                    puts
+                    @NextEntryLink = @user.SupplierLink[0]
+                    @user.SupplierLink = @user.SupplierLink.drop(1)
+                    @user.save
+                    redirect_to @NextEntryLink
+             
+                  else
+
+                    print 'User will be sent to the next adhoc, fed or rfg survey: ', @user.SupplierLink[0]
+                    puts
+                    @NextEntryLink = @user.SupplierLink[0]
+                    @user.SupplierLink = @user.SupplierLink.drop(1)
+                    @user.save
+                    redirect_to @NextEntryLink
+
+                  end
+
+                else # if SupplierLink empty?
+                  tracker.track(@user.ip_address, 'FL-6')
+                  redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
+                
+                end # if SupplierLink empty?
+              else # must be FED            
+              
+                # save attempt info in User and Survey tables
+                @user = User.find_by user_id: params[:PID]          
+            
+                print 'Status = Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
+                puts
+
+                # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
+                # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
+                if params[:tsfn] != nil then
+                  @user.SurveysAttempted << params[:tsfn]+'-3'                   
+                  @user.save            
+              
+                  @survey = Survey.find_by SurveyNumber: params[:tsfn]
+                
+                  if (@survey == nil) then
+                    sleep(1)
+                    @survey = Survey.find_by SurveyNumber: params[:tsfn]
+                    puts " *********** Retried retrieving survey"
+                  else
+                  end
+                              
+                  # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
+                  @survey.SurveyExactRank = @survey.SurveyExactRank + 1
+                  @survey.FailureCount = @survey.FailureCount + 1
+                  print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn], ' new ExactRank (Failure+OQ+Success) count= ', @survey.SurveyExactRank
                   puts
-                  @NextEntryLink = @user.SupplierLink[0]
-                  @user.SupplierLink = @user.SupplierLink.drop(1)
-                  @user.save
-                  redirect_to @NextEntryLink
+                
+                  @survey.save
+              
+                else # if params[tsfn] != nil
+                end # if params[tsfn] != nil
+              
+                # Give user chance to take another survey unless they do not qualify for any (other) survey
 
-                end
+                if (@user.SupplierLink.empty? == false) then
 
-              else # if SupplierLink empty?
-                tracker.track(@user.ip_address, 'FL-5')
-                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=5'
-              
-              end # if SupplierLink empty?
-              
-              
+                  if (@user.SupplierLink.length == 1) then #P2S is the next link
+            
+                    print 'User will be sent to this p2s survey: ', @user.SupplierLink[0]
+                    puts
+                    @NextEntryLink = @user.SupplierLink[0]
+                    @user.SupplierLink = @user.SupplierLink.drop(1)
+                    @user.save
+                    redirect_to @NextEntryLink
+             
+                  else
+
+                    print 'User will be sent to this fed or rfg survey: ', @user.SupplierLink[0]
+                    puts
+                    @NextEntryLink = @user.SupplierLink[0]
+                    @user.SupplierLink = @user.SupplierLink.drop(1)
+                    @user.save
+                    redirect_to @NextEntryLink
+
+                  end
+
+                else # if SupplierLink empty?
+                  tracker.track(@user.ip_address, 'FL-5')
+                  redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=5'
+                
+                end # if SupplierLink empty?              
+              end # if ADHOC
             end # if RFG          
-          end # if p2s redirect   
+          end # if p2s   
         end # if test
                 
-
       when "4"
         # OverQuotaLink: https://www.ketsci.com/redirects/status?status=4&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
 
         # turn to t'test' be true on launch 
         if params[:PID] == 'test' then
           redirect_to 'https://www.ketsci.com/redirects/overquota?&OQ=1'
-
-        else # if test
-          
+        else # if test  
           if @p2s_redirect then
             
             # save attempt info in User and Survey tables
@@ -978,7 +1228,6 @@ class RedirectsController < ApplicationController
             tracker.track(@user.ip_address, 'FL-6')
             redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
           else # not a p2sredirect
-            
             if @rfg_redirect then
             
               # save attempt info in User and Survey tables
@@ -989,9 +1238,7 @@ class RedirectsController < ApplicationController
               puts          
           
               @user.SurveysAttempted << params[:tsfn]+'-4'
-              @user.save    
-
-
+              @user.save
               
               # Save attempts counts by project
               @project = RfgProject.find_by rfg_id: params[:tsfn]
@@ -1014,13 +1261,11 @@ class RedirectsController < ApplicationController
               puts
               @project.save
 
-          
-
               # Give user chance to take another survey
           
               if (@user.SupplierLink.empty? == false) then
         
-#              if (@user.SupplierLink.length == 1) then #P2S is the next link
+                # See if (@user.SupplierLink.length == 1) then #P2S is the next link (Actually does not matter anyway - just go to next survey)
           
                 print 'User will be sent to this survey: ', @user.SupplierLink[0]
                 puts
@@ -1033,73 +1278,130 @@ class RedirectsController < ApplicationController
                 tracker.track(@user.ip_address, 'FL-7')
                 redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=7'
             
-              end # if SupplierLink empty           
+              end # if SupplierLink empty                     
+            else # Adhoc
+              if @adhoc_redirect then
+                # save attempt info in User and Survey tables
+                @user = User.find_by user_id: params[:PID]
+
+                print 'Adhoc survey OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
+                puts          
             
-            else
+                @user.SurveysAttempted << params[:tsfn]+'-4'
+                @user.save
+            
+            
+                @survey = Adhoc.find_by SurveyNumber: params[:tsfn]
               
-              # save attempt info in User and Survey tables
-              @user = User.find_by user_id: params[:PID]
-
-
-              print 'OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
-              puts          
-          
-              @user.SurveysAttempted << params[:tsfn]+'-4'
-              @user.save
-          
-          
-              @survey = Survey.find_by SurveyNumber: params[:tsfn]
+                if (@survey == nil) then
+                  sleep(1)
+                  @survey = Adhoc.find_by SurveyNumber: params[:tsfn]
+                  puts " *********** Retried retrieving Adhoc survey"
+                else
+                end    
             
-              if (@survey == nil) then
-                sleep(1)
+                # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
+
+                if @survey.OverQuotaCount == nil then
+                  @survey.OverQuotaCount = 1
+                else
+                 @survey.OverQuotaCount = @survey.OverQuotaCount + 1
+               end
+
+                # @survey.SurveyExactRank = @survey.SurveyExactRank + 1
+                print '********************************* Unsuccessful attempts count raised by 1 following an OQ for Adhoc survey number: ', params[:tsfn]
+                puts
+              
+                @survey.save          
+
+                # Give user chance to take another survey            
+                if (@user.SupplierLink.empty? == false) then
+          
+                  if (@user.SupplierLink.length == 1) then #P2S is the next link
+              
+                    print 'User will be sent to this survey: ', @user.SupplierLink[0]
+                    puts
+                    @NextEntryLink = @user.SupplierLink[0]
+                    @user.SupplierLink = @user.SupplierLink.drop(1)
+                    @user.save
+                    redirect_to @NextEntryLink               
+                  else
+            
+                    print 'User will be sent to this survey: ', @user.SupplierLink[0]
+                    puts
+                    @NextEntryLink = @user.SupplierLink[0]
+                    @user.SupplierLink = @user.SupplierLink.drop(1)
+                    @user.save
+                    redirect_to @NextEntryLink
+                  end              
+                else # if SupplierLink empty
+                  tracker.track(@user.ip_address, 'FL-9')
+                  redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=9'              
+                end # if SupplierLink empty
+              else # must be FED
+                
+                # save attempt info in User and Survey tables
+                @user = User.find_by user_id: params[:PID]
+
+
+                print 'OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
+                puts          
+            
+                @user.SurveysAttempted << params[:tsfn]+'-4'
+                @user.save
+            
+            
                 @survey = Survey.find_by SurveyNumber: params[:tsfn]
-                puts " *********** Retried retrieving survey"
-              else
-              end    
-          
-              # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
-
-              @survey.OverQuotaCount = @survey.OverQuotaCount + 1
-
-              @survey.SurveyExactRank = @survey.SurveyExactRank + 1
-              print '********************************* Unsuccessful attempts count raised by 1 following an OQ for survey number: ', params[:tsfn]
-              puts
-            
-              @survey.save          
-
-              # Give user chance to take another survey
-          
-              if (@user.SupplierLink.empty? == false) then
-        
-              if (@user.SupplierLink.length == 1) then #P2S is the next link
-          
-                print 'User will be sent to this survey: ', @user.SupplierLink[0]
-                puts
-                @NextEntryLink = @user.SupplierLink[0]
-                @user.SupplierLink = @user.SupplierLink.drop(1)
-                @user.save
-                redirect_to @NextEntryLink
-           
-              else
-        
-                print 'User will be sent to this survey: ', @user.SupplierLink[0]
-                puts
-                @NextEntryLink = @user.SupplierLink[0]
-                @user.SupplierLink = @user.SupplierLink.drop(1)
-                @user.save
-                redirect_to @NextEntryLink
-              end
-            
-              else # if SupplierLink empty
-                tracker.track(@user.ip_address, 'FL-8')
-                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=8'
-            
-              end # if SupplierLink empty
-            
-            end # RFG redirect          
-          end # p2sredirect
-        end # if test
               
+                if (@survey == nil) then
+                  sleep(1)
+                  @survey = Survey.find_by SurveyNumber: params[:tsfn]
+                  puts " *********** Retried retrieving survey"
+                else
+                end    
+            
+                # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
+
+                @survey.OverQuotaCount = @survey.OverQuotaCount + 1
+
+                @survey.SurveyExactRank = @survey.SurveyExactRank + 1
+                print '********************************* Unsuccessful attempts count raised by 1 following an OQ for survey number: ', params[:tsfn]
+                puts
+              
+                @survey.save          
+
+                # Give user chance to take another survey
+            
+                if (@user.SupplierLink.empty? == false) then
+          
+                if (@user.SupplierLink.length == 1) then #P2S is the next link
+            
+                  print 'User will be sent to this survey: ', @user.SupplierLink[0]
+                  puts
+                  @NextEntryLink = @user.SupplierLink[0]
+                  @user.SupplierLink = @user.SupplierLink.drop(1)
+                  @user.save
+                  redirect_to @NextEntryLink
+             
+                else
+          
+                  print 'User will be sent to this survey: ', @user.SupplierLink[0]
+                  puts
+                  @NextEntryLink = @user.SupplierLink[0]
+                  @user.SupplierLink = @user.SupplierLink.drop(1)
+                  @user.save
+                  redirect_to @NextEntryLink
+                end
+              
+                else # if SupplierLink empty
+                  tracker.track(@user.ip_address, 'FL-8')
+                  redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=8'
+              
+                end # if SupplierLink empty
+              end # if Adhoc
+            end # if RFG          
+          end #  if p2s
+        end # if test              
 
       when "5"
         # QualityTerminationLink: https://www.ketsci.com/redirects/status?status=5&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
@@ -1164,8 +1466,7 @@ class RedirectsController < ApplicationController
           tracker.track(@user.ip_address, 'QT-2')
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=2'
           
-        end # if test
-        
+        end # if test        
     end # case
   end # status
 end # class
