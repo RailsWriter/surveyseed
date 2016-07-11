@@ -2933,7 +2933,7 @@ class UsersController < ApplicationController
         end
         
         
-        @adhocSupplierLinks << survey.Link+@adhocNetId+survey.SurveyNumber+user.user_id
+        @adhocSupplierLinks << survey.SupplierLink+@adhocNetId+survey.SurveyNumber+user.user_id
         
         print '********** This USER_ID: ', user.user_id, ' has QUALIFIED for the following Adhoc survey : ', survey.SurveyNumber
         puts

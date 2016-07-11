@@ -748,7 +748,7 @@ class RedirectsController < ApplicationController
                                                    
                   # Keep a count of completes on each Network
                 
-                  puts "*************** Keeping track of completes on the corresponding network"
+                  puts "*************** Keeping track of completes on the corresponding networks"
                 
                   @net = Network.find_by netid: @user.netid
                 
