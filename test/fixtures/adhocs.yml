@@ -1,0 +1,89 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  SurveyName: 
+  SurveyNumber: 1
+  CountryLanguageID: 1
+  LengthOfInterview: 1
+  Conversion: 1
+  CPI: 1.5
+  OverallCompletes: 1
+  TotalRemaining: 1
+  SurveyMobileConversion: 1
+  QualificationAgePreCodes: MyText
+  QualificationGenderPreCodes: MyText
+  QualificationZIPPreCodes: 
+  : 
+  QualificationHHIPreCodes: MyText
+  QualificationEducationPreCodes: MyText
+  QualificationHHCPreCodes: MyText
+  QualificationEthnicityPreCodes: MyText
+  QualificationRacePreCodes: MyText
+  QualificationEmploymentPreCodes: MyText
+  QualificationPIndustryPreCodes: MyText
+  QualificationDMAPreCodes: MyText
+  QualificationStatePreCodes: MyText
+  QualificationRegionPreCodes: MyText
+  QualificationDivisionPreCodes: MyText
+  QualificationJobTitlePreCodes: MyText
+  QualificationChildrenPreCodes: MyText
+  SurveyQuotas: 
+  : 
+  SurveyStillLive: false
+  SurveyGrossRank: 1
+  SurveyExactRank: 1
+  SupplierLink: MyText
+  created_at: 2016-07-10 21:31:15
+  updated_at: 2016-07-10 21:31:15
+  FailureCount: 1
+  OverQuotaCount: 1
+  NumberOfAttemptsAtLastComplete: 1
+  GEPC: 1.5
+  KEPC: 1.5
+  TCR: 1.5
+  Label: 
+  LastModified: 2016-07-10 21:31:15
+
+two:
+  SurveyName: 
+  SurveyNumber: 1
+  CountryLanguageID: 1
+  LengthOfInterview: 1
+  Conversion: 1
+  CPI: 1.5
+  OverallCompletes: 1
+  TotalRemaining: 1
+  SurveyMobileConversion: 1
+  QualificationAgePreCodes: MyText
+  QualificationGenderPreCodes: MyText
+  QualificationZIPPreCodes: 
+  : 
+  QualificationHHIPreCodes: MyText
+  QualificationEducationPreCodes: MyText
+  QualificationHHCPreCodes: MyText
+  QualificationEthnicityPreCodes: MyText
+  QualificationRacePreCodes: MyText
+  QualificationEmploymentPreCodes: MyText
+  QualificationPIndustryPreCodes: MyText
+  QualificationDMAPreCodes: MyText
+  QualificationStatePreCodes: MyText
+  QualificationRegionPreCodes: MyText
+  QualificationDivisionPreCodes: MyText
+  QualificationJobTitlePreCodes: MyText
+  QualificationChildrenPreCodes: MyText
+  SurveyQuotas: 
+  : 
+  SurveyStillLive: false
+  SurveyGrossRank: 1
+  SurveyExactRank: 1
+  SupplierLink: MyText
+  created_at: 2016-07-10 21:31:15
+  updated_at: 2016-07-10 21:31:15
+  FailureCount: 1
+  OverQuotaCount: 1
+  NumberOfAttemptsAtLastComplete: 1
+  GEPC: 1.5
+  KEPC: 1.5
+  TCR: 1.5
+  Label: 
+  LastModified: 2016-07-10 21:31:15

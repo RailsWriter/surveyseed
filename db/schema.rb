@@ -11,7 +11,51 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150906075406) do
+ActiveRecord::Schema.define(version: 20160716074352) do
+
+  create_table "adhocs", force: true do |t|
+    t.string   "SurveyName"
+    t.integer  "SurveyNumber"
+    t.integer  "CountryLanguageID"
+    t.integer  "LengthOfInterview"
+    t.integer  "Conversion"
+    t.float    "CPI"
+    t.integer  "OverallCompletes"
+    t.integer  "TotalRemaining"
+    t.integer  "SurveyMobileConversion"
+    t.text     "QualificationAgePreCodes"
+    t.text     "QualificationGenderPreCodes"
+    t.text     "QualificationZIPPreCodes",        limit: 1000000
+    t.text     "QualificationHHIPreCodes"
+    t.text     "QualificationEducationPreCodes"
+    t.text     "QualificationHHCPreCodes"
+    t.text     "QualificationEthnicityPreCodes"
+    t.text     "QualificationRacePreCodes"
+    t.text     "QualificationEmploymentPreCodes"
+    t.text     "QualificationPIndustryPreCodes"
+    t.text     "QualificationDMAPreCodes"
+    t.text     "QualificationStatePreCodes"
+    t.text     "QualificationRegionPreCodes"
+    t.text     "QualificationDivisionPreCodes"
+    t.text     "QualificationJobTitlePreCodes"
+    t.text     "QualificationChildrenPreCodes"
+    t.text     "SurveyQuotas",                    limit: 5000000
+    t.boolean  "SurveyStillLive"
+    t.integer  "SurveyGrossRank"
+    t.integer  "SurveyExactRank"
+    t.string   "SupplierLink"
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+    t.integer  "FailureCount"
+    t.integer  "OverQuotaCount"
+    t.integer  "NumberOfAttemptsAtLastComplete"
+    t.float    "GEPC"
+    t.float    "KEPC"
+    t.float    "TCR"
+    t.string   "Label"
+    t.datetime "LastModified"
+    t.text     "CompletedBy"
+  end
 
   create_table "leads", force: true do |t|
     t.string   "name"

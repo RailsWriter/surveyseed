@@ -214,6 +214,11 @@ class RedirectsController < ApplicationController
               else
               end         
             
+            if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
+                @net_name = "RadiumOne3"
+              else
+              end 
+
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
               else
@@ -308,6 +313,19 @@ class RedirectsController < ApplicationController
   
               else
               end
+
+              if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
+     
+                begin
+                  @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                   rescue HTTParty::Error => e
+                     puts 'HttParty::Error '+ e.message
+                     retry
+                end while @RadiumOne3PostBack.code != 200
+  
+              else
+              end
+
                                                
               # Keep a count of completes on each Network
             
@@ -419,6 +437,12 @@ class RedirectsController < ApplicationController
                 @net_name = "RadiumOne2"
               else
               end
+
+              if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
+                @net_name = "RadiumOne3"
+              else
+              end
+
               
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
@@ -541,6 +565,18 @@ class RedirectsController < ApplicationController
   
               else
               end
+
+              if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
+     
+                begin
+                  @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                   rescue HTTParty::Error => e
+                     puts 'HttParty::Error '+ e.message
+                     retry
+                  end while @RadiumOne3PostBack.code != 200
+  
+              else
+              end
                            
               # Keep a count of completes on all Networks
             
@@ -639,6 +675,11 @@ class RedirectsController < ApplicationController
                   
                   if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
                     @net_name = "RadiumOne2"
+                  else
+                  end 
+
+                  if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
+                    @net_name = "RadiumOne3"
                   else
                   end         
                 
@@ -745,6 +786,17 @@ class RedirectsController < ApplicationController
                     end while @RadiumOnePostBack.code != 200      
                   else
                   end
+
+                  if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
+         
+                    begin
+                      @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                       rescue HTTParty::Error => e
+                         puts 'HttParty::Error '+ e.message
+                         retry
+                    end while @RadiumOne3PostBack.code != 200      
+                  else
+                  end
                                                    
                   # Keep a count of completes on each Network
                 
@@ -831,6 +883,11 @@ class RedirectsController < ApplicationController
                 
                 if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
                   @net_name = "RadiumOne2"
+                else
+                end
+
+                if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
+                  @net_name = "RadiumOne3"
                 else
                 end           
                 
@@ -956,6 +1013,18 @@ class RedirectsController < ApplicationController
                          puts 'HttParty::Error '+ e.message
                          retry
                     end while @RadiumOnePostBack.code != 200
+    
+                else
+                end
+
+                if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
+                    
+                    begin
+                      @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                       rescue HTTParty::Error => e
+                         puts 'HttParty::Error '+ e.message
+                         retry
+                    end while @RadiumOne3PostBack.code != 200
     
                 else
                 end
@@ -1095,7 +1164,7 @@ class RedirectsController < ApplicationController
                   end
                               
                   # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
-                  If @survey.FailureCount == nil then
+                  if @survey.FailureCount == nil then
                     @survey.FailureCount = 1
                   else
                     @survey.FailureCount = @survey.FailureCount + 1

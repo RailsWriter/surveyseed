@@ -1201,9 +1201,9 @@ class UsersController < ApplicationController
       net = Network.find_by netid: @netid
         
       if net.payout == nil then
-        @currentpayout = 1.90 # assumes this is the minimum payout for FED surveys across networks including the 30% fees
+        @currentpayout = 1.85 # assumes this is the minimum payout for FED surveys across networks including the 30% fees
       else
-        @currentpayout = 1.3*net.payout # FED CPI must be higher than net.payout + 30% of survey CPI. This approximation with 30% of net.payout is a good approximation.
+        @currentpayout = 1.44*net.payout # FED CPI must be higher than net.payout + 30% of survey CPI. This approximation with 30% of net.payout is a good approximation.
         p '****************************** minimum payout for FED set to: ', @currentpayout
         puts
       end
@@ -2933,7 +2933,7 @@ class UsersController < ApplicationController
         end
         
         
-        @adhocSupplierLinks << survey.SupplierLink+@adhocNetId+survey.SurveyNumber+user.user_id
+        @adhocSupplierLinks << survey.SupplierLink+@adhocNetId+survey.SurveyNumber.to_s+user.user_id
         
         print '********** This USER_ID: ', user.user_id, ' has QUALIFIED for the following Adhoc survey : ', survey.SurveyNumber
         puts
@@ -2943,6 +2943,8 @@ class UsersController < ApplicationController
             
       else
         # No qualified Adhoc surveys found for if qualification conditions
+        print '???????????????????????????????????------------------------>>>> NO QUALIFIED ADHOC SURVEYS FOUND **************'
+        puts
       end
 
     end # do loop for all Adhoc surveys in db
@@ -8327,7 +8329,7 @@ class UsersController < ApplicationController
           user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
           puts "RFG is Back-3"
         else
-          @tmp1 = adhocSupplierLinks + user.SupplierLink
+          @tmp1 = @adhocSupplierLinks + user.SupplierLink
           user.SupplierLink = @tmp1 + @RFGSupplierLinks
           puts "RFG is Back-4"
         end
@@ -8360,7 +8362,7 @@ class UsersController < ApplicationController
               user.SupplierLink = @RFGSupplierLinks + @tmp3
               puts "RFG is Front-5"
             else
-              @tmp4 = adhocSupplierLinks + RFGSupplierLinks
+              @tmp4 = @adhocSupplierLinks + RFGSupplierLinks
               @tmp5 = user.SupplierLink
               user.SupplierLink = @tmp4 + @tmp5
               puts "RFG is Front-6"
@@ -8661,10 +8663,19 @@ class UsersController < ApplicationController
            puts 'HttParty::Error '+ e.message
           retry
         end while @RadiumOnePostBack.code != 200
-
       else
       end  
-      
+
+      if user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
+
+        begin
+          @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+         rescue HTTParty::Error => e
+           puts 'HttParty::Error '+ e.message
+          retry
+        end while @RadiumOne3PostBack.code != 200
+      else
+      end
         
       # Keep a count of Test completes on each Network
   
@@ -8719,6 +8730,11 @@ class UsersController < ApplicationController
       
       if user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
         @net_name = "RadiumOne2"
+      else
+      end
+
+      if user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
+        @net_name = "RadiumOne3"
       else
       end
     

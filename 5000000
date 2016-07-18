@@ -1,0 +1,2 @@
+      invoke  active_record
+      create    db/migrate/20160711065324_update_again_column_in_adhoc.rb
