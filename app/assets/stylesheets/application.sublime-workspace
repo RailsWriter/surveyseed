@@ -1,0 +1,306 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"api",
+				"apiResponse"
+			],
+			[
+				"print",
+				"Print"
+			],
+			[
+				"ad",
+				"adhoc_redirect"
+			],
+			[
+				"adh",
+				"adhocSupplierLinks"
+			],
+			[
+				"pa",
+				"payout"
+			],
+			[
+				"use",
+				"user_id"
+			],
+			[
+				"Sur",
+				"SurveyNumber"
+			],
+			[
+				"A",
+				"ADHOC"
+			],
+			[
+				"C",
+				"Converters"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/akhtarjameel/projects/surveyseed/scripts/RFGtestscript.rb",
+		"/Users/akhtarjameel/projects/surveyseed/app/views/users/qq2.html.erb",
+		"/Users/akhtarjameel/projects/surveyseed/app/controllers/users_controller.rb",
+		"/Users/akhtarjameel/projects/surveyseed/app/controllers/redirects_controller.rb",
+		"/Users/akhtarjameel/projects/surveyseed/app/views/leads/home.html.erb",
+		"/Users/akhtarjameel/Desktop/flightwebsite/app/views/static_pages/home.html.erb",
+		"/Users/akhtarjameel/Desktop/flightwebsite/app/assets/stylesheets/static_pages.scss",
+		"/Users/akhtarjameel/projects/surveyseed/app/controllers/center_controller.rb",
+		"/Users/akhtarjameel/projects/surveyseed/app/views/center/surveys_US.html.erb",
+		"/Users/akhtarjameel/projects/surveyseed/app/views/center/surveys_AU.html.erb",
+		"/Users/akhtarjameel/projects/surveyseed/app/views/center/surveys_CA.html.erb",
+		"/Users/akhtarjameel/projects/surveyseed/app/controllers/leads_controller.rb",
+		"/Users/akhtarjameel/projects/surveyseed/app/controllers/networks_controller.rb",
+		"/Users/akhtarjameel/projects/surveyseed/app/controllers/application_controller.rb",
+		"/Users/akhtarjameel/projects/surveyseed/scripts/GenerateMemoLinkCompletesReport.rb",
+		"/Users/akhtarjameel/projects/surveyseed/scripts/GenerateDailyCompletesReport.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/schema.rb",
+		"/Users/akhtarjameel/projects/surveyseed/scripts/buildsurveystack.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20160716074352_update_more_column_in_adhoc.rb",
+		"/Users/akhtarjameel/projects/surveyseed/app/models/adhoc.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20160711065324_update_again_column_in_adhoc.rb",
+		"/Users/akhtarjameel/projects/surveyseed/config/routes.rb",
+		"/Users/akhtarjameel/Desktop/FirstProject/app/assets/stylesheets/application.css",
+		"/Users/akhtarjameel/projects/surveyseed/app/models/survey.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20141209032057_add_more_details_to_surveys.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20160711070713_add_column_to_adhoc.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20160711070437_add_column_to_adhoc.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20160711070038_add_column_to_adhoc.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20150204044941_again_add_details_to_surveys.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20150216085720_further_add_details_to_surveys.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20160711064124_update_column_in_adhoc.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20160711064526_update_again_column_in_adhoc.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20141203192020_change_column.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20160711061028_update_column_in_adhoc.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20160711062224_change_column_in_adhic.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20160711061739_change_column_in_adhoc.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20160711043115_create_adhocs.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20141203194309_change_survey_quota_column.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20150305012049_add_new_data_columns_to_surveys.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20150516092948_remove_industries_pre_codes_from_surveys.rb",
+		"/Users/akhtarjameel/projects/surveyseed/db/migrate/20150212061236_even_again_add_details_to_surveys.rb",
+		"/Users/akhtarjameel/projects/surveyseed/app/models/network.rb",
+		"/Users/akhtarjameel/projects/surveyseed/scripts/updatequotas.rb",
+		"/Users/akhtarjameel/Desktop/tmp",
+		"/Users/akhtarjameel/projects/surveyseed/app/assets/stylesheets/leads.css.scss",
+		"/Users/akhtarjameel/projects/surveyseed/app/views/center/users_US.html.erb",
+		"/Users/akhtarjameel/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings"
+	],
+	"find":
+	{
+		"height": 22.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"@Adhoc",
+			"Flag2",
+			"@Adhocnet.Flag",
+			"@Adhocnet.save",
+			"????----",
+			"1111",
+			"currentpayout",
+			"1.25",
+			"Aiuy56420xzLL7862rtwsxcAHxsdhjkl",
+			"adhocSupplierLinks",
+			"Adhoc.",
+			"ALL",
+			".to_",
+			"adhocSupplierLink",
+			".link",
+			".Link",
+			"Adhoc.",
+			"SurveyExactRank",
+			"Keep a count of completes on each Network",
+			"SurveysCompleted",
+			"p1ac",
+			"@pid",
+			"currentpayout",
+			"adhocSupplierLinks",
+			"RFGSupplierLinks",
+			"QualifiedSurveys",
+			"RFGSupplierLinks",
+			"selectRfgProjects",
+			"adhoc",
+			"test",
+			"T2Abd5433LLA785410lpH567",
+			"currentpayout",
+			"CPI",
+			"adhoc",
+			"1111",
+			"Kets",
+			"RadiumOne",
+			"sha1",
+			"rankfedsurveys",
+			"ranksurveys",
+			"SupplierLink",
+			"rfg",
+			"1111",
+			"hero",
+			"container2",
+			"research",
+			"container3",
+			"white",
+			"nil",
+			"QuotaCompletesLeft",
+			"QualificationCompletesLeft",
+			"RFGQuotaIsAvailable",
+			"<=",
+			"project.quotas[j][\"completesLeft\"]",
+			"completesLeft",
+			"301",
+			"foundtopprojectswithquota",
+			"print",
+			"Flag2"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 22.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "application.sublime-project",
+	"replace":
+	{
+		"height": 40.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": false,
+	"template_settings":
+	{
+	}
+}

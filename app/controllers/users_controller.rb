@@ -8311,11 +8311,12 @@ class UsersController < ApplicationController
     else
     end
        
-    # Order Adhoc, FED and RFG surveys
+    # Order FED, ADHOC and RFG surveys
     
     if (@RFGIsBack) then
       puts "RFG is Back"
       if user.SupplierLink == nil then
+        # No FED surveys
         if @adhocSupplierLinks == nil then
           user.SupplierLink = @RFGSupplierLinks
           puts "RFG is Back-1 but no ADHOC or FED surveys are available"
@@ -8329,7 +8330,7 @@ class UsersController < ApplicationController
           user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
           puts "RFG is Back-3"
         else
-          @tmp1 = @adhocSupplierLinks + user.SupplierLink
+          @tmp1 = user.SupplierLink + @adhocSupplierLinks
           user.SupplierLink = @tmp1 + @RFGSupplierLinks
           puts "RFG is Back-4"
         end
@@ -8338,6 +8339,7 @@ class UsersController < ApplicationController
       if (@RFGIsFront) then
         puts "RFG is Front"
         if user.SupplierLink == nil then
+          # No FED surveys
           if @adhocSupplierLinks == nil then
             user.SupplierLink = @RFGSupplierLinks
             puts "RFG is Front-1"
@@ -8352,7 +8354,7 @@ class UsersController < ApplicationController
               puts "RFG is Front-3 but no RFG or ADHOC surveys available"
             else
               @tmp2 = user.SupplierLink
-              user.SupplierLink = @adhocSupplierLinks + @tmp2
+              user.SupplierLink = @tmp2 + @adhocSupplierLinks
               puts "RFG is Front-4 but no RFG surveys available"
             end
 
@@ -8376,13 +8378,13 @@ class UsersController < ApplicationController
           puts "RFG not Included-1"
         else
           @tmp6 = user.SupplierLink
-          user.SupplierLink = @adhocSupplierLinks + @tmp6
+          user.SupplierLink = @tmp6 + @adhocSupplierLinks
           puts "RFG not Included-2"
         end
       end
     end
     
-    # Save the order of ADHOC, FED and RFG
+    # Save the order of FED, ADHOC and RFG
     
     user.save
     
