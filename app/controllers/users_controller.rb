@@ -3334,8 +3334,8 @@ class UsersController < ApplicationController
     
     if user.country == "9" then  
               
-    RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectEPC: :desc).each do |project|
-
+    #RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectEPC: :desc).each do |project|
+    RfgProject.where("country = ? AND state = ?", user_country, 2).order(estimatedIR: :desc).order(projectEPC: :desc).each do |project|
       if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects     
         
         if project.projectStillLive then
@@ -5097,7 +5097,8 @@ class UsersController < ApplicationController
        
     if user.country == "6" then  
               
-    RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectEPC: :desc).each do |project|
+    #RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectEPC: :desc).each do |project|
+    RfgProject.where("country = ? AND state = ?", user_country, 2).order(estimatedIR: :desc).order(projectEPC: :desc).each do |project|
 
       if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects     
         
@@ -6638,8 +6639,8 @@ class UsersController < ApplicationController
     
     if user.country == "5" then  
               
-    RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectEPC: :desc).each do |project|
-
+    #RfgProject.where("country = ? AND state = ?", user_country, 2).order(epc: :desc).order(projectEPC: :desc).each do |project|
+    RfgProject.where("country = ? AND state = ?", user_country, 2).order(estimatedIR: :desc).order(projectEPC: :desc).each do |project|
       if @foundtopprojectswithquota == false then  #3 false means not finished finding top projects     
         
         if project.projectStillLive then

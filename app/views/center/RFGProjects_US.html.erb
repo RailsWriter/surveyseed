@@ -3,13 +3,13 @@
 
 <p>Showing <%= @projects.count%> US surveys at <%= Time.now.utc %></p>
 
-	<p> Block: id - Co - EPC - CPI - pEPC - pCR - State </p>
+	<p> Block: id - Co - estIR - CPI - pEPC - pCR - State </p>
 	
 	<h5>rfg_id ------------------ Block ----------------------------------- Remaining -------- Created -------- Attempts ------------ ALC -------- Ntwk --------- TLC</h5>
 	
 	
 	<% @projects.each do |c| %>
 	    <li>
-	       <%= link_to c.rfg_id.to_s + '--' + c.id.to_s + '--' + c.country.to_s + '--' + c.epc.to_s + '---' + c.cpi.to_s + '---' + (c.projectEPC).to_s + '---' + (c.projectCR).to_s + '---' + (c.state).to_s + '----------------' + (c.desiredCompletes - c.currentCompletes).to_s + '---------------' + c.created_at.to_date.to_s + '------------------' + c.NumberofAttempts.to_s + '------------------' + c.AttemptsAtLastComplete.to_s + '---------------' + c.CompletedBy.flatten(2).at(4).to_s + '---------------' + c.CompletedBy.flatten(2).at(1).to_s, :action =>'show_projects_US', :id =>c.id  -%>
+	       <%= link_to c.rfg_id.to_s + '--' + c.id.to_s + '--' + c.country.to_s + '--' + c.estimatedIR.to_s + '---' + c.cpi.to_s + '---' + (c.projectEPC).to_s + '---' + (c.projectCR).to_s + '---' + (c.state).to_s + '----------------' + (c.desiredCompletes - c.currentCompletes).to_s + '---------------' + c.created_at.to_date.to_s + '------------------' + c.NumberofAttempts.to_s + '------------------' + c.AttemptsAtLastComplete.to_s + '---------------' + c.CompletedBy.flatten(2).at(4).to_s + '---------------' + c.CompletedBy.flatten(2).at(1).to_s, :action =>'show_projects_US', :id =>c.id  -%>
 	    </li>
 	<% end %>
