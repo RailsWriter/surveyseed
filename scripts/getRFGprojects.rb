@@ -68,10 +68,19 @@ begin
         print '************ Processing an EXISTING project:', @project.rfg_id
         puts
         
-        if RFGProjectsIndex["response"]["projects"][i]["lastModified"] == @project.lastModified then
+        if RFGProjectsIndex["response"]["projects"][i]["lastModified"] == @project.lastModified.iso8601 then
           skipProject = true # no need to update if no modifications
+          puts '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>UN-MODIFIED EXISTING PROJECT: SKIP<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+          print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Index Timestamp: ', RFGProjectsIndex["response"]["projects"][i]["lastModified"]
+          puts
+          print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Database Timestamp in iso8601: ', @project.lastModified.iso8601
+          puts
         else
-          
+          puts '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>MODIFIED EXISTING PROJECT FOUND: UPDATE DATABASE<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+          print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Index Timestamp: ', RFGProjectsIndex["response"]["projects"][i]["lastModified"]
+          puts
+          print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Database Timestamp in iso8601: ', @project.lastModified.iso8601
+          puts
           @project.title = RFGProjectsIndex["response"]["projects"][i]["title"]
           @project.cpi = RFGProjectsIndex["response"]["projects"][i]["cpi"]
           @project.estimatedIR = RFGProjectsIndex["response"]["projects"][i]["estimatedIR"]
@@ -92,8 +101,9 @@ begin
           if (RFGProjectsIndex["response"]["projects"][i]["state"] != 2) || (@project.desiredCompletes == @project.currentCompletes) then
             @project.projectStillLive = false
             skipProject = true # no need to update if no modifications
+            puts '>>>>>>>>>>>>>>>>>MODIFIED EXISTING PROJECT BUT WITH STATE !=2 OR NO REMAINING COMPLETES: SKIP<<<<<<<<<<<<<<<<<<<<<<<<<<'
           else
-            @project.projectStillLive = true
+            @project.projectStillLive = true  
           end
           
           @project.save
@@ -104,7 +114,7 @@ begin
       
     else
     
-      puts '************ Processing a NEW project'
+      puts '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NEW project FOUND <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
       if ((RFGProjectsIndex["response"]["projects"][i]["country"] == "CA") || (RFGProjectsIndex["response"]["projects"][i]["country"] == "US") || (RFGProjectsIndex["response"]["projects"][i]["country"] == "AU")) &&
         ( RFGProjectsIndex["response"]["projects"][i]["cpi"] > "$1.24" ) then
       
@@ -135,9 +145,10 @@ begin
           skipProject = true # no need to update if no modifications
         else
           @project.projectStillLive = true
+          @project.save
         end
         
-        @project.save
+        
         
       else
         puts "This NEW project does not meet our criteria, skip it"
@@ -271,8 +282,8 @@ begin
         #print "************+++++++++++++=====================datapoints in targeting API received: ", RFGProjectTargets["response"]["datapoints"], "******============================"
         #puts
         
-        print "************+++++++++++++=====================datapoints in targeting API saved as @project.datapoints: ", @project.datapoints, "******============================"
-        puts
+        #print "************+++++++++++++=====================datapoints in targeting API saved as @project.datapoints: ", @project.datapoints, "******============================"
+        #puts
         
         
         @project.lastModified = RFGProjectTargets["response"]["lastModified"]
@@ -289,7 +300,7 @@ begin
         end
             
         # CreateLink for the project
-      
+        puts '>>>>>>>>>>>>>>>>>>>>>$$$$$$$$$$$$$$$>>>>> CREATING LINK <<<<<<<<<<<<<<<<<<<<<<<<<<$$$$$$$$$$$$$$$$$<<<<<<<<<<<<<<<<<<'
         command = { :command => "livealert/createLink/1", :rfg_id => @project.rfg_id }.to_json
         
         time=Time.now.to_i
@@ -382,7 +393,8 @@ begin
       projectstobedeleted << oldproject.rfg_id
       print '******************** DELETING THIS Project NUMBER NOT on Index LIST: ', oldproject.rfg_id
       puts
-      oldproject.delete
+      oldproject.destroy
+      #RfgProject.where("rfg_id=?", oldproject.rfg_id).destroy_all
     end
   end # do21 oldproject
     
@@ -395,14 +407,14 @@ begin
   print 'getRFGProjects: Time at end', timenow
   puts
   
-  if (timenow - starttime) > 60 then 
+  if (timenow - starttime) > 300 then 
     print 'time elapsed since start =', (timenow - starttime), '- going to repeat immediately'
     puts
     timetorepeat = true
   else
-    print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 1 minutes'
+    print 'time elapsed since start =', (timenow - starttime), '- going to sleep for 5 minutes'
     puts
-    sleep (1.minutes)
+    sleep (5.minutes)
     timetorepeat = true
   end
 
