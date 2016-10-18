@@ -8696,53 +8696,59 @@ class UsersController < ApplicationController
   
       # Save Test completed information by user
   
-      if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
-        @net_name = "Fyber"
-      else
-      end
+      # if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
+      #   @net_name = "Fyber"
+      # else
+      # end
   
-      if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
-        @net_name = "SuperSonic"
-      else
-      end
+      # if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
+      #   @net_name = "SuperSonic"
+      # else
+      # end
   
-      if user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
-        @net_name = "RadiumOne"
-      else
-      end
+      # if user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
+      #   @net_name = "RadiumOne"
+      # else
+      # end
   
-      if user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
-        @net_name = "SS2"
-      else
-      end 
+      # if user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
+      #   @net_name = "SS2"
+      # else
+      # end 
       
-      if user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
-        @net_name = "Fyber2"
-      else
-      end
+      # if user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
+      #   @net_name = "Fyber2"
+      # else
+      # end
       
-      if user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
-        @net_name = "SS3"
-      else
-      end
+      # if user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
+      #   @net_name = "SS3"
+      # else
+      # end
       
-      if user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
-        @net_name = "MemoLink"
-      else
-      end
+      # if user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
+      #   @net_name = "MemoLink"
+      # else
+      # end
       
-      if user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
-        @net_name = "RadiumOne2"
-      else
-      end
+      # if user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
+      #   @net_name = "RadiumOne2"
+      # else
+      # end
 
-      if user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
-        @net_name = "RadiumOne3"
-      else
-      end
+      # if user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
+      #   @net_name = "RadiumOne3"
+      # else
+      # end
+
+      # if user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then 
+      #   @net_name = "TapJoy"
+      # else
+      # end
     
       user.SurveysAttempted << 'TESTSURVEY'
-      user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
+      #user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
+      user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, user.netid.slice(0..2)]
       user.save
     
     end # duplicate is false

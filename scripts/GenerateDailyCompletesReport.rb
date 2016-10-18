@@ -21,5 +21,7 @@ begin
   puts
   print "Local time ", Time.now-7*60*60
   puts
-  sleep (10.minutes)
+  print "Going to sleep for 5 minutes"
+  puts
+  sleep (5.minutes)
 end while timetorepeat
