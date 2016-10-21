@@ -214,8 +214,13 @@ class RedirectsController < ApplicationController
               else
               end         
             
-            if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
+              if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
                 @net_name = "RadiumOne3"
+              else
+              end 
+
+              if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then 
+                @net_name = "Tapjoy"
               else
               end 
 
@@ -323,6 +328,17 @@ class RedirectsController < ApplicationController
                      retry
                 end while @RadiumOne3PostBack.code != 200
   
+              else
+              end
+
+              if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
+
+                begin
+                  @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  rescue HTTParty::Error => e
+                  puts 'HttParty::Error '+ e.message
+                  retry
+                end while @TapjoyPostBack.code != 200
               else
               end
 
@@ -443,6 +459,10 @@ class RedirectsController < ApplicationController
               else
               end
 
+              if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then 
+                @net_name = "Tapjoy"
+              else
+              end
               
               if @user.netid == "T2Abd5433LLA785410lpH567" then 
                 @net_name = "TestNtk"
@@ -577,6 +597,17 @@ class RedirectsController < ApplicationController
   
               else
               end
+
+              if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
+
+                begin
+                  @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  rescue HTTParty::Error => e
+                  puts 'HttParty::Error '+ e.message
+                  retry
+                end while @TapjoyPostBack.code != 200
+              else
+              end
                            
               # Keep a count of completes on all Networks
             
@@ -681,7 +712,12 @@ class RedirectsController < ApplicationController
                   if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
                     @net_name = "RadiumOne3"
                   else
-                  end         
+                  end      
+
+                  if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then 
+                    @net_name = "Tapjoy"
+                  else
+                  end    
                 
                   if @user.netid == "T2Abd5433LLA785410lpH567" then 
                     @net_name = "TestNtk"
@@ -797,6 +833,17 @@ class RedirectsController < ApplicationController
                     end while @RadiumOne3PostBack.code != 200      
                   else
                   end
+
+                  if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
+
+                    begin
+                      @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      rescue HTTParty::Error => e
+                      puts 'HttParty::Error '+ e.message
+                      retry
+                    end while @TapjoyPostBack.code != 200
+                  else
+                  end
                                                    
                   # Keep a count of completes on each Network
                 
@@ -888,6 +935,11 @@ class RedirectsController < ApplicationController
 
                 if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
                   @net_name = "RadiumOne3"
+                else
+                end 
+
+                if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then 
+                  @net_name = "Tapjoy"
                 else
                 end           
                 
@@ -1026,6 +1078,17 @@ class RedirectsController < ApplicationController
                          retry
                     end while @RadiumOne3PostBack.code != 200
     
+                else
+                end
+
+                if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
+
+                  begin
+                    @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    rescue HTTParty::Error => e
+                    puts 'HttParty::Error '+ e.message
+                    retry
+                  end while @TapjoyPostBack.code != 200
                 else
                 end
                                        
