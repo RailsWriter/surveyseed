@@ -8355,7 +8355,8 @@ class UsersController < ApplicationController
               puts "RFG is Front-3 but no RFG or ADHOC surveys available"
             else
               @tmp2 = user.SupplierLink
-              user.SupplierLink = @tmp2 + @adhocSupplierLinks
+              #user.SupplierLink = @tmp2 + @adhocSupplierLinks
+              user.SupplierLink = @adhocSupplierLinks + @tmp2
               puts "RFG is Front-4 but no RFG surveys available"
             end
 
