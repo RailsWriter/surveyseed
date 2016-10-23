@@ -8365,7 +8365,7 @@ class UsersController < ApplicationController
               user.SupplierLink = @RFGSupplierLinks + @tmp3
               puts "RFG is Front-5"
             else
-              @tmp4 = @adhocSupplierLinks + RFGSupplierLinks
+              @tmp4 = @adhocSupplierLinks + @RFGSupplierLinks
               @tmp5 = user.SupplierLink
               user.SupplierLink = @tmp4 + @tmp5
               puts "RFG is Front-6"
