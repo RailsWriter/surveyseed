@@ -334,7 +334,7 @@ class RedirectsController < ApplicationController
               if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
 
                 begin
-                  @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                   rescue HTTParty::Error => e
                   puts 'HttParty::Error '+ e.message
                   retry
@@ -601,7 +601,7 @@ class RedirectsController < ApplicationController
               if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
 
                 begin
-                  @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                   rescue HTTParty::Error => e
                   puts 'HttParty::Error '+ e.message
                   retry
@@ -837,7 +837,7 @@ class RedirectsController < ApplicationController
                   if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
 
                     begin
-                      @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                       rescue HTTParty::Error => e
                       puts 'HttParty::Error '+ e.message
                       retry
@@ -1084,7 +1084,7 @@ class RedirectsController < ApplicationController
                 if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
 
                   begin
-                    @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                     rescue HTTParty::Error => e
                     puts 'HttParty::Error '+ e.message
                     retry

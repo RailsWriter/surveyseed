@@ -6,13 +6,14 @@ require 'httparty'
 
 
 flag = 'prod'
+#flag = 'stag'
 
 
+# prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
+# staging_base_url = "http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com"
 
-
-
-prod_base_url = "http://vpc-apiloadbalancer-991355604.us-east-1.elb.amazonaws.com"
-staging_base_url = "http://vpc-stg-apiloadbalancer-1968605456.us-east-1.elb.amazonaws.com"
+prod_base_url = "http://api.samplicio.us"
+staging_base_url = "http://stg-api.samplicio.us"
 
 print "**************************** QUOTA UPDATE: ENV is set to ", flag
 puts
