@@ -150,7 +150,7 @@ class CenterController < ApplicationController
 
 
     def adhoc_surveys
-    @a_surveys = Adhoc.where("SurveyStillLive = ?", 'true').each
+    @a_surveys = Adhoc.where("SurveyStillLive = ?", 1).each
     
     respond_to do |format|
       format.html # home.html.erb
@@ -159,7 +159,7 @@ class CenterController < ApplicationController
     end
 
     def show_adhoc_surveys
-      @a_surveys = Adhoc.where("SurveyStillLive = ?", 'true').each  
+      @a_surveys = Adhoc.where("SurveyStillLive = ?", 1).each
     end
     
     
