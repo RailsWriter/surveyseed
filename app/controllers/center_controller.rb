@@ -147,6 +147,20 @@ class CenterController < ApplicationController
     def show_projects_AU
       @projects = RfgProject.where("country = ?", "AU").each  
     end
+
+
+    def adhoc_surveys
+    @a_surveys = Adhoc.where("SurveyStillLive = ?", 'true').each
+    
+    respond_to do |format|
+      format.html # home.html.erb
+      format.json { render json: @a_surveys }
+    end      
+    end
+
+    def show_adhoc_surveys
+      @a_surveys = Adhoc.where("SurveyStillLive = ?", 'true').each  
+    end
     
     
         
