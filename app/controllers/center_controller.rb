@@ -80,88 +80,102 @@ class CenterController < ApplicationController
     @users = User.where("country = ?", '5').each
   end
     
-    def users_CA  
-      @users = User.where("country = ?", '6').last(100).reverse.each
+  def users_CA  
+    @users = User.where("country = ?", '6').last(100).reverse.each
 
-        respond_to do |format|
-          format.html # users.html.erb
-          format.json { render json: @users }
-        end
-    end
-  
-    def show_users_CA
-      @users = User.where("country = ?", '6').each
-    end
-  
-    def users_IN  
-      @users = User.where("country = ?", '7').last(100).reverse.each
-
-        respond_to do |format|
-          format.html # users.html.erb
-          format.json { render json: @users }
-        end
-    end
-  
-    def show_users_IN
-      @users = User.where("country = ?", '7').each
-    end
-  
-    def RFGProjects_CA
-      
-      @projects = RfgProject.where("country = ?", "CA").order(estimatedIR: :desc).order(projectEPC: :desc).each
-    
       respond_to do |format|
-        format.html # home.html.erb
-        format.json { render json: @projects }
-      end      
-    end
+        format.html # users.html.erb
+        format.json { render json: @users }
+      end
+  end
+  
+  def show_users_CA
+    @users = User.where("country = ?", '6').each
+  end
 
-    def show_projects_CA
-      @projects = RfgProject.where("country = ?", "CA").each  
-    end
-    
-    def RFGProjects_US
-      
-      @projects = RfgProject.where("country = ?", "US").order(estimatedIR: :desc).order(projectEPC: :desc).each
-    
+  def users_IN  
+    @users = User.where("country = ?", '7').last(100).reverse.each
+
       respond_to do |format|
-        format.html # home.html.erb
-        format.json { render json: @projects }
-      end      
-    end
+        format.html # users.html.erb
+        format.json { render json: @users }
+      end
+  end
 
-    def show_projects_US
-      @projects = RfgProject.where("country = ?", "US").each  
-    end  
+  def show_users_IN
+    @users = User.where("country = ?", '7').each
+  end
+  
+  def RFGProjects_CA
     
-    def RFGProjects_AU
-      
-      @projects = RfgProject.where("country = ?", "AU").order(estimatedIR: :desc).order(projectEPC: :desc).each
+    @projects = RfgProject.where("country = ?", "CA").order(estimatedIR: :desc).order(projectEPC: :desc).each
+  
+    respond_to do |format|
+      format.html # home.html.erb
+      format.json { render json: @projects }
+    end      
+  end
+
+  def show_projects_CA
+    @projects = RfgProject.where("country = ?", "CA").each  
+  end
+  
+  def RFGProjects_US
     
-      respond_to do |format|
-        format.html # home.html.erb
-        format.json { render json: @projects }
-      end      
-    end
+    @projects = RfgProject.where("country = ?", "US").order(estimatedIR: :desc).order(projectEPC: :desc).each
+  
+    respond_to do |format|
+      format.html # home.html.erb
+      format.json { render json: @projects }
+    end      
+  end
 
-    def show_projects_AU
-      @projects = RfgProject.where("country = ?", "AU").each  
-    end
-
-
-    def adhoc_surveys
-    @a_surveys = Adhoc.where("SurveyStillLive = ?", 1).each
+  def show_projects_US
+    @projects = RfgProject.where("country = ?", "US").each  
+  end  
+  
+  def RFGProjects_AU
     
+    @projects = RfgProject.where("country = ?", "AU").order(estimatedIR: :desc).order(projectEPC: :desc).each
+  
+    respond_to do |format|
+      format.html # home.html.erb
+      format.json { render json: @projects }
+    end      
+  end
+
+  def show_projects_AU
+    @projects = RfgProject.where("country = ?", "AU").each  
+  end
+
+
+  def adhoc_surveys
+    @a_surveys = Adhoc.where("SurveyNumber > ?", 0).each
+  
     respond_to do |format|
       format.html # home.html.erb
       format.json { render json: @a_surveys }
     end      
-    end
+  end
 
-    def show_adhoc_surveys
-      @a_surveys = Adhoc.where("SurveyStillLive = ?", 1).each
+  def show_adhoc_surveys
+    @a_surveys = Adhoc.where("SurveyNumber > ?", 0).each
+  end
+  
+
+  def draft_survey  
+    if params[:newAdhocSurvey] != nil
+      a=Adhoc.new
+
+      a.SurveyName = params[:newAdhocSurvey][SurveyName]
+      a.SurveyNumber = 1000+Adhoc.count+1
+      a.QualificationAgePreCodes = params[:newAdhocSurvey][Age]
+      a.CPI = params[:newAdhocSurvey][CPI]
+      a.SurveyStillLive=false
+      a.save
+    else
     end
-    
+  end
     
         
 #    def alllNets

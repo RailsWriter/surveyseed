@@ -8276,12 +8276,141 @@ class UsersController < ApplicationController
       (0..@RFGSupplierLinks.length-1).each do |i|
         @RFGSupplierLinks[i] = @RFGSupplierLinks[i]+@RFGAdditionalValues+@MS_is_mobile
       end
-      print "--------------************ RFGSupplierLinks List *********************-----------------: ", @RFGSupplierLinks
+      print "--------------************>>>>>>>>>>>>>>>>>>> RFGSupplierLinks List <<<<<<<<<<<<<<<<<<<*********************-----------------: ", @RFGSupplierLinks
       puts
     else
       # do nothing, no RFG surveys match the user
       puts "************ User did not match any available quota in RFG projects"
-    end      
+    end   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # Instead of LiveLink use Offerwall surveys
+
+    if @RFGSupplierLinks != nil then
+      # Additional parameters are known
+      p "--------------------**************>>>>>>>>>>>>>> RFG SupplierLink NOT NIL so attaching additional params <<<<<<<<<<<<<<<<<*****************-------------------"
+
+      if user.country=="9" then
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :householdIncome => @RFGHhi, :employment => @RFGEmployment, :educationUS => @RFGEducationUS, :ethnicityUS => @RFGEthnicity, :jobTitle => @RFGJobTitle, :employmentIndustry => @RFGPindustry}.to_json
+      else
+        if user.country=="6" then
+          command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :householdIncome => @RFGHhi, :educationCA => @RFGEducationCA, :employment => @RFGEmployment, :jobTitle => @RFGJobTitle, :employmentIndustry => @RFGPindustry}.to_json
+        else
+          if user.country=="5" then
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :householdIncome => @RFGHhi, :educationAU => @RFGEducationAU, :employment => @RFGEmployment, :jobTitle => @RFGJobTitle, :employmentIndustry => @RFGPindustry}.to_json          
+          else
+          end
+        end
+      end
+    else
+      # Additional parameters are NOT known
+      p "--------------------**************>>>>>>>>>>>>>> RFG SupplierLink IS NIL so no Additional parameters attached <<<<<<<<<<<<<<<<<*****************-------------------"
+
+      if user.country=="9" then
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday}.to_json
+      else
+        if user.country=="6" then
+          command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday}.to_json
+        else
+          if user.country=="5" then
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday}.to_json          
+          else
+          end
+        end
+      end
+    end
+
+    # time=Time.now.to_i
+    # #hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.hex2bin, Digest::SHA1)
+    # digest = OpenSSL::Digest.new('sha1')
+    # hash = OpenSSL::HMAC.hexdigest(digest, secret.hex2bin, "#{time}#{command}")
+
+
+    # uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
+
+
+    # Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+    #   req = Net::HTTP::Post.new uri
+    #   req.body = command
+    #   req.content_type = 'application/json'
+    #   response = http.request req
+    #   puts response.body
+    #   @OfferwallResponse = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil
+    # end
+
+
+
+
+    time=Time.now.to_i
+    hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.scan(/../).map {|x| x.to_i(16).chr}.join, Digest::SHA1)
+    uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
+  
+    begin
+      Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+        req = Net::HTTP::Post.new uri
+        req.body = command
+        req.content_type = 'application/json'
+        response = http.request req
+        @OfferwallResponse = JSON.parse(response.body)  
+      end
+          
+      rescue Net::ReadTimeout => e  
+      puts e.message
+    end
+
+
+    print "Offerwall Response: ", @OfferwallResponse["response"]
+    puts
+    
+    @maxIR = @OfferwallResponse["response"]["surveys"][0]["ir"]
+
+    @NumberOfSurveys = @OfferwallResponse["response"]["surveys"].length
+      
+      print "************ Number of surveys: ", @NumberOfSurveys
+      puts
+
+      (0..@NumberOfSurveys-1).each do |i|
+
+        if @maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"] then
+          @maxIRIndex = i
+          @maxIR = @OfferwallResponse["response"]["surveys"][i]["ir"]
+          @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][i]["offer_url"]
+        else
+        end
+      end
+      
+      print "RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxIRIndex, " with IR: ", @maxIR
+      puts
+
+      @RFGSupplierLinks = []
+      @RFGSupplierLinks << @RFGOfferwallSupplierLink
+
+      print "************>>>>>>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
+      puts
+
+
+
+
+
+
+
+
+
+
     
     else
     # do nothing for RFG
