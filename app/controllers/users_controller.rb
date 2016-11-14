@@ -4710,9 +4710,9 @@ class UsersController < ApplicationController
                   @QualificationChildren = false
                 else
                   (0..user.children.length-1).each do |c|
-                    (0..project.quotas[j].datapoints[n]["values"].length-1).each do |i|
-                      if (project.quotas[j].datapoints[n]["values"][i]["unit"]!=nil) then
-                        if (project.quotas[j].datapoints[n]["values"][i]["unit"]==0) then 
+                    (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                      if (project.quotas[j]["datapoints"][n]["values"][i]["unit"]!=nil) then
+                        if (project.quotas[j]["datapoints"][n]["values"][i]["unit"]==0) then 
                           y=1
                         else
                           y=12
@@ -4720,13 +4720,13 @@ class UsersController < ApplicationController
                       else
                         y=1
                       end
-                      @QualificationChildren = (((project.quotas[j].datapoints[n]["values"][i]["min"]..project.quotas[j].datapoints[n]["values"][i]["max"]).include?(((user.children[c].to_f/2).round)*y)) && ((project.quotas[j].datapoints[n]["values"][i]["gender"] == nil) || (user.children[c].to_i % 2==project.quotas[j].datapoints[n]["values"][i]["gender"].to_i % 2))) || @QualificationChildren
+                      @QualificationChildren = (((project.quotas[j]["datapoints"][n]["values"][i]["min"]..project.quotas[j]["datapoints"][n]["values"][i]["max"]).include?(((user.children[c].to_f/2).round)*y)) && ((project.quotas[j]["datapoints"][n]["values"][i]["gender"] == nil) || (user.children[c].to_i % 2==project.quotas[j]["datapoints"][n]["values"][i]["gender"].to_i % 2))) || @QualificationChildren
                     end
                   end
                 end
                 print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User entered Children: ", user.children
                 puts
-                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project quota Children: ", project.quotas[j].datapoints[n]["values"]
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project quota Children: ", project.quotas[j]["datapoints"][n]["values"]
                 puts
                 print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Quota for @QualificationChildren: ", @QualificationChildren
                 puts    
@@ -6335,9 +6335,9 @@ class UsersController < ApplicationController
                   @QualificationChildren = false
                 else
                   (0..user.children.length-1).each do |c|
-                    (0..project.quotas[j].datapoints[n]["values"].length-1).each do |i|
-                      if (project.quotas[j].datapoints[n]["values"][i]["unit"]!=nil) then
-                        if (project.quotas[j].datapoints[n]["values"][i]["unit"]==0) then 
+                    (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                      if (project.quotas[j]["datapoints"][n]["values"][i]["unit"]!=nil) then
+                        if (project.quotas[j]["datapoints"][n]["values"][i]["unit"]==0) then 
                           y=1
                         else
                           y=12
@@ -6345,13 +6345,13 @@ class UsersController < ApplicationController
                       else
                         y=1
                       end
-                      @QualificationChildren = (((project.quotas[j].datapoints[n]["values"][i]["min"]..project.quotas[j].datapoints[n]["values"][i]["max"]).include?(((user.children[c].to_f/2).round)*y)) && ((project.quotas[j].datapoints[n]["values"][i]["gender"] == nil) || (user.children[c].to_i % 2==project.quotas[j].datapoints[n]["values"][i]["gender"].to_i % 2))) || @QualificationChildren
+                      @QualificationChildren = (((project.quotas[j]["datapoints"][n]["values"][i]["min"]..project.quotas[j]["datapoints"][n]["values"][i]["max"]).include?(((user.children[c].to_f/2).round)*y)) && ((project.quotas[j]["datapoints"][n]["values"][i]["gender"] == nil) || (user.children[c].to_i % 2==project.quotas[j]["datapoints"][n]["values"][i]["gender"].to_i % 2))) || @QualificationChildren
                     end
                   end
                 end
                 print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User entered Children: ", user.children
                 puts
-                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project quota Children: ", project.quotas[j].datapoints[n]["values"]
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project quota Children: ", project.quotas[j]["datapoints"][n]["values"]
                 puts
                 print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Quota for @QualificationChildren: ", @QualificationChildren
                 puts    
@@ -7873,9 +7873,9 @@ class UsersController < ApplicationController
                   @QualificationChildren = false
                 else
                   (0..user.children.length-1).each do |c|
-                    (0..project.quotas[j].datapoints[n]["values"].length-1).each do |i|
-                      if (project.quotas[j].datapoints[n]["values"][i]["unit"]!=nil) then
-                        if (project.quotas[j].datapoints[n]["values"][i]["unit"]==0) then 
+                    (0..project.quotas[j]["datapoints"][n]["values"].length-1).each do |i|
+                      if (project.quotas[j]["datapoints"][n]["values"][i]["unit"]!=nil) then
+                        if (project.quotas[j]["datapoints"][n]["values"][i]["unit"]==0) then 
                           y=1
                         else
                           y=12
@@ -7883,13 +7883,13 @@ class UsersController < ApplicationController
                       else
                         y=1
                       end
-                      @QualificationChildren = (((project.quotas[j].datapoints[n]["values"][i]["min"]..project.quotas[j].datapoints[n]["values"][i]["max"]).include?(((user.children[c].to_f/2).round)*y)) && ((project.quotas[j].datapoints[n]["values"][i]["gender"] == nil) || (user.children[c].to_i % 2==project.quotas[j].datapoints[n]["values"][i]["gender"].to_i % 2))) || @QualificationChildren
+                      @QualificationChildren = (((project.quotas[j]["datapoints"][n]["values"][i]["min"]..project.quotas[j]["datapoints"][n]["values"][i]["max"]).include?(((user.children[c].to_f/2).round)*y)) && ((project.quotas[j]["datapoints"][n]["values"][i]["gender"] == nil) || (user.children[c].to_i % 2==project.quotas[j]["datapoints"][n]["values"][i]["gender"].to_i % 2))) || @QualificationChildren
                     end
                   end
                 end
                 print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> User entered Children: ", user.children
                 puts
-                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project quota Children: ", project.quotas[j].datapoints[n]["values"]
+                print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Project quota Children: ", project.quotas[j]["datapoints"][n]["values"]
                 puts
                 print "---------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Quota for @QualificationChildren: ", @QualificationChildren
                 puts    
@@ -8396,7 +8396,7 @@ class UsersController < ApplicationController
       print "RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxIRIndex, " with IR: ", @maxIR
       puts
 
-      @RFGSupplierLinks = []
+      @RFGSupplierLinks.clear
       @RFGSupplierLinks << @RFGOfferwallSupplierLink
 
       print "************>>>>>>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
