@@ -66,8 +66,10 @@ class RedirectsController < ApplicationController
             @adhoc_redirect = true
           else
             
-            if params[:rid][0..3] == "3333" then
-              params[:PID] = params[:rid].sub "3333", ''
+            # if params[:rid][0..3] == "3333" then
+            if params[:PID][0..3] == "3333" then
+              # params[:PID] = params[:rid].sub "3333", ''
+              params[:PID] = params[:PID].sub "3333", ''
               params[:tsfn] = params[:rfg_id]
               params[:tis] = '20'
               print "********************* Extracted userid from RFG PID to be = ", params[:PID]
