@@ -70,7 +70,8 @@ class RedirectsController < ApplicationController
             if params[:PID][0..3] == "3333" then
               # params[:PID] = params[:rid].sub "3333", ''
               params[:PID] = params[:PID].sub "3333", ''
-              params[:tsfn] = params[:rfg_id]
+              #params[:tsfn] = params[:rfg_id]
+              params[:tsfn] = 'RFG'
               params[:tis] = '20'
               print "********************* Extracted userid from RFG PID to be = ", params[:PID]
               puts
@@ -234,7 +235,7 @@ class RedirectsController < ApplicationController
               @user.SurveysCompleted[params[:PID]] = [Time.now, 'P2Ssurvey', 'P2S', '$1.25', @user.clickid, @net_name]
               @user.save
             
-              print "*************** User.netid is: ", @user.netid
+              print "*************** User.netid in P2S-2 is: ", @user.netid
               puts
               
               # Postback the network about success with users clickid
@@ -400,19 +401,21 @@ class RedirectsController < ApplicationController
               print '************** Suceess for user_id/PID on RFG: ', params[:PID], ' CID: ', @user.clickid
               puts
           
-              @user.SurveysAttempted << params[:tsfn]+'-2'
+              #@user.SurveysAttempted << params[:tsfn]+'-2'
+              @user.SurveysAttempted << 'RFG-2'
+
               
-              @project = RfgProject.find_by rfg_id: params[:tsfn]
+              # @project = RfgProject.find_by rfg_id: params[:tsfn]
             
-              if (@project == nil) then
-                sleep(1)
-                @project = RfgProject.find_by rfg_id: params[:tsfn]
-                puts " *********** Retried retrieving project"
-              else
-              end    
+              # if (@project == nil) then
+              #   sleep(1)
+              #   @project = RfgProject.find_by rfg_id: params[:tsfn]
+              #   puts " *********** Retried retrieving project"
+              # else
+              # end    
                  
-              print '************ Successfully completed project:', @project.rfg_id
-              puts
+              # print '************ Successfully completed project:', @project.rfg_id
+              # puts
               
               # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}            
             
@@ -471,37 +474,51 @@ class RedirectsController < ApplicationController
               else
               end
              
-              @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'RFG', @project.cpi, @user.clickid, @net_name]
-              @user.save
+              # @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'RFG', @project.cpi, @user.clickid, @net_name]
+              # @user.save
               
              
-              # Save completed project info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}            
-              @project.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
+              # # Save completed project info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}            
+              # @project.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
   
-              # Save attempts counts
-              if (@project.NumberofAttempts == nil) then
-                @project.NumberofAttempts = 0
-              else
-              end
+              # # Save attempts counts
+              # if (@project.NumberofAttempts == nil) then
+              #   @project.NumberofAttempts = 0
+              # else
+              # end
               
-              if (@project.AttemptsAtLastComplete == nil) then
-                @project.AttemptsAtLastComplete = 0
-              else
-              end
+              # if (@project.AttemptsAtLastComplete == nil) then
+              #   @project.AttemptsAtLastComplete = 0
+              # else
+              # end
                             
-              @project.NumberofAttempts = @project.NumberofAttempts + 1
-              #@RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
-              @project.AttemptsAtLastComplete = @project.NumberofAttempts
-              #if @RFGAttemptsSinceLastComplete  > 20 then
-               # @project.epc = "$.00"
-                #@project.projectEPC = "$.00"
-                #else
-                #end
+              # @project.NumberofAttempts = @project.NumberofAttempts + 1
+              # #@RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+              # @project.AttemptsAtLastComplete = @project.NumberofAttempts
+              # #if @RFGAttemptsSinceLastComplete  > 20 then
+              #  # @project.epc = "$.00"
+              #   #@project.projectEPC = "$.00"
+              #   #else
+              #   #end
               
-              print "Updating Attempts count for project in Success: ", @project.rfg_id
-              puts
-              @project.save
+              # print "Updating Attempts count for project in Success: ", @project.rfg_id
+              # puts
+              # @project.save
   
+
+
+
+
+
+
+              @user.SurveysCompleted[params[:PID]] = [Time.now, 'RFGsurvey', 'RFG', '$3.00', @user.clickid, @net_name]
+              @user.save
+            
+              print "*************** User.netid in RFG-2 is: ", @user.netid
+              puts
+
+
+
 
               # Postback the network about success with users clickid
             
@@ -1157,35 +1174,38 @@ class RedirectsController < ApplicationController
               print 'Status = RFG Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
               puts
 
-              # Save last attempted project unless user did not qualify for any (other) project from start (no tsfn is attached)
-              # This may not be necessary now that users are stopped in the uer controller if they do not qualify.
-              if params[:tsfn] != nil then
-                @user.SurveysAttempted << params[:tsfn]+'-3'                   
-                @user.save
-              else
-              end
+              # # Save last attempted project unless user did not qualify for any (other) project from start (no tsfn is attached)
+              # # This may not be necessary now that users are stopped in the uer controller if they do not qualify.
+              # if params[:tsfn] != nil then
+              #   @user.SurveysAttempted << params[:tsfn]+'-3'                   
+              #   @user.save
+              # else
+              # end
+
+              @user.SurveysAttempted << 'P2S-3'
+              @user.save
               
               # Save attempts counts by project
               
-              @project = RfgProject.find_by rfg_id: params[:tsfn]
+             #  @project = RfgProject.find_by rfg_id: params[:tsfn]
               
-              if (@project.NumberofAttempts == nil) then
-                @project.NumberofAttempts = 0
-              else
-              end         
+             #  if (@project.NumberofAttempts == nil) then
+             #    @project.NumberofAttempts = 0
+             #  else
+             #  end         
               
-              @project.NumberofAttempts = @project.NumberofAttempts + 1
-              #@RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
-              #@project.AttemptsAtLastComplete = @project.NumberofAttempts
-             # if @RFGAttemptsSinceLastComplete  > 20 then
-              #  @project.epc = "$.00"
-               # @project.projectEPC = "$.00"
-              #else
-              #end
+             #  @project.NumberofAttempts = @project.NumberofAttempts + 1
+             #  #@RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+             #  #@project.AttemptsAtLastComplete = @project.NumberofAttempts
+             # # if @RFGAttemptsSinceLastComplete  > 20 then
+             #  #  @project.epc = "$.00"
+             #   # @project.projectEPC = "$.00"
+             #  #else
+             #  #end
               
-              print "Updating Attempts count for project in Fail: ", @project.rfg_id
-              puts  
-              @project.save
+             #  print "Updating Attempts count for project in Fail: ", @project.rfg_id
+             #  puts  
+             #  @project.save
 
             
               # Give user chance to take another survey unless they do not qualify for any (other) survey
@@ -1368,32 +1388,35 @@ class RedirectsController < ApplicationController
               @user = User.find_by user_id: params[:PID]
 
 
-              print 'OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
+              print 'RFG OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
               puts          
           
-              @user.SurveysAttempted << params[:tsfn]+'-4'
-              @user.save
+              # @user.SurveysAttempted << params[:tsfn]+'-4'
+              # @user.save
+
+              @user.SurveysAttempted << 'RFG-4'
+              @user.save  
               
-              # Save attempts counts by project
-              @project = RfgProject.find_by rfg_id: params[:tsfn]
+              # # Save attempts counts by project
+              # @project = RfgProject.find_by rfg_id: params[:tsfn]
               
-              if (@project.NumberofAttempts == nil) then
-                @project.NumberofAttempts = 0
-              else
-              end
-              
-              @project.NumberofAttempts = @project.NumberofAttempts + 1
-              #@RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
-              #@project.AttemptsAtLastComplete = @project.NumberofAttempts
-              #if @RFGAttemptsSinceLastComplete  > 20 then
-               # @project.epc = "$.00"
-              #  @project.projectEPC = "$.00"
+              # if (@project.NumberofAttempts == nil) then
+              #   @project.NumberofAttempts = 0
               # else
               # end
+              
+              # @project.NumberofAttempts = @project.NumberofAttempts + 1
+              # #@RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+              # #@project.AttemptsAtLastComplete = @project.NumberofAttempts
+              # #if @RFGAttemptsSinceLastComplete  > 20 then
+              #  # @project.epc = "$.00"
+              # #  @project.projectEPC = "$.00"
+              # # else
+              # # end
   
-              print "Updating Attempts count for project in OQ: ", @project.rfg_id
-              puts
-              @project.save
+              # print "Updating Attempts count for project in OQ: ", @project.rfg_id
+              # puts
+              # @project.save
 
               # Give user chance to take another survey
           
@@ -1555,27 +1578,30 @@ class RedirectsController < ApplicationController
           @user.save
           
           if @rfg_redirect then
-            
-            # Save attempts counts by project
-            @project = RfgProject.find_by rfg_id: params[:tsfn]
-            
-            if (@project.NumberofAttempts == nil) then
-              @project.NumberofAttempts = 0
-            else
-            end
-            
-            @project.NumberofAttempts = @project.NumberofAttempts + 1
-           # @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
-            #@project.AttemptsAtLastComplete = @project.NumberofAttempts
-          #  if @RFGAttemptsSinceLastComplete  > 20 then
-           #   @project.epc = "$.00"
-            #  @project.projectEPC = "$.00"
-            #else
-            #end
 
-            print "Updating Attempts count for project in TERM: ", @project.rfg_id
-            puts
-            @project.save
+            @user.SurveysAttempted << 'RFG-5'
+            @user.save 
+            
+          #   # Save attempts counts by project
+          #   @project = RfgProject.find_by rfg_id: params[:tsfn]
+            
+          #   if (@project.NumberofAttempts == nil) then
+          #     @project.NumberofAttempts = 0
+          #   else
+          #   end
+            
+          #   @project.NumberofAttempts = @project.NumberofAttempts + 1
+          #  # @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+          #   #@project.AttemptsAtLastComplete = @project.NumberofAttempts
+          # #  if @RFGAttemptsSinceLastComplete  > 20 then
+          #  #   @project.epc = "$.00"
+          #   #  @project.projectEPC = "$.00"
+          #   #else
+          #   #end
+
+          #   print "Updating Attempts count for project in TERM: ", @project.rfg_id
+          #   puts
+          #   @project.save
             
           else # must be a FED redirect
             
