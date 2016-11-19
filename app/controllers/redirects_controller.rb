@@ -1182,7 +1182,7 @@ class RedirectsController < ApplicationController
               # else
               # end
 
-              @user.SurveysAttempted << 'P2S-3'
+              @user.SurveysAttempted << 'RFG-3'
               @user.save
               
               # Save attempts counts by project

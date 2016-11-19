@@ -1,0 +1,14 @@
+<h1>ALL LEADS</h1>
+
+
+<p><%= Time.now %></p>
+
+	
+	<h5>id ------------ Name ------------------ Email ----------- Message ------------- Created_at --------------- Phone </h5>
+
+	<% Lead.where("id > ?", 0).each do |c| %>
+	    <li>
+	       <%= link_to c.id.to_s + '--' + c.name.to_s + '---' + c.email.to_s + '---' + c.message.to_s + '--' + c.created_at.to_s + '----------' + c.phone.to_s  -%>
+	    </li>
+		<br>
+	<% end %>
