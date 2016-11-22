@@ -10,22 +10,25 @@
 	<body class="body">		
 		<div class="header">
 			<center>
-				<h1>Gender</h1>
+				<h1>Quick Question</h1>
 			</center>
 		</header>
 		
 		<div class="content">
-			<%= form_tag("gender", method: "post") do %>
+			<center>
+				<% session_id = session.id %>
+	    		<%user = User.find_by session_id: session_id %>
+				<% Adhoc.where("SurveyNumber = ?", user.SupplierLink[-2]).first do |c| %>
+			    	<li>
+			       		<%= link_to c.Pii1.to_s  -%>
+			    	</li>
+		    	<% end %>
+			</center>
+			<%= form_tag("Pii1Action", method: "post") do %>
 				<fieldset>
 					<div class="mytags">
-						<label>
-							<%= radio_button_tag 'gender', '1' %>
-						  	Male
-						</label><br>
-						<label>
-							<%= radio_button_tag 'gender', '2' %>
-						  	Female
-						</label><br><br>
+						<%= text_field_tag 'Pii1Resp', nil, maxlength: 1000 %>
+						<%= label_tag(:PII, '') %><br><br>
 					</div>
 
 					<div class="myinput">

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160716074352) do
+ActiveRecord::Schema.define(version: 20161121054813) do
 
   create_table "adhocs", force: true do |t|
     t.string   "SurveyName"
@@ -55,6 +55,21 @@ ActiveRecord::Schema.define(version: 20160716074352) do
     t.string   "Label"
     t.datetime "LastModified"
     t.text     "CompletedBy"
+    t.text     "Screener1"
+    t.text     "Screener2"
+    t.text     "Screener3"
+    t.text     "Screener4"
+    t.text     "Screener5"
+    t.string   "Screener1Resp"
+    t.string   "Screener2Resp"
+    t.string   "Screener3Resp"
+    t.string   "Screener4Resp"
+    t.string   "Screener5Resp"
+    t.text     "Pii1"
+    t.text     "Pii2"
+    t.text     "Pii3"
+    t.text     "Pii4"
+    t.text     "Pii5"
   end
 
   create_table "leads", force: true do |t|
@@ -255,6 +270,11 @@ ActiveRecord::Schema.define(version: 20160716074352) do
     t.text     "children"
     t.integer  "fingerprint",                      limit: 8
     t.text     "industries"
+    t.text     "Pii1"
+    t.text     "Pii2"
+    t.text     "Pii3"
+    t.text     "Pii4"
+    t.text     "Pii5"
   end
 
 end

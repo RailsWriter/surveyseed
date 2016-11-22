@@ -2811,8 +2811,10 @@ class UsersController < ApplicationController
     # change countrylanguageid setting to match user countryID only
     @usercountry = (user.country).to_i
 
-    # Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
-    Adhoc.where("CountryLanguageID = ? AND SurveyStillLive = ? AND CPI >= ?", @usercountry, true, @currentpayout).each do |survey|        
+    #Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
+    Adhoc.where("CountryLanguageID = ? AND SurveyStillLive = ? AND CPI >= ?", @usercountry, true, @currentpayout).each do |survey|     
+    #Adhoc.where("CPI >= ?", @currentpayout).each do |survey|      
+
 
       if (((survey.CountryLanguageID == 5) &&        
 #          ( survey.SurveyStillLive ) && 
@@ -2832,12 +2834,13 @@ class UsersController < ApplicationController
           ) ||
           
           
+          # I have removed .slice(0..2) in the Zip comparison - tripple check it that it is the right thing for Adhoc surveys
           
           ((survey.CountryLanguageID == 6) &&          
 #          ( survey.SurveyStillLive ) && 
           (( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
-          (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP.slice(0..2) ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP.slice(0..2) ])) &&
+          (( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
           (( survey.QualificationRacePreCodes.empty? ) || ( survey.QualificationRacePreCodes.flatten == [ "ALL" ] ) || (([ user.race ] & survey.QualificationRacePreCodes.flatten) == [ user.race ])) &&
           (( survey.QualificationEthnicityPreCodes.empty? ) || ( survey.QualificationEthnicityPreCodes.flatten == [ "ALL" ] ) || (([ user.ethnicity ] & survey.QualificationEthnicityPreCodes.flatten) == [ user.ethnicity ])) &&
           (( survey.QualificationEducationPreCodes.empty? ) || ( survey.QualificationEducationPreCodes.flatten == [ "ALL" ] ) || (([ user.eduation ] & survey.QualificationEducationPreCodes.flatten) == [ user.eduation ])) &&
@@ -2924,7 +2927,8 @@ class UsersController < ApplicationController
         end
         
         if (survey.CountryLanguageID == 6) then
-          @_ZIP = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP.slice(0..2) ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP.slice(0..2) ])
+          #@_ZIP = ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP.slice(0..2) ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP.slice(0..2) ])
+          @_ZIP = (( survey.QualificationZIPPreCodes.empty? ) || survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])
           @_province_check = (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ]))
           
           print '************** ZIP slice match: ', @_ZIP, 'CA Province match: ', @_province_check
@@ -8672,21 +8676,139 @@ class UsersController < ApplicationController
       
       else
     
+        # check if it is a Adhoc survey with screener questions
+        
         @EntryLink = user.SupplierLink[0]        
-#      @EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
+        #@EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
+
+        @adhocNetId = '1111' # replace with call to the Network dbase table
+        if @EntryLink.include? '='+@adhocNetId then
+          @ParsedEntryLink = @EntryLink.partition ("="+@adhocNetId) # adhocNetId is '1111'
+          @adhocSurveyNumber = @ParsedEntryLink[2][0..3]  # Will stop working if SurveyNumber is not 4 digits
+
+          print "************************ AdhocSurveyNumber in SupplierLink is: ", @adhocSurveyNumber, " *******************"
+          puts
+
+          user.SurveysAttempted << @adhocSurveyNumber
+          user.save
+
+          # Verify if user passes Screeners, if any, for this ADHOC survey
+          @adhocSurvey = Adhoc.where("SurveyNumber = ?", @adhocSurveyNumber).first
+          if @adhocSurvey.Screener1 != nil then
+
+            print "lllllllllllllllll This adhoc survey has a screener1 ", @adhocSurveyNumber, " lllllll Redirecting user to screener llllllllll"
+            puts
+
+            redirect_to '/users/Scrnr1'
+          else
+
+            print '***************** Adhoc survey without Screener => User will be sent to this @EntryLink: ', @EntryLink
+            puts
+            user.SupplierLink = user.SupplierLink.drop(1)
+            user.save
+            redirect_to @EntryLink
+          end
+        else
+          print "'***************** Not an ADHOC survey => User will be sent to this @EntryLink: ', @EntryLink"
+          puts
+          user.SupplierLink = user.SupplierLink.drop(1)
+          user.save
+          redirect_to @EntryLink
+        end
+      end # if user.SupplierLink[0] == @p2sSupplierLink then
+    end # if user.SupplierLink == nil    
+  end # userride
+
+  def Scrnr1Action
+    session_id = session.id
+    user = User.find_by session_id: session_id
+
+    #    tracker.track(user.ip_address, 'Scrnr1Action')
+    @EntryLink = user.SupplierLink[0]
+    if params[:Scrnr1Resp] != nil
+      user.SurveysAttempted << params[:Scrnr1Resp]
+      user.save
+      @adhocSurveyLookup = Adhoc.where("SurveyNumber = ?", user.SurveysAttempted[-2]).first # Is it always -2? NO, when there are 
+#CHANGE ---- more than 1 SreenerResponses are stored
+      
+      if @adhocSurveyLookup.Screener1Resp == params[:Scrnr1Resp] then
+        #redirect_to '/users/Scrnr2'
+        # Check if there are Additional questions
+        if @adhocSurveyLookup.Pii1 != nil then
+          redirect_to '/users/Pii1'
+        else
+          user.SupplierLink = user.SupplierLink.drop(1)
+          user.save
+          redirect_to @EntryLink
+        end
+      else
+        # user disqualified from this ADHOC survey
+
+        print '***************** User screened out from ADHOC survey: ', user.SupplierLink[0]
+        puts
+
         user.SupplierLink = user.SupplierLink.drop(1)
         user.save
-        
-        print '***************** User will be sent to this @EntryLink: ', @EntryLink
-        puts
-        
-        redirect_to @EntryLink
-      
-      end # if user.SupplierLink[0] == @p2sSupplierLink then
-      
-    end # if user.SupplierLink == nil
-    
+        checkNextSurveyAfterAdhoc (session_id)
+      end
+    else
+      redirect_to '/users/Scrnr1' # Go back to same Scrnr1 question due to No user response
+    end
   end
+    
+  def checkNextSurveyAfterAdhoc (session_id)
+        
+    user = User.find_by session_id: session_id    
+    
+    @EntryLink = user.SupplierLink[0]        
+    #@EntryLink = user.SupplierLink[0]+@PID+@AdditionalValues
+    
+    print '***************** User will be sent to this @EntryLink: ', @EntryLink
+    puts
+
+    # Verify if user passes Screeners, if any, for this ADHOC survey
+
+    @adhocNetId = '1111' # replace with call to the Network dbase table
+      if @EntryLink.include? '='+@adhocNetId then
+      @ParsedEntryLink = @EntryLink.partition ("="+@adhocNetId) # adhocNetId is '1111'
+      @adhocSurveyNumber = @ParsedEntryLink[2][0..3]  # Will stop working if SurveyNumber is not 4 digits
+      user.SurveysAttempted << @adhocSurveyNumber
+      user.save
+
+      @adhocSurvey = Adhoc.where("SurveyNumber = ?", @adhocSurveyNumber).first
+      if @adhocSurvey.Screener1 != nil then
+        redirect_to '/users/Scrnr1'
+      else
+        user.SupplierLink = user.SupplierLink.drop(1)
+        user.save
+        redirect_to @EntryLink
+      end
+    else
+      print "Not an ADHOC survey"
+      puts
+      user.SupplierLink = user.SupplierLink.drop(1)
+      user.save
+      redirect_to @EntryLink
+    end
+  end
+
+  def Pii1Action
+    session_id = session.id
+    user = User.find_by session_id: session_id
+
+    #    tracker.track(user.ip_address, 'Pii1Action')
+    @EntryLink = user.SupplierLink[0]
+
+    if params[:Pii1Resp] != nil
+      user.Pii1 = params[:Pii1Resp]
+      user.SupplierLink = user.SupplierLink.drop(1)
+      user.save
+      redirect_to @EntryLink
+    else
+      redirect_to '/users/Pii1'
+    end
+  end
+
   
   def p1action
     redirect_to '/users/p2'
@@ -8899,9 +9021,7 @@ class UsersController < ApplicationController
       redirect_to '/users/successfulMML'
     else
       redirect_to '/users/successful'
-    end
-    
-    
-  end
+    end  
+  end # p3action
 
 end
