@@ -1608,7 +1608,8 @@ end
             
                 else
             
-                  if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
+                  #if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
+                  if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_AU) then
                 
                     @foundtopsurveyswithquota = true
               
@@ -2163,7 +2164,8 @@ end
             
                   else
             
-                    if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
+                    #if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
+                    if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_AU) then
                 
                       @foundtopsurveyswithquota = true
               
@@ -2229,7 +2231,8 @@ end
             
                   else
             
-                    if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
+                    #if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @p2s_AU) then
+                    if (user.country == '5') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_AU) then
                 
                       @foundtopsurveyswithquota = true
               
