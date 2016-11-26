@@ -1,0 +1,457 @@
+<div ng-controller="home">
+	<script type="text/ng-template" id="editAgeDetail.html">
+		<div class="modal-header">
+			<h3 class="modal-title">Age</h3>
+		</div>
+		<div class="modal-body">
+			<form class="form-horizontal" role="form">
+				<div>
+					<div class="form-group">
+						<label class="control-label col-sm-offset-1 col-sm-1 ">from: </label>
+						<div class="col-sm-2"><input ng-model="ageFrom" class="form-control" /></div>
+						<label class="control-label col-sm-1 ">to: </label>
+						<div class="col-sm-2"><input ng-model="ageTo" class="form-control" /></div>
+						<div class="col-sm-1"><button class="btn btn-warning" type="button" ng-click="addAge()"><span class="glyphicon glyphicon-plus"></span></button></div>
+					</div>
+					<div>&nbsp;</div>
+					<div ng-repeat="ageRange in ageRangeArray">
+						<div class="form-group">
+							<div class="col-md-offset-1 col-md-2">{{ageRange[0]}} to {{ageRange[ageRange.length-1]}}</div>
+							<div class="col-sm-1"><button class="btn btn-warning" type="button" ng-click="removeAge(ageRange)"><span class="glyphicon glyphicon-trash"></span></button></div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group modal-footer">
+					<div class="pull-right">
+						<button type="submit" class="btn btn-default" ng-click="ok()">Ok</button>
+						<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="editZipDetail.html">
+		<div class="modal-header">
+			<h3 class="modal-title">Zip</h3>
+		</div>
+		<div class="modal-body">
+			<form class="form-horizontal" role="form">
+				<div>
+					<div class="form-group">
+						<label class="control-label col-sm-offset-1 col-sm-1 ">from: </label>
+						<div class="col-sm-2"><input ng-model="zipFrom" class="form-control" /></div>
+						<label class="control-label col-sm-1 ">to: </label>
+						<div class="col-sm-2"><input ng-model="zipTo" class="form-control" /></div>
+						<div class="col-sm-1"><button class="btn btn-warning" type="button" ng-click="addZip()"><span class="glyphicon glyphicon-plus"></span></button></div>
+					</div>
+					<div>&nbsp;</div>
+					<div ng-repeat="zipRange in zipArray">
+						<div class="form-group">
+							<div class="col-md-offset-1 col-md-2">{{zipRange[0]}} to {{zipRange[zipRange.length-1]}}</div>
+							<div class="col-sm-1"><button class="btn btn-warning" type="button" ng-click="removeZip(zipRange)"><span class="glyphicon glyphicon-trash"></span></button></div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group modal-footer">
+					<div class="pull-right">
+						<button type="submit" class="btn btn-default" ng-click="ok()">Ok</button>
+						<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="editGenderDetail.html">
+		<div class="modal-header">
+			<h3 class="modal-title">Gender</h3>
+		</div>
+		<div class="modal-body">
+			<form class="form-horizontal" role="form">
+				<div>
+					<div ng-repeat="gender in genderArray">
+						<div class="form-group">
+							<label class="control-label col-sm-offset-1 col-sm-1">{{gender.name}} </label>
+							<div class="col-sm-2"><input ng-model="gender.Selected" class="form-control" type="checkbox" /></div>
+						</div>
+					</div>
+					<div>&nbsp;</div>
+				</div>
+				<div class="form-group modal-footer">
+					<div class="pull-right">
+						<button type="submit" class="btn btn-default" ng-click="ok()">Ok</button>
+						<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="editStatesDetail.html">
+		<div class="modal-header">
+			<h3 class="modal-title">States</h3>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+			<div class="col-sm-5">
+				<select name="states" id="states" ng-model="selectedStatesArray" multiple style="height:350px">
+					<!--<select class="form-control bfh-select-fix bfh-states"></select>-->
+					<option ng-repeat="option in statesArray" value="{{option}}">{{option.stateName}}</option>
+				</select>
+			</div>
+			<div class="jumbotron col-sm-5">
+				<div ng-repeat="selectedState in selectedStatesArray">{{selectedState}}</div>
+			</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="pull-right">
+				<form class="form-horizontal" role="form">
+					<button type="submit" class="btn btn-default" ng-click="ok()">Ok</button>
+					<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+				</form>
+			</div>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="editDMADetail.html">
+		<div class="modal-header">
+			<h3 class="modal-title">DMA</h3>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-sm-6">
+					<select name="dmaList" id="dmaList" ng-model="selectedDMAArray" multiple style="height:350px">
+						<option ng-repeat="option in dmaArray" value="{{option}}">{{option.DMARegion}}</option>
+					</select>
+				</div>
+				<div class="jumbotron col-sm-6">
+					<div ng-repeat="selectedDMA in selectedDMAArray">{{selectedDMA}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="pull-right">
+				<form class="form-horizontal" role="form">
+					<button type="submit" class="btn btn-default" ng-click="ok()">Ok</button>
+					<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+				</form>
+			</div>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="editchildEduDetail.html">
+		<div class="modal-header">
+			<h3 class="modal-title">Child Education</h3>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-sm-6">
+					<select name="stdEduArray" id="stdEduArray" ng-model="selectedStdEduList" multiple style="height:350px">
+						<option ng-repeat="option in stdEduArray" value="{{option}}">{{option.stdEduName}}</option>
+					</select>
+				</div>
+				<div class="jumbotron col-sm-6">
+					<div ng-repeat="selectedEdu in selectedStdEduList">{{selectedEdu}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="pull-right">
+				<form class="form-horizontal" role="form">
+					<button type="submit" class="btn btn-default" ng-click="ok()">Ok</button>
+					<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+				</form>
+			</div>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="editHiUSDetail.html">
+		<div class="modal-header">
+			<h3 class="modal-title">STANDARD_HHI_US</h3>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-sm-6">
+					<select name="stdEduArray" id="stdHiUSCodesArray" ng-model="selectedStdHiUSCodesList" multiple style="height:350px">
+						<option ng-repeat="option in stdHiUSCodesArray" value="{{option}}">{{option.stdHiUSName}}</option>
+					</select>
+				</div>
+				<div class="jumbotron col-sm-6">
+					<div ng-repeat="selectedHiUS in selectedStdHiUSCodesList">{{selectedHiUS}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="pull-right">
+				<form class="form-horizontal" role="form">
+					<button type="submit" class="btn btn-default" ng-click="ok()">Ok</button>
+					<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+				</form>
+			</div>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="editChildAgeGenderDetail.html">
+		<div class="modal-header">
+			<h3 class="modal-title">Child Age and Gender</h3>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-sm-6">
+					<select name="stdEduArray" id="stdAgeGenderArray" ng-model="selectedChildAgeGenderList" multiple style="height:350px">
+						<option ng-repeat="option in stdAgeGenderArray" value="{{option}}">{{option.ageGenderChildName}}</option>
+					</select>
+				</div>
+				<div class="jumbotron col-sm-6">
+					<div ng-repeat="selectedAgeGenderChild in selectedChildAgeGenderList">{{selectedAgeGenderChild}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="pull-right">
+				<form class="form-horizontal" role="form">
+					<button type="submit" class="btn btn-default" ng-click="ok()">Ok</button>
+					<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+				</form>
+			</div>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="editStdEmploymentDetail.html">
+		<div class="modal-header">
+			<h3 class="modal-title">STANDARD_HHI_US</h3>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-sm-6">
+					<select name="stdEduArray" id="stdEmploymentArray" ng-model="selectedStdEmployment" multiple style="height:350px">
+						<option ng-repeat="option in stdEmploymentArray" value="{{option}}">{{option.stdEmploymentName}}</option>
+					</select>
+				</div>
+				<div class="jumbotron col-sm-6">
+					<div ng-repeat="selectedStdEmploymentObj in selectedStdEmployment">{{selectedStdEmploymentObj}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<div class="pull-right">
+				<form class="form-horizontal" role="form">
+					<button type="submit" class="btn btn-default" ng-click="ok()">Ok</button>
+					<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+				</form>
+			</div>
+		</div>
+	</script>
+
+</div>
+<div>
+	<div >
+		<form role="form">
+			<div clas="row"><label class="badge badge-info"><h5>Survey Info</h5></label></div>
+			<!--<div class="well well-sm"><h4 class="list-group-item-heading">Survey Info</h4></div>-->
+			<div clas="panel panel-default">
+				<div class="row">
+					<div class="col-md-12 ">
+						<div  class="form-group">
+							<label class="control-label col-sm-2 ">Name: </label>
+							<div class="col-sm-4"><input ng-model="survey.name" class="form-control" /></div>
+
+							<label class="control-label col-sm-offset-1 col-sm-1 ">LOI: </label>
+							<div class="col-sm-4"><input ng-model="survey.loi" class="form-control" /></div>
+						</div>
+						<div class="padXs">&nbsp;</div>
+						<div  class="form-group">
+							<label class="control-label col-sm-2 ">Test Link: </label>
+							<div class="col-sm-10"><input ng-model="survey.testLink" class="form-control" /></div>
+						</div>
+						<div class="padXs">&nbsp;</div>
+						<div  class="form-group">
+							<label class="control-label col-sm-2 ">Live Link: </label>
+							<div class="col-sm-10"><input ng-model="survey.liveLink" class="form-control" /></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="padSm">&nbsp;</div>
+			<div clas="row"><label class="badge badge-info"><h5>Quota Info</h5></label></div>
+			<div class="panel panel-info panel-body">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="row">
+							<label class="control-label col-sm-2 ">Age </label>
+							<label class="control-label col-sm-1 ">Gender </label>
+							<label class="control-label col-sm-2 ">Country </label>
+							<label class="control-label col-sm-1 ">Zip </label>
+							<label class="control-label col-sm-1 ">State</label>
+							<label class="control-label col-sm-1 ">DMA </label>
+							<label class="control-label col-sm-1 ">N = </label>
+							<label class="control-label col-sm-1 ">CPI </label>
+							<label class="control-label col-sm-1 "># Days </label>
+							<label class="control-label col-sm-1 ">Feasiblity </label>
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<label class="control-label col-sm-2 ">
+								<div>
+									<div ng-repeat="ageRange in ageRangeArray">
+										<div>{{ageRange[0]}} to {{ageRange[ageRange.length-1]}}</div>
+									</div>
+									<a class="btn btn-primary badge badge-primary" href="#" ng-click="updateAge()">
+										Edit&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span>
+									</a>
+								</div>
+							</label>
+							<label class="control-label col-sm-1 ">
+								<div>
+									<div ng-repeat="gender in genderArray">
+										<div ng-show="gender.Selected==true">{{gender.name}}</div>
+									</div>
+									<a class="btn btn-primary badge badge-primary" href="#" ng-click="updateGender()">
+										Edit&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span>
+									</a>
+
+								</div>
+							</label>
+							<label class="control-label col-sm-2">
+								<div>
+									<select name="countries" id="countries" ng-model="selectedCountry" style="width:150px">
+										<option ng-repeat="option in countryList" value="{{option.countryCode}}">{{option.countryName}}</option>
+									</select>
+
+								</div>
+							</label>
+							<div class="col-sm-1 ">
+								<div>{{zipArray.length}} entries.</div>
+								<a class="btn btn-primary badge badge-primary" href="#" ng-click="updateZip()">
+									Edit&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span>
+								</a>
+							</div>
+							<div class="col-sm-1 ">
+								<div>{{selectedStatesArray.length}} states.</div>
+								<a class="btn btn-primary badge badge-primary" href="#" ng-click="updateStates()">
+									Edit&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span>
+								</a>
+							</div>
+							<div class="control-label col-sm-1 ">
+								<div>{{selectedDMAArray.length}} DMAs.</div>
+								<a class="btn btn-primary badge badge-primary" href="#" ng-click="updateDMA()">
+									Edit&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span>
+								</a>
+							</div>
+							<div class="col-sm-1 ">
+								<input type="text" ng-model="noOfCompletes" class="form-control" placeholder="0"/>
+							</div>
+							<div class="control-label col-sm-1 ">
+								<input type="text" ng-model="cpi" class="form-control" placeholder="$ 0"/>
+							</div>
+							<div class="control-label col-sm-1 ">
+								<label type="text" ng-model="noOfDays" class="control-label" />
+							</div>
+							<div class="control-label col-sm-1 ">
+								<button class="btn btn-success" type="button" ng-click="checkFeasibility()">Check</button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="row">
+							<label class="control-label col-sm-3 ">Standard Education </label>
+							<label class="control-label col-sm-3 ">Standard HHI </label>
+							<label class="control-label col-sm-3 ">Age and Gender Of Child</label>
+							<label class="control-label col-sm-3 ">Standard Employment </label>
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-3">
+								<div>{{selectedStdEduList.length}} entries.</div>
+								<a class="btn btn-primary badge badge-primary" href="#" ng-click="updateStdChildEdu()">
+									Edit&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span>
+								</a>
+							</div>
+							<div class="col-sm-3">
+								<div>{{selectedStatesArray.length}} entries.</div>
+								<a class="btn btn-primary badge badge-primary" href="#" ng-click="updateStdHiUS()">
+									Edit&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span>
+								</a>
+							</div>
+							<div class="col-sm-3">
+								<div>{{selectedStatesArray.length}} entries.</div>
+								<a class="btn btn-primary badge badge-primary" href="#" ng-click="updateChildAgeGender()">
+									Edit&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span>
+								</a>
+							</div>
+							<div class="col-sm-3">
+								<div>{{selectedStatesArray.length}} entries.</div>
+								<a class="btn btn-primary badge badge-primary" href="#" ng-click="updateStdEmployment()">
+									Edit&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div clas="row"><label class="badge badge-info"><h5>Screening Questions</h5></label></div>
+			<div class="row">
+				<!--<div class="well well-sm"><h4 class="list-group-item-heading">Screening Questions</h4></div>-->
+				<div class="col-md-12">
+					<div  class="form-group">
+						<label class="control-label col-sm-1">Question1: </label>
+						<div class="col-sm-9"><input ng-model="survey.question1" class="form-control" /></div>
+						<div class="col-sm-1">
+
+							<div class="input-group">
+								<input type="radio" value="yes" ng-model="survey.questionAns1" />
+								<span class="input-group-label">
+									<label class="control-label">Yes</label>
+								</span>
+							</div>
+						</div>
+						<div class="col-sm-1">
+							<div class="input-group">
+								<input type="radio" value="no" ng-model="survey.questionAns1" />
+								<span class="input-group-label">
+									<label class="control-label">No</label>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="padXs">&nbsp;</div>
+					<div  class="form-group">
+						<label class="control-label col-sm-1">Question2: </label>
+						<div class="col-sm-9"><input ng-model="survey.question2" class="form-control" /></div>
+						<div class="col-sm-1">
+							<div class="input-group">
+								<input type="radio" name="survey.questionAns2" value="yes" ng-model="survey.questionAns2" />
+								<span class="input-group-label">
+									<label class="control-label">Yes</label>
+								</span>
+							</div><!-- /input-group -->
+						</div>
+						<div class="col-sm-1">
+							<div class="input-group">
+								<input type="radio" name="survey.questionAns2" value="no" ng-model="survey.questionAns2" />
+								<span class="input-group-label">
+									<label class="control-label">No</label>
+								</span>
+							</div><!-- /input-group -->
+						</div>
+					</div>
+				</div>
+				<div class="padSm">&nbsp;</div>
+			</div>
+
+			<div class="form-group modal-footer">
+				<div class="col-sm-offset-3 col-sm-9">
+					<button type="submit" class="btn btn-default" ng-click="submitSurvey()">Launch Survey</button>
+					<button class="btn btn-warning" type="button" ng-click="saveSurvey()">Save as Draft</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

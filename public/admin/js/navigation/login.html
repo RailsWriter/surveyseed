@@ -1,0 +1,40 @@
+<div class="panel">
+<div class="alert alert-danger" ng-show="error">
+	There was a problem logging in. Please try again.
+</div>
+<form role="form" ng-submit="login()">
+	<div class="row myrow">
+		<div class="col-xs-6">
+			<div>
+				<!--<img src='../img/imgTravelerLogo.png' class="img-responsive col-sm-offset-2"  height="65%" width="50%"/>-->
+				&nbsp;
+			</div>
+<!--			<div><img src='../img/bg.png'/></div>-->
+		</div>
+		<div class="col-xs-5">
+			<div class="panel panel-primary">
+				<div class="panel-heading" align="center">
+						KETSCI
+				</div>
+				<div class="panel-body">
+					<div class="bottom-align">
+						<div class="col-xs-12"><h2>Signin</h2></div>
+						<div class="form-group col-xs-12">
+							<label for="username">Username:</label>
+							<input type="text" class="form-control" id="username" name="username" ng-model="credentials.username"/>
+						</div>
+						<div class="form-group col-xs-12">
+							<label for="password" >Password:</label>
+							<input type="password" class="form-control" id="password" name="password" ng-model="credentials.password"/>
+						</div>
+						<div class="pull-right">
+							<button type="submit" class="btn btn-primary">Submit</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</form>
+</div>
