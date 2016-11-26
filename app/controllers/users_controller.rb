@@ -1291,7 +1291,7 @@ if net.stackOrder != nil then
       @RFGIsBack = true
       puts "**************** RFG is after FED"          
     else
-      if (net.stackOrder.include? ("R") == false) then
+      if (net.stackOrder.exclude?("R")) then
         @RFGIsOff = true
         puts "**************** RFG is OFF since net.stackOrder = ", net.stackOrder
       else
