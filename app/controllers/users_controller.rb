@@ -1256,27 +1256,65 @@ class UsersController < ApplicationController
     @RFGIsOff = false
     
     
-    if net.stackOrder != nil then
-      if (net.stackOrder == "RFGISFRONT") then
-        @RFGIsFront = true
-        puts "**************** RFG IS ahead of FED"
+    # if net.stackOrder != nil then
+    #   if (net.stackOrder == "RFGISFRONT") then
+    #     @RFGIsFront = true
+    #     puts "**************** RFG IS ahead of FED"
             
-      else
-        if (net.stackOrder == "RFGISBACK") then
-          @RFGIsBack = true
-          puts "**************** RFG IS at the Back of FED"
+    #   else
+    #     if (net.stackOrder == "RFGISBACK") then
+    #       @RFGIsBack = true
+    #       puts "**************** RFG IS at the Back of FED"
               
-        else
-          if (net.stackOrder == "RFGISOFF") then
-            @RFGIsOff = true
-            puts "**************** RFG IS OFF"
-          else
-          end    
-        end
-      end
+    #     else
+    #       if (net.stackOrder == "RFGISOFF") then
+    #         @RFGIsOff = true
+    #         puts "**************** RFG IS OFF"
+    #       else
+    #       end    
+    #     end
+    #   end
+    # else
+    #   @RFGIsOff = true
+    # end
+
+
+
+
+
+if net.stackOrder != nil then
+  if (net.stackOrder == ("ARFP" || "RAFP" || "RFAP" || "RFP")) then
+    @RFGIsFront = true
+    puts "**************** RFG is ahead of FED"        
+  else
+    if (net.stackOrder == ("AFRP" || "FARP" || "FRAP" || "FRP")) then
+      @RFGIsBack = true
+      puts "**************** RFG is after FED"          
     else
-      @RFGIsOff = true
+      if (net.stackOrder.include? ("R") == false) then
+        @RFGIsOff = true
+        puts "**************** RFG is OFF since net.stackOrder = ", net.stackOrder
+      else
+      end    
     end
+  end
+else
+  @RFGIsOff = true
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     # Set the priority for P2S stack
         
@@ -1309,10 +1347,12 @@ class UsersController < ApplicationController
         @foundtopsurveyswithquota = true # true takes users to the next stackOrder
 
       else
-        @p2s_AU = net.FED_AU
+        #@p2s_AU = net.FED_AU
+        @fed_AU = net.FED_AU
       end        
     else
-      @p2s_AU = 1
+      #@p2s_AU = 1
+      @fed_AU = 1
     end
     
     if @poorconversion then
@@ -2385,6 +2425,10 @@ class UsersController < ApplicationController
     # Save the FED survey numbers that the user meets the qualifications and quota requirements for in this user's record of database in rank order
     
     user.save
+
+    @fedSupplierLinks = user.SupplierLink
+    print "*********************************** FED SupplierLinks: ", @fedSupplierLinks
+    puts
     
     print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time 3 End FED search: ", Time.now
     puts
@@ -4892,13 +4936,17 @@ class UsersController < ApplicationController
               
               end # case statement
               
-              if project.quotas[j]["completesLeft"] == nil then
+              if project.quotas[j]["datapoints"][n]["completesLeft"] == nil then
                 @QuotaCompletesLeft = true
+                p "************* RFG CompletesLeft is UNDEFINED ***************"
               else 
-                if (project.quotas[j]["completesLeft"] > 0) then
+                if (project.quotas[j]["datapoints"][n]["completesLeft"] > 0) then
                   @QuotaCompletesLeft = true
+                  p "************* RFG CompletesLeft is > 0  ***************"
+
                 else
                   @QuotaCompletesLeft = false
+                  p "************* RFG CompletesLeft is = 0  ***************"
                 end
               end
               
@@ -6472,6 +6520,22 @@ class UsersController < ApplicationController
               
               end # case
               
+
+              if project.quotas[j]["datapoints"][n]["completesLeft"] == nil then
+                @QuotaCompletesLeft = true
+                p "************* RFG CompletesLeft is UNDEFINED ***************"
+              else 
+                if (project.quotas[j]["datapoints"][n]["completesLeft"] > 0) then
+                  @QuotaCompletesLeft = true
+                  p "************* RFG CompletesLeft is > 0  ***************"
+
+                else
+                  @QuotaCompletesLeft = false
+                  p "************* RFG CompletesLeft is = 0  ***************"
+                end
+              end
+
+
               
               print " QUOTA AVAILABILITY CRITERIA for: ", project.rfg_id
               puts
@@ -6495,9 +6559,11 @@ class UsersController < ApplicationController
               puts
               print "Children = ", (@QualificationChildren)
               puts
-                            
+              print "CompletesLeft = ", (@QuotaCompletesLeft)
+              puts
+
               
-              if ( (project.country == "CA") && ( @QualificationAge ) && ( @QualificationGender ) && (@QualificationComputer) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEducation ) && (@QualificationEmployment) && (@QualificationChildren) && (project.quotas[j]["completesLeft"] > 0) ) then
+              if ( (project.country == "CA") && ( @QualificationAge ) && ( @QualificationGender ) && (@QualificationComputer) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEducation ) && (@QualificationEmployment) && (@QualificationChildren) && (@QuotaCompletesLeft) ) then
               
                 @RFGQuotaIsAvailable = true
                 puts "******* Quota is available"
@@ -8009,6 +8075,29 @@ class UsersController < ApplicationController
               
               end # case
               
+
+
+
+
+              if project.quotas[j]["datapoints"][n]["completesLeft"] == nil then
+                @QuotaCompletesLeft = true
+                p "************* RFG CompletesLeft is UNDEFINED ***************"
+              else 
+                if (project.quotas[j]["datapoints"][n]["completesLeft"] > 0) then
+                  @QuotaCompletesLeft = true
+                  p "************* RFG CompletesLeft is > 0  ***************"
+
+                else
+                  @QuotaCompletesLeft = false
+                  p "************* RFG CompletesLeft is = 0  ***************"
+                end
+              end
+
+
+
+
+
+
               
               print " QUOTA AVAILABILITY CRITERIA for: ", project.rfg_id
               puts
@@ -8032,9 +8121,11 @@ class UsersController < ApplicationController
               puts
               print "Children = ", (@QualificationChildren)
               puts
+              print "CompletesLeft = ", (@QuotaCompletesLeft)
+              puts
                             
               
-              if ( (project.country == "AU") && ( @QualificationAge ) && ( @QualificationGender ) && (@QualificationComputer) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEducation ) && (@QualificationEmployment) && (@QualificationChildren) && (project.quotas[j]["completesLeft"] > 0) ) then
+              if ( (project.country == "AU") && ( @QualificationAge ) && ( @QualificationGender ) && (@QualificationComputer) && ( @QualificationZip ) && ( @QualificationHhi ) && ( @QualificationPindustry ) && ( @QualificationEducation ) && ( @QualificationEducation ) && (@QualificationEmployment) && (@QualificationChildren) && (@QuotaCompletesLeft) ) then
               
                 @RFGQuotaIsAvailable = true
                 puts "******* Quota is available"
@@ -8445,84 +8536,88 @@ class UsersController < ApplicationController
     else
     end
        
-    # Order FED, ADHOC and RFG surveys
+    # # Order FED, ADHOC and RFG surveys
     
-    if (@RFGIsBack) then
-      puts "RFG is Back"
-      if user.SupplierLink == nil then
-        # No FED surveys
-        if @adhocSupplierLinks == nil then
-          user.SupplierLink = @RFGSupplierLinks
-          puts "RFG is Back-1 but no ADHOC or FED surveys are available"
-        else
-          user.SupplierLink = @adhocSupplierLinks
-          user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
-          puts "RFG is Back-2"
-        end
-      else      
-        if @adhocSupplierLinks == nil then
-          user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
-          puts "RFG is Back-3"
-        else
-          @tmp1 = user.SupplierLink + @adhocSupplierLinks
-          user.SupplierLink = @tmp1 + @RFGSupplierLinks
-          puts "RFG is Back-4"
-        end
-      end
-    else
-      if (@RFGIsFront) then
-        puts "RFG is Front"
-        if user.SupplierLink == nil then
-          # No FED surveys
-          if @adhocSupplierLinks == nil then
-            user.SupplierLink = @RFGSupplierLinks
-            puts "RFG is Front-1"
-          else
-            user.SupplierLink = @adhocSupplierLinks
-            user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
-            puts "RFG is Front-2"
-          end
-        else
-          if @RFGSupplierLinks == nil then
-            if @adhocSupplierLinks == nil then
-              puts "RFG is Front-3 but no RFG or ADHOC surveys available"
-            else
-              @tmp2 = user.SupplierLink
-              #user.SupplierLink = @tmp2 + @adhocSupplierLinks
-              user.SupplierLink = @adhocSupplierLinks + @tmp2
-              puts "RFG is Front-4 but no RFG surveys available"
-            end
+    # if (@RFGIsBack) then
+    #   puts "RFG is Back"
+    #   if user.SupplierLink == nil then
+    #     # No FED surveys
+    #     if @adhocSupplierLinks == nil then
+    #       user.SupplierLink = @RFGSupplierLinks
+    #       puts "RFG is Back-1 but no ADHOC or FED surveys are available"
+    #     else
+    #       user.SupplierLink = @adhocSupplierLinks
+    #       user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
+    #       puts "RFG is Back-2"
+    #     end
+    #   else      
+    #     if @adhocSupplierLinks == nil then
+    #       user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
+    #       puts "RFG is Back-3"
+    #     else
+    #       @tmp1 = user.SupplierLink + @adhocSupplierLinks
+    #       user.SupplierLink = @tmp1 + @RFGSupplierLinks
+    #       puts "RFG is Back-4"
+    #     end
+    #   end
+    # else
+    #   if (@RFGIsFront) then
+    #     puts "RFG is Front"
+    #     if user.SupplierLink == nil then
+    #       # No FED surveys
+    #       if @adhocSupplierLinks == nil then
+    #         user.SupplierLink = @RFGSupplierLinks
+    #         puts "RFG is Front-1"
+    #       else
+    #         user.SupplierLink = @adhocSupplierLinks
+    #         user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
+    #         puts "RFG is Front-2"
+    #       end
+    #     else
+    #       if @RFGSupplierLinks == nil then
+    #         if @adhocSupplierLinks == nil then
+    #           puts "RFG is Front-3 but no RFG or ADHOC surveys available"
+    #         else
+    #           @tmp2 = user.SupplierLink
+    #           #user.SupplierLink = @tmp2 + @adhocSupplierLinks
+    #           user.SupplierLink = @adhocSupplierLinks + @tmp2
+    #           puts "RFG is Front-4 but no RFG surveys available"
+    #         end
 
-          else
-            if @adhocSupplierLinks == nil then
-              @tmp3 = user.SupplierLink
-              user.SupplierLink = @RFGSupplierLinks + @tmp3
-              puts "RFG is Front-5"
-            else
-              @tmp4 = @adhocSupplierLinks + @RFGSupplierLinks
-              @tmp5 = user.SupplierLink
-              user.SupplierLink = @tmp4 + @tmp5
-              puts "RFG is Front-6"
-            end
-          end
-        end
-      else
-        puts "*************** RFG is not included *********"
-        if @adhocSupplierLinks == nil then
-          # do nothing, only FED surveys are available
-          puts "RFG not Included-1"
-        else
-          @tmp6 = user.SupplierLink
-          user.SupplierLink = @tmp6 + @adhocSupplierLinks
-          puts "RFG not Included-2"
-        end
-      end
-    end
+    #       else
+    #         if @adhocSupplierLinks == nil then
+    #           @tmp3 = user.SupplierLink
+    #           user.SupplierLink = @RFGSupplierLinks + @tmp3
+    #           puts "RFG is Front-5"
+    #         else
+    #           @tmp4 = @adhocSupplierLinks + @RFGSupplierLinks
+    #           @tmp5 = user.SupplierLink
+    #           user.SupplierLink = @tmp4 + @tmp5
+    #           puts "RFG is Front-6"
+    #         end
+    #       end
+    #     end
+    #   else
+    #     puts "*************** RFG is not included *********"
+    #     if @adhocSupplierLinks == nil then
+    #       # do nothing, only FED surveys are available
+    #       puts "RFG not Included-1"
+    #     else
+    #       @tmp6 = user.SupplierLink
+    #       user.SupplierLink = @tmp6 + @adhocSupplierLinks
+    #       puts "RFG not Included-2"
+    #     end
+    #   end
+    # end
     
-    # Save the order of FED, ADHOC and RFG
+    # # Save the order of FED, ADHOC and RFG
     
-    user.save
+    # user.save
     
+
+
+
+
     # Queue up additional surveys from P2S. First calculate the additional values to be attached.
     
     @netid = user.netid  
@@ -8649,7 +8744,7 @@ class UsersController < ApplicationController
       puts
       
       user.SupplierLink << @p2sSupplierLink
-      
+
       # Save the list of SupplierLinks with P2S, if ACTIVE
     
       user.save
@@ -8658,7 +8753,74 @@ class UsersController < ApplicationController
       puts "-------------------********************** P2S is not attached ********************------------------------"
     end #if P2SisAttached 
 
-    # Start the ride
+    
+
+
+
+
+
+    # Order surveys by stackOrder for the user ride
+
+    case @net.stackOrder
+    when "AFRP"
+      user.SupplierLink = @adhocSupplierLinks + @fedSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
+      #user.SupplierLink << @p2sSupplierLink
+      print "************ AFRP user will be sent to these surveys: ", user.SupplierLink
+      puts
+
+    when "ARFP"
+      user.SupplierLink = @adhocSupplierLinks + @RFGSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
+      print "************ ARFP user will be sent to these surveys: ", user.SupplierLink
+      puts
+
+    when "FARP"
+      user.SupplierLink = @fedSupplierLinks + @adhocSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
+      print "************ FARP user will be sent to these surveys: ", user.SupplierLink
+      puts
+
+    when "FRAP"
+      user.SupplierLink = @fedSupplierLinks + @RFGSupplierLinks + @adhocSupplierLinks + [@p2sSupplierLink]
+      print "************ FRAP user will be sent to these surveys: ", user.SupplierLink
+      puts
+
+    when "RAFP"
+      user.SupplierLink = @RFGSupplierLinks + @adhocSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
+      print "************ RAFP user will be sent to these surveys: ", user.SupplierLink
+      puts
+
+    when "RFAP"
+      user.SupplierLink = @RFGSupplierLinks + @fedSupplierLinks + @adhocSupplierLinks + [@p2sSupplierLink]
+      print "************ RFAP user will be sent to these surveys: ", user.SupplierLink
+      puts
+
+    when "RFP"
+      user.SupplierLink = @RFGSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
+      print "************ RFP user will be sent to these surveys: ", user.SupplierLink
+      puts
+
+    when "FRP"
+      user.SupplierLink = @fedSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
+      print "************ FRP user will be sent to these surveys : ", user.SupplierLink
+      puts
+    end
+    
+    # Remove any blank entries
+    if user.SupplierLink !=nil then
+      user.SupplierLink.reject! { |c| c == nil}
+    else
+    end
+
+    print "************ After removing blank entries, user will be sent to these surveys: ", user.SupplierLink
+    puts
+
+
+
+
+
+
+
+
+    # Start the user ride
     
     if user.SupplierLink.length == 0 then
       redirect_to '/users/nosuccess'
@@ -8702,14 +8864,14 @@ class UsersController < ApplicationController
             redirect_to '/users/Scrnr1'
           else
 
-            print '***************** Adhoc survey without Screener => User will be sent to this @EntryLink: ', @EntryLink
+            print "***************** Adhoc survey without Screener => User will be sent to this @EntryLink: ", @EntryLink
             puts
             user.SupplierLink = user.SupplierLink.drop(1)
             user.save
             redirect_to @EntryLink
           end
         else
-          print "'***************** Not an ADHOC survey => User will be sent to this @EntryLink: ', @EntryLink"
+          print "***************** Not an ADHOC survey => User will be sent to this @EntryLink: ", @EntryLink
           puts
           user.SupplierLink = user.SupplierLink.drop(1)
           user.save
