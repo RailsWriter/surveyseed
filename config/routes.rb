@@ -13,6 +13,17 @@ Rails.application.routes.draw do
   resources :center
 
 
+  match "*path", :to => proc {|env| [200, {
+  'Access-Control-Allow-Origin' => '*',
+  'Access-Control-Allow-Methods' => 'POST',
+  'Access-Control-Allow-Credentials' => 'true',
+  'Access-Control-Request-Method' => '*',
+  'Access-Control-Allow-Headers' => 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+  'Content-Type' => 'application/json'
+
+  }, ["CORS Preflight"]] }, :via => [:options]
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   

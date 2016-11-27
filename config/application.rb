@@ -23,27 +23,37 @@ module Surveyseed
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+    # Added below to address cors issue
+
     config.action_dispatch.default_headers.merge!({
         'Access-Control-Allow-Origin' => '*',
-        'Access-Control-Request-Method' => '*',
+        'Access-Control-Request-Method' => %w{GET POST OPTIONS}.join(","),
         'Access-Control-Allow-Methods' => '*',
         'Access-Control-Allow-Headers' => '*'
     })
 
-
-    config.middleware.insert_before 0, "Rack::Cors" do
+    config.middleware.insert_before 0, "Rack::Cors", :debug => true, :logger => (-> { Rails.logger }) do
       allow do
         origins '*'
-        resource '*', :headers => :any, :methods => [:get, :post, :options]
+
+        resource '/cors',
+          :headers => :any,
+          :methods => [:post],
+          :credentials => true,
+          :max_age => 0
+
+        resource '*',
+          :headers => :any,
+          :methods => [:get, :post, :delete, :put, :patch, :options, :head],
+          :max_age => 0
       end
     end
 
-    # Rails 5
-
-    config.middleware.insert_before 0, Rack::Cors do
+    config.middleware.use Rack::Cors do
       allow do
         origins '*'
-        resource '*', :headers => :any, :methods => [:get, :post, :options]
+        resource '*', 
+            :headers => :any, :methods => [:get, :post, :options]
       end
     end
 
