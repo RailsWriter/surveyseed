@@ -168,21 +168,21 @@ class CenterController < ApplicationController
       print "****************** Received draft_survey", params[:newAdhocSurvey]
       puts
       a=Adhoc.new
-      a.SurveyName = params[:newAdhocSurvey][SurveyName]
+      a.SurveyName = params[:newAdhocSurvey]["SurveyName"]
       a.SurveyNumber = 1000+Adhoc.count+1
-      a.CountryLanguageID = params[:newAdhocSurvey][CountryLanguageID]
-      a.LengthOfInterview = params[:newAdhocSurvey][LengthOfInterview]
-      a.CPI = params[:newAdhocSurvey][CPI]
-      a.QualificationAgePreCodes = params[:newAdhocSurvey][QualificationAgePreCodes]
-      a.QualificationGenderPreCodes = params[:newAdhocSurvey][QualificationGenderPreCodes]
-      a.QualificationZIPPreCodes = params[:newAdhocSurvey][QualificationZIPPreCodes]
-      a.QualificationEducationPreCodes = params[:newAdhocSurvey][QualificationEducationPreCodes]
-      a.QualificationHHIPreCodes = params[:newAdhocSurvey][QualificationHHIPreCodes]
-      a.QualificationChildrenPreCodes = params[:newAdhocSurvey][QualificationChildrenPreCodes]
-      a.QualificationEmploymentPreCodes = params[:newAdhocSurvey][QualificationEmploymentPreCodes]
-      a.QualificationDMAPreCodes = params[:newAdhocSurvey][QualificationDMAPreCodes]
-      a.QualificationStatePreCodes = params[:newAdhocSurvey][QualificationStatePreCodes]
-      a.QualificationRegionPreCodes = params[:newAdhocSurvey][QualificationRegionPreCodes]
+      a.CountryLanguageID = params[:newAdhocSurvey]["CountryLanguageID"]
+      a.LengthOfInterview = params[:newAdhocSurvey]["LengthOfInterview"]
+      a.CPI = params[:newAdhocSurvey]["CPI"]
+      a.QualificationAgePreCodes = params[:newAdhocSurvey]["QualificationAgePreCodes"]
+      a.QualificationGenderPreCodes = params[:newAdhocSurvey]["QualificationGenderPreCodes"]
+      a.QualificationZIPPreCodes = params[:newAdhocSurvey]["QualificationZIPPreCodes"]
+      a.QualificationEducationPreCodes = params[:newAdhocSurvey]["QualificationEducationPreCodes"]
+      a.QualificationHHIPreCodes = params[:newAdhocSurvey]["QualificationHHIPreCodes"]
+      a.QualificationChildrenPreCodes = params[:newAdhocSurvey]["QualificationChildrenPreCodes"]
+      a.QualificationEmploymentPreCodes = params[:newAdhocSurvey]["QualificationEmploymentPreCodes"]
+      a.QualificationDMAPreCodes = params[:newAdhocSurvey]["QualificationDMAPreCodes"]
+      a.QualificationStatePreCodes = params[:newAdhocSurvey]["QualificationStatePreCodes"]
+      a.QualificationRegionPreCodes = params[:newAdhocSurvey]["QualificationRegionPreCodes"]
       a.SurveyStillLive=false
       a.save
     else
