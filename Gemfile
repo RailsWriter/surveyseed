@@ -41,6 +41,8 @@ gem 'useragent', '0.10.0'
 gem 'newrelic_rpm'
 gem 'geocoder'
 
+gem 'rack-cors', :require => 'rack/cors'
+
 group :development, :test do
   gem 'sqlite3',     '1.3.9'
 

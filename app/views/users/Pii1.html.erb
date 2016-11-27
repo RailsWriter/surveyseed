@@ -15,17 +15,27 @@
 		</header>
 		
 		<div class="content">
-			<center>
-				<p>Please enter your name and address.</p>
-			</center>
+			<center><h2>
+				<% session_id = session.id %>
+				<% print "session_id in Pii1.html is : ", session_id %>
+				<% puts %>
+	    		<%user = User.find_by session_id: session_id %>
+	    		<% print "user is: ", user %>
+	    		<% puts %>
+	    		<% print "user SurveysAttempted is: ", user.SurveysAttempted %>
+	    		<% puts %>
+				<% Adhoc.where("SurveyNumber = ?", user.SurveysAttempted[-2]).each do |c| %>
+			    	<p>
+			       		<%= link_to c.Pii1.to_s  -%>
+			    	</p>
+		    	<% end %>
+			</h2></center>
 			<%= form_tag("Pii1Action", method: "post") do %>
 				<fieldset>
-					<div class="mytags">
-						<center>
-							<%= text_area_tag 'Pii1Resp', nil, maxlength: 1000 %>
-							<%= label_tag(:PII, '') %><br><br>
-						</center>
-					</div>
+					<div class="mytags"><center>
+						<%= text_area_tag 'Pii1Resp', nil, maxlength: 2000 %>
+						<%= label_tag(:PII, '') %><br><br>
+					</center></div>
 
 					<div class="myinput">
 						<center>

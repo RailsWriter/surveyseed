@@ -8891,7 +8891,14 @@ end
     #    tracker.track(user.ip_address, 'Scrnr1Action')
     @EntryLink = user.SupplierLink[0]
     if params[:Scrnr1Resp] != nil
-      user.SurveysAttempted << params[:Scrnr1Resp]
+
+      # sometimes users might go back on Scrn1 response
+      if (user.SurveysAttempted[-1] == "1") || (user.SurveysAttempted[-1] == "2") then # this means the user has simply gone back => replace response
+        user.SurveysAttempted[-1] = params[:Scrnr1Resp] # replace old response
+      else
+        user.SurveysAttempted << params[:Scrnr1Resp] # it is a first time response
+      end
+
       user.save
       @adhocSurveyLookup = Adhoc.where("SurveyNumber = ?", user.SurveysAttempted[-2]).first # Is it always -2? NO, when there are 
 #CHANGE ---- more than 1 SreenerResponses are stored

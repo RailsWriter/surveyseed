@@ -16,13 +16,7 @@
 		
 		<div class="content">
 			<center>
-				<% session_id = session.id %>
-	    		<%user = User.find_by session_id: session_id %>
-				<% Adhoc.where("SurveyNumber = ?", user.SupplierLink[-2]).each do |c| %>
-			    	<li>
-			       		<%= link_to c.Screener1.to_s  -%>
-			    	</li>
-		    	<% end %>
+				<p>Would you be willing to share your Name and Address for a survey?</p>
 			</center>
 			<%= form_tag("Scrnr1Action", method: "post") do %>
 				<fieldset>

@@ -16,19 +16,15 @@
 		
 		<div class="content">
 			<center>
-				<% session_id = session.id %>
-	    		<%user = User.find_by session_id: session_id %>
-				<% Adhoc.where("SurveyNumber = ?", user.SupplierLink[-2]).first do |c| %>
-			    	<li>
-			       		<%= link_to c.Pii1.to_s  -%>
-			    	</li>
-		    	<% end %>
+				<p>Please enter your name and address.</p>
 			</center>
 			<%= form_tag("Pii1Action", method: "post") do %>
 				<fieldset>
 					<div class="mytags">
-						<%= text_field_tag 'Pii1Resp', nil, maxlength: 1000 %>
-						<%= label_tag(:PII, '') %><br><br>
+						<center>
+							<%= text_area_tag 'Pii1Resp', nil, maxlength: 1000 %>
+							<%= label_tag(:PII, '') %><br><br>
+						</center>
 					</div>
 
 					<div class="myinput">

@@ -15,9 +15,21 @@
 		</header>
 		
 		<div class="content">
-			<center>
-				<p>Would you be willing to share your Name and Address for a survey?</p>
-			</center>
+			<center><h2>
+				<% session_id = session.id %>
+				<% print "session_id in Scrn1.html is : ", session_id %>
+				<% puts %>
+	    		<%user = User.find_by session_id: session_id %>
+	    		<% print "user is: ", user %>
+	    		<% puts %>
+	    		<% print "user SurveysAttempted is: ", user.SurveysAttempted %>
+	    		<% puts %>
+				<% Adhoc.where("SurveyNumber = ?", user.SurveysAttempted[-1]).each do |c| %>
+			    	<p>
+			       		<%= link_to c.Screener1.to_s  -%>
+			    	</p>
+		    	<% end %>
+			</h2></center>
 			<%= form_tag("Scrnr1Action", method: "post") do %>
 				<fieldset>
 					<div class="mytags">
