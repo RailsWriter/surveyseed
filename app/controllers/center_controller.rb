@@ -169,7 +169,7 @@ class CenterController < ApplicationController
       puts
       a=Adhoc.new
       a.SurveyName = params[:newAdhocSurvey]["SurveyName"]
-      a.SurveyNumber = 1000+Adhoc.count+1
+      a.SurveyNumber = 1000+Adhoc.count+2
       a.CountryLanguageID = params[:newAdhocSurvey]["CountryLanguageID"]
       a.LengthOfInterview = params[:newAdhocSurvey]["LengthOfInterview"]
       a.CPI = params[:newAdhocSurvey]["CPI"]
