@@ -178,7 +178,7 @@ class CenterController < ApplicationController
       # a.QualificationGenderPreCodes = params[:newAdhocSurvey]["QualificationGenderPreCodes"]
       # a.QualificationZIPPreCodes = params[:newAdhocSurvey]["QualificationZIPPreCodes"]
       # a.QualificationEducationPreCodes = params[:newAdhocSurvey]["QualificationEducationPreCodes"]
-      a.QualificationHHIPreCodes = params[:newAdhocSurvey]["stdHiUS"][0]["stdHiUSCode"]
+      # a.QualificationHHIPreCodes = params[:newAdhocSurvey][:stdHiUS][:stdHiUSCode]
       # a.QualificationChildrenPreCodes = params[:newAdhocSurvey]["QualificationChildrenPreCodes"]
       # a.QualificationEmploymentPreCodes = params[:newAdhocSurvey]["QualificationEmploymentPreCodes"]
       a.QualificationDMAPreCodes = params[:newAdhocSurvey]["DMA"]
