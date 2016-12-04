@@ -187,7 +187,7 @@ class CenterController < ApplicationController
       a.SurveyStillLive=false
       a.SupplierLink = params[:newAdhocSurvey]["LiveLink"]
       a.Screener1 = params[:newAdhocSurvey]["Question1"]
-      a.Sreener1Resp = params[:newAdhocSurvey]["QuestionAns1"]
+      a.Screener1Resp = params[:newAdhocSurvey]["QuestionAns1"]
       a.save
     else
       p "***************** Nothing was received as draft_survey **************"
