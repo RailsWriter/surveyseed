@@ -1577,6 +1577,7 @@ end
               # Lets assume that quota is open for all users so add this survey number to user's ride
               print '************* No Total quota ID found. Assuming that quota is open for ALL users. Might want to change this to refuse this survey based on experience. This should typically NOT happen.'
               puts
+
               
                            
               if (user.SurveysWithMatchingQuota.length == 0) then
@@ -1590,10 +1591,15 @@ end
                     user.SurveysWithMatchingQuota.insert(i, @surveynumber)
                     @inserted = true
                   else
+                    if ( (i==user.SurveysWithMatchingQuota.length-1) && (@inserted == false) ) then
+                      user.SurveysWithMatchingQuota << @surveynumber
+                      @inserted = true
+                    else
+                    end
                   end
                 end
-              end
-              
+              end              
+
               
                       
               if (user.country == '9') && (user.SurveysWithMatchingQuota.uniq.length >= @fed_US) then
@@ -1656,7 +1662,8 @@ end
               # Go through each quota (k)
           
               (1..@NumberOfQuotas).each do |k| #6
-                puts '***************** Starting at the next value of k i.e. next QuotaID: ', survey.SurveyQuotas[k]["SurveyQuotaID"]
+                # print '***************** Starting at the next value of k i.e. next QuotaID: ', survey.SurveyQuotas[k]["SurveyQuotaID"]
+                # puts
                 @NumberOfRespondents = survey.SurveyQuotas[k]["NumberOfRespondents"]
                 print 'Number of respondents =, in this quota ID index k=: ', @NumberOfRespondents, ' ', k
                 puts
@@ -8471,14 +8478,14 @@ end
     end
 
 
-    print "Offerwall Response: ", @OfferwallResponse["response"]
-    puts
+    # print "Offerwall Response: ", @OfferwallResponse["response"]
+    # puts
     
     @maxIR = @OfferwallResponse["response"]["surveys"][0]["ir"]
 
     @NumberOfSurveys = @OfferwallResponse["response"]["surveys"].length
       
-      print "************ Number of surveys: ", @NumberOfSurveys
+      print "************ Number of surveys on RFG Offerwall: ", @NumberOfSurveys
       puts
 
       (0..@NumberOfSurveys-1).each do |i|
