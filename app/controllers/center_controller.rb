@@ -163,14 +163,16 @@ class CenterController < ApplicationController
   end
   
 
-  def draft_survey  
-    respond_to :json, :html
+  def draft_survey
 
     if params[:newAdhocSurvey] != nil then
       print "****************** Received draft_survey", params[:newAdhocSurvey]
       puts
 
-      render json: { message: "newAdhocSurvey received" }
+      respond_to do |format|
+        format.html # home.html.erb
+        format.json { render json: { message: "newAdhocSurvey received" } }
+      end 
 
       a=Adhoc.new
       a.SurveyName = params[:newAdhocSurvey]["SurveyName"]
@@ -195,7 +197,12 @@ class CenterController < ApplicationController
       a.Screener1Resp = params[:newAdhocSurvey]["QuestionAns1"]
       a.save
     else
-      render json: { message: "newAdhocSurvey not received" }
+
+      respond_to do |format|
+        format.html # home.html.erb
+        format.json { render json: { message: "newAdhocSurvey received" } }
+      end 
+
       p "***************** Nothing was received as draft_survey **************"
     end
   end
