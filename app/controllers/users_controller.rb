@@ -2152,6 +2152,11 @@ end
                       user.SurveysWithMatchingQuota.insert(i, @surveynumber)
                       @inserted = true
                     else
+                      if ( (i==user.SurveysWithMatchingQuota.length-1) && (@inserted == false) ) then
+                        user.SurveysWithMatchingQuota << @surveynumber
+                        @inserted = true
+                      else
+                      end
                     end
                   end
                 end
@@ -2221,6 +2226,11 @@ end
                       user.SurveysWithMatchingQuota.insert(i, @surveynumber)
                       @inserted = true
                     else
+                      if ( (i==user.SurveysWithMatchingQuota.length-1) && (@inserted == false) ) then
+                        user.SurveysWithMatchingQuota << @surveynumber
+                        @inserted = true
+                      else
+                      end
                     end
                   end
                 end
