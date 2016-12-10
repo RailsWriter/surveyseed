@@ -174,16 +174,17 @@ class CenterController < ApplicationController
         format.json { render json: { message: "newAdhocSurvey received" } }
       end 
 
+
       a=Adhoc.new
       a.SurveyName = params[:newAdhocSurvey]["SurveyName"]
       a.SurveyNumber = 1000+Adhoc.count+2
       # a.CountryLanguageID = params[:newAdhocSurvey]["CountryLanguageID"]
-      a.LengthOfInterview = params[:newAdhocSurvey]["LengthOfInterview"]
+      a.LengthOfInterview = params[:newAdhocSurvey]["LOI"]
       a.TotalRemaining = params[:newAdhocSurvey]["NoOfCompletes"].to_i
       a.CPI = params[:newAdhocSurvey]["CPI"].to_f
-      # a.QualificationAgePreCodes = params[:newAdhocSurvey]["QualificationAgePreCodes"]
+      a.QualificationAgePreCodes = params[:newAdhocSurvey][Quotas]["Age"]
       # a.QualificationGenderPreCodes = params[:newAdhocSurvey]["QualificationGenderPreCodes"]
-      # a.QualificationZIPPreCodes = params[:newAdhocSurvey]["QualificationZIPPreCodes"]
+      a.QualificationZIPPreCodes = params[:newAdhocSurvey][Quotas]["Zip"]
       # a.QualificationEducationPreCodes = params[:newAdhocSurvey]["QualificationEducationPreCodes"]
       # a.QualificationHHIPreCodes = params[:newAdhocSurvey][:stdHiUS][:stdHiUSCode]
       # a.QualificationChildrenPreCodes = params[:newAdhocSurvey]["QualificationChildrenPreCodes"]
@@ -191,10 +192,10 @@ class CenterController < ApplicationController
       a.QualificationDMAPreCodes = params[:newAdhocSurvey]["DMA"]
       a.QualificationStatePreCodes = params[:newAdhocSurvey]["State"]
       a.QualificationRegionPreCodes = params[:newAdhocSurvey]["Region"]
-      a.SurveyStillLive=false
       a.SupplierLink = params[:newAdhocSurvey]["LiveLink"]
       a.Screener1 = params[:newAdhocSurvey]["Question1"]
       a.Screener1Resp = params[:newAdhocSurvey]["QuestionAns1"]
+      a.SurveyStillLive=false
       a.save
     else
 
