@@ -8512,9 +8512,9 @@ end
       puts
 
       @RFGSupplierLinks.clear
-      @RFGSupplierLinks << @RFGOfferwallSupplierLink
+      @RFGSupplierLinks << @RFGOfferwallSupplierLink+@RFGAdditionalValues
 
-      print "************>>>>>>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
+      print "************>>>>User will be sent to this RFG link>>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
       puts
 
 
@@ -8538,6 +8538,21 @@ end
     userride (session_id)      
         
   end #selectRfgProjects
+
+
+
+
+  def selectInnovateSurveys (session_id)
+
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    @INVSupplierLink << "http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+"4444"+user.user_id
+
+  end
+
+
+
+
+
        
   def userride (session_id)
     
