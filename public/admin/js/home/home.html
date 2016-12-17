@@ -200,7 +200,7 @@
 		<div class="modal-body">
 			<div class="row">
 				<div class="col-sm-6">
-					<select name="stdEduArray" id="stdAgeGenderArray" ng-model="selectedChildAgeGenderList" multiple style="height:350px">
+					<select name="stdAgeGenderArray" id="stdAgeGenderArray" ng-model="selectedChildAgeGenderList" multiple style="height:350px">
 						<option ng-repeat="option in stdAgeGenderArray" value="{{option}}">{{option.ageGenderChildName}}</option>
 					</select>
 				</div>
@@ -375,19 +375,19 @@
 								</a>
 							</div>
 							<div class="col-sm-3">
-								<div>{{selectedStatesArray.length}} entries.</div>
+								<div>{{selectedStdHiUSCodesList.length}} entries.</div>
 								<a class="btn btn-primary badge badge-primary" href="#" ng-click="updateStdHiUS()">
 									Edit&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span>
 								</a>
 							</div>
 							<div class="col-sm-3">
-								<div>{{selectedStatesArray.length}} entries.</div>
+								<div>{{selectedChildAgeGenderList.length}} entries.</div>
 								<a class="btn btn-primary badge badge-primary" href="#" ng-click="updateChildAgeGender()">
 									Edit&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span>
 								</a>
 							</div>
 							<div class="col-sm-3">
-								<div>{{selectedStatesArray.length}} entries.</div>
+								<div>{{selectedStdEmployment.length}} entries.</div>
 								<a class="btn btn-primary badge badge-primary" href="#" ng-click="updateStdEmployment()">
 									Edit&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span>
 								</a>

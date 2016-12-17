@@ -233,14 +233,53 @@ angular.module('home', ['ui.bootstrap','datamanager']).controller('home', functi
       }
     });
 
-    modalInstance.result.then(function (selectedChildAgeGenderList) {
-      $scope.selectedChildAgeGenderList=selectedChildAgeGenderList
+    modalInstance.result.then(function (selectedStdEmployment) {
+      $scope.selectedStdEmployment=selectedStdEmployment
     }, function () {
     });
   };
 
   $scope.saveSurvey = function(){
-//    request.send('{ "newAdhocSurvey": { "SurveyName": "acme", "LOI": "12", "TestLink" : "http://..", "LiveLink" : "http://...", "SurveyStillLive" : "false", "Quota" : {"Age" : "["13", "14", "15", "34", "35", "36"]", "Gender" : "1", ... } }');
+    var selectedGenderArray = []
+      $scope.genderArray.map(function(gender){
+        if(gender.Selected == true)
+          selectedGenderArray.push(gender.selectedValue)
+      })
+    var selectedStatesArray = []
+    $scope.selectedStatesArray.map(function(state){
+      selectedStatesArray.push(JSON.parse(state).stateCode)
+    })
+
+    var selectedDMAArray = []
+    $scope.selectedDMAArray.map(function(dma){
+      selectedDMAArray.push(JSON.parse(dma).DMARegionCode)
+    })
+
+    var selectedStdEduList = []
+    $scope.selectedStdEduList.map(function(stdEdu){
+      selectedStdEduList.push(JSON.parse(stdEdu).stdEduCode)
+    })
+
+    var selectedStdHiUSCodesList = []
+    $scope.selectedStdHiUSCodesList.map(function(stdHiUS){
+      selectedStdHiUSCodesList.push(JSON.parse(stdHiUS).stdHiUSCode)
+    })
+
+    var selectedStdHiUSCodesList = []
+    $scope.selectedStdHiUSCodesList.map(function(stdHiUS){
+      selectedStdHiUSCodesList.push(JSON.parse(stdHiUS).stdHiUSCode)
+    })
+
+    var selectedChildAgeGenderList = []
+    $scope.selectedChildAgeGenderList.map(function(childAge){
+      selectedChildAgeGenderList.push(JSON.parse(childAge).ageGenderChildCode)
+    })
+
+    var selectedStdEmployment = []
+    $scope.selectedStdEmployment.map(function(stdEmp){
+      selectedStdEmployment.push(JSON.parse(stdEmp).stdEmploymentCode)
+    })
+
     var adHocSurvey={}
     var survey = {}
     survey.SurveyName = $scope.survey.name
@@ -250,17 +289,17 @@ angular.module('home', ['ui.bootstrap','datamanager']).controller('home', functi
     var Quotas=[]
     var Quota={
       Age:$scope.ageRangeArray,
-      Gender:$scope.genderArray,
+      Gender:selectedGenderArray,//$scope.genderArray,
       Zip:$scope.zipArray,
-      State:$scope.selectedStatesArray,
+      State:selectedStatesArray,
       Country:$scope.selectedCountry,
       NoOfCompletes:$scope.noOfCompletes,
       CPI:$scope.cpi,
-      DMA:$scope.selectedDMAArray,
-      childEdu:$scope.selectedStdEduList,
-      stdHiUS:$scope.selectedStdHiUSCodesList,
-      childAgeGender:$scope.selectedChildAgeGenderList,
-      stdEmployment:$scope.selectedStdEmployment
+      DMA:selectedDMAArray,
+      stdEdu:selectedStdEduList,
+      stdHiUS:selectedStdHiUSCodesList,
+      childAgeGender:selectedChildAgeGenderList,
+      stdEmployment:selectedStdEmployment
   }
     Quotas.push(Quota)
     survey.Quotas=Quotas
@@ -268,10 +307,12 @@ angular.module('home', ['ui.bootstrap','datamanager']).controller('home', functi
     survey.QuestionAns1=$scope.survey.questionAns1
     survey.Question2=$scope.survey.question2
     survey.QuestionAns2=$scope.survey.questionAns2
+    survey.SuveyStatus="Draft"
     adHocSurvey.newAdhocSurvey=survey
     console.log("survey::"+JSON.stringify(adHocSurvey,null,'  '))
 
     var headers = {"Content-Type":"application/json"};
+
     $http({method: "POST", url: "https://ketsci.com/center/draft_survey", data:adHocSurvey, config: headers}).
     then(function(response) {
       console.log('updated survey'+JSON.stringify(response.data))
@@ -293,7 +334,7 @@ angular.module('home').controller('ageModalInstanceCtrl', function ($scope, $htt
   $scope.addAge = function (){
     var ageRange = []
     for(i=$scope.ageFrom;i<=$scope.ageTo;i++)
-      ageRange.push(i)
+      ageRange.push(i.toString())
     console.log('ageRange'+ageRange)
     console.log('ageRangeArray'+ $scope.ageRangeArray )
     $scope.ageRangeArray.push(ageRange)
@@ -320,10 +361,10 @@ angular.module('home').controller('zipModalInstanceCtrl', function ($scope, $htt
   $scope.addZip = function (){
     var zipRange = []
     for(i=$scope.zipFrom;i<=$scope.zipTo;i++)
-      zipRange.push(i)
+      zipRange.push(i.toString())
     console.log('zipRange'+zipRange)
-    console.log('zipArray'+ $scope.zipArray )
     $scope.zipArray.push(zipRange)
+    console.log('zipArray'+ $scope.zipArray )
   };
 
   $scope.removeZip = function(zipRange){
