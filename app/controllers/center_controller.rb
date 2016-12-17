@@ -178,6 +178,10 @@ class CenterController < ApplicationController
       a=Adhoc.new
       a.SurveyName = params[:newAdhocSurvey]["SurveyName"]
       a.SurveyNumber = 1000+Adhoc.count+2
+      a.SupplierLink = params[:newAdhocSurvey]["LiveLink"]
+      a.LengthOfInterview = params[:newAdhocSurvey]["LOI"]
+
+      
       if params[:newAdhocSurvey]["Quotas"][0]["Country"] == "US" then
         a.CountryLanguageID=9
       else
@@ -190,9 +194,8 @@ class CenterController < ApplicationController
           end
         end
       end
-      a.LengthOfInterview = params[:newAdhocSurvey]["LOI"]
-      a.TotalRemaining = params[:newAdhocSurvey]["NoOfCompletes"].to_i
-      a.CPI = params[:newAdhocSurvey]["CPI"].to_f
+      a.TotalRemaining = params[:newAdhocSurvey]["Quotas"][0]["NoOfCompletes"].to_i
+      a.CPI = params[:newAdhocSurvey]["Quotas"][0]["CPI"].to_f
       a.QualificationAgePreCodes = params[:newAdhocSurvey]["Quotas"][0]["Age"]
       if params[:newAdhocSurvey]["Quotas"][0]["Gender"] == "M" then
         a.QualificationGenderPreCodes="1"
@@ -207,14 +210,14 @@ class CenterController < ApplicationController
         end
       end
       a.QualificationZIPPreCodes = params[:newAdhocSurvey]["Quotas"][0]["Zip"]
-      # a.QualificationEducationPreCodes = params[:newAdhocSurvey]["QualificationEducationPreCodes"]
+      a.QualificationEducationPreCodes = params[:newAdhocSurvey]["Quotas"][0]["stdEdu"]
       a.QualificationHHIPreCodes = params[:newAdhocSurvey]["Quotas"][0]["stdHiUS"]
-      # a.QualificationChildrenPreCodes = params[:newAdhocSurvey]["QualificationChildrenPreCodes"]
-      # a.QualificationEmploymentPreCodes = params[:newAdhocSurvey]["QualificationEmploymentPreCodes"]
-      a.QualificationDMAPreCodes = params[:newAdhocSurvey]["DMA"]
-      a.QualificationStatePreCodes = params[:newAdhocSurvey]["State"]
-      a.QualificationRegionPreCodes = params[:newAdhocSurvey]["Region"]
-      a.SupplierLink = params[:newAdhocSurvey]["LiveLink"]
+      a.QualificationChildrenPreCodes = params[:newAdhocSurvey]["Quotas"][0]["ChildAgeGender"]
+      a.QualificationEmploymentPreCodes = params[:newAdhocSurvey]["Quotas"][0]["stdEmployment"]
+      a.QualificationDMAPreCodes = params[:newAdhocSurvey]["Quotas"][0]["DMA"]
+      a.QualificationStatePreCodes = params[:newAdhocSurvey]["Quotas"][0]["State"]
+      a.QualificationRegionPreCodes = params[:newAdhocSurvey]["Quotas"][0]["Region"]
+      
       a.Screener1 = params[:newAdhocSurvey]["Question1"]
       a.Screener1Resp = params[:newAdhocSurvey]["QuestionAns1"]
       if params[:newAdhocSurvey]["SurveyStatus"] == "Draft" then
