@@ -182,11 +182,11 @@ class CenterController < ApplicationController
       a.LengthOfInterview = params[:newAdhocSurvey]["LOI"]
       a.TotalRemaining = params[:newAdhocSurvey]["NoOfCompletes"].to_i
       a.CPI = params[:newAdhocSurvey]["CPI"].to_f
-      a.QualificationAgePreCodes = params[:newAdhocSurvey][Quotas]["Age"]
+      a.QualificationAgePreCodes = params[:newAdhocSurvey]["Quotas"]["Age"]
       # a.QualificationGenderPreCodes = params[:newAdhocSurvey]["QualificationGenderPreCodes"]
-      a.QualificationZIPPreCodes = params[:newAdhocSurvey][Quotas]["Zip"]
+      a.QualificationZIPPreCodes = params[:newAdhocSurvey]["Quotas"]["Zip"]
       # a.QualificationEducationPreCodes = params[:newAdhocSurvey]["QualificationEducationPreCodes"]
-      # a.QualificationHHIPreCodes = params[:newAdhocSurvey][:stdHiUS][:stdHiUSCode]
+      a.QualificationHHIPreCodes = params[:newAdhocSurvey]["stdHiUS"]["stdHiUSCode"]
       # a.QualificationChildrenPreCodes = params[:newAdhocSurvey]["QualificationChildrenPreCodes"]
       # a.QualificationEmploymentPreCodes = params[:newAdhocSurvey]["QualificationEmploymentPreCodes"]
       a.QualificationDMAPreCodes = params[:newAdhocSurvey]["DMA"]
