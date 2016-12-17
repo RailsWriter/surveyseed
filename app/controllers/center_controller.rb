@@ -178,15 +178,38 @@ class CenterController < ApplicationController
       a=Adhoc.new
       a.SurveyName = params[:newAdhocSurvey]["SurveyName"]
       a.SurveyNumber = 1000+Adhoc.count+2
-      # a.CountryLanguageID = params[:newAdhocSurvey]["CountryLanguageID"]
+      if params[:newAdhocSurvey]["Quotas"][0]["Country"] == "US" then
+        a.CountryLanguageID=9
+      else
+        if params[:newAdhocSurvey]["Quotas"][0]["Country"] == "CA" then
+          a.CountryLanguageID=6
+        else
+          if params[:newAdhocSurvey]["Quotas"][0]["Country"] == "AU" then
+            a.CountryLanguageID=5
+          else
+          end
+        end
+      end
       a.LengthOfInterview = params[:newAdhocSurvey]["LOI"]
       a.TotalRemaining = params[:newAdhocSurvey]["NoOfCompletes"].to_i
       a.CPI = params[:newAdhocSurvey]["CPI"].to_f
-      a.QualificationAgePreCodes = params[:newAdhocSurvey]["Quotas"]["Age"]
+      a.QualificationAgePreCodes = params[:newAdhocSurvey]["Quotas"][0]["Age"]
+      if params[:newAdhocSurvey]["Quotas"][0]["Gender"] == "M" then
+        a.QualificationGenderPreCodes="1"
+      else
+        if params[:newAdhocSurvey]["Quotas"][0]["Gender"] == "F" then
+          a.QualificationGenderPreCodes="2"
+        else
+          if params[:newAdhocSurvey]["Quotas"][0]["Gender"] == "All" then
+            a.QualificationGenderPreCodes="ALL"
+          else
+          end
+        end
+      end
       # a.QualificationGenderPreCodes = params[:newAdhocSurvey]["QualificationGenderPreCodes"]
-      a.QualificationZIPPreCodes = params[:newAdhocSurvey]["Quotas"]["Zip"]
+      a.QualificationZIPPreCodes = params[:newAdhocSurvey]["Quotas"][0]["Zip"]
       # a.QualificationEducationPreCodes = params[:newAdhocSurvey]["QualificationEducationPreCodes"]
-      a.QualificationHHIPreCodes = params[:newAdhocSurvey]["stdHiUS"]["stdHiUSCode"]
+      a.QualificationHHIPreCodes = params[:newAdhocSurvey]["Quotas"][0]["stdHiUS"]["stdHiUSCode"]
       # a.QualificationChildrenPreCodes = params[:newAdhocSurvey]["QualificationChildrenPreCodes"]
       # a.QualificationEmploymentPreCodes = params[:newAdhocSurvey]["QualificationEmploymentPreCodes"]
       a.QualificationDMAPreCodes = params[:newAdhocSurvey]["DMA"]
@@ -195,7 +218,11 @@ class CenterController < ApplicationController
       a.SupplierLink = params[:newAdhocSurvey]["LiveLink"]
       a.Screener1 = params[:newAdhocSurvey]["Question1"]
       a.Screener1Resp = params[:newAdhocSurvey]["QuestionAns1"]
-      a.SurveyStillLive=false
+      if params[:newAdhocSurvey]["SurveyStatus"] == "Draft" then
+        a.SurveyStillLive=false
+      else
+        a.SurveyStillLive=true
+      end
       a.save
     else
 
