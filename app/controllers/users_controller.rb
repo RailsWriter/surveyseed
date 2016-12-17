@@ -3421,8 +3421,7 @@ end
         @QualificationCounty = true
         @QualificationDMA = true
         @QualificationState = true
-        @QualificationRegion = true
-        
+        @QualificationRegion = true        
         @QualificationJobTitle = true
         @QualificationEthnicity = true
      
@@ -3548,6 +3547,10 @@ end
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
+              
+              print "===========================$$$$$$$$$$$$$$$$$$$$$$$============@RFGHhi===============: ", @RFGHhi
+              puts
+
             end
             # print "User entered HHI: ", user.householdincome
             # puts
@@ -5308,6 +5311,10 @@ end
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
+
+              print "===========================$$$$$$$$$$$$$$$$$$$$$$$============@RFGHhi===============: ", @RFGHhi
+              puts
+
             end
             # print "User entered HHI: ", user.householdincome
             # puts
@@ -6823,6 +6830,7 @@ end
               if (project.datapoints[m]["values"][i]["choice"] == 1) && ( (user.householdincome.to_i == 1) || (user.householdincome.to_i == 18) ) then
                 @QualificationHhi = true
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
+#             puts
               else
               end
               
@@ -6867,6 +6875,10 @@ end
                 @RFGHhi = project.datapoints[m]["values"][i]["choice"].to_s
               else
               end
+
+              print "===========================$$$$$$$$$$$$$$$$$$$$$$$============@RFGHhi===============: ", @RFGHhi
+              puts
+
             end
             # print "User entered HHI: ", user.householdincome
             # puts
@@ -8022,22 +8034,22 @@ end
                     @RFGEducationAU = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
                   else
                   end
-                        if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && ((user.eduation.to_i == 7) || (user.eduation.to_i == 8))  then
-                          @QualificationEducation = true
-                          @RFGEducationAU = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                        else
-                        end
-                        if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && (user.eduation.to_i == 9) then
-                          @QualificationEducation = true
-                          @RFGEducationAU = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                        else
-                        end                    
-                        if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 10) || (user.eduation.to_i == 11))  then
-                          @QualificationEducation = true
-                          @RFGEducationAU = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                        else
-                        end
-                      end
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && ((user.eduation.to_i == 7) || (user.eduation.to_i == 8))  then
+                    @QualificationEducation = true
+                    @RFGEducationAU = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && (user.eduation.to_i == 9) then
+                    @QualificationEducation = true
+                    @RFGEducationAU = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end                    
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && ((user.eduation.to_i == 10) || (user.eduation.to_i == 11))  then
+                    @QualificationEducation = true
+                    @RFGEducationAU = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end
+                end
                       # print "User entered Education: ", user.eduation
                       # puts
                       # print "Project quota Education: ", project.quotas[j]["datapoints"][n]["values"]
@@ -8053,39 +8065,39 @@ end
                     @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
                   else
                   end 
-                          if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) && (user.employment.to_i == 2) then
-                            @QualificationEmployment = true
-                            @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                          else
-                          end
-                          if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3) && (user.employment.to_i == 1) then
-                            @QualificationEmployment = true
-                            print "----------->>> project employment choice: ", project.quotas[j]["datapoints"][n]["values"][i]["choice"], 'and user.employment: ', user.employment
-                            puts 
-                            @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                          else
-                          end
-                          if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) && (user.employment.to_i == 7)  then
-                            @QualificationEmployment = true
-                            @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                          else
-                          end
-                          if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && (user.employment.to_i == 9)  then
-                            @QualificationEmployment = true
-                            @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                          else
-                          end
-                          if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && ((user.employment.to_i == 3) || (user.employment.to_i == 4)) then
-                            @QualificationEmployment = true
-                            @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                          else
-                          end                    
-                          if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && (user.employment.to_i == 8)  then
-                            @QualificationEmployment = true
-                            @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
-                          else
-                          end
-                        end
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 2) && (user.employment.to_i == 2) then
+                    @QualificationEmployment = true
+                    @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 3) && (user.employment.to_i == 1) then
+                    @QualificationEmployment = true
+                    print "----------->>> project employment choice: ", project.quotas[j]["datapoints"][n]["values"][i]["choice"], 'and user.employment: ', user.employment
+                    puts 
+                    @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 4) && (user.employment.to_i == 7)  then
+                    @QualificationEmployment = true
+                    @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 5) && (user.employment.to_i == 9)  then
+                    @QualificationEmployment = true
+                    @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 6) && ((user.employment.to_i == 3) || (user.employment.to_i == 4)) then
+                    @QualificationEmployment = true
+                    @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end                    
+                  if (project.quotas[j]["datapoints"][n]["values"][i]["choice"] == 7) && (user.employment.to_i == 8)  then
+                    @QualificationEmployment = true
+                    @RFGEmployment = project.quotas[j]["datapoints"][n]["values"][i]["choice"].to_s
+                  else
+                  end
+                end
               # print "User entered Employment: ", user.employment
               # puts
               # print "Project quota Employment: ", project.quotas[j]["datapoints"][n]["values"]
@@ -8492,6 +8504,7 @@ end
     # puts
     
     @maxIR = @OfferwallResponse["response"]["surveys"][0]["ir"]
+    @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][0]["offer_url"]
 
     @NumberOfSurveys = @OfferwallResponse["response"]["surveys"].length
       
