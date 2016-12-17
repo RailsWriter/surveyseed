@@ -166,7 +166,7 @@ class CenterController < ApplicationController
   def draft_survey
 
     if params[:newAdhocSurvey] != nil then
-      print "****************** Received draft_survey", params[:newAdhocSurvey]
+      print "****************** Received draft_survey ", params[:newAdhocSurvey]
       puts
 
       respond_to do |format|
@@ -206,10 +206,9 @@ class CenterController < ApplicationController
           end
         end
       end
-      # a.QualificationGenderPreCodes = params[:newAdhocSurvey]["QualificationGenderPreCodes"]
       a.QualificationZIPPreCodes = params[:newAdhocSurvey]["Quotas"][0]["Zip"]
       # a.QualificationEducationPreCodes = params[:newAdhocSurvey]["QualificationEducationPreCodes"]
-      a.QualificationHHIPreCodes = params[:newAdhocSurvey]["Quotas"][0]["stdHiUS"]["stdHiUSCode"]
+      a.QualificationHHIPreCodes = params[:newAdhocSurvey]["Quotas"][0]["stdHiUS"]
       # a.QualificationChildrenPreCodes = params[:newAdhocSurvey]["QualificationChildrenPreCodes"]
       # a.QualificationEmploymentPreCodes = params[:newAdhocSurvey]["QualificationEmploymentPreCodes"]
       a.QualificationDMAPreCodes = params[:newAdhocSurvey]["DMA"]
