@@ -252,32 +252,27 @@ angular.module('home', ['ui.bootstrap','datamanager']).controller('home', functi
 
     var selectedDMAArray = []
     $scope.selectedDMAArray.map(function(dma){
-      selectedDMAArray.push(JSON.parse(dma).DMARegionCode)
+      selectedDMAArray.push(JSON.parse(dma).DMARegionCode.toString())
     })
 
     var selectedStdEduList = []
     $scope.selectedStdEduList.map(function(stdEdu){
-      selectedStdEduList.push(JSON.parse(stdEdu).stdEduCode)
+      selectedStdEduList.push(JSON.parse(stdEdu).stdEduCode.toString())
     })
 
     var selectedStdHiUSCodesList = []
     $scope.selectedStdHiUSCodesList.map(function(stdHiUS){
-      selectedStdHiUSCodesList.push(JSON.parse(stdHiUS).stdHiUSCode)
-    })
-
-    var selectedStdHiUSCodesList = []
-    $scope.selectedStdHiUSCodesList.map(function(stdHiUS){
-      selectedStdHiUSCodesList.push(JSON.parse(stdHiUS).stdHiUSCode)
+      selectedStdHiUSCodesList.push(JSON.parse(stdHiUS).stdHiUSCode.toString())
     })
 
     var selectedChildAgeGenderList = []
     $scope.selectedChildAgeGenderList.map(function(childAge){
-      selectedChildAgeGenderList.push(JSON.parse(childAge).ageGenderChildCode)
+      selectedChildAgeGenderList.push(JSON.parse(childAge).ageGenderChildCode.toString())
     })
 
     var selectedStdEmployment = []
     $scope.selectedStdEmployment.map(function(stdEmp){
-      selectedStdEmployment.push(JSON.parse(stdEmp).stdEmploymentCode)
+      selectedStdEmployment.push(JSON.parse(stdEmp).stdEmploymentCode.toString())
     })
 
     var adHocSurvey={}
@@ -307,7 +302,7 @@ angular.module('home', ['ui.bootstrap','datamanager']).controller('home', functi
     survey.QuestionAns1=$scope.survey.questionAns1
     survey.Question2=$scope.survey.question2
     survey.QuestionAns2=$scope.survey.questionAns2
-    survey.SuveyStatus="Draft"
+    survey.SurveyStatus="Draft"
     adHocSurvey.newAdhocSurvey=survey
     console.log("survey::"+JSON.stringify(adHocSurvey,null,'  '))
 
