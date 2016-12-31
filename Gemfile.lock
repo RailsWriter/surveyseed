@@ -116,7 +116,7 @@ GEM
     multi_json (1.10.1)
     multi_xml (0.5.5)
     mysql2 (0.3.17)
-    newrelic_rpm (3.9.9.275)
+    newrelic_rpm (3.17.2.327)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
     pry (0.10.1)
