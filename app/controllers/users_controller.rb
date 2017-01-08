@@ -9586,8 +9586,10 @@ end
       if user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
 
         begin
-          @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-         rescue HTTParty::Error => e
+          puts "************************* TEST SENDING RADIUMONE3 POSTBACK **************************************"
+          #@RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+          @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+          rescue HTTParty::Error => e
            puts 'HttParty::Error '+ e.message
           retry
         end while @RadiumOne3PostBack.code != 200
