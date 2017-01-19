@@ -16,7 +16,7 @@ class UsersController < ApplicationController
 
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
-    if params[:age].empty? == false
+    if (params[:age].empty? == false) then
       @age = params[:age]
     else
       redirect_to '/users/new'
@@ -808,6 +808,24 @@ class UsersController < ApplicationController
     ranksurveysforuser(session.id)
     
   end
+
+  def join_panel  
+
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+
+    user=User.find_by session_id: session.id
+
+    tracker.track(user.ip_address, 'newpanelist')
+
+    if params[:emailid].empty? == false then
+      #user.emailid = params[:emailid]
+      user.Pii1 = params[:emailid]
+
+      user.save
+    else
+    end
+  end
+
   
   # start to rankfedsurveys
 

@@ -758,7 +758,7 @@ class RedirectsController < ApplicationController
                   # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
                 
                   @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
-                  @survey.save!
+                  @survey.save
 
                   print "*************** User.netid is: ", @user.netid
                   puts
@@ -982,8 +982,10 @@ class RedirectsController < ApplicationController
                 
                 # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
               
-                @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
-                @survey.save!
+           # TEMPORARILY STOP STORING COMPLETEDBY INFO
+              
+            # @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
+            # @survey.save
 
                 # Save (inverse of) TCR and reset counter for attempts at last complete
               
@@ -1348,7 +1350,7 @@ class RedirectsController < ApplicationController
              
                   else
 
-                    print 'User will be sent to this fed or rfg survey: ', @user.SupplierLink[0]
+                    print 'User will be sent to the next survey: ', @user.SupplierLink[0]
                     puts
                     @NextEntryLink = @user.SupplierLink[0]
                     @user.SupplierLink = @user.SupplierLink.drop(1)
