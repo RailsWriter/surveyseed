@@ -1,2 +1,2 @@
       invoke  active_record
-      create    db/migrate/20160711064124_update_column_in_adhoc.rb
+      create    db/migrate/20170122074832_update_column_in_survey.rb

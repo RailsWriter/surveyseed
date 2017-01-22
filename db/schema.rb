@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161121054813) do
+ActiveRecord::Schema.define(version: 20170122074832) do
 
   create_table "adhocs", force: true do |t|
     t.string   "SurveyName"
@@ -184,7 +184,7 @@ ActiveRecord::Schema.define(version: 20161121054813) do
     t.text     "SupplierLink"
     t.datetime "created_at",                                       null: false
     t.datetime "updated_at",                                       null: false
-    t.text     "CompletedBy"
+    t.text     "CompletedBy",                     limit: 1000000
     t.float    "KEPC"
     t.float    "GEPC"
     t.integer  "FailureCount"
