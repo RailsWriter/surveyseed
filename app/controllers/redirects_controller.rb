@@ -984,8 +984,8 @@ class RedirectsController < ApplicationController
               
            # TEMPORARILY STOP STORING COMPLETEDBY INFO
               
-            # @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
-            # @survey.save
+            @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
+            @survey.save
 
                 # Save (inverse of) TCR and reset counter for attempts at last complete
               

@@ -818,9 +818,7 @@ class UsersController < ApplicationController
     tracker.track(user.ip_address, 'newpanelist')
 
     if params[:emailid].empty? == false then
-      #user.emailid = params[:emailid]
-      user.Pii1 = params[:emailid]
-
+      user.emailId = params[:emailid]
       user.save
     else
     end
