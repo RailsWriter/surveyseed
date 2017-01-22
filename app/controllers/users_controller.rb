@@ -820,6 +820,7 @@ class UsersController < ApplicationController
     if params[:emailid].empty? == false then
       user.emailId = params[:emailid]
       user.save
+      redirect_to '/users/thanks'
     else
     end
   end
