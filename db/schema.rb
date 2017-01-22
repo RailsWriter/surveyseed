@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170122074832) do
+ActiveRecord::Schema.define(version: 20170122084058) do
 
   create_table "adhocs", force: true do |t|
     t.string   "SurveyName"
@@ -241,8 +241,8 @@ ActiveRecord::Schema.define(version: 20170122074832) do
     t.string   "eduation"
     t.integer  "householdcomp"
     t.string   "householdincome"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
     t.string   "session_id"
     t.string   "ip_address"
     t.string   "user_agent"
@@ -275,6 +275,14 @@ ActiveRecord::Schema.define(version: 20170122074832) do
     t.text     "Pii3"
     t.text     "Pii4"
     t.text     "Pii5"
+    t.string   "emailId"
+    t.string   "password"
+    t.string   "acceptTermsVersion"
+    t.string   "acceptedTerms",                              default: "f"
+    t.datetime "dateTermsAccepted"
+    t.string   "userType"
+    t.string   "redeemRewards",                              default: "1"
+    t.string   "surveyFrequency",                            default: "1"
   end
 
 end
