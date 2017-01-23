@@ -16,11 +16,36 @@
 		
 		<div id="content">
 			<center>
-				<p>Thanks for completing this survey. Please return to the app or site you clicked on this offer to claim your reward.</p>
-				<p>You can take up to 3 surveys today.</p><br><br><br><br><br>
-				<p>Visit <%= link_to "Ketsci.com", 'http://www.ketsci.com' %> to submit your own survey questions. Get responses from your target audience quickly.
-				</center>			
+				<p>Return to the app or site you clicked on this offer to claim your reward.</p>
+			</center>			
 		</content>
+
+
+		<div class="content">
+			<center><br>
+				<p>In addition, enter your Email address to receive notifications for new surveys.</p>
+			</center>
+				<%= form_tag("/users/join_panel", method: "post") do %>
+					<fieldset>
+						<div class="myyrsinput">
+							<%= text_field_tag 'emailid', nil, maxlength: 100 %>
+							<%= label_tag(:emailid, '') %><br><br>
+						</div>
+					
+						<div class="myinput">
+							<center>				
+								<%= submit_tag "Submit" %><br>
+								<p>or</p>
+								<%= submit_tag "No Thanks" %>
+							</center>
+						</div>
+					</fieldset>
+				<% end %>
+		</content>
+
+
+
+
 		<br>
 		<br>
 				

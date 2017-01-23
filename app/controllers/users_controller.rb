@@ -822,6 +822,7 @@ class UsersController < ApplicationController
       user.save
       redirect_to '/users/thanks'
     else
+      redirect_to '/users/thanks'
     end
   end
 
