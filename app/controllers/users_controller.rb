@@ -820,6 +820,7 @@ class UsersController < ApplicationController
     if params[:emailid].empty? == false then
       user.emailId = params[:emailid]
       user.save
+      tracker.track(user.ip_address, 'panelistregistered')
       redirect_to '/users/thanks'
     else
       redirect_to '/users/thanks'
