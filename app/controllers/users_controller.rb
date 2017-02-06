@@ -827,6 +827,36 @@ class UsersController < ApplicationController
     end
   end
 
+
+
+  def login
+    if params[:credentials] != nil then
+      print "****************** Received login credentials ", params[:credentials]
+      puts
+
+      @user = User.where('emailId=? AND password=?', params[:credentials][emailId], params[:credentials][password])
+      
+      if @user!=nil then
+        render json: @user
+      else
+        u=user.new
+        u.emailId=params[:credentials][emailId]
+        u.password=params[:credentials][password]
+        u.save
+      end
+    else
+      respond_to do |format|
+        #format.html # home.html.erb
+        format.json { render json: { message: "No login credentials received" } }
+      end 
+
+      p "***************** Nothing was received in POST as credentials **************"
+    end
+  end
+
+
+
+
   
   # start to rankfedsurveys
 

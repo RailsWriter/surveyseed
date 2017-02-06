@@ -230,7 +230,7 @@ class CenterController < ApplicationController
 
       respond_to do |format|
         format.html # home.html.erb
-        format.json { render json: { message: "newAdhocSurvey received" } }
+        format.json { render json: { message: "No newAdhocSurvey received" } }
       end 
 
       p "***************** Nothing was received as draft_survey **************"
