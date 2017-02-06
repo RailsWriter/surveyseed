@@ -168,7 +168,7 @@ class RedirectsController < ApplicationController
             puts
             
             if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
-              print "************* Click Id already exists - do not postback again!"
+              print "************* Click Id already exists - do not postback to P2S again!"
               puts
       
             else
@@ -403,267 +403,280 @@ class RedirectsController < ApplicationController
               print '************** Suceess for user_id/PID on RFG: ', params[:PID], ' CID: ', @user.clickid
               puts
           
-              #@user.SurveysAttempted << params[:tsfn]+'-2'
-              @user.SurveysAttempted << 'RFG-2'
+              
 
-              
-              # @project = RfgProject.find_by rfg_id: params[:tsfn]
-            
-              # if (@project == nil) then
-              #   sleep(1)
-              #   @project = RfgProject.find_by rfg_id: params[:tsfn]
-              #   puts " *********** Retried retrieving project"
-              # else
-              # end    
-                 
-              # print '************ Successfully completed project:', @project.rfg_id
-              # puts
-              
-              # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}            
-            
-              if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
-                @net_name = "Fyber"
+              if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
+                print "************* Click Id already exists - do not postback to RFG again!"
+                puts
+      
               else
-              end
+
+
+
+                #@user.SurveysAttempted << params[:tsfn]+'-2'
+                @user.SurveysAttempted << 'RFG-2'
+
+                
+                # @project = RfgProject.find_by rfg_id: params[:tsfn]
               
-              if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
-                @net_name = "SuperSonic"
-              else
-              end
+                # if (@project == nil) then
+                #   sleep(1)
+                #   @project = RfgProject.find_by rfg_id: params[:tsfn]
+                #   puts " *********** Retried retrieving project"
+                # else
+                # end    
+                   
+                # print '************ Successfully completed project:', @project.rfg_id
+                # puts
+                
+                # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}            
               
-              if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
-                @net_name = "RadiumOne"
-              else
-              end
-              
-              if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
-                @net_name = "SS2"
-              else
-              end
-              
-              if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
-                @net_name = "Fyber2"
-              else
-              end
-              
-              if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
-                @net_name = "SS3"
-              else
-              end 
-              
-              if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
-                @net_name = "MemoLink"
-              else
-              end           
-              
-              if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
-                @net_name = "RadiumOne2"
-              else
-              end
+                if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
+                  @net_name = "Fyber"
+                else
+                end
+                
+                if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
+                  @net_name = "SuperSonic"
+                else
+                end
+                
+                if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
+                  @net_name = "RadiumOne"
+                else
+                end
+                
+                if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
+                  @net_name = "SS2"
+                else
+                end
+                
+                if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
+                  @net_name = "Fyber2"
+                else
+                end
+                
+                if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
+                  @net_name = "SS3"
+                else
+                end 
+                
+                if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
+                  @net_name = "MemoLink"
+                else
+                end           
+                
+                if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
+                  @net_name = "RadiumOne2"
+                else
+                end
 
-              if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
-                @net_name = "RadiumOne3"
-              else
-              end
+                if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
+                  @net_name = "RadiumOne3"
+                else
+                end
 
-              if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then 
-                @net_name = "Tapjoy"
-              else
-              end
-              
-              if @user.netid == "T2Abd5433LLA785410lpH567" then 
-                @net_name = "TestNtk"
-              else
-              end
-             
-              # @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'RFG', @project.cpi, @user.clickid, @net_name]
-              # @user.save
-              
-             
-              # # Save completed project info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}            
-              # @project.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
-  
-              # # Save attempts counts
-              # if (@project.NumberofAttempts == nil) then
-              #   @project.NumberofAttempts = 0
-              # else
-              # end
-              
-              # if (@project.AttemptsAtLastComplete == nil) then
-              #   @project.AttemptsAtLastComplete = 0
-              # else
-              # end
-                            
-              # @project.NumberofAttempts = @project.NumberofAttempts + 1
-              # #@RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
-              # @project.AttemptsAtLastComplete = @project.NumberofAttempts
-              # #if @RFGAttemptsSinceLastComplete  > 20 then
-              #  # @project.epc = "$.00"
-              #   #@project.projectEPC = "$.00"
-              #   #else
-              #   #end
-              
-              # print "Updating Attempts count for project in Success: ", @project.rfg_id
-              # puts
-              # @project.save
-  
-
-
-
-
-
-
-              @user.SurveysCompleted[params[:PID]] = [Time.now, 'RFGsurvey', 'RFG', '$3.00', @user.clickid, @net_name]
-              @user.save
-            
-              print "*************** User.netid in RFG-2 is: ", @user.netid
-              puts
-
-
-
-
-              # Postback the network about success with users clickid
-            
-              if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
-                begin
-                  @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  rescue HTTParty::Error => e
-                    puts 'HttParty::Error '+ e.message
-                    retry
-                end while @FyberPostBack.code != 200
-              else
-              end
-                        
-              if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
-       
-                begin
-                @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  rescue HTTParty::Error => e
-                  puts 'HttParty::Error '+ e.message
-                  retry
-                end while @SupersonicPostBack.code != 200
+                if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then 
+                  @net_name = "Tapjoy"
+                else
+                end
+                
+                if @user.netid == "T2Abd5433LLA785410lpH567" then 
+                  @net_name = "TestNtk"
+                else
+                end
+               
+                # @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'RFG', @project.cpi, @user.clickid, @net_name]
+                # @user.save
+                
+               
+                # # Save completed project info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}            
+                # @project.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
     
-              else
-              end
-            
-              if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
-     
-                begin
-                  @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                   rescue HTTParty::Error => e
-                     puts 'HttParty::Error '+ e.message
-                     retry
-                  end while @RadiumOnePostBack.code != 200
-  
-              else
-              end
+                # # Save attempts counts
+                # if (@project.NumberofAttempts == nil) then
+                #   @project.NumberofAttempts = 0
+                # else
+                # end
+                
+                # if (@project.AttemptsAtLastComplete == nil) then
+                #   @project.AttemptsAtLastComplete = 0
+                # else
+                # end
+                              
+                # @project.NumberofAttempts = @project.NumberofAttempts + 1
+                # #@RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+                # @project.AttemptsAtLastComplete = @project.NumberofAttempts
+                # #if @RFGAttemptsSinceLastComplete  > 20 then
+                #  # @project.epc = "$.00"
+                #   #@project.projectEPC = "$.00"
+                #   #else
+                #   #end
+                
+                # print "Updating Attempts count for project in Success: ", @project.rfg_id
+                # puts
+                # @project.save
+    
+
+
+
+
+
+
+                @user.SurveysCompleted[params[:PID]] = [Time.now, 'RFGsurvey', 'RFG', '$3.00', @user.clickid, @net_name]
+                @user.save
               
-              if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
-       
-                begin
-                  @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                print "*************** User.netid in RFG-2 is: ", @user.netid
+                puts
+
+
+
+
+                # Postback the network about success with users clickid
+              
+                if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+                  begin
+                    @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    rescue HTTParty::Error => e
+                      puts 'HttParty::Error '+ e.message
+                      retry
+                  end while @FyberPostBack.code != 200
+                else
+                end
+                          
+                if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+         
+                  begin
+                  @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                     rescue HTTParty::Error => e
                     puts 'HttParty::Error '+ e.message
                     retry
-                end while @SS2PostBack.code != 200
-    
-              else
-              end   
+                  end while @SupersonicPostBack.code != 200
+      
+                else
+                end
               
-              if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then
+                if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
+       
+                  begin
+                    @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                     rescue HTTParty::Error => e
+                       puts 'HttParty::Error '+ e.message
+                       retry
+                    end while @RadiumOnePostBack.code != 200
+    
+                else
+                end
+                
+                if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
+         
+                  begin
+                    @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      rescue HTTParty::Error => e
+                      puts 'HttParty::Error '+ e.message
+                      retry
+                  end while @SS2PostBack.code != 200
+      
+                else
+                end   
+                
+                if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then
 
-                begin
-                  @Fyber2PostBack = HTTParty.post('http://www2.balao.de/SPNcu?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  rescue HTTParty::Error => e
+                  begin
+                    @Fyber2PostBack = HTTParty.post('http://www2.balao.de/SPNcu?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    rescue HTTParty::Error => e
+                      puts 'HttParty::Error '+ e.message
+                      retry
+                    end while @Fyber2PostBack.code != 200
+      
+                else
+                end   
+                              
+                if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
+                  #puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
+                  
+                  begin
+                    @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                          rescue HTTParty::Error => e
+                            puts 'HttParty::Error '+ e.message
+                            retry
+                  end while @SS3PostBack.code != 200
+      
+                else
+                end
+                
+                if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
+       
+                  begin
+                    @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                     rescue HTTParty::Error => e
+                       puts 'HttParty::Error '+ e.message
+                       retry
+                    end while @RadiumOnePostBack.code != 200
+    
+                else
+                end
+
+                if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
+       
+                  begin
+                    puts "************************* RFG SENDING RADIUMONE3 POSTBACK **************************************"
+                    #@RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                     rescue HTTParty::Error => e
+                       puts 'HttParty::Error '+ e.message
+                       retry
+                    end while @RadiumOne3PostBack.code != 200
+    
+                else
+                end
+
+                if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
+
+                  begin
+                    @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    rescue HTTParty::Error => e
                     puts 'HttParty::Error '+ e.message
                     retry
-                  end while @Fyber2PostBack.code != 200
-    
-              else
-              end   
-                            
-              if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
-                #puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
+                  end while @TapjoyPostBack.code != 200
+                else
+                end
+                             
+                # Keep a count of completes on all Networks
+              
+                puts "*************** Keeping track of completes on all networks"
+              
+                @net = Network.find_by netid: @user.netid
+                if @net.Flag3 == nil then
                 
-                begin
-                  @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                        rescue HTTParty::Error => e
-                          puts 'HttParty::Error '+ e.message
-                          retry
-                end while @SS3PostBack.code != 200
-    
-              else
-              end
-              
-              if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
-     
-                begin
-                  @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                   rescue HTTParty::Error => e
-                     puts 'HttParty::Error '+ e.message
-                     retry
-                  end while @RadiumOnePostBack.code != 200
-  
-              else
-              end
-
-              if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
-     
-                begin
-                  puts "************************* RFG SENDING RADIUMONE3 POSTBACK **************************************"
-                  #@RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                   rescue HTTParty::Error => e
-                     puts 'HttParty::Error '+ e.message
-                     retry
-                  end while @RadiumOne3PostBack.code != 200
-  
-              else
-              end
-
-              if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
-
-                begin
-                  @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  rescue HTTParty::Error => e
-                  puts 'HttParty::Error '+ e.message
-                  retry
-                end while @TapjoyPostBack.code != 200
-              else
-              end
-                           
-              # Keep a count of completes on all Networks
-            
-              puts "*************** Keeping track of completes on all networks"
-            
-              @net = Network.find_by netid: @user.netid
-              if @net.Flag3 == nil then
-              
-                @net.Flag3 = "1" 
-                @net.save
-              
-              else
-              
-                @net.Flag3 = (@net.Flag3.to_i + 1).to_s
-                @net.save
-              
-              end
+                  @net.Flag3 = "1" 
+                  @net.save
+                
+                else
+                
+                  @net.Flag3 = (@net.Flag3.to_i + 1).to_s
+                  @net.save
+                
+                end
 
 
-              # Count RFG completes
-              
-              @RFGnet = Network.find_by netid: "3333"
-              if @RFGnet.Flag3 == nil then
-              
-                @RFGnet.Flag3 = "1" 
-                @RFGnet.save
-              
-              else
-              
-                @RFGnet.Flag3 = (@RFGnet.Flag3.to_i + 1).to_s
-                @RFGnet.save
-              
-              end
+                # Count RFG completes
+                
+                @RFGnet = Network.find_by netid: "3333"
+                if @RFGnet.Flag3 == nil then
+                
+                  @RFGnet.Flag3 = "1" 
+                  @RFGnet.save
+                
+                else
+                
+                  @RFGnet.Flag3 = (@RFGnet.Flag3.to_i + 1).to_s
+                  @RFGnet.save
+                
+                end
+
+
+              end # duplicate is false
               
               # Happy ending
               
@@ -684,7 +697,7 @@ class RedirectsController < ApplicationController
                 puts
                 
                 if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
-                  print "************* Click Id already exists - do not postback again!"
+                  print "************* Click Id already exists - do not postback to ADHOC again!"
                   puts          
                 else
                 
@@ -913,230 +926,241 @@ class RedirectsController < ApplicationController
 
                 print '************** Suceess for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
                 puts
+
+
+                if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
+                  print "************* Click Id already exists - do not postback to FED again!"
+                  puts          
+                else
+
+
+
           
-                @user.SurveysAttempted << params[:tsfn]+'-2'
-            
-                # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
-            
-                if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
-                  @net_name = "Fyber"
-                else
-                end
-                           
-                if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
-                  @net_name = "SuperSonic"
-                else
-                end
-            
-                if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
-                  @net_name = "RadiumOne"
-                else
-                end
+                  @user.SurveysAttempted << params[:tsfn]+'-2'
               
-                if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
-                  @net_name = "SS2"
-                else
-                end
+                  # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
+              
+                  if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then 
+                    @net_name = "Fyber"
+                  else
+                  end
+                             
+                  if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then 
+                    @net_name = "SuperSonic"
+                  else
+                  end
+              
+                  if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then 
+                    @net_name = "RadiumOne"
+                  else
+                  end
                 
-                if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
-                  @net_name = "Fyber2"
-                else
-                end 
+                  if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then 
+                    @net_name = "SS2"
+                  else
+                  end
+                  
+                  if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then 
+                    @net_name = "Fyber2"
+                  else
+                  end 
+                  
+                  if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
+                    @net_name = "SS3"
+                  else
+                  end  
+                  
+                  if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
+                    @net_name = "MemoLink"
+                  else
+                  end   
+                  
+                  if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
+                    @net_name = "RadiumOne2"
+                  else
+                  end
+
+                  if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
+                    @net_name = "RadiumOne3"
+                  else
+                  end 
+
+                  if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then 
+                    @net_name = "Tapjoy"
+                  else
+                  end           
+                  
+                  if @user.netid == "T2Abd5433LLA785410lpH567" then 
+                    @net_name = "TestNtk"
+                  else
+                  end              
+     
+                  @survey = Survey.find_by SurveyNumber: params[:tsfn]                    
+                  print '************ Successfully completed survey:', @survey.SurveyNumber
+                  puts
                 
-                if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then 
-                  @net_name = "SS3"
-                else
-                end  
+                  @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
+                  @user.save
+                  
+                  # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
                 
-                if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then 
-                  @net_name = "MemoLink"
-                else
-                end   
+                  # TEMPORARILY STOP STORING COMPLETEDBY INFO
                 
-                if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then 
-                  @net_name = "RadiumOne2"
-                else
-                end
+                  @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
+                  @survey.save
 
-                if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then 
-                  @net_name = "RadiumOne3"
-                else
-                end 
-
-                if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then 
-                  @net_name = "Tapjoy"
-                else
-                end           
+                  # Save (inverse of) TCR and reset counter for attempts at last complete
                 
-                if @user.netid == "T2Abd5433LLA785410lpH567" then 
-                  @net_name = "TestNtk"
-                else
-                end              
-   
-                @survey = Survey.find_by SurveyNumber: params[:tsfn]                    
-                print '************ Successfully completed survey:', @survey.SurveyNumber
-                puts
-              
-                @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
-                @user.save
+                  @survey.SurveyExactRank = @survey.SurveyExactRank + 1  # SurveyExactRank=Failure+OQ+Success count
+                  @NumberofAttemptsSinceLastComplete = @survey.SurveyExactRank - @survey.NumberofAttemptsAtLastComplete
+                  @survey.TCR = (1.0 / @NumberofAttemptsSinceLastComplete).round(3)
+
+                  @survey.NumberofAttemptsAtLastComplete = @survey.SurveyExactRank
                 
-                # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
-              
-           # TEMPORARILY STOP STORING COMPLETEDBY INFO
-              
-            @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
-            @survey.save
+                  # Move the just converted survey to F or S immediately, if it is already not there
+                
+                  if (@survey.SurveyGrossRank > 100) then
+          
+                    @survey.SurveyGrossRank = 101 - (@survey.TCR * 100)
+                    print "************** Assigned Just converted to Fast: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
+                    @survey.label = 'JUST CONVERTED'
 
-                # Save (inverse of) TCR and reset counter for attempts at last complete
-              
-                @survey.SurveyExactRank = @survey.SurveyExactRank + 1  # SurveyExactRank=Failure+OQ+Success count
-                @NumberofAttemptsSinceLastComplete = @survey.SurveyExactRank - @survey.NumberofAttemptsAtLastComplete
-                @survey.TCR = (1.0 / @NumberofAttemptsSinceLastComplete).round(3)
+                  else
 
-                @survey.NumberofAttemptsAtLastComplete = @survey.SurveyExactRank
-              
-                # Move the just converted survey to F or S immediately, if it is already not there
-              
-                if (@survey.SurveyGrossRank > 100) then
-        
-                  @survey.SurveyGrossRank = 101 - (@survey.TCR * 100)
-                  print "************** Assigned Just converted to Fast: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
-                  @survey.label = 'JUST CONVERTED'
+                    # the survey is already in F i.e. rank is <= 100. do nothing
 
-                else
+                  end
 
-                  # the survey is already in F i.e. rank is <= 100. do nothing
+                  @survey.save
 
-                end
-
-                @survey.save
-
-                # Postback the network about success with users clickid
-              
-                if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
-                  begin
-                    @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                    rescue HTTParty::Error => e
-                      puts 'HttParty::Error '+ e.message
-                      retry
-                    end while @FyberPostBack.code != 200
-                 else
-                end
-                         
-                if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
-         
-                  begin
-                    @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  # Postback the network about success with users clickid
+                
+                  if @user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+                    begin
+                      @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                       rescue HTTParty::Error => e
                         puts 'HttParty::Error '+ e.message
                         retry
-                    end while @SupersonicPostBack.code != 200
+                      end while @FyberPostBack.code != 200
+                   else
+                  end
+                           
+                  if @user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
+           
+                    begin
+                      @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                        rescue HTTParty::Error => e
+                          puts 'HttParty::Error '+ e.message
+                          retry
+                      end while @SupersonicPostBack.code != 200
+        
+                  else
+                  end
+                  
+                  if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
+                      
+                      begin
+                        @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                         rescue HTTParty::Error => e
+                           puts 'HttParty::Error '+ e.message
+                           retry
+                      end while @RadiumOnePostBack.code != 200
       
-                else
-                end
-                
-                if @user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
+                  else
+                  end
+                  
+                  if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
+           
+                    begin
+                      @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                        rescue HTTParty::Error => e
+                        puts 'HttParty::Error '+ e.message
+                        retry
+                    end while @SS2PostBack.code != 200
+        
+                  else
+                  end
+                  
+                  if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then
+
+                    begin
+                      @Fyber2PostBack = HTTParty.post('http://www2.balao.de/SPNcu?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      rescue HTTParty::Error => e
+                        puts 'HttParty::Error '+ e.message
+                        retry
+                      end while @Fyber2PostBack.code != 200
+        
+                  else
+                  end
+                              
+                  if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
+                    # puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
                     
                     begin
-                      @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                       rescue HTTParty::Error => e
-                         puts 'HttParty::Error '+ e.message
-                         retry
-                    end while @RadiumOnePostBack.code != 200
-    
-                else
-                end
-                
-                if @user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
-         
-                  begin
-                    @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                            rescue HTTParty::Error => e
+                              puts 'HttParty::Error '+ e.message
+                              retry
+                    end while @SS3PostBack.code != 200
+        
+                  else
+                  end
+                  
+                  if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
+                      
+                      begin
+                        @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                         rescue HTTParty::Error => e
+                           puts 'HttParty::Error '+ e.message
+                           retry
+                      end while @RadiumOnePostBack.code != 200
+      
+                  else
+                  end
+
+                  if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
+                      
+                      begin
+                        puts "************************* FED SENDING RADIUMONE3 POSTBACK **************************************"
+                        #@RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                        @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                         rescue HTTParty::Error => e
+                           puts 'HttParty::Error '+ e.message
+                           retry
+                      end while @RadiumOne3PostBack.code != 200
+      
+                  else
+                  end
+
+                  if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
+
+                    begin
+                      @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                       rescue HTTParty::Error => e
                       puts 'HttParty::Error '+ e.message
                       retry
-                  end while @SS2PostBack.code != 200
-      
-                else
-                end
+                    end while @TapjoyPostBack.code != 200
+                  else
+                  end
+                                         
+                  # Keep a count of completes on all Networks
                 
-                if @user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then
-
-                  begin
-                    @Fyber2PostBack = HTTParty.post('http://www2.balao.de/SPNcu?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                    rescue HTTParty::Error => e
-                      puts 'HttParty::Error '+ e.message
-                      retry
-                    end while @Fyber2PostBack.code != 200
-      
-                else
-                end
-                            
-                if @user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
-                  # puts "************---------------->>>>>> WAITING FOR POSTBACK URL ********************------------------<<<<<<<<<<<<<<<<<<"
+                  puts "*************** Keeping track of completes on all networks"
+                          
+                  @net = Network.find_by netid: @user.netid
+                  if @net.Flag3 == nil then
                   
-                  begin
-                    @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                          rescue HTTParty::Error => e
-                            puts 'HttParty::Error '+ e.message
-                            retry
-                  end while @SS3PostBack.code != 200
-      
-                else
-                end
-                
-                if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
-                    
-                    begin
-                      @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                       rescue HTTParty::Error => e
-                         puts 'HttParty::Error '+ e.message
-                         retry
-                    end while @RadiumOnePostBack.code != 200
-    
-                else
-                end
+                  @net.Flag3 = "1" 
+                  @net.save
+                  
+                  else
+                  
+                  @net.Flag3 = (@net.Flag3.to_i + 1).to_s
+                  @net.save
+                  
+                  end  
 
-                if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
-                    
-                    begin
-                      puts "************************* FED SENDING RADIUMONE3 POSTBACK **************************************"
-                      #@RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                      @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                       rescue HTTParty::Error => e
-                         puts 'HttParty::Error '+ e.message
-                         retry
-                    end while @RadiumOne3PostBack.code != 200
-    
-                else
-                end
-
-                if @user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
-
-                  begin
-                    @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                    rescue HTTParty::Error => e
-                    puts 'HttParty::Error '+ e.message
-                    retry
-                  end while @TapjoyPostBack.code != 200
-                else
-                end
-                                       
-                # Keep a count of completes on all Networks
-              
-                puts "*************** Keeping track of completes on all networks"
-                        
-                @net = Network.find_by netid: @user.netid
-                if @net.Flag3 == nil then
-                
-                @net.Flag3 = "1" 
-                @net.save
-                
-                else
-                
-                @net.Flag3 = (@net.Flag3.to_i + 1).to_s
-                @net.save
-                
-                end                     
+                end # duplicate is false                     
 
                 # Happy ending
                 

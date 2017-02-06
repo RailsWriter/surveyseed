@@ -19,6 +19,34 @@
 				<p>Thanks for completing this survey. You will receive your reward from <%= link_to "MemoLink", 'http://www.memolink.com/index.cfm/survey.list/' %>.</p><br><br>
 			</center>		
 		</content>
+
+
+		<div class="content">
+			<center><br>
+				<p>Enter your Email address to receive notifications for new surveys.</p>
+			</center>
+				<%= form_tag("/users/join_panel", method: "post") do %>
+					<fieldset>
+						<div class="myyrsinput">
+							<%= text_field_tag 'emailid', nil, maxlength: 100 %>
+							<%= label_tag(:emailid, '') %><br><br>
+						</div>
+					
+						<div class="myinput">
+							<center>				
+								<%= submit_tag "Submit" %><br>
+								<p>or</p>
+								<%= submit_tag "No Thanks" %>
+							</center>
+						</div>
+					</fieldset>
+				<% end %>
+		</content>
+
+
+
+
+		
 		<br>
 		<br>
 				

@@ -4,7 +4,7 @@
 <p><%= Time.now.utc %></p>
 
 	
-	<h5>name - DBid - netid - payout - status ---------- Hits ------------- Completes --------------- P2S_US-CA-AU ---- FED_US-CA-AU ---- RFG_US-CA-AU ----- stackOrder </h5>
+	<h5>name - DBid - netid - payout - status ---------- NtkTrafficVol. ------------- Completes --------------- P2S_US-CA-AU ---- FED_US-CA-AU ---- RFG_US-CA-AU ----- stackOrder </h5>
 
 	<% Network.where("status != ?", "DEAD").order(name: :asc).each do |c| %>
 	    <li>

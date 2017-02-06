@@ -17,11 +17,11 @@ begin
   end
   print "Number of completes in last 24 hrs: ", count
   puts
-  print "Current UTC ", Time.now
+  print "UTC time ", Time.now
   puts
-  print "Local time ", Time.now-7*60*60
+  print "Local time ", Time.now-8*60*60
   puts
-  print "Going to sleep for 5 minutes"
+  print "Going to sleep for 6 minutes"
   puts
-  sleep (5.minutes)
+  sleep (6.minutes)
 end while timetorepeat
