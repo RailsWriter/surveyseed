@@ -5,7 +5,6 @@ class User < ActiveRecord::Base
   serialize :SupplierLink, Array
   serialize :SurveysAttempted, Array
   serialize :SurveysCompleted, Hash
-  
   serialize :children, Array
   serialize :industries, Array
 

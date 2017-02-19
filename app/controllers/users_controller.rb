@@ -9483,7 +9483,7 @@ end
       if @EntryLink.include? '='+@adhocNetId then
       @ParsedEntryLink = @EntryLink.partition ("="+@adhocNetId) # adhocNetId is '1111'
       @adhocSurveyNumber = @ParsedEntryLink[2][0..3]  # Will stop working if SurveyNumber is not 4 digits
-      user.SurveysAttempted << @adhocSurveyNumber
+      user.SurveysAttempted << @adhocSurveyNumber+'-ts='+Time.now
       user.save
 
       @adhocSurvey = Adhoc.where("SurveyNumber = ?", @adhocSurveyNumber).first
