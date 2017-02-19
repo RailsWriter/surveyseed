@@ -137,7 +137,7 @@ class RedirectsController < ApplicationController
           # Is there anything to save from the attempt info in User and Survey tables?
           # params[:tsfn] was being returned empty in one run period.
           
-          @user.SurveysAttempted << params[:tsfn]+'-1'+'-ts='+Time.now
+          @user.SurveysAttempted << params[:tsfn]+'-1'+'-ts='+Time.now.to_s
           @user.save
           
           # User lands up here if anything unclear happens in the ride. Best course seems to be to send the user back to very begining to start over.
@@ -173,7 +173,7 @@ class RedirectsController < ApplicationController
       
             else
             
-              @user.SurveysAttempted << 'P2S-2'+'-ts='+Time.now
+              @user.SurveysAttempted << 'P2S-2'+'-ts='+Time.now.to_s
               
               # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
             
@@ -415,7 +415,7 @@ class RedirectsController < ApplicationController
 
 
                 #@user.SurveysAttempted << params[:tsfn]+'-2'
-                @user.SurveysAttempted << 'RFG-2'+'-ts='+Time.now
+                @user.SurveysAttempted << 'RFG-2'+'-ts='+Time.now.to_s
 
                 
                 # @project = RfgProject.find_by rfg_id: params[:tsfn]
@@ -703,7 +703,7 @@ class RedirectsController < ApplicationController
                   puts          
                 else
                 
-                  @user.SurveysAttempted << 'ADHOC-2'+'-ts='+Time.now
+                  @user.SurveysAttempted << 'ADHOC-2'+'-ts='+Time.now.to_s
                   
                   # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
                 
@@ -939,7 +939,7 @@ class RedirectsController < ApplicationController
 
 
           
-                  @user.SurveysAttempted << params[:tsfn]+'-2'+'-ts='+Time.now
+                  @user.SurveysAttempted << params[:tsfn]+'-2'+'-ts='+Time.now.to_s
               
                   # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
               
@@ -1197,7 +1197,7 @@ class RedirectsController < ApplicationController
             print 'Status = Failure in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
             puts
 
-            @user.SurveysAttempted << 'P2S-3'+'-ts='+Time.now
+            @user.SurveysAttempted << 'P2S-3'+'-ts='+Time.now.to_s
             @user.save        
             
             #Tell user that they were not matched in P2S due to Failure
@@ -1220,7 +1220,7 @@ class RedirectsController < ApplicationController
               # else
               # end
 
-              @user.SurveysAttempted << 'RFG-3'+'-ts='+Time.now
+              @user.SurveysAttempted << 'RFG-3'+'-ts='+Time.now.to_s
               @user.save
               
               # Save attempts counts by project
@@ -1274,7 +1274,7 @@ class RedirectsController < ApplicationController
                 # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
                 # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
                 if params[:tsfn] != nil then
-                  @user.SurveysAttempted << params[:tsfn]+'-3'+'-ts='+Time.now                   
+                  @user.SurveysAttempted << params[:tsfn]+'-3'+'-ts='+Time.now.to_s                   
                   @user.save            
               
                   @survey = Adhoc.find_by SurveyNumber: params[:tsfn]
@@ -1340,7 +1340,7 @@ class RedirectsController < ApplicationController
                 # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
                 # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
                 if params[:tsfn] != nil then
-                  @user.SurveysAttempted << params[:tsfn]+'-3'+'-ts='+Time.now                   
+                  @user.SurveysAttempted << params[:tsfn]+'-3'+'-ts='+Time.now.to_s                   
                   @user.save            
               
                   @survey = Survey.find_by SurveyNumber: params[:tsfn]
@@ -1413,7 +1413,7 @@ class RedirectsController < ApplicationController
             print 'OQ in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
             puts
 
-            @user.SurveysAttempted << 'P2S-4'+'-ts='+Time.now
+            @user.SurveysAttempted << 'P2S-4'+'-ts='+Time.now.to_s
             @user.save  
             
             #Tell user that they were not matched due to OQ in P2S
@@ -1432,7 +1432,7 @@ class RedirectsController < ApplicationController
               # @user.SurveysAttempted << params[:tsfn]+'-4'
               # @user.save
 
-              @user.SurveysAttempted << 'RFG-4'+'-ts='+Time.now
+              @user.SurveysAttempted << 'RFG-4'+'-ts='+Time.now.to_s
               @user.save  
               
               # # Save attempts counts by project
@@ -1482,7 +1482,7 @@ class RedirectsController < ApplicationController
                 print 'Adhoc survey OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
                 puts          
             
-                @user.SurveysAttempted << params[:tsfn]+'-4'+'-ts='+Time.now
+                @user.SurveysAttempted << params[:tsfn]+'-4'+'-ts='+Time.now.to_s
                 @user.save
             
             
@@ -1542,7 +1542,7 @@ class RedirectsController < ApplicationController
                 print 'OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
                 puts          
             
-                @user.SurveysAttempted << params[:tsfn]+'-4'+'-ts='+Time.now
+                @user.SurveysAttempted << params[:tsfn]+'-4'+'-ts='+Time.now.to_s
                 @user.save
             
             
@@ -1611,13 +1611,13 @@ class RedirectsController < ApplicationController
           print '*********************** QTerm for user_id/PID, CID:', params[:PID], @user.clickid
           puts 
         
-          @user.SurveysAttempted << params[:tsfn]+'-5'+'-ts='+Time.now
+          @user.SurveysAttempted << params[:tsfn]+'-5'+'-ts='+Time.now.to_s
           @user.black_listed = true
           @user.save
           
           if @rfg_redirect then
 
-            @user.SurveysAttempted << 'RFG-5'+'-ts='+Time.now
+            @user.SurveysAttempted << 'RFG-5'+'-ts='+Time.now.to_s
             @user.save 
             
           #   # Save attempts counts by project
