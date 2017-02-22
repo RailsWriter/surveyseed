@@ -834,7 +834,7 @@ class UsersController < ApplicationController
       print "****************** Received login credentials ", params[:credentials]
       puts
 
-      user = User.where('emailId=? AND password=?', params[:credentials][emailId], params[:credentials][password]).first
+      user = User.where('emailId=? AND password=?', params[:credentials]["emailId"], params[:credentials]["password"]).first
       
       if user!=nil then
         print "***************** Found existing user: ", user
