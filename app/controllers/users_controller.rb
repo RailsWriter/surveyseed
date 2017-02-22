@@ -827,22 +827,20 @@ class UsersController < ApplicationController
     end
   end
 
-
-
   def login
     if params[:credentials] != nil then
       print "****************** Received login credentials ", params[:credentials]
       puts
 
-      user = User.where('emailId=? AND password=?', params[:credentials]["emailId"], params[:credentials]["password"]).first
+      @user = User.where('emailId=? AND password=?', params[:credentials]["emailId"], params[:credentials]["password"]).first
       
-      if user!=nil then
-        print "***************** Found existing user: ", user
-        render json: user
+      if @user!=nil then
+        print "***************** Found existing user: ", @user
+        render json: @user
       else
         u=User.new
-        u.emailId=params[:credentials][emailId]
-        u.password=params[:credentials][password]
+        u.emailId=params[:credentials]["emailId"]
+        u.password=params[:credentials]["password"]
         u.save
         print "***************** Created new user: ", u
         render json: u
@@ -856,10 +854,6 @@ class UsersController < ApplicationController
       p "***************** Nothing was received in POST as credentials **************"
     end
   end
-
-
-
-
   
   # start to rankfedsurveys
 
