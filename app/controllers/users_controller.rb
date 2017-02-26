@@ -836,6 +836,7 @@ class UsersController < ApplicationController
       
       if @user!=nil then
         print "***************** Found existing user: ", @user
+        puts
         render json: @user
       else
         u=User.new
@@ -843,6 +844,7 @@ class UsersController < ApplicationController
         u.password=params[:credentials]["password"]
         u.save
         print "***************** Created new user: ", u
+        puts
         render json: u
       end
     else
@@ -854,6 +856,61 @@ class UsersController < ApplicationController
       p "***************** Nothing was received in POST as credentials **************"
     end
   end
+
+  def surveyStats
+    # GET https://www.ketsci.com/users/surveyStats?userRecordId=xyz
+    # Response: @completedSurveyStats = [["2017-01",5],["2017-02",3]]
+    # @Url = request.original_url
+    # @userRecordId = @Url.partition ("userRecordId=")
+    #@user = User.find(@userRecordId[2])
+    print "****************** Received userRecordId = ", params[:userRecordId]
+    puts
+    @user = User.find(params[:userRecordId])
+    p "******** User Found in surveyStats ********"
+
+    # SurveysAttempted and Completed by Month
+    # WHAT ABOUT P2S or INV surveys - no way to count?
+
+    if @user.SurveysCompleted != nil then
+      @CompletedSurveysTimestampsArray = @user.SurveysCompleted.keys
+      (0..@CompletedSurveysTimestampsArray.length-1).each do |i|
+        @CompletedSurveysTimestampsArray[i] = @CompletedSurveysTimestampsArray[i][0..6]
+      end
+
+      print "****************** @CompletedSurveysTimestampsArray is = ", @CompletedSurveysTimestampsArray
+      puts
+
+      @counts = Hash.new 0
+      @CompletedSurveysTimestampsArray.each do |month|
+        @counts[month] += 1
+      end
+
+      print "****************** @counts Hash is = ", @counts
+      puts
+
+      @counts = @counts.flatten
+
+      print "****************** @counts Array is = ", @counts
+      puts
+      
+      j=0
+      k=0      
+      begin
+        @completedSurveyStats[k] = [@counts[j],@counts[j+1]]
+        j=j+2
+        k=k+1
+      end while j<@counts.length-1
+
+      print "****************** @completedSurveyStats Array of Arrays is = ", @completedSurveyStats
+      puts
+
+      render json: @completedSurveyStats
+    else
+      # This user has not completed any surveys
+      @completedSurveyStats = []
+    end
+  end
+
   
   # start to rankfedsurveys
 
