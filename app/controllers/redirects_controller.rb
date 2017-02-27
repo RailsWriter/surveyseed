@@ -314,11 +314,12 @@ class RedirectsController < ApplicationController
               if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
      
                 begin
-                  @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  #@RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  @RadiumOne2PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                    rescue HTTParty::Error => e
                      puts 'HttParty::Error '+ e.message
                      retry
-                end while @RadiumOnePostBack.code != 200
+                end while @RadiumOne2PostBack.code != 200
   
               else
               end
@@ -326,7 +327,7 @@ class RedirectsController < ApplicationController
               if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
      
                 begin
-                  puts "************************* P2S SENDING RADIUMONE3 POSTBACK **************************************"
+                  #puts "************************* P2S SENDING RADIUMONE3 POSTBACK **************************************"
                   #@RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                   @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                    rescue HTTParty::Error => e
@@ -610,11 +611,12 @@ class RedirectsController < ApplicationController
                 if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
        
                   begin
-                    @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    #@RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    @RadiumOne2PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                      rescue HTTParty::Error => e
                        puts 'HttParty::Error '+ e.message
                        retry
-                    end while @RadiumOnePostBack.code != 200
+                    end while @RadiumOne2PostBack.code != 200
     
                 else
                 end
@@ -622,7 +624,7 @@ class RedirectsController < ApplicationController
                 if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
        
                   begin
-                    puts "************************* RFG SENDING RADIUMONE3 POSTBACK **************************************"
+                    #puts "************************* RFG SENDING RADIUMONE3 POSTBACK **************************************"
                     #@RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                     @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                      rescue HTTParty::Error => e
@@ -854,18 +856,19 @@ class RedirectsController < ApplicationController
                   if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
          
                     begin
-                      @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      #@RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      @RadiumOne2PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                        rescue HTTParty::Error => e
                          puts 'HttParty::Error '+ e.message
                          retry
-                    end while @RadiumOnePostBack.code != 200      
+                    end while @RadiumOne2PostBack.code != 200      
                   else
                   end
 
                   if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
          
                     begin
-                      puts "************************* ADHOC SENDING RADIUMONE3 POSTBACK **************************************"
+                      #puts "************************* ADHOC SENDING RADIUMONE3 POSTBACK **************************************"
                       #@RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                       @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                        rescue HTTParty::Error => e
@@ -1113,11 +1116,12 @@ class RedirectsController < ApplicationController
                   if @user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
                       
                       begin
-                        @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                        #@RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                        @RadiumOne2PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                          rescue HTTParty::Error => e
                            puts 'HttParty::Error '+ e.message
                            retry
-                      end while @RadiumOnePostBack.code != 200
+                      end while @RadiumOne2PostBack.code != 200
       
                   else
                   end
@@ -1125,7 +1129,7 @@ class RedirectsController < ApplicationController
                   if @user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
                       
                       begin
-                        puts "************************* FED SENDING RADIUMONE3 POSTBACK **************************************"
+                        #puts "************************* FED SENDING RADIUMONE3 POSTBACK **************************************"
                         #@RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                         @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                          rescue HTTParty::Error => e

@@ -1306,8 +1306,8 @@ class UsersController < ApplicationController
       if net.payout == nil then
         @currentpayout = 1.85 # assumes this is the minimum payout for FED surveys across networks including the 30% fees
       else
-        @currentpayout = 1.44*net.payout # FED CPI must be higher than net.payout + 30% of survey CPI. This approximation with 30% of net.payout is a good approximation.
-        p '****************************** minimum payout for FED set to: ', @currentpayout
+        @currentpayout = (1.44*net.payout).round(2) # FED CPI must be higher than net.payout + 30% of survey CPI. This approximation with 30% of net.payout is a good approximation.
+        print '****************************** minimum payout for FED set to: ', @currentpayout
         puts
       end
              
@@ -1319,7 +1319,6 @@ class UsersController < ApplicationController
       else
         if (net.status == "INACTIVE") then
           p '****************************** ACCESS FROM AN INACTIVE NETWOK DENIED'
-          puts
           redirect_to '/users/nosuccess'
           return
         else
@@ -1666,7 +1665,7 @@ end
            
               puts "**************** Found Total quota values"       
               # if survey.SurveyQuotas[0]["NumberOfRespondents"] > 0 then #4
-              if ((survey.SurveyQuotas[0]["NumberOfRespondents"] > 0) && ((survey.SurveyQuotas[0]["QuotaCPI"] == nil) || (survey.SurveyQuotas[0]["QuotaCPI"] > @currentpayout))) then #4
+              if ((survey.SurveyQuotas[0]["NumberOfRespondents"] > 0) && ((survey.SurveyQuotas[0]["QuotaCPI"] == nil) || (survey.SurveyQuotas[0]["QuotaCPI"] >= @currentpayout))) then #4
                                 
                 # print 'Total quota numberofrespondents is: ', survey.SurveyQuotas[0]["NumberOfRespondents"]
                 # puts
@@ -1774,7 +1773,7 @@ end
                 # puts
 
             
-              if ((survey.SurveyQuotas[k]["NumberOfRespondents"] > 0) && ((survey.SurveyQuotas[k]["QuotaCPI"] == nil) || (survey.SurveyQuotas[k]["QuotaCPI"] > @currentpayout))) then #7
+              if ((survey.SurveyQuotas[k]["NumberOfRespondents"] > 0) && ((survey.SurveyQuotas[k]["QuotaCPI"] == nil) || (survey.SurveyQuotas[k]["QuotaCPI"] >= @currentpayout))) then #7
                             
                 print '****************** Needs respondents for quota k=', k
                 puts
@@ -9678,18 +9677,19 @@ end
       if user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
 
         begin
-          @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+          #@RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+          @RadiumOne2PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
          rescue HTTParty::Error => e
            puts 'HttParty::Error '+ e.message
           retry
-        end while @RadiumOnePostBack.code != 200
+        end while @RadiumOne2PostBack.code != 200
       else
       end  
 
       if user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
 
         begin
-          puts "************************* TEST SENDING RADIUMONE3 POSTBACK **************************************"
+          #puts "************************* TEST SENDING RADIUMONE3 POSTBACK **************************************"
           #@RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
           @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
           rescue HTTParty::Error => e
