@@ -13,70 +13,73 @@ mixpanel.init("e5606382b5fdf6308a1aa86a678d6674");</script><!-- end Mixpanel -->
 </head>
 
 
-<body class ="bodyhome">	
-
+<body class ="bodyhome">
  
  <div id="header">
 	 <div id="container1">
-		 <%= image_tag image_path('KetsciLogo.png') %>			 						 
-             <right><a href="mailto:projectsmanagement@ketsci.com?subject=KETSCI Panel sign-up&body=I authorize KETSCI, Inc. to use this email address to send me future notifications to complete surveys." style="color:#FFFFFF">Panel Sign-Up</a></right>
+	 <p5><center>KETSCI</center></p5>
  	</div>
  </div>
- 
 
  <div id="hero">
 	 <div id="container2">
 		<center>
-			<p5>Market insights from around the globe.</p5>
+			<p4>Market insights from around the globe.</p4>
 		</center>
  	</div>
  </div>
  
  <div id="aboutus">
-		 <h1><center> About Us </center></h1>
+		 <h1><center> </center></h1>
 		 <p></p>
 			 <center><p2> KETSCI is a market research technology company. We provide high quality qualified audience to Researchers. Mobile and web developers integrate our API to monetize and reward their users everytime they complete a survey.
-			 
-			 <!-- <table border="0" cellpadding="0" cellspacing="0" style="background-color:#000000; border:1px solid #353535; border-radius:5px;">
-			     <tr>
-			         <td align="center" valign="middle" style="color:#FFFFFF; font-family:Helvetica, Arial, sans-serif; font-size:14px; letter-spacing:-.5px; line-height:150%; padding-top:15px; padding-right:30px; padding-bottom:15px; padding-left:30px;">
-
-			             <a href="mailto:projectsmanagement@ketsci.com?subject=KETSCI Panel sign-up&body=I authorize KETSCI, Inc. to use this email address to send me future notifications to complete surveys." style="color:#FFFFFF">KETSCI Panel Sign-Up</a>
-			         </td>
-			     </tr>
-			 </table> -->
-			 
+			 <p>-----------</p>
 			 </p2></center>
  </div>
  
  <div id="research">
-		 <h1><center> High Quality Sample for Research </center></h1>
-		 <p></p>
-			 <center><p2> KETSCI reaches millions of users through a wide network of mobile and web apps. We will get quick responses from your target audience. Currently we operate in the US, Canada and Australia. See our <a href="/KETSCI_PanelFacts.pdf">Panel Facts Sheet</a> to learn about our high quality and diverse community of panelists.
+		 <h1><center> Researchers </center></h1>
+			 <center><p2> We will get quick responses from your target audience. KETSCI reaches millions of users through a wide network of mobile and web apps. Currently we operate in the US, Canada and Australia. We ensure the highest sample quality by using modern technical solutions and perform a number of checks before allowing a user to take a survey. See our <a href="/KETSCI_PanelFacts.pdf">Panel Facts Sheet</a> to learn about our high quality and diverse community of panelists.
 				 <p></p>
-			<a href="mailto:projectsmanagement@ketsci.com?subject=KETSCI"> Contact</a> us to partner in your research project.
+			<a href="mailto:projectsmanagement@ketsci.com"> Contact</a> us to partner in your research project.
 			<p></p>
+			<p>-----------</p>
 			 </p2></center>
  </div>
 
  <div id="monetize">
-		 <h1><center> Monetization Opportunity for Developers </center></h1>
-		 <p></p>
-			 <center><p2> Earn additional revenue from users who visit your website or use your app. We are extremely flexible in the ways to integrate our offer on any platform e.g. iOS, ANDROID, Win, Web, etc. You will always be in full control of how and where your users interact and complete KETSCI surveys. It takes only a few minutes to integrate our API in your code. Contact us by <a href="mailto:projectsmanagement@ketsci.com?subject=KETSCI"> email.</a> You can start earning within a day or two.
-				 <p></p>			 
+		 <h1><center> Developers </center></h1>
+			<center><p2> Earn additional revenue from users who visit your website or use your app. We are extremely flexible in the ways to integrate our offer on any platform e.g. iOS, ANDROID, Win, Web, etc. You will always be in full control of how and where your users interact and complete KETSCI surveys. It takes only a few minutes to integrate our API in your code. 
+			<p></p>
+			Contact us by <a href="mailto:projectsmanagement@ketsci.com"> email.</a> You can start earning within a day or two.
+			<p></p>
+			<p>-----------</p>	 
+			 </p2></center>
+ </div>
+
+ <div id="user">
+		 <h1><center> Users </center></h1>
+			 <center><p2>
+				Make your opinion count! Sign-up to join Ketsci's panel. We will notify you when new survey opportunities are available for you.
+				<p></p>
+				<input type="submit" class='panelbutton' value="Panel Sign-Up" onclick="window.location.href='mailto:projectsmanagement@ketsci.com?subject=KETSCI Panel sign-up&body=I authorize KETSCI, Inc. to use this email address to send me future notifications to complete surveys.'">
+				 <!-- <a href="mailto:projectsmanagement@ketsci.com?subject=KETSCI Panel sign-up&body=I authorize KETSCI, Inc. to use this email address to send me future notifications to complete surveys." style="color:#XXXXXX">Panel Sign-Up
+				 </a> -->	
+				<p></p>
+				<p>-----------</p> 
 			 </p2></center>
  </div>
  
 
  <div id="contact">
     <div id="container3">
-		<center><h1>We look forward to hearing from you!</h1>
-			<div id="p1"><h3><%= alert %></h3></div><br>
+		<center><h1>Contact Us</h1>
+			<div id="alert"><%= alert %></div><br>
 			<%= form_for @lead do |f| %>	
-					<%= f.text_field :name, placeholder: "Name", :class => "input" %><br><br>
-					<%= f.text_field :email, placeholder: "Email", :class => "input" %><br><br>
-					<%= f.text_field :phone, placeholder: "Phone", :class => "input" %><br><br>
-					<%= f.text_area :message, placeholder: "Message", :class => "textarea" %><br><br>
+					<%= f.text_field :name, placeholder: "Name..", :class => "input" %><br><br>
+					<%= f.text_field :email, placeholder: "Email..", :class => "input" %><br><br>
+					<%= f.text_field :phone, placeholder: "Phone..", :class => "input" %><br><br>
+					<%= f.text_area :message, placeholder: "Message..", :class => "textarea" %><br><br>
 					<%= f.submit "Send", :class => "button" %>				
 			<% end %>
 		</center>
@@ -86,18 +89,25 @@ mixpanel.init("e5606382b5fdf6308a1aa86a678d6674");</script><!-- end Mixpanel -->
  <div id="footer">
  	<div id="left_col">
 			<!-- %= image_tag image_path('images.jpeg') % -->
-			<p> Copyright © by KETSCI, Inc. All rights reserved.</p>
+			<p3> ©2017 KETSCI Inc 2017 - </p3>
 			<!--a href="/privacy_policy_11032014.pdf">Privacy Policy.</a -->
-			<a href="/users/PrivacyPolicy">Privacy Policy</a>
+			<p3><a href="/users/PrivacyPolicy">Privacy Policy</a></p3>
 			<!--a href="/users/tos">Terms and Conditions.</a -->
 
 			<!--a href="/terms_and_conditions_11032014.pdf">Terms and Conditions.</a -->
 			<p></p>
  	</div>
+
     <div id="right_col">
-			<span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=RB6PmkV40C36wW0v29AgjdNZRIIKSgGjK0x59o2FkYtHxPwkG4jyVmyayLAr"></script></span>		
 			<a href="https://mixpanel.com/f/partner"><img src="//cdn.mxpnl.com/site_media/images/partner/badge_light.png" alt="Mobile Analytics" /></a>
+			<span id="siteseal"><script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=RB6PmkV40C36wW0v29AgjdNZRIIKSgGjK0x59o2FkYtHxPwkG4jyVmyayLAr"></script></span>		
+			
 	</div>
+
+	<center>
+		 <!---%= image_tag image_path('KetsciLogo.png') %>
+	</center>
+
  </div>
 
 </body>

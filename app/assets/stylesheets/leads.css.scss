@@ -19,88 +19,19 @@
 		background-color:white;
 	}
 	
-	p5 {
-		font-weight: 200;
-		font-size: 50px;		
-	}
-
-	h1 {
-		font-weight: 110;
-		font-size: 20px;		
-	}
-	
-	p {
-		font-weight: 100;
-		font-size: 20px;
-	}
-
-	p1 {
-		font-weight: 100;
-		font-size: 20px;
-		color: white;
-	}
-	
-/*	#bigfont {
-		font-weight: 150;
-		font-size: 20px;
-		color: black;
-		font-family: Roboto, helvetica, arial, sans-serif;
-	}
-*/
-	
 	#header {
-		height: 70px;
-		padding-top: 15px;
-		padding-left:20px;
-		background-color: #7187a8;
+		height: 150px;
+		padding-top: 50px;
+		padding-left:0px;
+		background-color: white;
 	}
 	
 	#container1 {
 	    margin-left: auto;
 	    margin-right: auto;
 	    background-color: transparent;
-	}
-	
-  	#hero {
-/*		height: 300px;   same as the height of background image - moved to per device section */
-		background-size: cover; /* better because picture does not resize to keep full picture in view */
-        background-image: image_url('worldcropped.jpg');
-		background-repeat: no-repeat;
-		background-position: center top;
-/*		background-size: 100% auto; worst because picture resizes to keep full picture in view */
-/*		background-attachment: fixed; worst as it makes the rest of the body rollover hero image */
-  	}
-	
-	#aboutus {
-		height: 475px;
-		padding-top: 10px;
-		padding-left:20px;
-		background-color: ivory;
-	}
-
-	#research {
-			height: 500px;
-			padding-top: 10px;
-			padding-left:100px;
-			padding-right:100px;
-			background-color: white;
-			font-weight: 150;
-			font-size: 30px;
-		}
-	
-	#monetize {
-			height: 475px;
-			padding-top: 10px;
-			padding-left:100px;
-			padding-right:100px;
-			background-color: beige;
-			font-weight: 150;
-			font-size: 30px;
-		}
-	
-	p2 {
-		font-weight: 75;
-		font-size: 18px;
+	    border-width: 10px;
+		border-color: black;
 	}
 	
 	#container2 {
@@ -115,166 +46,255 @@
 		height:300; /* keeps the block nice and fixed width on screen */
         margin-top: 0px;
 		padding-top: 0.5em;
-		padding-bottom: 1.8em;
-        background-color: #7AA65B;
-		background-size: cover; /* covers full availablr space */
+		padding-bottom: 1.0em;
+        background-color: white;
+		background-size: cover; /* covers full available space */
   	}
 	
 	#container3 {
 	    margin-left: auto;
 	    margin-right: auto;
-		padding-top: 0.0em;
-	    width: 90%;
+		padding-top: 1.9em;
+		padding-bottom: 4.5em;
 		font-weight: 10;
 		font-size: 6px;
-	    color: black;
+	    color: white;
         font-family: Roboto, helvetica, arial, sans-serif;
-	    background-color: transparent;
-	}
-	
-	.input {
-	    font-size: 2.2em;
-	    padding: 0.5em;
-		border-width: 0em;
-	    border-radius: 0em;
-		width: 260px;
-		font-family: Roboto, helvetica, arial, sans-serif;
-	}
-	
-	.textarea {
-		font-size: 2.2em;
-	    padding: 0.5em;
-		border-width: 0em;
-	    border-radius: 0em;
-		width: 260px;
-		font-family: Roboto, helvetica, arial, sans-serif;
-	}
-	
-	.button {
-	    font-size: 2.5em;
-	    padding: 0.5em;
-		border-width: 0em;
-	    border-radius: 0em;
-		width: 260px;
-		font-family: Roboto, helvetica, arial, sans-serif;
-		color: white;
-		background: #E6253F;
+	    background-color:silver;
 	}
 	
 	#footer {
-        padding: 6.0em;
-        background-color: #4D4235;
-	/*	height: 300px; 
+        padding: 3.0em;
+        background-color: white;
+    /*    color: white;
+		height: 300px; 
 		background-size: cover; */
-	}
-	
-	#container4 {
-	    margin-left: auto;
-	    margin-right: auto;
-	    background-color: transparent;
-	    color: white;
-        font-family: Roboto, helvetica, arial, sans-serif;
-	}
-	
-	#container4 a {
-		color:white;
-	  	text-decoration: none;
-	 }
-	
-	#smallfont {
-		font-weight: 50;
-		font-size: 10px;
-		color: white;
-		font-family: Roboto, helvetica, arial, sans-serif;
 	}
 
 	#left_col {
 		   float:left;
 		   width:350px;
+		   font-size: 10px;
 		}
 
-		#right_col {
-		   float:right;
-		   width:150px;
-		}
+	#right_col {
+	   float:right;
+	   width:150px;
+	}
 	
 	@media only screen and (max-width: 600px) {
+
+
+		h1 {
+			font-weight: 100;
+			font-size: 20px;		
+		}
+
+		p2 {
+			font-weight: 75;
+			font-size: 15px;
+		}
+
+		p3 {
+			font-weight: 100;
+			font-size: 15px;
+		}
+
+		p4 {
+			font-weight: 200;
+			font-size: 40px;		
+		}
+
+		p5 {
+			font-weight: 300;
+			font-size: 60px;		
+		}
 		
 	  	#hero {
 			height: 300px;  /* same as the height of background image */
 			background-size: cover;
+			background-image: image_url('worldcropped.jpg');
+			background-repeat: no-repeat;
+			background-position: center top;
+	/*		background-size: 100% auto; worst because picture resizes to keep full picture in view */
+	/*		background-attachment: fixed; worst as it makes the rest of the body rollover hero image */
 		}
+
+		.panelbutton {
+		  	font-size:1em;
+		    padding:0.15em;
+			border-width:0em;
+		    border-radius:0em;
+			font-family:Roboto, helvetica, arial, sans-serif;
+			width:125px;
+			color:white;
+			background-color:silver;
+		}
+
+		.input {
+		    font-size:2em;
+		    padding:0.5em;
+			border-width:0em;
+		    border-radius:0em;
+			width:260px;
+			font-family:Roboto, helvetica, arial, sans-serif;
+			background-color:white;
+		}
+
+		.textarea {
+			font-size: 2.2em;
+		    padding: 0.5em;
+			border-width: 0em;
+		    border-radius: 0em;
+		    height: 75px;
+			width: 260px;
+			font-family: Roboto, helvetica, arial, sans-serif;
+			background-color: white;
+		}
+
+		.button {
+		    font-size:2.5em;
+		    padding:0.5em;
+			border-width:0em;
+		    border-radius:0em;
+			width:260px;
+			font-family:Roboto, helvetica, arial, sans-serif;
+			color:white;
+			background-color:pink;
+		}
+
+		#alert {
+			font-weight: 250;
+			font-size: 20px;
+			color: black;
+		}
+
 	}
 	
 	@media only screen and (min-width: 601px) and (max-width: 1023px) {
+
 		h1 {
-			font-weight: 200;
+			font-weight: 100;
 			font-size: 25px;			
 		}
-		
-		p1 {
+
+		p2 {
+			font-weight: 75;
+			font-size: 18px;
+		}
+
+		p3 {
 			font-weight: 100;
-			font-size: 20px;
+			font-size: 15px;
+		}
+
+		p4 {
+			font-weight: 200;
+			font-size: 40px;		
+		}
+
+		p5 {
+			font-weight: 300;
+			font-size: 60px;		
 		}
 		
 		#hero {
 			height:400px; /* keep as the desired height of background image */
 			background-size: cover; /* looses cover property even though defined in All */
+			background-image: image_url('worldcropped.jpg');
+			background-repeat: no-repeat;
+			background-position: center top;
+	/*		background-size: 100% auto; worst because picture resizes to keep full picture in view */
+	/*		background-attachment: fixed; worst as it makes the rest of the body rollover hero image */
 		}
 		
 		#aboutus {
-			height: 400px;
+			height: 200px;
 			padding-top: 10px;
 			padding-left:20px;
-			background-color: ivory;
-			font-weight: 150;
+			background-color: white;
+			font-weight: 75;
 			font-size: 30px;
 		}
 
 		#research {
-			height: 425px;
+			height: 500px;
 			padding-top: 10px;
 			padding-left:100px;
 			padding-right:100px;
 			background-color: white;
-			font-weight: 150;
-			font-size: 30px;
+			font-weight: 75;
+			font-size: 25px;
+		}
+
+		#user {
+			height: 400px;
+			padding-top: 10px;
+			padding-left:100px;
+			padding-right:100px;
+			background-color: white;
+			font-weight: 75;
+			font-size: 25px;
+		}
+
+		.panelbutton {
+		  	font-size:1em;
+		    padding:0.25em;
+			border-width:0em;
+		    border-radius:0em;
+			font-family:Roboto, helvetica, arial, sans-serif;
+			width:225px;
+			color:white;
+			background-color:silver;
 		}
 		
 		#monetize {
-				height: 400px;
-				padding-top: 10px;
-				padding-left:100px;
-				padding-right:100px;
-				background-color: beige;
-				font-weight: 150;
-				font-size: 30px;
-			}
-	
-		p2 {
+			height: 400px;
+			padding-top: 10px;
+			padding-left:100px;
+			padding-right:100px;
+			background-color: white;
 			font-weight: 75;
-			font-size: 15px;
+			font-size: 25px;
 		}
 		
 		#container2 {
 			padding-top:10.0em;
 		}
-		
-		#bigfont {
-			font-weight: 400;
-			font-size: 25px;
-			color: black;
+
+		.input {
+		    font-size:2em;
+		    padding:0.5em;
+			border-width:0em;
+		    border-radius:0em;
+			width:450px;
+			font-family:Roboto, helvetica, arial, sans-serif;
+			background-color:white;
+		}
+
+		.textarea {
+			font-size: 2.2em;
+		    padding: 0.5em;
+			border-width: 0em;
+		    border-radius: 0em;
+		    height: 75px;
+			width: 450px;
 			font-family: Roboto, helvetica, arial, sans-serif;
+			background-color: white;
+		}
+
+		.button {
+		    font-size: 2.5em;
+		    padding: 0.5em;
+			border-width: 0em;
+		    border-radius: 0em;
+			width:450px;
+			font-family: Roboto, helvetica, arial, sans-serif;
+			color: white;
+			background-color:orange;
 		}
 		
-	  	#contact {
-			height:400;
-	        margin-top: 0px;
-			padding-top: 0.5em;
-			padding-bottom: 1.8em;
-	  	}
-		
-		#p1 {
+		#alert {
 			font-weight: 300;
 			font-size: 25px;
 			color: black;
@@ -283,78 +303,116 @@
 		#left_col {
 		   float:left;
 		   width:400px;
+		   font-size: 10px;
 		}
 
 		#right_col {
 		   float:right;
-		   width:150px;
+		   width:250px;
 		}
 	}
 	
 	@media only screen and (min-width: 1024px) and (max-width: 2023px) {	
 		h1 {
-			font-weight: 250;
+			font-weight: 200;
 			font-size: 30px;			
 		}
 
 		p {
-			font-weight: 100;
-			font-size: 20px;			
+			font-weight: 400;
+			font-size: 25px;			
 		}
+
+		p2 {
+			font-weight: 75;
+			font-size: 18px;
+		}
+
+		p3 {
+			font-weight: 100;
+			font-size: 15px;
+		}
+
+		p4 {
+			font-weight: 200;
+			font-size: 40px;		
+		}
+
+		p5 {
+			font-weight: 300;
+			font-size: 60px;		
+		}
+
 		
 	  	#hero {
 			height: 400px; /* same as for tablet screen */
 			background-size: cover;
+			background-image: image_url('worldcropped.jpg');
+			background-repeat: no-repeat;
+			background-position: center top;
+	/*		background-size: 100% auto; worst because picture resizes to keep full picture in view */
+	/*		background-attachment: fixed; worst as it makes the rest of the body rollover hero image */
 	  	}
 		
 		#aboutus {
-			height: 225px;
-			padding-top: 15px;
-			padding-left:20px;
-			background-color: ivory;
-			font-weight: 150;
-			font-size: 30px;
+			height:200px;
+			padding-top:10px;
+			padding-left:100px;
+			padding-right:100px;
+			padding-bottom:10px;
+			background-color:white;
+			font-weight:75;
+			font-size:30px;
 		}
 		
 		#research {
-			height: 250px;
+			height:325px;
+			padding-top:10px;
+			padding-left:100px;
+			padding-right:100px;
+			padding-bottom:10px;
+			background-color:white;
+			font-weight:75;
+			font-size:30px;
+		}
+
+		#monetize {
+			height: 325px;
 			padding-top: 10px;
 			padding-left:100px;
 			padding-right:100px;
 			background-color: white;
-			font-weight: 150;
+			font-weight: 75;
 			font-size: 30px;
 		}
 
-		#monetize {
-				height: 225px;
-				padding-top: 10px;
-				padding-left:100px;
-				padding-right:100px;
-				background-color: beige;
-				font-weight: 150;
-				font-size: 30px;
-			}
+		#user {
+			height:325px;
+			padding-top:10px;
+			padding-left:100px;
+			padding-right:100px;
+			padding-bottom:10px;
+			background-color:white;
+			font-weight:75;
+			font-size:30px;
+		}
+
+		.panelbutton {
+		  	font-size:1.25em;
+		    padding:0.5em;
+			border-width:0em;
+		    border-radius:0em;
+			font-family:Roboto, helvetica, arial, sans-serif;
+			width:260px;
+			color:white;
+			background-color:silver;
+		}
 		
 		#container2 {
 			padding-top:10.0em;
 		}
 		
-		#bigfont {
-			font-weight: 500;
-			font-size: 30px;
-			color: black;
-			font-family: Roboto, helvetica, arial, sans-serif;
-		}
-		
-	  	#contact {
-			height:400;
-	        margin-top: 0px;
-			padding-top: 0.5em;
-			padding-bottom: 1.8em;
-	  	}
-		
-		#p1 {
+		#alert {
 			font-weight: 350;
 			font-size: 30px;
 			color: black;
@@ -365,86 +423,147 @@
 		    padding: 0.5em;
 			border-width: 0em;
 		    border-radius: 0em;
-			width: 360px;
+			width: 500px;
 			font-family: Roboto, helvetica, arial, sans-serif;
+			background-color: white;
 		}
 	
 		.textarea {
-			font-size: 2.1em;
-		    padding: 0.5em;
-			border-width: 0em;
-		    border-radius: 0em;
-			width: 360px;
-			font-family: Roboto, helvetica, arial, sans-serif;
+			font-size:2.1em;
+		    padding:0.5em;
+			border-width:0em;
+		    border-radius:0em;
+		    height:100px;
+			width:500px;
+			font-family:Roboto, helvetica, arial, sans-serif;
+			background-color:white;
 		}
 	
 		.button {
-		    font-size: 2.5em;
+		    font-size: 3.5em;
 		    padding: 0.5em;
 			border-width: 0em;
 		    border-radius: 0em;
-			width: 360px;
+			width:500px;
 			font-family: Roboto, helvetica, arial, sans-serif;
 			color: white;
-			background: #229936;
+			background-color: red;
 		}
 		
 		#left_col {
 		   float:left;
 		   width:450px;
+		   font-size: 10px;
 		}
 
 		#right_col {
 		   float:right;
-		   width:150px;
+		   width:350px;
 		}
 	}
 		
-		@media only screen and (min-width: 2024px) {	
+		@media only screen and (min-width: 2024px) {
+
 			h1 {
-				font-weight: 600;
-				font-size: 60px;			
+				font-weight: 250;
+				font-size: 50px;			
 			}
 
 			p {
 				font-weight: 500;
 				font-size: 30px;			
 			}
+
+			p2 {
+				font-weight: 75;
+				font-size: 18px;
+			}
+
+			p3 {
+				font-weight: 100;
+				font-size: 15px;
+			}
+
+			p4 {
+				font-weight: 200;
+				font-size: 40px;		
+			}
+
+			p5 {
+				font-weight: 300;
+				font-size: 60px;		
+			}
 		
 		  	#hero {
 				height: 400px; /* same as tablet and desktop */
-				width: 1824px;
+				width: 1824px; /* why not cover, as above? */
+				background-image: image_url('worldcropped.jpg');
+				background-repeat: no-repeat;
+				background-position: center top;
+		/*		background-size: 100% auto; worst because picture resizes to keep full picture in view */
+		/*		background-attachment: fixed; worst as it makes the rest of the body rollover hero image */
 		  	}
 			
+
 			#aboutus {
-				height: 295px;
-				padding-top: 15px;
-				padding-left:50px;
-				background-color: ivory;
-				font-weight: 100;
+				height:250px;
+				padding-top:10px;
+				padding-left:100px;
+				padding-right:100px;
+				padding-bottom:10px;
+				background-color:white;
+				font-weight:125;
+				font-size:30px;
+			}
+		
+			#research {
+				height:350px;
+				padding-top:10px;
+				padding-left:100px;
+				padding-right:100px;
+				padding-bottom:10px;
+				background-color:white;
+				font-weight:125;
+				font-size:30px;
+			}
+
+			#monetize {
+				height: 350px;
+				padding-top: 10px;
+				padding-left:100px;
+				padding-right:100px;
+				background-color: white;
+				font-weight: 125;
 				font-size: 30px;
+			}
+
+			#user {
+				height:350px;
+				padding-top:10px;
+				padding-left:100px;
+				padding-right:100px;
+				padding-bottom:10px;
+				background-color:white;
+				font-weight:125;
+				font-size:30px;
 			}
 			
 			#container2 {
 				padding-top:20em;
 			}
-			
-			#bigfont {
-				font-weight: 500;
-				font-size: 30px;
-				color: black;
-				font-family: Roboto, helvetica, arial, sans-serif;
-			}
 
-		  	#contact {
-				height:400;
-		        margin-top: 0px;
-				padding-top: 0.5em;
-				padding-bottom: 1.8em;
-				font-family: Roboto, helvetica, arial, sans-serif;
-		  	}
+			.panelbutton {
+			  	font-size:1.50em;
+			    padding:0.75em;
+				border-width:0em;
+			    border-radius:0em;
+				font-family:Roboto, helvetica, arial, sans-serif;
+				width:360px;
+				color:white;
+				background-color:silver;
+			}
 			
-			#p1 {
+			#alert {
 				font-weight: 400;
 				font-size: 30px;
 				color: black;
@@ -465,15 +584,18 @@
 			    border-radius: 0em;
 				width: 460px;
 				font-family: Roboto, helvetica, arial, sans-serif;
+				background-color: white;
 			}
 	
 			.textarea {
-				font-size: 2.1em;
-			    padding: 0.5em;
-				border-width: 0em;
-			    border-radius: 0em;
-				width: 460px;
-				font-family: Roboto, helvetica, arial, sans-serif;
+				font-size:2.1em;
+			    padding:0.5em;
+				border-width:0em;
+			    border-radius:0em;
+			    height:125px;
+				width:460px;
+				font-family:Roboto, helvetica, arial, sans-serif;
+				background-color:white;
 			}
 	
 			.button {
@@ -484,6 +606,13 @@
 				width: 460px;
 				font-family: Roboto, helvetica, arial, sans-serif;
 				color: white;
-				background: #229936;
+				background-color: #blue;
 			}
+
+			#alert {
+				font-weight: 375;
+				font-size: 35px;
+				color: black;
+			}
+
 		}
