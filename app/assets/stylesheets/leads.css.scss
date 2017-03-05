@@ -58,7 +58,7 @@
 		padding-bottom: 4.5em;
 		font-weight: 10;
 		font-size: 6px;
-	    color: white;
+	    color:black;
         font-family: Roboto, helvetica, arial, sans-serif;
 	    background-color:silver;
 	}
@@ -88,6 +88,11 @@
 		h1 {
 			font-weight: 100;
 			font-size: 20px;		
+		}
+
+		p1 {
+			font-weight: 30;
+			font-size: 10px;
 		}
 
 		p2 {
@@ -178,6 +183,11 @@
 			font-size: 25px;			
 		}
 
+		p1 {
+			font-weight: 50;
+			font-size: 12px;
+		}
+
 		p2 {
 			font-weight: 75;
 			font-size: 18px;
@@ -218,7 +228,7 @@
 		}
 
 		#research {
-			height: 500px;
+			height: 400px;
 			padding-top: 10px;
 			padding-left:100px;
 			padding-right:100px;
@@ -228,7 +238,7 @@
 		}
 
 		#user {
-			height: 400px;
+			height: 300px;
 			padding-top: 10px;
 			padding-left:100px;
 			padding-right:100px;
@@ -249,7 +259,7 @@
 		}
 		
 		#monetize {
-			height: 400px;
+			height:375px;
 			padding-top: 10px;
 			padding-left:100px;
 			padding-right:100px;
@@ -318,9 +328,9 @@
 			font-size: 30px;			
 		}
 
-		p {
-			font-weight: 400;
-			font-size: 25px;			
+		p1 {
+			font-weight: 60;
+			font-size: 15px;
 		}
 
 		p2 {
@@ -366,7 +376,7 @@
 		}
 		
 		#research {
-			height:325px;
+			height:350px;
 			padding-top:10px;
 			padding-left:100px;
 			padding-right:100px;
@@ -387,7 +397,7 @@
 		}
 
 		#user {
-			height:325px;
+			height:275px;
 			padding-top:10px;
 			padding-left:100px;
 			padding-right:100px;
@@ -469,9 +479,9 @@
 				font-size: 50px;			
 			}
 
-			p {
-				font-weight: 500;
-				font-size: 30px;			
+			p1 {
+				font-weight: 60;
+				font-size: 15px;
 			}
 
 			p2 {
