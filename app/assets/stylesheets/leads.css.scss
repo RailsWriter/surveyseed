@@ -70,17 +70,6 @@
 		height: 300px; 
 		background-size: cover; */
 	}
-
-	#left_col {
-		   float:left;
-		   width:350px;
-		   font-size: 10px;
-		}
-
-	#right_col {
-	   float:right;
-	   width:150px;
-	}
 	
 	@media only screen and (max-width: 600px) {
 
@@ -125,9 +114,15 @@
 	/*		background-attachment: fixed; worst as it makes the rest of the body rollover hero image */
 		}
 
+		#left_col_user {
+		}
+
+		#right_col_user {
+		}
+
 		.panelbutton {
 		  	font-size:1em;
-		    padding:0.15em;
+		    padding:0.0em;
 			border-width:0em;
 		    border-radius:0em;
 			font-family:Roboto, helvetica, arial, sans-serif;
@@ -172,6 +167,12 @@
 			font-weight: 250;
 			font-size: 20px;
 			color: black;
+		}
+
+		#left_col_footer {
+		}
+
+		#right_col_footer {
 		}
 
 	}
@@ -219,9 +220,10 @@
 		}
 		
 		#aboutus {
-			height: 200px;
+			height: 300px;
 			padding-top: 10px;
-			padding-left:20px;
+			padding-left:100px;
+			padding-right:100px;
 			background-color: white;
 			font-weight: 75;
 			font-size: 30px;
@@ -247,13 +249,24 @@
 			font-size: 25px;
 		}
 
+
+		#left_col_user {
+		   float:left;
+		   width:170px;
+		}
+
+		#right_col_user {
+		   float:right;
+		   width:170px;
+		}
+
 		.panelbutton {
 		  	font-size:1em;
-		    padding:0.25em;
+		    padding:0.0em;
 			border-width:0em;
 		    border-radius:0em;
 			font-family:Roboto, helvetica, arial, sans-serif;
-			width:225px;
+			width:150px;
 			color:white;
 			background-color:silver;
 		}
@@ -310,15 +323,10 @@
 			color: black;
 		}
 		
-		#left_col {
-		   float:left;
-		   width:400px;
-		   font-size: 10px;
+		#left_col_footer {
 		}
 
-		#right_col {
-		   float:right;
-		   width:250px;
+		#right_col_footer {
 		}
 	}
 	
@@ -407,13 +415,23 @@
 			font-size:30px;
 		}
 
+		#left_col_user {
+		   float:left;
+		   width:310px;
+		}
+
+		#right_col_user {
+		   float:right;
+		   width:310px;
+		}
+
 		.panelbutton {
 		  	font-size:1.25em;
-		    padding:0.5em;
+		    padding:0.0em;
 			border-width:0em;
 		    border-radius:0em;
 			font-family:Roboto, helvetica, arial, sans-serif;
-			width:260px;
+			width:250px;
 			color:white;
 			background-color:silver;
 		}
@@ -460,15 +478,10 @@
 			background-color: red;
 		}
 		
-		#left_col {
-		   float:left;
-		   width:450px;
-		   font-size: 10px;
+		#left_col_footer {
 		}
 
-		#right_col {
-		   float:right;
-		   width:350px;
+		#right_col_footer {
 		}
 	}
 		
@@ -562,13 +575,23 @@
 				padding-top:20em;
 			}
 
+			#left_col_user {
+			   float:left;
+			   width:500px;
+			}
+
+			#right_col_user {
+			   float:right;
+			   width:500px;
+			}
+
 			.panelbutton {
 			  	font-size:1.50em;
-			    padding:0.75em;
+			    padding:0.0em;
 				border-width:0em;
 			    border-radius:0em;
 				font-family:Roboto, helvetica, arial, sans-serif;
-				width:360px;
+				width:250px;
 				color:white;
 				background-color:silver;
 			}
@@ -623,6 +646,12 @@
 				font-weight: 375;
 				font-size: 35px;
 				color: black;
+			}
+
+			#left_col_footer {
+			}
+
+			#right_col_footer {
 			}
 
 		}

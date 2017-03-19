@@ -109,7 +109,9 @@ class UsersController < ApplicationController
         @user.age = @age
         @user.netid = netid
         @user.clickid = clickid
-        @user.country = @countryPrecode
+
+        # if deriving country from IP address => disable country question
+        #@user.country = @countryPrecode
         
         # Initialize user ride related lists. These protect from getting old lists, if the user restarts taking surveys in the same session after a long break. However, these get a blank entry on the list due to save action
         
@@ -141,6 +143,8 @@ class UsersController < ApplicationController
 
         if user.black_listed==true then
           p '******************* EVAL_AGE: REPEAT USER is Black listed'
+
+          # Send to userride to be termed.
           userride (session_id)
         else
           p '******************* EVAL_AGE: Modifying existing user record of a REPEAT USER'
@@ -148,7 +152,9 @@ class UsersController < ApplicationController
           user.age = @age
           user.netid = netid
           user.clickid = clickid
-          user.country = @countryPrecode     
+
+          # if deriving country from IP address  => disable country question
+          #user.country = @countryPrecode 
                
           # These get a blank entry on the list due to save action?
           user.QualifiedSurveys = []
@@ -179,9 +185,7 @@ class UsersController < ApplicationController
       redirect_to '/users/tos'
     else
       redirect_to '/users/tos'
-    end
-    
-    
+    end    
     
   end
   
@@ -209,10 +213,10 @@ class UsersController < ApplicationController
     else
       p 'TOS: A REPEAT USER'
       # set 24 hr survey attempts in separate sessions from same device/IP address here
-      if (user.number_of_attempts_in_last_24hrs < 50) then
+      if (user.number_of_attempts_in_last_24hrs < 20) then
         # skip gender and other demo questions due to responses in last 24 hrs
-#        redirect_to '/users/qq9'
-        redirect_to '/users/qq2'
+        #redirect_to '/users/qq2'
+        redirect_to '/users/qq12Returning'
       else
         # user has made too many attempts to take surveys
         p '******* Too many attempts to take a survey ***********'
@@ -871,10 +875,10 @@ class UsersController < ApplicationController
     # SurveysAttempted and Completed by Month
     # WHAT ABOUT P2S or INV surveys - no way to count?
 
-    if @user.SurveysCompleted != nil then
+    if @user.SurveysCompleted.lenght > 0 then
       @CompletedSurveysTimestampsArray = @user.SurveysCompleted.keys
       (0..@CompletedSurveysTimestampsArray.length-1).each do |i|
-        @CompletedSurveysTimestampsArray[i] = @CompletedSurveysTimestampsArray[i][0..6]
+        @CompletedSurveysTimestampsArray[i] = @CompletedSurveysTimestampsArray[i].to_s[0..6]
       end
 
       print "****************** @CompletedSurveysTimestampsArray is = ", @CompletedSurveysTimestampsArray
@@ -904,11 +908,14 @@ class UsersController < ApplicationController
       print "****************** @completedSurveyStats Array of Arrays is = ", @completedSurveyStats
       puts
 
-      render json: @completedSurveyStats
+      render json: @completedSurveyStats.to_json
+    
     else
       # This user has not completed any surveys
       @completedSurveyStats = []
+      render json: @completedSurveyStats.to_json
     end
+  
   end
 
   
@@ -1472,6 +1479,17 @@ end
     # change countrylanguageid setting to match user countryID only
     @usercountry = (user.country).to_i
 
+
+    # Identify and disqualify any FED surveys a REPEAT USER has already taken
+    if user.SurveysAttempted==nil then
+      @surveysAlreadyAttempted=["None"]
+      p "********** No Surveys Attempted Previously ********"
+    else
+      @surveysAlreadyAttempted=user.SurveysAttempted
+      print "********** This REPEAT USER has Attempted these Surveys Previously: ", @surveysAlreadyAttempted
+      puts
+    end
+
     # Survey.where("CountryLanguageID = ? AND SurveyGrossRank >= ?", @usercountry, @topofstack).order( "SurveyGrossRank" ).each do |survey|
     Survey.where("CountryLanguageID = ? AND SurveyGrossRank < ? AND SurveyStillLive = ? AND CPI >= ?", @usercountry, 400, true, @currentpayout).order( "SurveyGrossRank" ).each do |survey|
 
@@ -1481,6 +1499,7 @@ end
 
         if ( ((survey.CountryLanguageID == 5) &&        
 #          ( survey.SurveyStillLive ) && 
+          (@surveysAlreadyAttempted.to_s.match(survey.SurveyNumber.to_s) == nil) &&
           (( survey.QualificationAgePreCodes.empty? ) || ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.empty? ) || ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
           (( survey.QualificationZIPPreCodes.empty? ) || ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
@@ -1500,6 +1519,7 @@ end
           
           ((survey.CountryLanguageID == 6) &&          
 #          ( survey.SurveyStillLive ) && 
+          (@surveysAlreadyAttempted.to_s.match(survey.SurveyNumber.to_s) == nil) &&
           (( survey.QualificationAgePreCodes.empty? ) || ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.empty? ) || ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
           (( survey.QualificationZIPPreCodes.empty? ) || ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP.slice(0..2) ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP.slice(0..2) ])) &&
@@ -1520,7 +1540,8 @@ end
           
           ( (user.netid != "FmsuA567rw21345f54rrLLswaxzAHnms") &&
           (survey.CountryLanguageID == 9) &&          
-#          ( survey.SurveyStillLive ) && 
+#          ( survey.SurveyStillLive ) &&
+          (@surveysAlreadyAttempted.to_s.match(survey.SurveyNumber.to_s) == nil) && 
           (( survey.QualificationAgePreCodes.empty? ) || ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.empty? ) || ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
           (( survey.QualificationZIPPreCodes.empty? ) || ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
@@ -1546,6 +1567,7 @@ end
           (survey.CountryLanguageID == 9) &&          
 #          ( survey.SurveyStillLive ) && 
           (survey.SurveyMobileConversion > 2) &&
+          (@surveysAlreadyAttempted.to_s.match(survey.SurveyNumber.to_s) == nil) &&
           (( survey.QualificationAgePreCodes.empty? ) || ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.empty? ) || ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
           (( survey.QualificationZIPPreCodes.empty? ) || ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
@@ -1571,7 +1593,7 @@ end
           
         
           #Prints for testing code
-
+          @_surveysAlreadyAttempted = (@surveysAlreadyAttempted.to_s.match(survey.SurveyNumber.to_s) == nil)
           @_gender = ( survey.QualificationGenderPreCodes.empty? ) || ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
           @_age = ( survey.QualificationAgePreCodes.empty? ) || ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
           @_age_value = [user.age] & survey.QualificationAgePreCodes.flatten
@@ -1592,11 +1614,10 @@ end
           puts "---------------------------------->>>  FED Replace QualificationHHCPrecodes with CA_provincePrecodes column"
         
           print '************ FED User QUALIFIED for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ..... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.employment, ' Std_Employment PreCode from survey: ', survey.QualificationEmploymentPreCodes, ' User Entered PIndustry: ', user.pindustry, ' PIndustry PreCode from survey: ', survey.QualificationPIndustryPreCodes, ' User Entered JobTitle: ', user.jobtitle, ' JobTitle PreCode from survey: ', survey.QualificationJobTitlePreCodes, ' User Entered Children: ', user.children, ' Children PreCodes from survey: ', survey.QualificationChildrenPreCodes, ' User Entered Industries: ', user.industries, ' Industries PreCodes from survey: ....', ' Network Payout: ', @currentpayout, ' CPI from survey: ', survey.CPI, ' SurveyStillAlive: ', survey.SurveyStillLive
-         
-        puts
+          puts
         
-        print '************* FED Gender match: ', @_gender, ' Age match: ', @_age, ' Age_logic value: ', @_age_value, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment, ' PIndustry match: ', @_pindustry, ' JobTitle match: ', @_jobtitle, ' Children match: ', @_children, ' Children_logic value: ', @_children_logic,  ' Industries match: ', @_industries, ' Industries_logic value: ', @_industries_logic, ' CPI check: ', @_CPI_check
-        puts
+          print '************* FED BIGPRINT surveyAlreadyAttempted: ', @_surveysAlreadyAttempted, ' Gender match: ', @_gender, ' Age match: ', @_age, ' Age_logic value: ', @_age_value, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment, ' PIndustry match: ', @_pindustry, ' JobTitle match: ', @_jobtitle, ' Children match: ', @_children, ' Children_logic value: ', @_children_logic,  ' Industries match: ', @_industries, ' Industries_logic value: ', @_industries_logic, ' CPI check: ', @_CPI_check
+          puts
         
 
         if (survey.CountryLanguageID == 9) then
@@ -2372,7 +2393,7 @@ end
       else
         # This survey qualifications did not match with the user
         # Print for testing/verification
-        
+        @_surveysAlreadyAttempted = (@surveysAlreadyAttempted.to_s.match(survey.SurveyNumber.to_s) == nil)
         @_gender = ( survey.QualificationGenderPreCodes.empty? ) || ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || (( @GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )
         @_age = ( survey.QualificationAgePreCodes.empty? ) || ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([user.age] & survey.QualificationAgePreCodes.flatten) == [user.age])
         @_age_value = [user.age] & survey.QualificationAgePreCodes.flatten
@@ -2390,11 +2411,10 @@ end
         @_CPI_check = ((survey.CPI == nil) || (survey.CPI >= @currentpayout))
         
         
-        print '************ User DID NOT QUALIFY for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ....... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.employment, ' Std_Employment PreCode from survey: ', survey.QualificationEmploymentPreCodes, ' User Entered PIndustry: ', user.pindustry, ' PIndustry PreCode from survey: ', survey.QualificationPIndustryPreCodes, ' User Entered JobTitle: ', user.jobtitle, ' JobTitle PreCode from survey: ', survey.QualificationJobTitlePreCodes, ' User Entered Children: ', user.children, ' Children PreCodes from survey: ', survey.QualificationChildrenPreCodes,  ' User Entered Industries: ', user.industries, ' Industries PreCodes from survey: ....', ' Network Payout: ', @currentpayout, ' CPI from survey: ', survey.CPI, ' SurveyStillAlive: ', survey.SurveyStillLive
-         
+        print '************ User DID NOT QUALIFY for FED survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ....... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.employment, ' Std_Employment PreCode from survey: ', survey.QualificationEmploymentPreCodes, ' User Entered PIndustry: ', user.pindustry, ' PIndustry PreCode from survey: ', survey.QualificationPIndustryPreCodes, ' User Entered JobTitle: ', user.jobtitle, ' JobTitle PreCode from survey: ', survey.QualificationJobTitlePreCodes, ' User Entered Children: ', user.children, ' Children PreCodes from survey: ', survey.QualificationChildrenPreCodes,  ' User Entered Industries: ', user.industries, ' Industries PreCodes from survey: ....', ' Network Payout: ', @currentpayout, ' CPI from survey: ', survey.CPI, ' SurveyStillAlive: ', survey.SurveyStillLive         
         puts
         
-        print '************** Gender match:', @_gender, ' Age match: ', @_age, ' Age_logic value: ', @_age_value, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment, ' PIndustry match: ', @_pindustry, ' JobTitle match: ', @_jobtitle, ' Children match: ', @_children, ' Children_logic value: ', @_children_logic,   ' Industries match: ', @_industries, ' Industries_logic value: ', @_industries_logic, ' CPI check: ', @_CPI_check
+        print '************** FED BIGPRINT surveyAlreadyAttempted: ', @_surveysAlreadyAttempted, ' Gender match:', @_gender, ' Age match: ', @_age, ' Age_logic value: ', @_age_value, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment, ' PIndustry match: ', @_pindustry, ' JobTitle match: ', @_jobtitle, ' Children match: ', @_children, ' Children_logic value: ', @_children_logic,   ' Industries match: ', @_industries, ' Industries_logic value: ', @_industries_logic, ' CPI check: ', @_CPI_check
         puts
         
         if (survey.CountryLanguageID == 9) then
@@ -2956,7 +2976,7 @@ end
         @currentpayout = 1.25 # assumes this is the minimum payout of $1.25 across networks. There is no extra cost.
       else
         @currentpayout = net.payout
-        p '****************************** minimum payout for ADHOC set to: ', @currentpayout
+        print '****************************** minimum payout for ADHOC set to: ', @currentpayout
         puts
       end
     else
@@ -8430,7 +8450,7 @@ end
 #     end
         
     if user.age != nil then
-      @RFGbirthday = (Time.now.year.to_i - user.age.to_i).to_s + "-" + Random.rand(12).to_s + "-" + Random.rand(30).to_s
+      @RFGbirthday = (Time.now.year.to_i - user.age.to_i).to_s + "-" + (Random.rand(11)+1).to_s + "-" + (Random.rand(27)+1).to_s
       print "-----RFGbirthday-------------------***************__________________", @RFGbirthday
       puts
     else
@@ -9019,6 +9039,8 @@ end
       end
     end
 
+    print "RFG Offerwall Command: ", command
+    puts
 
 
 
@@ -9039,11 +9061,11 @@ end
       puts e.message
     end
 
-    # print "Offerwall Response: ", @OfferwallResponse["response"]
-    # puts
+    print "Offerwall Response: ", @OfferwallResponse["response"]
+    puts
 
     if @OfferwallResponse["response"]["surveys"].length == 0 then
-      print "*********No surveys reurned bu RFG Offerwall**********"
+      print "*********No surveys reurned by RFG Offerwall**********"
       puts
       @RFGSupplierLinks = []
     else
@@ -9710,7 +9732,9 @@ end
       else
       end
 
-        
+
+      # No postback needed for TEST survey on Charity Network user as it is our own network. We already record number of completes on each Network.
+
       # Keep a count of Test completes on each Network
   
       puts "*************** Track Test completes on each network"
@@ -9776,6 +9800,11 @@ end
         @net_name = "TapJoy"
       else
       end
+
+      if user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then 
+        @net_name = "Charity"
+      else
+      end
     
       user.SurveysAttempted << 'TESTSURVEY'
       user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
@@ -9787,7 +9816,11 @@ end
     if user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
       redirect_to '/users/successfulMML'
     else
-      redirect_to '/users/successful'
+      if user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
+        redirect_to '/users/successfulCharity'
+      else
+        redirect_to '/users/successful'
+      end
     end  
   end # p3action
 

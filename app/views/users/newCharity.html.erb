@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">		
+	</head>
+
+
+
+	<body class="body">
+				
+		<div class="header">
+			<center>
+				<h1>WELCOME!</h1>
+			</center>
+		</header>
+		
+		<div class="topcontent">
+			<center>
+				<br>
+				<br>
+				<p><h4>QUALIFY  =>  COMPLETE A SURVEY  =>  GET REWARD</h4></p>
+			</center>
+		</topcontent>
+		<br>
+		<div class="content">
+			<center>
+				<p>What is your age?</p>
+			</center>
+				<%= form_tag("/users/eval_age", method: "post") do %>
+					<fieldset>
+						<div class="myyrsinput">
+							<%= text_field_tag 'age', nil, maxlength: 2 %>
+							<%= label_tag(:age, 'yrs.') %><br><br>
+						</div>
+												
+						<%= hidden_field_tag :clickid, SecureRandom.urlsafe_base64 %>
+						<%= hidden_field_tag :netid, "KsAnLL23qacAHoi87ytr45bhj8" %>
+						<%= hidden_field_tag :session_id, session.id %>
+						<%= hidden_field_tag :ip_address, request.remote_ip %>
+					
+						<div class="myinput">
+							<center>				
+								<%= submit_tag "Next" %>
+							</center>
+						</div>
+					</fieldset>
+				<% end %>
+		</content>		
+		
+		
+		
+		<br>
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('KetsciLogoSm.png') %>
+			</center>
+		</footer>
+	</body>	
+	
+</html>

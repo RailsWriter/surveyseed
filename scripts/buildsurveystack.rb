@@ -70,7 +70,7 @@ begin
   
   
 # Consider removing the CPI condition from builder and updater and only keep it in the user controller.
-# it is set to $1.49 as this enables $1 payout e.g. Fyber2 for CA and AUS surveys. 
+# it is set to $0.75 as this enables 50c payout for Charity with 30% shared with FED. 
 
   (0..totalavailablesurveys).each do |i|
     
@@ -78,7 +78,7 @@ begin
     
       if ( ((offerwallresponse["Surveys"][i]["CountryLanguageID"] == 5) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 6) || (offerwallresponse["Surveys"][i]["CountryLanguageID"] == 9)) && 
         ((offerwallresponse["Surveys"][i]["StudyTypeID"] == 1) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 11) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 13) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 14) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 15) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 16) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 17) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 19) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 21) || (offerwallresponse["Surveys"][i]["StudyTypeID"] == 23)) && 
-        ((offerwallresponse["Surveys"][i]["CPI"] > 1.49)) ) then
+        ((offerwallresponse["Surveys"][i]["CPI"] > 0.75)) ) then
 
         # Save key data for the NEW survey i
     

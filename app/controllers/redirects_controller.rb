@@ -231,6 +231,13 @@ class RedirectsController < ApplicationController
                 @net_name = "TestNtk"
               else
               end    
+
+              
+              if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then 
+                @net_name = "Charity"
+              else
+              end 
+              
                             
               #@user.SurveysCompleted[params[:PID]] = [Time.now, 'P2Ssurvey', 'P2S', '$1.25', @user.clickid, @net_name]
               @user.SurveysCompleted[Time.now] = [params[:PID], 'P2Ssurvey', 'P2S', '$1.25', @user.clickid, @net_name]
@@ -393,8 +400,13 @@ class RedirectsController < ApplicationController
             if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
               redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=1'
             else
-              redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'    
-            end                    
+              if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
+                redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=1'
+              else
+                redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'   
+              end 
+            end     
+
           else # not a P2S project. Try RFG next            
             if @rfg_redirect then
              
@@ -487,6 +499,11 @@ class RedirectsController < ApplicationController
                   @net_name = "TestNtk"
                 else
                 end
+
+                if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then 
+                  @net_name = "Charity"
+                else
+                end 
                
                 # @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'RFG', @project.cpi, @user.clickid, @net_name]
                 # @user.save
@@ -685,12 +702,19 @@ class RedirectsController < ApplicationController
               # Happy ending
               
               tracker.track(@user.ip_address, 'RFG_Completes')
-              
+
               if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
-                redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=2'
+                redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=1'
               else
-                redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=2'
-              end        
+                if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
+                  redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=2'
+                else
+                  redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'   
+                end 
+              end
+
+
+
             else # not a RFG project. Try ADHOC next
               if @adhoc_redirect then
                 # save attempt info in User and Survey tables
@@ -762,7 +786,12 @@ class RedirectsController < ApplicationController
                   if @user.netid == "T2Abd5433LLA785410lpH567" then 
                     @net_name = "TestNtk"
                   else
-                  end    
+                  end   
+
+                  if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then 
+                    @net_name = "Charity"
+                  else
+                  end  
 
 
                   @survey = Adhoc.find_by SurveyNumber: params[:tsfn]                    
@@ -918,12 +947,19 @@ class RedirectsController < ApplicationController
                 end # duplicate is false                 
                 # Happy ending
                 
-                tracker.track(@user.ip_address, 'ADHOC_Completes')
+                tracker.track(@user.ip_address, 'ADHOC_Completes')     
+
                 if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
                   redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=1'
                 else
-                  redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'    
-                end                
+                  if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
+                    redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=3'
+                  else
+                    redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'   
+                  end 
+                end
+
+
               else # not a P2S or RFG or ADHOC project. it must be a FED survey            
           
                 # save attempt info in User and Survey tables
@@ -999,7 +1035,12 @@ class RedirectsController < ApplicationController
                   if @user.netid == "T2Abd5433LLA785410lpH567" then 
                     @net_name = "TestNtk"
                   else
-                  end              
+                  end     
+
+                  if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then 
+                    @net_name = "Charity"
+                  else
+                  end          
      
                   @survey = Survey.find_by SurveyNumber: params[:tsfn]                    
                   print '************ Successfully completed survey:', @survey.SurveyNumber
@@ -1175,10 +1216,15 @@ class RedirectsController < ApplicationController
                 tracker.track(@user.ip_address, 'FED_Completes')
                 
                 if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
-                  redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=3'
+                  redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=1'
                 else
-                  redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=3'
-                end              
+                  if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
+                    redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=5'
+                  else
+                    redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'   
+                  end 
+                end
+
               end # if ADHOC
             end # if RFG
           end # if P2S
