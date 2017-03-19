@@ -46,7 +46,7 @@ mixpanel.init("e5606382b5fdf6308a1aa86a678d6674");</script><!-- end Mixpanel -->
 		</br>
 		<div id="left_col_user">	
 			<center>
-				For every survey completed using this link, KETSCI will donate 50c to benefit needy children.
+				For every survey you complete using the Donate link, KETSCI will contribute 50c to a charity to benefit needy children.
 				<p></p>
 				<input type="submit" class='panelbutton' value="Donate" onclick="window.location.href='/users/newCharity'">
 				<p></p>
@@ -70,7 +70,7 @@ mixpanel.init("e5606382b5fdf6308a1aa86a678d6674");</script><!-- end Mixpanel -->
 		 <h1><center> Developers </center></h1>
 			<center><p2> Earn additional revenue from users who visit your website or use your app. We are extremely flexible in the ways to integrate our offer on any platform e.g. iOS, ANDROID, Win, Web, etc. You will always be in full control of how and where your users interact and complete KETSCI surveys. It takes only a few minutes to integrate our API in your code. 
 			<p></p>
-			Contact us by <a href="mailto:projectsmanagement@ketsci.com"> email.</a> You can start earning within a day or two.
+			<a href="mailto:projectsmanagement@ketsci.com"> Contact</a> us to start earning within a day or two.
 			<p></p>	 
 			 </p2></center>
  </div>
@@ -86,16 +86,16 @@ mixpanel.init("e5606382b5fdf6308a1aa86a678d6674");</script><!-- end Mixpanel -->
  
  <div id="contact">
     <div id="container3">
-    	<center><p1>For Business Inquiries</p1>
-		<h1>Contact Us</h1>
-			<div id="alert"><%= alert %></div><br>
-			<%= form_for @lead do |f| %>	
+    	<center><h1>Contact Us</h1>
+			<p>(For Business Inquiries)</p>
+				<div id="alert"><%= alert %></div><br>
+				<%= form_for @lead do |f| %>	
 					<%= f.text_field :name, placeholder: "Name..", :class => "input" %><br><br>
 					<%= f.text_field :email, placeholder: "Email..", :class => "input" %><br><br>
 					<%= f.text_field :phone, placeholder: "Phone..", :class => "input" %><br><br>
 					<%= f.text_area :message, placeholder: "Message..", :class => "textarea" %><br><br>
 					<%= f.submit "Send", :class => "button" %>				
-			<% end %>
+				<% end %>
 		</center>
    	</div>
  </div> 

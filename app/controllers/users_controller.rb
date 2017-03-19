@@ -836,20 +836,24 @@ class UsersController < ApplicationController
       print "****************** Received login credentials ", params[:credentials]
       puts
 
-      @user = User.where('emailId=? AND password=?', params[:credentials]["emailId"], params[:credentials]["password"]).first
+      user = User.where('emailId=? AND password=?', params[:credentials]["emailId"], params[:credentials]["password"]).first
       
-      if @user!=nil then
-        print "***************** Found existing user: ", @user
+      if user!=nil then
+        print "***************** Found existing user: ", user
         puts
-        render json: @user
+        render json: user
       else
-        u=User.new
-        u.emailId=params[:credentials]["emailId"]
-        u.password=params[:credentials]["password"]
-        u.save
-        print "***************** Created new user: ", u
+        user=User.new
+        user.emailId=params[:credentials]["emailId"]
+        user.password=params[:credentials]["password"]
+        user.acceptedTerms='f'
+        user.userType='1'
+        user.redeemRewards='1'
+        user.surveyFrequency='1'
+        user.save
+        print "***************** Created new user: ", user
         puts
-        render json: u
+        render json: user
       end
     else
       respond_to do |format|
@@ -863,7 +867,7 @@ class UsersController < ApplicationController
 
   def surveyStats
     # GET https://www.ketsci.com/users/surveyStats?userRecordId=xyz
-    # Response: @completedSurveyStats = [["2017-01",5],["2017-02",3]]
+    # Response: completedSurveyStats = [["2017-01",5],["2017-02",3]]
     # @Url = request.original_url
     # @userRecordId = @Url.partition ("userRecordId=")
     #@user = User.find(@userRecordId[2])
@@ -875,7 +879,7 @@ class UsersController < ApplicationController
     # SurveysAttempted and Completed by Month
     # WHAT ABOUT P2S or INV surveys - no way to count?
 
-    if @user.SurveysCompleted.lenght > 0 then
+    if @user.SurveysCompleted.length > 0 then
       @CompletedSurveysTimestampsArray = @user.SurveysCompleted.keys
       (0..@CompletedSurveysTimestampsArray.length-1).each do |i|
         @CompletedSurveysTimestampsArray[i] = @CompletedSurveysTimestampsArray[i].to_s[0..6]
@@ -892,28 +896,29 @@ class UsersController < ApplicationController
       print "****************** @counts Hash is = ", @counts
       puts
 
-      @counts = @counts.flatten
+      @countsArray = @counts.flatten
 
-      print "****************** @counts Array is = ", @counts
+      print "****************** @countsArray is = ", @countsArray
       puts
       
       j=0
-      k=0      
+      k=0  
+      completedSurveyStats = []    
       begin
-        @completedSurveyStats[k] = [@counts[j],@counts[j+1]]
-        j=j+2
+        completedSurveyStats[k] = [@countsArray[j],@countsArray[j+1]]
         k=k+1
-      end while j<@counts.length-1
+        j=j+2
+      end while j<@countsArray.length-1
 
-      print "****************** @completedSurveyStats Array of Arrays is = ", @completedSurveyStats
+      print "****************** completedSurveyStats Array of Arrays is = ", completedSurveyStats
       puts
 
-      render json: @completedSurveyStats.to_json
+      render json: completedSurveyStats.to_json
     
     else
       # This user has not completed any surveys
-      @completedSurveyStats = []
-      render json: @completedSurveyStats.to_json
+      completedSurveyStats = []
+      render json: completedSurveyStats.to_json
     end
   
   end
