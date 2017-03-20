@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <base href="http://www.ketsci.com/panel/" />
+
+  <title>Ketsci Panel</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link href="extn/angular-xeditable/css/xeditable.css" rel="stylesheet">
+  <link rel="stylesheet" href="extn/angular-autocomplete/css/autocomplete.css">
+  <link href="css/ketscipanel.css" rel="stylesheet">
+</head>
+<body ng-app="ketscipanel"  ng-controller="appController">
+<div ng-controller="navigation"/>
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <div class="row">
+        <!-- use ng-if="currentUser.roles.iindexOf('admin')>-1" to display nav bar based on roles-->
+        <nav class="navbar navbar-default ">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">
+                <!--<img src='img/imgTravelerLogo.png' class="img-responsive col-sm-offset-2"  height="65%" width="50%"/>-->
+                KETSCI
+              </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                <li><a href="/home" class="badge badge-primary"> Home&nbsp;<span class="glyphicon glyphicon-resize-small"></span> <span class="sr-only">(current)</span></a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle badge badge-primary" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> My Account &nbsp;<span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Change Password</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="#" ng-click="logout()">Logout</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div ng-view></div>
+    </div>
+    <div class="panel-footer">
+      <!-- 				<pre>http status code: {{status}}
+      http response data: {{data}}</pre>
+       -->
+      <span class="glyphicon glyphicon-copyright-mark"> Ketsci</span>
+      <span class="col-sm-offset-4">
+        <a href="#">Terms Of Service</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="#">Privacy Policy</a>
+      </span>
+    </div>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.2/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.2/angular-route.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.2/angular-cookies.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.2/angular-animate.js"></script>
+<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script src="extn/angular-xeditable/js/xeditable.js"></script>
+<script src="extn/angular-dirPagination/dirPagination.js"></script>
+
+<script type="text/javascript" src="extn/angular-autocomplete/autocomplete.js"></script>
+<script type="text/javascript" src="extn/angular-autocomplete/app.js"></script>
+
+<script src="js/auth/auth.js"></script>
+<script src="js/home/home.js"></script>
+<script src="js/navigation/navigation.js"></script>
+<script src="js/ketscipanel.js"></script>
+
+</body>
+
+</html>

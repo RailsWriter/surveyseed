@@ -1,0 +1,136 @@
+<div>
+	<div class="row">
+		<div class="col-md-6" id="creditsChart"></div>
+		<div class="col-md-6"><span class="badge">Total Credits:</span></div>
+	</div>
+	<form role="form">
+		<div clas="row"><label class="badge badge-info"><h5>Subscriptions</h5></label></div>
+		<!--<div class="well well-sm"><h4 class="list-group-item-heading">Survey Info</h4></div>-->
+		<div clas="panel panel-default">
+			<div class="row">
+<!--
+				<div class="col-md-6">
+					<span class="text-muted"><h5>How would you like to redeem your rewards upon reaching a goal?&nbsp;&nbsp;</h5></span>
+				</div>
+				<div class="col-md-6">
+					<div class="btn-group" data-toggle="buttons">
+						<label class="btn btn-primary active">
+							<input type="radio" name="redeem" id="amznCard" autocomplete="off" ng-model="redeem" value="1">
+							Amazon Gift Card
+							&lt;!&ndash;<img src="/panel/img/visa-card.jpg" class="cardImg">&ndash;&gt;
+						</label>
+						&nbsp;&nbsp;
+						<label class="btn btn-primary">
+							<input type="radio" name="redeem" id="charity" autocomplete="off" ng-model="redeem" value="2">
+							Donate to Charity
+							&lt;!&ndash;<img src="/panel/img/charity_cards.png" class="cardImg">&ndash;&gt;
+						</label>
+					</div>
+				</div>
+-->
+				<div  class="form-group">
+					<label class="control-label col-sm-4"><span class="text-muted"><h5>How would you like to redeem your rewards upon reaching a goal?&nbsp;&nbsp;</h5></span> </label>
+					<div class="col-sm-2">
+						<div class="input-group btn btn-primary">
+							<input type="radio" value="1" ng-model="redeem" />
+								<span class="input-group-label">
+									<label class="control-label">Amazon Gift Card&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+								</span>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="input-group btn btn-primary">
+							<input type="radio" value="2" ng-model="redeem" />
+								<span class="input-group-label">
+									<label class="control-label">Donate to Charity&nbsp;&nbsp;&nbsp;&nbsp;</label>
+								</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br/>
+			<div class="row">
+<!--
+				<div class="col-md-6">
+					<span class="text-muted"><h5>How frequently you want us to send surveys?&nbsp;&nbsp;</h5></span>
+				</div>
+				<div class="col-md-6">
+					<div class="btn-group" data-toggle="buttons">
+						<label class="btn btn-primary">
+							<input type="radio" ng-model="contactFreq" ng-class="{active: contactFreq == '1'}" ng-value="1">
+							Daily
+							&lt;!&ndash;<img src="/panel/img/visa-card.jpg" class="cardImg">&ndash;&gt;
+						</label>
+						<label class="btn btn-primary active">
+							<input type="radio" ng-model="contactFreq"ng-class="{active: contactFreq == '2'}" ng-value="2">
+							Weekly
+							&lt;!&ndash;<img src="/panel/img/visa-card.jpg" class="cardImg">&ndash;&gt;
+						</label>
+						<label class="btn btn-primary">
+							<input type="radio" ng-model="contactFreq" ng-class="{active: contactFreq == '3'}" ng-value="3">
+							Monthly
+							&lt;!&ndash;<img src="/panel/img/charity_cards.png" class="cardImg">&ndash;&gt;
+						</label>
+					</div>
+				</div>
+-->
+
+				<div  class="form-group">
+					<label class="control-label col-sm-4"><span class="text-muted"><h5>How frequently you want us to send surveys?&nbsp;&nbsp;</h5></span> </label>
+					<div class="col-sm-1">
+						<div class="input-group btn btn-primary">
+							<input type="radio" value="1" ng-model="contactFreq" />
+								<span class="input-group-label">
+									<label class="control-label">Daily&nbsp;&nbsp;&nbsp;&nbsp;</label>
+								</span>
+						</div>
+					</div>
+					<div class="col-sm-1">
+						<div class="input-group btn btn-primary">
+							<input type="radio" value="2" ng-model="contactFreq" />
+								<span class="input-group-label">
+									<label class="control-label">Weekly</label>
+								</span>
+						</div>
+					</div>
+					<div class="col-sm-1">
+						<div class="input-group btn btn-primary">
+							<input type="radio" value="3" ng-model="contactFreq" />
+								<span class="input-group-label">
+									<label class="control-label">monthly</label>
+								</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-md-6">
+					<span class="text-muted"><h5>Click here to unsubscribe&nbsp;&nbsp;</h5></span>
+				</div>
+				<div class="col-md-6">
+					<button type="submit" class="btn btn-warning" ng-click="submitSurvey()">Unsubscribe</button>
+				</div>
+			</div>
+		</div>
+		<div class="padSm">&nbsp;</div>
+<!--
+		<div clas="row"><label class="badge badge-info"><h5>Legal</h5></label></div>
+		<div class="panel panel-info panel-body">
+			<div class="row">
+				<div class="col-md-12 ">
+					<a href="#">Terms Of Service</a>
+					<a href="#">Privacy Policy</a>
+				</div>
+			</div>
+		</div>
+-->
+
+		<div class="form-group modal-footer">
+			<div class="col-sm-offset-3 col-sm-9">
+				<button type="submit" class="btn btn-default" ng-click="saveUserPrefs()">Save</button>
+				<button class="btn btn-warning" type="button" ng-click="cancelPrefs()">Cancel</button>
+			</div>
+		</div>
+	</form>
+</div>

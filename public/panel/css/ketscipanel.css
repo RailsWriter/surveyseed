@@ -1,0 +1,66 @@
+.badge-default {
+  background-color: #999999;
+}
+
+.badge-primary {
+  background-color: #428bca;
+}
+
+.badge-success {
+  background-color: #5cb85c;
+}
+
+.badge-info {
+  background-color: #5bc0de;
+}
+
+.badge-warning {
+  background-color: #f0ad4e;
+}
+
+.badge-danger {
+  background-color: #d9534f;
+}
+
+td {
+	font-size: .9em;
+}
+
+th {
+	font-weight: bold;
+	font-size: .9em;
+}
+
+.myrow {
+  font-size: 0;
+}
+.myrow > * {
+  float: none;
+  display: inline-block;
+  font-size: 14px; /* if using LESS it's quicker to just use @font-size-base */
+}
+.myrow > *:last-child {
+  vertical-align: bottom;
+}
+.myrow p:last-child {
+  margin-bottom: 0; /* optional */
+}
+
+.table-info{
+  background-color: #18303a;
+}
+
+.pre-info{
+  background-color: #18303a;
+  color: white
+}
+
+.element-container{
+  height: 600px;
+  overflow: scroll;
+}
+
+.cardImg{
+  width:250px;
+  height:130px;
+}
