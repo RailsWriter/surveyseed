@@ -817,16 +817,20 @@ class UsersController < ApplicationController
 
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
-    user=User.find_by session_id: session.id
-
-    tracker.track(user.ip_address, 'newpanelist')
-
-    if params[:emailid].empty? == false then
-      user.emailId = params[:emailid]
-      user.save
-      tracker.track(user.ip_address, 'panelistregistered')
-      redirect_to '/users/thanks'
+    if (User.where('session_id=?', session.id).exists?) then
+      user=User.find_by session_id: session.id
+      tracker.track(user.ip_address, 'interestedpanelist')
+      if (params[:emailid].empty? == false) then
+        user.emailId = params[:emailid]
+        user.save
+        tracker.track(user.ip_address, 'panelistregistered')
+        redirect_to '/users/thanks'
+      else
+        p "************** We do not have users emailid in join_panel *****************"
+        redirect_to '/users/thanks'
+      end
     else
+      p "************** We do not have users session_id in join_panel *****************"
       redirect_to '/users/thanks'
     end
   end
@@ -1486,7 +1490,8 @@ end
 
 
     # Identify and disqualify any FED surveys a REPEAT USER has already taken
-    if user.SurveysAttempted==nil then
+    @surveysAlreadyAttempted=[]
+    if user.SurveysAttempted.length==0 then
       @surveysAlreadyAttempted=["None"]
       p "********** No Surveys Attempted Previously ********"
     else
