@@ -114,12 +114,6 @@
 	/*		background-attachment: fixed; worst as it makes the rest of the body rollover hero image */
 		}
 
-		#left_col_user {
-		}
-
-		#right_col_user {
-		}
-
 		.panelbutton {
 		  	font-size:1em;
 		    padding:0.0em;
@@ -128,7 +122,7 @@
 			font-family:Roboto, helvetica, arial, sans-serif;
 			width:125px;
 			color:white;
-			background-color:silver;
+			background-color:red;
 		}
 
 		.input {
@@ -167,12 +161,6 @@
 			font-weight: 250;
 			font-size: 20px;
 			color: black;
-		}
-
-		#left_col_footer {
-		}
-
-		#right_col_footer {
 		}
 
 	}
@@ -252,12 +240,12 @@
 
 		#left_col_user {
 		   float:left;
-		   width:170px;
+		   width:190px;
 		}
 
 		#right_col_user {
 		   float:right;
-		   width:170px;
+		   width:190px;
 		}
 
 		.panelbutton {
@@ -268,7 +256,7 @@
 			font-family:Roboto, helvetica, arial, sans-serif;
 			width:150px;
 			color:white;
-			background-color:silver;
+			background-color:red;
 		}
 		
 		#monetize {
@@ -321,12 +309,6 @@
 			font-weight: 300;
 			font-size: 25px;
 			color: black;
-		}
-		
-		#left_col_footer {
-		}
-
-		#right_col_footer {
 		}
 	}
 	
@@ -417,12 +399,12 @@
 
 		#left_col_user {
 		   float:left;
-		   width:310px;
+		   width:380px;
 		}
 
 		#right_col_user {
 		   float:right;
-		   width:310px;
+		   width:380px;
 		}
 
 		.panelbutton {
@@ -433,7 +415,7 @@
 			font-family:Roboto, helvetica, arial, sans-serif;
 			width:250px;
 			color:white;
-			background-color:silver;
+			background-color:red;
 		}
 		
 		#container2 {
@@ -476,12 +458,6 @@
 			font-family: Roboto, helvetica, arial, sans-serif;
 			color: white;
 			background-color: red;
-		}
-		
-		#left_col_footer {
-		}
-
-		#right_col_footer {
 		}
 	}
 		
@@ -593,7 +569,7 @@
 				font-family:Roboto, helvetica, arial, sans-serif;
 				width:250px;
 				color:white;
-				background-color:silver;
+				background-color:red;
 			}
 			
 			#alert {
@@ -639,19 +615,13 @@
 				width: 460px;
 				font-family: Roboto, helvetica, arial, sans-serif;
 				color: white;
-				background-color: #blue;
+				background-color:red;
 			}
 
 			#alert {
 				font-weight: 375;
 				font-size: 35px;
 				color: black;
-			}
-
-			#left_col_footer {
-			}
-
-			#right_col_footer {
 			}
 
 		}

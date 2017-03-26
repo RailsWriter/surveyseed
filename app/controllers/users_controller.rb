@@ -160,7 +160,7 @@ class UsersController < ApplicationController
           user.QualifiedSurveys = []
           user.SurveysWithMatchingQuota = []
           user.SupplierLink = []
-          user.session_id = session.id
+          # user.session_id = session.id - redundant, as it already exists
           user.tos = false
           user.attempts_time_stamps_array = user.attempts_time_stamps_array + [Time.now]
           user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
@@ -213,13 +213,13 @@ class UsersController < ApplicationController
     else
       p 'TOS: A REPEAT USER'
       # set 24 hr survey attempts in separate sessions from same device/IP address here
-      if (user.number_of_attempts_in_last_24hrs < 20) then
+      if (user.number_of_attempts_in_last_24hrs < 10) then
         # skip gender and other demo questions due to responses in last 24 hrs
         #redirect_to '/users/qq2'
         redirect_to '/users/qq12Returning'
       else
         # user has made too many attempts to take surveys
-        p '******* Too many attempts to take a survey ***********'
+        p '******* More than 10 attempts to take a survey in last 24 hrs ***********'
         redirect_to '/users/24hrsquotaexceeded'
       end
     end
@@ -346,13 +346,12 @@ class UsersController < ApplicationController
     end
   end    
   
-  def country
-    
-#   tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+  def country    
+  # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
     
     user=User.find_by session_id: session.id
     
-#     tracker.track(user.ip_address, 'Country')
+    # tracker.track(user.ip_address, 'Country')
     
     user.country=params[:country]
     user.save
@@ -369,16 +368,15 @@ class UsersController < ApplicationController
           if user.country=="7" then
             redirect_to '/users/qq4_IN'
           else
-            if user.country=="0" then
-             redirect_to '/users/nosuccess'
-            else
+            # if user.country=="0" then
+            #  redirect_to '/users/nosuccess'
+            # else
              redirect_to '/users/qq3'
-            end
+            # end
           end
         end
       end
-    end
-  
+    end  
   end
   
   def zip_US
@@ -806,7 +804,7 @@ class UsersController < ApplicationController
     
     tracker.track(user.ip_address, 'pleasewait')    
     
-    print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time 2 start FED search: ", Time.now
+    print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ", user.user_id, " of ", user.country, " Time 2 start FED search: ", Time.now
     puts
     
     ranksurveysforuser(session.id)
@@ -822,6 +820,7 @@ class UsersController < ApplicationController
       tracker.track(user.ip_address, 'interestedpanelist')
       if (params[:emailid].empty? == false) then
         user.emailId = params[:emailid]
+        user.password = 'WelcomeToKetsci'
         user.save
         tracker.track(user.ip_address, 'panelistregistered')
         redirect_to '/users/thanks'
@@ -843,28 +842,36 @@ class UsersController < ApplicationController
       user = User.where('emailId=? AND password=?', params[:credentials]["emailId"], params[:credentials]["password"]).first
       
       if user!=nil then
-        print "***************** Found existing user: ", user
+        print "***************** Found registered existing user: ", user
         puts
         render json: user
       else
-        user=User.new
-        user.emailId=params[:credentials]["emailId"]
-        user.password=params[:credentials]["password"]
-        user.acceptedTerms='f'
-        user.userType='1'
-        user.redeemRewards='1'
-        user.surveyFrequency='1'
-        user.save
-        print "***************** Created new user: ", user
-        puts
-        render json: user
+
+        user = User.where('emailId=?', params[:credentials]["emailId"]).first
+
+        if user != nil then
+          print "************* This panelist already exists, please provide correct default/chosen password *************"
+          puts
+          format.json { render json: { message: "This panelist already exists, please provide correct password" } }
+        else
+          user=User.new
+          user.emailId=params[:credentials]["emailId"]
+          user.password=params[:credentials]["password"]
+          user.acceptedTerms=[:credentials]["acceptedTerms"]
+          user.userType=[:credentials]["userType"]
+          user.redeemRewards=[:credentials]["redeemRewards"]
+          user.surveyFrequency=[:credentials]["surveyFrequency"]
+          user.save
+          print "***************** Created new panelist: ", user
+          puts
+          render json: user
+        end
       end
     else
       respond_to do |format|
         #format.html # home.html.erb
-        format.json { render json: { message: "No login credentials received" } }
+        format.json { render json: { message: "No login credentials received for the panelist" } }
       end 
-
       p "***************** Nothing was received in POST as credentials **************"
     end
   end
