@@ -838,29 +838,22 @@ class UsersController < ApplicationController
     if params[:credentials] != nil then
       print "****************** Received login credentials ", params[:credentials]
       puts
-
-      user = User.where('emailId=? AND password=?', params[:credentials]["emailId"], params[:credentials]["password"]).first
-      
+      user = User.where('emailId=? AND password=?', params[:credentials]["emailId"], params[:credentials]["password"]).first      
       if user!=nil then
         print "***************** Found registered existing user: ", user
         puts
         render json: user
       else
-
         user = User.where('emailId=?', params[:credentials]["emailId"]).first
-
         if user != nil then
           print "************* This panelist already exists, please provide correct default/chosen password *************"
           puts
-          format.json { render json: { message: "This panelist already exists, please provide correct password" } }
+          format.json { render json: { message: "This UserID already exists, please provide correct password" } }
         else
           user=User.new
           user.emailId=params[:credentials]["emailId"]
           user.password=params[:credentials]["password"]
-          user.acceptedTerms=[:credentials]["acceptedTerms"]
-          user.userType=[:credentials]["userType"]
-          user.redeemRewards=[:credentials]["redeemRewards"]
-          user.surveyFrequency=[:credentials]["surveyFrequency"]
+          user.userType='1'
           user.save
           print "***************** Created new panelist: ", user
           puts
@@ -870,7 +863,7 @@ class UsersController < ApplicationController
     else
       respond_to do |format|
         #format.html # home.html.erb
-        format.json { render json: { message: "No login credentials received for the panelist" } }
+        format.json { render json: { message: "No login credentials received" } }
       end 
       p "***************** Nothing was received in POST as credentials **************"
     end
@@ -932,6 +925,36 @@ class UsersController < ApplicationController
       render json: completedSurveyStats.to_json
     end
   
+  end
+
+
+  def savePreferences
+    if params[:preferences] != nil then
+      print "****************** Received savePreferences parameters ", params[:preferences]
+      puts
+      user = User.where('emailId=? AND password=?', params[:preferences]["emailId"], params[:preferences]["password"]).first    
+      if user!=nil then
+        print "***************** Found registered existing user: ", user
+        puts
+
+        user.redeemRewards=[:preferences]["redeemRewards"]
+        user.surveyFrequency=[:preferences]["surveyFrequency"]
+        user.save
+        print "***************** Saved new preferences: ", user
+        puts
+        render json: user
+      else
+        print "************* User not found. Provide correct userid/password *************"
+        puts
+        format.json { render json: { message: "User not found" } }
+      end
+    else
+      respond_to do |format|
+        #format.html # home.html.erb
+        format.json { render json: { message: "No preferences received" } }
+      end 
+      p "***************** Nothing was received by savePreferences as preferences **************"
+    end
   end
 
   

@@ -198,18 +198,19 @@ class CenterController < ApplicationController
       a.CPI = params[:newAdhocSurvey]["Quotas"][0]["CPI"].to_f
       a.QualificationAgePreCodes = params[:newAdhocSurvey]["Quotas"][0]["Age"]
       if params[:newAdhocSurvey]["Quotas"][0]["Gender"] == "M" then
-        a.QualificationGenderPreCodes="1"
+        a.QualificationGenderPreCodes= ["1"]
       else
         if params[:newAdhocSurvey]["Quotas"][0]["Gender"] == "F" then
-          a.QualificationGenderPreCodes="2"
+          a.QualificationGenderPreCodes= ["2"]
         else
-          if params[:newAdhocSurvey]["Quotas"][0]["Gender"] == "All" then
-            a.QualificationGenderPreCodes="ALL"
-          else
-          end
+          a.QualificationGenderPreCodes= ["ALL"]
         end
       end
-      a.QualificationZIPPreCodes = params[:newAdhocSurvey]["Quotas"][0]["Zip"]
+      if params[:newAdhocSurvey]["Quotas"][0]["Zip"].empty? then
+        a.QualificationZIPPreCodes = ["ALL"]
+      else
+        a.QualificationZIPPreCodes = params[:newAdhocSurvey]["Quotas"][0]["Zip"]
+      end
       a.QualificationEducationPreCodes = params[:newAdhocSurvey]["Quotas"][0]["stdEdu"]
       a.QualificationHHIPreCodes = params[:newAdhocSurvey]["Quotas"][0]["stdHiUS"]
       a.QualificationChildrenPreCodes = params[:newAdhocSurvey]["Quotas"][0]["ChildAgeGender"]
