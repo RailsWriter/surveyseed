@@ -206,7 +206,7 @@ class CenterController < ApplicationController
           a.QualificationGenderPreCodes= ["ALL"]
         end
       end
-      if params[:newAdhocSurvey]["Quotas"][0]["Zip"].empty? then
+      if params[:newAdhocSurvey]["Quotas"][0]["Zip"] == nil then
         a.QualificationZIPPreCodes = ["ALL"]
       else
         a.QualificationZIPPreCodes = params[:newAdhocSurvey]["Quotas"][0]["Zip"]
