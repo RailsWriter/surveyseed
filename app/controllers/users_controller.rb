@@ -137,6 +137,12 @@ class UsersController < ApplicationController
       
       if (first_time_user==false) then
         user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
+
+        # Sends email to user when user is created.
+        p "========================================================Sending MAIL================================"
+        PanelMailer.welcome_email(user).deliver_now
+
+
       #  p user
 
         # Why do I have to stop at first? Optimizes. But there should be not more than 1 entry.
