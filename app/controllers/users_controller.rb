@@ -139,8 +139,8 @@ class UsersController < ApplicationController
         user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
 
         # Sends email to user when user is created.
-        p "========================================================Sending MAIL================================"
-        PanelMailer.welcome_email(user).deliver_now
+        # p "========================================================Sending MAIL================================"
+        # PanelMailer.welcome_email(user).deliver_now
 
 
       #  p user
