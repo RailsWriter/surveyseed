@@ -828,6 +828,15 @@ class UsersController < ApplicationController
         user.emailId = params[:emailid]
         user.password = 'WelcomeToKetsci'
         user.save
+
+        # Sends email to user when panelist is created.
+        if user.netid == 'KsAnLL23qacAHoi87ytr45bhj8' then
+          p "========================================================Sending MAIL================================"
+          PanelMailer.welcome_email(user).deliver_now
+        else
+          #do nothing
+        end
+
         tracker.track(user.ip_address, 'panelistregistered')
         redirect_to '/users/thanks'
       else
@@ -1437,11 +1446,11 @@ class UsersController < ApplicationController
 
 
 if net.stackOrder != nil then
-  if (net.stackOrder == ("ARFP" || "RAFP" || "RFAP" || "RFP")) then
+  if (net.stackOrder == ("ARFP" || "RAFP" || "RFAP" || "RFP" || "RF" || "R")) then
     @RFGIsFront = true
     puts "**************** RFG is ahead of FED"        
   else
-    if (net.stackOrder == ("AFRP" || "FARP" || "FRAP" || "FRP")) then
+    if (net.stackOrder == ("AFRP" || "FARP" || "FRAP" || "FRP" || "FR" || "F")) then
       @RFGIsBack = true
       puts "**************** RFG is after FED"          
     else
@@ -9464,6 +9473,18 @@ end
     when "FRP"
       user.SupplierLink = @fedSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
       print "************ FRP user will be sent to these surveys : ", user.SupplierLink
+      puts
+    when "F"
+      user.SupplierLink = @fedSupplierLinks
+      print "************ F user will be sent to these surveys : ", user.SupplierLink
+      puts
+    when "R"
+      user.SupplierLink = @RFGSupplierLinks
+      print "************ R user will be sent to these surveys : ", user.SupplierLink
+      puts
+    when "P"
+      user.SupplierLink = [@p2sSupplierLink]
+      print "************ P user will be sent to these surveys : ", user.SupplierLink
       puts
     end
     
