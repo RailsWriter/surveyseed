@@ -24,7 +24,7 @@ Rails.application.configure do
    :domain               => "ketsci.com",
    :user_name            => ENV['mailgun_username'],
    :password             => ENV['mailgun_password'],
-   :authentication       => "plain",
+   :authentication       => :login,
    :enable_starttls_auto => true
   }
 
