@@ -1,5 +1,5 @@
 class PanelMailer < ActionMailer::Base
-  default from: "projectsmanagement@ketsci.com"
+  default from: "postmaster@ketsci.com"
 
   def welcome_email(user)
   	@user = user
