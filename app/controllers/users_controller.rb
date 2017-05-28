@@ -826,8 +826,9 @@ class UsersController < ApplicationController
       tracker.track(user.ip_address, 'interestedpanelist')
       if (params[:emailid].empty? == false) then
         user.emailId = params[:emailid]
-        user.password = 'WelcomeToKetsci'
-        user.save
+        user.password = 'WelcomeToKetsci'+user.user_id[0..3]
+        user.userType='1'
+        user.surveyFrequency = '2'
 
         # Sends email to user when panelist is created.
         if user.netid == 'KsAnLL23qacAHoi87ytr45bhj8' then
@@ -836,6 +837,8 @@ class UsersController < ApplicationController
         else
           #do nothing
         end
+
+        user.save
 
         tracker.track(user.ip_address, 'panelistregistered')
         redirect_to '/users/thanks'
@@ -855,22 +858,41 @@ class UsersController < ApplicationController
       puts
       user = User.where('emailId=? AND password=?', params[:credentials]["emailId"], params[:credentials]["password"]).first      
       if user!=nil then
-        print "***************** Found registered existing user: ", user
+        print "***************** Successful login: This person is a registered existing user: ", user
         puts
         render json: user
       else
         user = User.where('emailId=?', params[:credentials]["emailId"]).first
         if user != nil then
-          print "************* This panelist already exists, please provide correct default/chosen password *************"
+          print "************* Unsuccessful login: This UserID already exists, please provide correct default/chosen password *************"
           puts
-          format.json { render json: { message: "This UserID already exists, please provide correct password" } }
+          format.json { render json: { message: "Unsuccessful login: This UserID already exists, please provide correct password" } }
         else
+          
+          ip_address = request.remote_ip
+          session_id = session.id
+          netid = params[:netid]
+          clickid = params[:clickid]
+
           user=User.new
+          
+          user.QualifiedSurveys = Array.new
+          user.SurveysWithMatchingQuota = Array.new
+          user.SupplierLink = Array.new
+          user.user_agent = env['HTTP_USER_AGENT']
+          user.session_id = session_id
+          user.user_id = SecureRandom.urlsafe_base64
+          user.ip_address = ip_address
+          user.tos = false
+          user.watch_listed=false
+          user.black_listed=false
+          user.number_of_attempts_in_last_24hrs=0        
           user.emailId=params[:credentials]["emailId"]
           user.password=params[:credentials]["password"]
           user.userType='1'
+          user.surveyFrequency = '2'
           user.save
-          print "***************** Created new panelist: ", user
+          print "***************** Successfully created a new panelist: ", user
           puts
           render json: user
         end
@@ -878,9 +900,9 @@ class UsersController < ApplicationController
     else
       respond_to do |format|
         #format.html # home.html.erb
-        format.json { render json: { message: "No login credentials received" } }
+        format.json { render json: { message: "Unsuccessful login: No login credentials received" } }
       end 
-      p "***************** Nothing was received in POST as credentials **************"
+      p "***************** Unsuccessful login: Nothing was received in POST as credentials **************"
     end
   end
 

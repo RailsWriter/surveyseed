@@ -18,3 +18,49 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
+
+set :output, "log/cron_log.log"
+
+every :day, :at => '11:00pm' do
+    rake "sendEmailDaily:email_sender", :environment => "development"
+end
+
+# every :day, :at => '11:00pm' do
+#     rake "sendEmailDaily:email_sender", :environment => "production"
+# end
+
+every :monday, :at => '11:00pm' do
+    rake "sendEmailOnAlternateDays:email_sender", :environment => "development"
+end
+
+# every :monday, :at => '11:00pm' do
+#     rake "sendEmailOnAlternateDays:email_sender", :environment => "production"
+# end
+
+every :wednesday, :at => '11:00pm' do
+    rake "sendEmailOnAlternateDays:email_sender", :environment => "development"
+end
+
+# every :wednesday, :at => '11:00pm' do
+#     rake "sendEmailOnAlternateDays:email_sender", :environment => "production"
+# end
+
+every :friday, :at => '11:00pm' do
+    rake "sendEmailOnAlternateDays:email_sender", :environment => "development"
+end
+
+# every :friday, :at => '11:00pm' do
+#     rake "sendEmailOnAlternateDays:email_sender", :environment => "production"
+# end
+
+every :saturday, :at => '11:00pm' do
+    rake "sendEmailWeekly:email_sender", :environment => "development"
+end
+
+# every :saturday, :at => '11:00pm' do
+#     rake "sendEmailWeekly:email_sender", :environment => "production"
+# end
+
+# every 5.minute do
+#     rake "testRake:test1"
+# end
