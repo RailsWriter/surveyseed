@@ -831,7 +831,8 @@ class UsersController < ApplicationController
         user.surveyFrequency = '2'
 
         # Sends email to user when panelist is created.
-        if user.netid == 'KsAnLL23qacAHoi87ytr45bhj8' then
+        # if user.netid == 'KsAnLL23qacAHoi87ytr45bhj8' then
+        if user.netid == 'xxxxxxxxxxxxxxxxxxx' then
           p "========================================================Sending MAIL================================"
           PanelMailer.welcome_email(user).deliver_now
         else

@@ -34,9 +34,10 @@ angular.module('auth', []).factory('auth',
 					var credData = {}
 					credData.credentials={
 						emailId:credentials.username,
-						password:credentials.password
+						password:credentials.password,
+						netid: "LMq0514UMM20bgf17Yatemoh"
 					}
-					console.log("credData"+JSON.stringify(credData,null,"  "))
+					console.log("credData::123::"+JSON.stringify(credData,null,"  "))
 					$http.post('https://ketsci.com/users/login', credData).success(function(data) {
 						console.log('login success = '+JSON.stringify(data,null,"  "));
 						console.log('$location.path()::'+$location.path())
@@ -53,6 +54,7 @@ angular.module('auth', []).factory('auth',
 						$rootScope.redeem = data.redeemRewards
 						$rootScope.contactFreq = data.surveyFrequency
 						$rootScope.userId = data.id
+						$rootScope.emailId=data.emailId
 
 						/*redeem = data.redeemRewards
 						contactFreq=data.surveyFrequency

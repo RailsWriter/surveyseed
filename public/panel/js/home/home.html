@@ -1,4 +1,11 @@
 <div>
+	<div class="well well-lg">
+		You may attempt as many surveys as you like. You will earn 1 Star for each complete. Earning every 3 Stars will lead to a $5 Amazon card paid within 30 days of reaching that status
+		<div align="center">
+		<a class="btn btn-warning" role="button" href="https://www.ketsci.com/users/new?NID=LMq0514UMM20bgf17Yatemoh&CID=KETSCI_GUEST" target="_blank">TAKE 
+		Surveys</a>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md-6" id="creditsChart"></div>
 		<div class="col-md-6"><span class="badge">Total Credits:</span></div>
@@ -89,6 +96,14 @@
 						<div class="input-group btn btn-primary">
 							<input type="radio" value="2" ng-model="contactFreq" />
 								<span class="input-group-label">
+									<label class="control-label">Alternate Days</label>
+								</span>
+						</div>
+					</div>
+					<div class="col-sm-1">
+						<div class="input-group btn btn-primary">
+							<input type="radio" value="0" ng-model="contactFreq" />
+								<span class="input-group-label">
 									<label class="control-label">Weekly</label>
 								</span>
 						</div>
@@ -97,7 +112,7 @@
 						<div class="input-group btn btn-primary">
 							<input type="radio" value="3" ng-model="contactFreq" />
 								<span class="input-group-label">
-									<label class="control-label">monthly</label>
+									<label class="control-label">Never</label>
 								</span>
 						</div>
 					</div>
@@ -109,7 +124,7 @@
 					<span class="text-muted"><h5>Click here to unsubscribe&nbsp;&nbsp;</h5></span>
 				</div>
 				<div class="col-md-6">
-					<button type="submit" class="btn btn-warning" ng-click="submitSurvey()">Unsubscribe</button>
+					<button type="submit" class="btn btn-warning" ng-click="unsubscribeSurvey()">Unsubscribe</button>
 				</div>
 			</div>
 		</div>
