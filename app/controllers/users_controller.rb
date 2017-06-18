@@ -9282,18 +9282,18 @@ class UsersController < ApplicationController
     print "----RFGPindustry -------------------***************__________________", @RFGPindustry
     puts
       
-    # if user.country=="9" then 
-    #   @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
-    # else
-    #   if user.country=="6" then
-    #       @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
-    #   else
-    #     if user.country=="5" then
-    #         @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationAU='+@RFGEducationAU+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
-    #     else
-    #     end
-    #   end
-    # end    
+    if user.country=="9" then 
+      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
+    else
+      if user.country=="6" then
+          @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
+      else
+        if user.country=="5" then
+            @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationAU='+@RFGEducationAU+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
+        else
+        end
+      end
+    end    
       
     # if @parsed_user_agent.platform == 'iPhone' then
       
