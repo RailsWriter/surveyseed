@@ -342,27 +342,34 @@ begin
                   end
                   # Note: FED calls our Race definition as ETNICITY. Adhering to our definition.
                   @survey.QualificationRacePreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-                when 633
+                # when 633
+                when 48741
                   if flag == 'stag' then
-                    print 'STANDARD_EDUCATION: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print 'STANDARD_EDUCATION_v2: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
                   @survey.QualificationEducationPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-                when 14785
+                # when 14785
+                #   if flag == 'stag' then
+                #     print 'STANDARD_HHI_US: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                #     puts
+                #   else
+                #   end
+                when 61076
                   if flag == 'stag' then
-                    print 'STANDARD_HHI_US: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                    print 'STANDARD_HHI: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts
                   else
                   end
                   @survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")  
-                when 14887
-                  if flag == 'stag' then
-                    print 'STANDARD_HHI_INT: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
-                    puts
-                  else
-                  end
-                  @survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")     
+                # when 14887
+                #   if flag == 'stag' then
+                #     print 'STANDARD_HHI_INT: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
+                #     puts
+                #   else
+                #   end
+                #   @survey.QualificationHHIPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")     
                   
                   
                   
@@ -454,7 +461,8 @@ begin
                   end
                   @survey.QualificationRegionPreCodes = SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                                     
-                when 15294
+                # when 15294
+                when 15297
                   if flag == 'stag' then
                     print '--------------------> JobTitle: ', SurveyQualifications["SurveyQualification"]["Questions"][j].values_at("PreCodes")
                     puts

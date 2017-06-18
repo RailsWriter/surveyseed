@@ -84,8 +84,12 @@ class UsersController < ApplicationController
             @SSnet.save
           end
         end
+      
       else
         print "************************************ No NetworkId ********************"
+        redirect_to '/users/nosuccess'
+        return
+      
       end
 
       tracker.track(ip_address, 'Age')
@@ -814,6 +818,26 @@ class UsersController < ApplicationController
     puts
     
     ranksurveysforuser(session.id)
+    # @netid = user.netid
+
+    # if Network.where(netid: @netid).exists? then
+    #   net = Network.find_by netid: @netid
+
+    #   if net.stackOrder.exclude?('F') then
+    #     p '****************************** Skipping FED Surveys *************************************'
+    #     selectAdhocSurveys(session.id)
+    #   else
+    #     ranksurveysforuser(session.id)
+    #   end
+
+    # else
+
+    #   # Bad netid, Network is not known
+    #   p '****************************** ACCESS FROM AN UNRECOGNIZED NETWOK DENIED'
+    #   redirect_to '/users/nosuccess'
+    #   return
+    
+    # end
     
   end
 
@@ -853,7 +877,7 @@ class UsersController < ApplicationController
   end
 
   def login
-    if params[:credentials] != nil then
+    if ((params[:credentials]["emailId"] != nil) && (params[:credentials]["password"] != nil)) then
       print "****************** Received login credentials ", params[:credentials]
       puts
       user = User.where('emailId=? AND password=?', params[:credentials]["emailId"], params[:credentials]["password"]).first      
@@ -902,7 +926,7 @@ class UsersController < ApplicationController
         #format.html # home.html.erb
         format.json { render json: { message: "Unsuccessful login: No login credentials received" } }
       end 
-      p "***************** Unsuccessful login: Nothing was received in POST as credentials **************"
+      p "***************** Unsuccessful login: Email or Password credentials were not received in POST for login **************"
     end
   end
 
@@ -969,13 +993,14 @@ class UsersController < ApplicationController
     if params[:preferences] != nil then
       print "****************** Received savePreferences parameters ", params[:preferences]
       puts
-      user = User.where('emailId=? AND password=?', params[:preferences]["emailId"], params[:preferences]["password"]).first    
+      # user = User.where('emailId=? AND password=?', params[:preferences]["emailId"], params[:preferences]["password"]).first    
+      user = User.find(params[:preferences]["userId"])  
       if user!=nil then
         print "***************** Found registered existing user: ", user
         puts
 
-        user.redeemRewards=[:preferences]["redeemRewards"]
-        user.surveyFrequency=[:preferences]["surveyFrequency"]
+        user.redeemRewards=params[:preferences]["redeemRewards"]
+        user.surveyFrequency=params[:preferences]["surveyFrequency"]
         user.save
         print "***************** Saved new preferences: ", user
         puts
@@ -1002,7 +1027,7 @@ class UsersController < ApplicationController
     require 'base64'
     require 'hmac-sha1'
     # @SHA1key = 'uhstarvsuio765jalksrWE'
-    @SHA1key = "dKyEuAdS/pwtc9VK8ihCVsMmSK8JyK6QlTuOLiOSQD1tiXyOTdrMurEi84lrhddMxYcbAvLLMgrKHiroeROYMw=="
+    @SHA1key = 'dKyEuAdS/pwtc9VK8ihCVsMmSK8JyK6QlTuOLiOSQD1tiXyOTdrMurEi84lrhddMxYcbAvLLMgrKHiroeROYMw=='
 
 
     user=User.find_by session_id: session_id
@@ -1450,7 +1475,7 @@ class UsersController < ApplicationController
     sid = "f162681e-268a-46af-906e-eb4443a4013a"
     pid = user.user_id
     loi = "not set"
-    cos = @currentpayout
+    cos = @currentpayout.to_s
     tar = "not set"
     mid = "not set"
 
@@ -2611,68 +2636,120 @@ class UsersController < ApplicationController
 
 
 
+ # childrenvalue no longer used by Fulcrum
+    
+    # if user.children != nil then
+    #   @childrenvalue = '&Age_and_Gender_of_Child='+user.children[0]
+    #   if user.children.length > 1 then
+    #     (1..user.children.length-1).each do |i|
+    #       @childrenvalue = @childrenvalue+'&Age_and_Gender_of_Child='+user.children[i]
+    #     end
+    #   else
+    #   end
+    # else
+    #   @childrenvalue = ''
+    # end  
+
+
+
+
 
     
-    if user.children != nil then
-      @childrenvalue = '&Age_and_Gender_of_Child='+user.children[0]
-      if user.children.length > 1 then
-        (1..user.children.length-1).each do |i|
-          @childrenvalue = @childrenvalue+'&Age_and_Gender_of_Child='+user.children[i]
-        end
-      else
-      end
-    else
-      @childrenvalue = ''
-    end  
-    
+    # if user.industries != nil then
+    #   @industriesvalue = '&STANDARD_INDUSTRY='+user.industries[0]
+    #   if user.industries.length > 1 then
+    #     (1..user.industries.length-1).each do |i|
+    #       @industriesvalue = @industriesvalue+'&STANDARD_INDUSTRY='+user.industries[i]
+    #     end
+    #   else
+    #   end
+    # else
+    #   @industriesvalue = ''
+    # end
+
+
+
+
     if user.industries != nil then
-      @industriesvalue = '&STANDARD_INDUSTRY='+user.industries[0]
+      @industriesvalue = '&643='+user.industries[0]
       if user.industries.length > 1 then
         (1..user.industries.length-1).each do |i|
-          @industriesvalue = @industriesvalue+'&STANDARD_INDUSTRY='+user.industries[i]
+          @industriesvalue = @industriesvalue+'&643='+user.industries[i]
         end
       else
       end
     else
       @industriesvalue = ''
-    end  
-       
-    if user.country=="9" then 
-      @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP+'&HISPANIC='+user.ethnicity+'&ETHNICITY='+user.race+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_US='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue+'&STATE='+@statePrecode+'&DMA='+@DMARegionCode+@industriesvalue
-    else
-      if user.country=="6" then
-        @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP.slice(0..2)+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue+'&Province\/Territory_of_Canada='+@provincePrecode+@industriesvalue
-      else
-        if user.country=="5" then
-          @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue+@industriesvalue
-        else
-          if user.country=="7" then
-            @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_IN='+user.ZIP+'&STANDARD_EDUCATION='+user.eduation+'&STANDARD_HHI_INT='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue+@industriesvalue
-          else
-          end
-        end
-      end
-    end    
-        
-    @parsed_user_agent = UserAgent.parse(user.user_agent)
-    
-    print "*************************************** RankFEDSurveys: User platform is: ", @parsed_user_agent.platform
-    puts
-    
-    if (@parsed_user_agent.platform == 'iPhone') || (@parsed_user_agent.platform.include? "Android") then
-      
-      @MS_is_mobile = '&MS_is_mobile=true'
-      p "*************************************** UserRide: MS_is_mobile is set TRUE"
-      
-    else
-      @MS_is_mobile = '&MS_is_mobile=false'
-      p "*************************************** UserRide: MS_is_mobile is set FALSE"
-      
     end
 
 
 
 
+
+
+
+
+       
+    # if user.country=="9" then 
+    #   @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP='+user.ZIP+'&HISPANIC='+user.ethnicity+'&ETHNICITY='+user.race+'&STANDARD_EDUCATION_v2='+user.eduation+'&STANDARD_HHI='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue+'&STATE='+@statePrecode+'&DMA='+@DMARegionCode+@industriesvalue
+    # else
+    #   if user.country=="6" then
+    #     @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&ZIP_Canada='+user.ZIP.slice(0..2)+'&STANDARD_EDUCATION_v2='+user.eduation+'&STANDARD_HHI='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue+'&Province\/Territory_of_Canada='+@provincePrecode+@industriesvalue
+    #   else
+    #     if user.country=="5" then
+    #       @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_AU='+user.ZIP+'&STANDARD_EDUCATION_v2='+user.eduation+'&STANDARD_HHI='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue+@industriesvalue
+    #     else
+    #       if user.country=="7" then
+    #         @AdditionalValues = '&AGE='+user.age+'&GENDER='+user.gender+'&Fulcrum_ZIP_IN='+user.ZIP+'&STANDARD_EDUCATION_v2='+user.eduation+'&STANDARD_HHI='+user.householdincome+'&STANDARD_EMPLOYMENT='+user.employment+'&STANDARD_INDUSTRY_PERSONAL='+user.pindustry+'&STANDARD_JOB_TITLE='+user.jobtitle+@childrenvalue+@industriesvalue
+    #       else
+    #       end
+    #     end
+    #   end
+    # end    
+
+
+    # Mobile info not used by FED, P2S or RFG
+        
+    # @parsed_user_agent = UserAgent.parse(user.user_agent)
+    
+    # print "*************************************** RankFEDSurveys: User platform is: ", @parsed_user_agent.platform
+    # puts
+    
+    # if (@parsed_user_agent.platform == 'iPhone') || (@parsed_user_agent.platform.include? "Android") then
+      
+    #   @MS_is_mobile = '&MS_is_mobile=true'
+    #   p "*************************************** UserRide: MS_is_mobile is set TRUE"
+      
+    # else
+    #   @MS_is_mobile = '&MS_is_mobile=false'
+    #   p "*************************************** UserRide: MS_is_mobile is set FALSE"
+      
+    # end
+
+
+
+
+
+
+
+
+
+    if user.country=="9" then 
+      @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&45='+user.ZIP+'&47='+user.ethnicity+'&113='+user.race+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+'&96='+@statePrecode+'&97='+@DMARegionCode+@industriesvalue
+    else
+      if user.country=="6" then
+        @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12345='+user.ZIP.slice(0..2)+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+'&1015='+@provincePrecode+@industriesvalue
+      else
+        if user.country=="5" then
+          @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12340='+user.ZIP+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+@industriesvalue
+        else
+          if user.country=="7" then
+            @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12357='+user.ZIP+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+@industriesvalue
+          else
+          end
+        end
+      end
+    end
 
 
 
@@ -2710,20 +2787,22 @@ class UsersController < ApplicationController
 
 
 
-    baseLink = pulley_base_url+'lid='+lid+'&sid='+sid+'&pid='+pid+'&cos='+cos+@AdditionalValues+@MS_is_mobile
+    baseLink = pulley_base_url+'lid='+lid+'&sid='+sid+'&pid='+pid+'&cos='+cos+@Pulley_AdditionalValues
 
     print "**************************** Puley baseLink = ", baseLink
     puts
 
 
-    # Compute SHA-1 encryption for the baseLink and make it URL ready
+    # Compute SHA-1 encryption for the baseLink and make it URL encoded
     @SHA1Signature = Base64.encode64((HMAC::SHA1.new(@SHA1key) << baseLink).digest).strip
+
+    # Base-64 URL encode the Hash signature
     #    p 'Signature 1 =', @SHA1Signature  
-    @SHA1Signature = @SHA1Signature.gsub '+', '-'
+    @SHA1Signature = @SHA1Signature.gsub '+', '%2B'
     #    p 'Signature 2 =', @SHA1Signature
-    @SHA1Signature = @SHA1Signature.gsub '/', '_'
+    @SHA1Signature = @SHA1Signature.gsub '/', '%2F'
     #    p 'Signature 3 =', @SHA1Signature
-    @SHA1Signature= @SHA1Signature.gsub '=', ''
+    @SHA1Signature= @SHA1Signature.gsub '=', '%3D'
     #    p 'Signature 4 =', @SHA1Signature
 
     @fedSupplierLinks = baseLink+'&hash='+@SHA1Signature
@@ -2743,6 +2822,30 @@ class UsersController < ApplicationController
     
     # Select Adhoc surveys next
     selectAdhocSurveys(session_id)  
+
+
+    # @netid = user.netid
+
+    # if Network.where(netid: @netid).exists? then
+    #   net = Network.find_by netid: @netid
+
+    #   if net.stackOrder.exclude?('A') then
+    #     p '****************************** ACCESS FROM AN Hc,,,,,,,,, NETWOK '
+    #     selectRfgProjects(session_id)
+    #     # selectAdhocSurveys(session_id)
+    #   else
+    #     selectAdhocSurveys(session_id)
+    #   end
+
+    # else
+
+    #   # Bad netid, Network is not known
+    #   p '****************************** ACCESS FROM AN UNRECOGNIZED NETWOK DENIED'
+    #   redirect_to '/users/nosuccess'
+    #   return
+    
+    # end
+
         
   end # end rankfedsurveys
 
@@ -2755,6 +2858,23 @@ class UsersController < ApplicationController
     require 'uri'
     
     user=User.find_by session_id: session_id
+
+    # @netid = user.netid
+    # if Network.where(netid: @netid).exists? then
+    #   net = Network.find_by netid: @netid
+
+    #   if net.stackOrder.exclude?('A') then
+    #     p '****************************** Skipping ADHOC Surveys *************************************'
+    #     selectRfgProjects(session_id)
+    #   else
+    #     # Continue
+    #   end
+    # else
+    #   # Bad netid, Network is not known
+    #   p '****************************** ACCESS FROM AN UNRECOGNIZED NETWOK DENIED'
+    #   redirect_to '/users/nosuccess'
+    #   return    
+    # end
     
     @adhocClient = Network.find_by name: "ADHOC"
     if (@adhocClient.status == "ACTIVE") then
@@ -3311,13 +3431,35 @@ class UsersController < ApplicationController
   end # If Adhoc surveys are ACTIVE
 
 # Select RFG projects next
-  selectRfgProjects(session_id)  
+ selectRfgProjects(session_id)  
+
+
+    # @netid = user.netid
+
+    # if Network.where(netid: @netid).exists? then
+    #   net = Network.find_by netid: @netid
+
+
+    #   if net.stackOrder.exclude?('R') then
+    #     userride(session_id)
+    #   else
+    #     selectRfgProjects(session_id)
+    #   end
+
+    # else
+
+    #   # Bad netid, Network is not known
+    #   p '****************************** ACCESS FROM AN UNRECOGNIZED NETWOK DENIED'
+    #   redirect_to '/users/nosuccess'
+    #   return
+      
+    # end
         
   end # end selectAdhocSurveys
 
 
   
-  def selectRfgProjects (session_id)
+  def selectRfgProjects(session_id)
     
     require 'digest/hmac'
     require 'net/http'
@@ -3327,6 +3469,24 @@ class UsersController < ApplicationController
     secret = "8ef1fe91d92e0602648d157f981bb934"
     
     user=User.find_by session_id: session_id
+
+    # @netid = user.netid
+    # if Network.where(netid: @netid).exists? then
+    #   net = Network.find_by netid: @netid
+
+    #   if net.stackOrder.exclude?('R') then
+    #     p '****************************** Skipping RFG Surveys *************************************'
+    #     userride(session_id)
+    #   else
+    #     # Continue
+    #   end
+    # else
+    #   # Bad netid, Network is not known
+    #   p '****************************** ACCESS FROM AN UNRECOGNIZED NETWOK DENIED'
+    #   redirect_to '/users/nosuccess'
+    #   return    
+    # end
+
     
     @RFGclient = Network.find_by name: "RFG"
     if (@RFGclient.status == "ACTIVE") && (@RFGIsOff != true) then
@@ -3847,7 +4007,7 @@ class UsersController < ApplicationController
 #             print "@QualificationHhi: ", @QualificationHhi
 #             puts
             
-#             # when "STANDARD_HHI_INT"
+#             # when "STANDARD_HHI"
 #             # @QualificationHhi = false
 #             # (0..project.datapoints[m]["values"].length-1).each do |i|
 #               # if project.datapoints[m]["values"][i]["choice"] == user.householdincome.to_i then
@@ -9122,18 +9282,18 @@ class UsersController < ApplicationController
     print "----RFGPindustry -------------------***************__________________", @RFGPindustry
     puts
       
-    if user.country=="9" then 
-      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
-    else
-      if user.country=="6" then
-          @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
-      else
-        if user.country=="5" then
-            @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationAU='+@RFGEducationAU+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
-        else
-        end
-      end
-    end    
+    # if user.country=="9" then 
+    #   @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
+    # else
+    #   if user.country=="6" then
+    #       @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
+    #   else
+    #     if user.country=="5" then
+    #         @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationAU='+@RFGEducationAU+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
+    #     else
+    #     end
+    #   end
+    # end    
       
     # if @parsed_user_agent.platform == 'iPhone' then
       
@@ -9230,7 +9390,7 @@ class UsersController < ApplicationController
     print "Offerwall Response: ", @OfferwallResponse["response"]
     puts
 
-    if @OfferwallResponse["response"]["surveys"].length == 0 then
+    if @OfferwallResponse["response"].nil? then
       print "*********No surveys reurned by RFG Offerwall**********"
       puts
       @RFGSupplierLinks = []
@@ -9546,59 +9706,93 @@ class UsersController < ApplicationController
 
     # Order surveys by stackOrder for the user ride
 
-    case @net.stackOrder
-    when "AFRP"
-      user.SupplierLink = @adhocSupplierLinks + @fedSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
-      print "************ AFRP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "ARFP"
-      user.SupplierLink = @adhocSupplierLinks + @RFGSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
-      print "************ ARFP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "FARP"
-      user.SupplierLink = @fedSupplierLinks + @adhocSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
-      print "************ FARP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "FRAP"
-      user.SupplierLink = @fedSupplierLinks + @RFGSupplierLinks + @adhocSupplierLinks + [@p2sSupplierLink]
-      print "************ FRAP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "RAFP"
-      user.SupplierLink = @RFGSupplierLinks + @adhocSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
-      print "************ RAFP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "RFAP"
-      user.SupplierLink = @RFGSupplierLinks + @fedSupplierLinks + @adhocSupplierLinks + [@p2sSupplierLink]
-      print "************ RFAP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "RFP"
-      user.SupplierLink = @RFGSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
-      print "************ RFP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "FRP"
-      user.SupplierLink = @fedSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
-      print "************ FRP user will be sent to these surveys : ", user.SupplierLink
-      puts
-    when "F"
-      user.SupplierLink = @fedSupplierLinks
-      print "************ F user will be sent to these surveys : ", user.SupplierLink
-      puts
-    when "R"
-      user.SupplierLink = @RFGSupplierLinks
-      print "************ R user will be sent to these surveys : ", user.SupplierLink
-      puts
-    when "P"
-      user.SupplierLink = [@p2sSupplierLink]
-      print "************ P user will be sent to these surveys : ", user.SupplierLink
-      puts
+    user.SupplierLink=[]
+    (0..@net.stackOrder.length-1).each do |i|
+      supplier = @net.stackOrder[i]
+      
+      case supplier
+      when "A"
+        user.SupplierLink = user.SupplierLink + @adhocSupplierLinks
+      when "F"
+        user.SupplierLink = user.SupplierLink + [@fedSupplierLinks]
+      when "R"
+        user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
+      when "P"
+        user.SupplierLink = user.SupplierLink + [@p2sSupplierLink]
+      when "I"
+        user.SupplierLink = user.SupplierLink + @innovateSupplierLink
+      end
     end
+
+
+
+
+
+
+
+
+
+
+
+
+    # # Order surveys by stackOrder for the user ride
+
+    # case @net.stackOrder
+    # when "AFRP"
+    #   user.SupplierLink = @adhocSupplierLinks + @fedSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
+    #   print "************ AFRP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "ARFP"
+    #   user.SupplierLink = @adhocSupplierLinks + @RFGSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
+    #   print "************ ARFP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "FARP"
+    #   user.SupplierLink = @fedSupplierLinks + @adhocSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
+    #   print "************ FARP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "FRAP"
+    #   user.SupplierLink = @fedSupplierLinks + @RFGSupplierLinks + @adhocSupplierLinks + [@p2sSupplierLink]
+    #   print "************ FRAP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "RAFP"
+    #   user.SupplierLink = @RFGSupplierLinks + @adhocSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
+    #   print "************ RAFP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "RFAP"
+    #   user.SupplierLink = @RFGSupplierLinks + @fedSupplierLinks + @adhocSupplierLinks + [@p2sSupplierLink]
+    #   print "************ RFAP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "RFP"
+    #   user.SupplierLink = @RFGSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
+    #   print "************ RFP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "FRP"
+    #   user.SupplierLink = @fedSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
+    #   print "************ FRP user will be sent to these surveys : ", user.SupplierLink
+    #   puts
+    # when "F"
+    #   user.SupplierLink = @fedSupplierLinks
+    #   print "************ F user will be sent to these surveys : ", user.SupplierLink
+    #   puts
+    # when "R"
+    #   user.SupplierLink = @RFGSupplierLinks
+    #   print "************ R user will be sent to these surveys : ", user.SupplierLink
+    #   puts
+    # when "P"
+    #   user.SupplierLink = [@p2sSupplierLink]
+    #   print "************ P user will be sent to these surveys : ", user.SupplierLink
+    #   puts
+    # end
+
+
+
     
     # Remove any blank entries
     if user.SupplierLink !=nil then
@@ -9608,12 +9802,6 @@ class UsersController < ApplicationController
 
     print "************ After removing blank entries, user will be sent to these surveys: ", user.SupplierLink
     puts
-
-
-
-
-
-
 
 
     # Start the user ride

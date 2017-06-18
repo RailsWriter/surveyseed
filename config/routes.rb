@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   resources :networks
   resources :center
 
+  get '/panel/home', :to => redirect('/panel/index.html')
+  get '/panel/login', :to => redirect('/panel/index.html')
+
 
   match "*path", :to => proc {|env| [200, {
   'Access-Control-Allow-Origin' => '*',

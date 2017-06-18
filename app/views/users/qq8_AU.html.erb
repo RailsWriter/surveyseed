@@ -16,14 +16,14 @@
 		
 		<div class="content">
 			<center>
-				<p>How much total combined income do all members of your household earn before taxes?</p>
+				<p>What is your current weekly household income before taxes?</p>
 			</center>
 				
 				<%= form_tag("householdincome_AU", method: "post") do %>
 				<fieldset>
 				<div class="mybiglistinput">
 								
-						<label>
+						<!-- <label>
 						<%= radio_button_tag 'hhi', '1' %>
 					  		Less than A$15,000
 						</label><br>
@@ -94,7 +94,111 @@
 						<label>						
 						<%= radio_button_tag 'hhi', '18' %>
 					  		Prefer not to answer
-						</label><br><br>					
+						</label><br><br>			 -->	
+
+
+					<label>
+					<%= radio_button_tag 'hhi', '1' %>
+				  		Less than $250
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'hhi', '2' %>
+				  		$250 - $499
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'hhi', '3' %>
+				  		$500 - $599
+					</label><br>
+					<label>
+					<%= radio_button_tag 'hhi', '4' %>
+				  		$600 - $699
+					</label><br>
+					<label>
+					<%= radio_button_tag 'hhi', '5' %>
+				  		$700 - $799
+					</label><br>
+					<label>
+					<%= radio_button_tag 'hhi', '6' %>
+				  		$800 - $899
+					</label><br>
+					<label>
+					<%= radio_button_tag 'hhi', '7' %>
+				  		$900 - $999
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'hhi', '8' %>
+				  		$1,000 - $1,099
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'hhi', '9' %>
+				  		$1,100 - $1,199
+					</label><br>					
+					<label>
+					<%= radio_button_tag 'hhi', '10' %>
+				  		$1,200 - $1,299
+					</label><br>
+					<label>
+					<%= radio_button_tag 'hhi', '11' %>
+				  		$1,300 - $1,399
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'hhi', '12' %>
+				  		$1,400 - $1,499
+					</label><br>
+					<label>
+					<%= radio_button_tag 'hhi', '13' %>
+				  		$1,500 - $1,599
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'hhi', '14' %>
+				  		$1,600 - $1,699
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'hhi', '15' %>
+				  		$1,700 - $1,799
+					</label><br>
+					<label>
+					<%= radio_button_tag 'hhi', '16' %>
+				  		$1,800 - $1,899
+					</label><br>
+					<label>
+					<%= radio_button_tag 'hhi', '17' %>
+				  		$1,900 - $1,999
+					</label><br>
+					<label>
+					<%= radio_button_tag 'hhi', '18' %>
+				  		$2,000 - $2,499
+					</label><br>
+					<label>
+					<%= radio_button_tag 'hhi', '19' %>
+				  		$2,500 - $2,999
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'hhi', '20' %>
+				  		$3,000 - $3,499
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'hhi', '21' %>
+				  		$3,500 - $3,999
+					</label><br>					
+					<label>
+					<%= radio_button_tag 'hhi', '22' %>
+				  		$4,000 - $4,999
+					</label><br>
+					<label>
+					<%= radio_button_tag 'hhi', '23' %>
+				  		$5,000 - $7,499
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'hhi', '24' %>
+				  		$7,500 and above
+					</label><br>
+				<label>						
+					<%= radio_button_tag 'hhi', '-3105' %>
+				  		Prefer not to answer
+					</label><br><br>
+
+
 					</div>
 					<div class="myinput">
 						<center>
