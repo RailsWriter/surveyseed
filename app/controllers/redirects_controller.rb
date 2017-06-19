@@ -164,7 +164,7 @@ class RedirectsController < ApplicationController
         end
       end
     else
-      p '****************** Redirects: Signature verified **********************'
+      p '****************** Redirects: Pulley Signature verified **********************'
     end
         
     # SurveyExactRank is a counter for failures+OQ+Term on FED    

@@ -2670,7 +2670,9 @@ class UsersController < ApplicationController
 
 
 
-    if user.industries != nil then
+    if user.industries.nil? then
+      @industriesvalue = '&643='
+    else      
       @industriesvalue = '&643='+user.industries[0]
       if user.industries.length > 1 then
         (1..user.industries.length-1).each do |i|
@@ -2678,8 +2680,6 @@ class UsersController < ApplicationController
         end
       else
       end
-    else
-      @industriesvalue = ''
     end
 
 
