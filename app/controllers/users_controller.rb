@@ -8846,7 +8846,7 @@ class UsersController < ApplicationController
           @RFGEducationUS = "7"
         when 11
           @RFGEducationUS = "8"
-        when 12
+        when -3105
           @RFGEducationUS = "9"
         end
       else
@@ -8874,7 +8874,7 @@ class UsersController < ApplicationController
             @RFGEducationCA = "7"
           when 11
             @RFGEducationCA = "7"
-          when 12
+          when -3105
             @RFGEducationCA = ""
           end
         else
@@ -8902,7 +8902,7 @@ class UsersController < ApplicationController
               @RFGEducationAU = "7"
             when 11
               @RFGEducationAU = "7"
-            when 12
+            when -3105
               @RFGEducationAU = ""
             end
           else
@@ -9048,6 +9048,8 @@ class UsersController < ApplicationController
           @RFGHhi = "9"
         when 27
           @RFGHhi = "12"
+        when -3105
+          @RFGHhi = "12"
         end
       else
         if user.country=="6" then
@@ -9088,6 +9090,8 @@ class UsersController < ApplicationController
             @RFGHhi = "8"
           when 18
             @RFGHhi = "12"
+          when -3105
+            @RFGHhi = "12"
           end          
         else
           if user.country=="5" then
@@ -9127,6 +9131,8 @@ class UsersController < ApplicationController
             when 17
               @RFGHhi = "13"
             when 18
+              @RFGHhi = "14"
+            when -3105
               @RFGHhi = "14"
             end
           else
