@@ -2670,7 +2670,7 @@ class UsersController < ApplicationController
 
 
 
-    if user.industries.nil? then
+    if user.industries.empty? then
       @industriesvalue = '&643='
     else      
       @industriesvalue = '&643='+user.industries[0]
