@@ -8563,7 +8563,7 @@ end
     end
      
     if user.employment == nil then
-      @RFGEmployment = ''
+      @RFGEmployment = '7'
     else
       case user.employment.to_i
       when 1
@@ -8589,7 +8589,7 @@ end
       when 11
         @RFGEmployment = "7"
       when 12
-        @RFGEmployment = ""
+        @RFGEmployment = "7"
       end
     end
 
@@ -8597,9 +8597,9 @@ end
     puts
 
     if user.eduation == nil then
-      @RFGEducationUS = ''
-      @RFGEducationCA = ""
-      @RFGEducationAU = ""
+      @RFGEducationUS = '9'
+      @RFGEducationCA = "7"
+      @RFGEducationAU = "7"
     else
       if user.country=="9" then
         case user.eduation.to_i
@@ -8654,7 +8654,7 @@ end
           when 11
             @RFGEducationCA = "7"
           when -3105
-            @RFGEducationCA = ""
+            @RFGEducationCA = "7"
           end
         else
           if user.country=="5" then
@@ -8682,7 +8682,7 @@ end
             when 11
               @RFGEducationAU = "7"
             when -3105
-              @RFGEducationAU = ""
+              @RFGEducationAU = "7"
             end
           else
           end
@@ -8694,7 +8694,7 @@ end
     puts 
     
     if (user.race == nil && user.country==9) then
-      @RFGEthnicity = ''
+      @RFGEthnicity = '7'
     else
       case user.race.to_i
       when 1
@@ -8726,13 +8726,14 @@ end
       when 14
         @RFGEthnicity = "4"
       when 15
-        @RFGEthnicity = ""
+        @RFGEthnicity = "7"
       when 16
         @RFGEthnicity = "7"
       end
 
       if user.ethnicity == nil then
         #do nothing
+        @RFGEthnicity = '5'
       else
         case user.ethnicity.to_i
         when 2
@@ -8769,7 +8770,7 @@ end
     puts
 
     if user.householdincome == nil then
-      @RFGHhi = ''
+      @RFGHhi = '12'
     else
       if user.country=="9" then
         case user.householdincome.to_i
@@ -8918,7 +8919,7 @@ end
     puts 
 
     if user.jobtitle == nil then
-      @RFGJobTitle = ''
+      @RFGJobTitle = '23'
     else
       case user.jobtitle.to_i
       when 1
@@ -8950,7 +8951,7 @@ end
     puts 
 
     if user.pindustry == nil then
-      @RFGPindustry = ''
+      @RFGPindustry = '64'
     else
       case user.pindustry.to_i
       when 1
