@@ -8762,6 +8762,10 @@ end
           @RFGEthnicity = "5"
         when 14
           @RFGEthnicity = "5"
+      when 15
+        @RFGEthnicity = "5"
+      when 16
+        @RFGEthnicity = "5"
         end
       end
     end 
@@ -8866,8 +8870,26 @@ end
             @RFGHhi = "7"
           when 17
             @RFGHhi = "8"
-          when -3015
-            @RFGHhi = "12"
+        when 18
+          @RFGHhi = "8"
+        when 19
+          @RFGHhi = "8"
+        when 20
+          @RFGHhi = "8"
+        when 21
+          @RFGHhi = "8"
+        when 22
+          @RFGHhi = "8"
+        when 23
+          @RFGHhi = "8"
+        when 24
+          @RFGHhi = "8"
+        when 25
+          @RFGHhi = "8"
+        when 26
+          @RFGHhi = "8"
+        when -3015
+          @RFGHhi = "8"
           end          
         else
           if user.country=="5" then
@@ -8906,8 +8928,27 @@ end
               @RFGHhi = "12"
             when 17
               @RFGHhi = "13"
-            when -3105
-              @RFGHhi = "14"
+            when 18
+          @RFGHhi = "14"
+        when 19
+          @RFGHhi = "14"
+        when 20
+          @RFGHhi = "14"
+        when 21
+          @RFGHhi = "14"
+        when 22
+          @RFGHhi = "14"
+        when 23
+          @RFGHhi = "14"
+        when 24
+          @RFGHhi = "14"
+        when 25
+          @RFGHhi = "14"
+        when 26
+          @RFGHhi = "14"
+        when -3015
+          @RFGHhi = "14"
+          end      
             end
           else
           end
