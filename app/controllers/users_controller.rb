@@ -89,6 +89,13 @@ class UsersController < ApplicationController
       end
 
       tracker.track(ip_address, 'Age')
+
+      # Initialize data structures to store SupplierLinks
+      @fedSupplierLinks = []
+      @adhocSupplierLinks=[]
+      @RFGSupplierLinks=[]
+      @p2sSupplierLink=""
+      @innovateSupplierLink=""
       
       # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
       # if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
@@ -3069,7 +3076,7 @@ end
     #Initialize an array to store qualified Adhoc surveys
     @adhocQualifiedSurveys = Array.new
     @adhocSurveysWithQuota = Array.new
-    @adhocSupplierLinks = Array.new
+    #@adhocSupplierLinks = Array.new  done in Age
 
     # Validate user network and get/set payout info.
 
@@ -8940,8 +8947,7 @@ end
           @RFGHhi = "14"
         when -3015
           @RFGHhi = "14"
-          end      
-            end
+        end
           else
           end
         end
@@ -9111,13 +9117,13 @@ end
 
       
     if user.country=="9" then 
-      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncomePlusUS='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice'=@isMobileDevice
+      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncomePlusUS='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice='+@isMobileDevice
     else
       if user.country=="6" then
-          @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&householdIncomePlusCA='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice'=@isMobileDevice
+          @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&householdIncomePlusCA='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice='+@isMobileDevice
       else
         if user.country=="5" then
-            @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationAU='+@RFGEducationAU+'&householdIncomeAU='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice'=@isMobileDevice
+            @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationAU='+@RFGEducationAU+'&householdIncomeAU='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice='+@isMobileDevice
         else
         end
       end
@@ -9281,7 +9287,7 @@ end
   def selectInnovateSurveys (session_id)
 
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
-    @INVSupplierLink << "http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+"4444"+user.user_id
+    @innovateSupplierLink = "http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+"4444"+user.user_id
 
   end
 
@@ -9535,19 +9541,33 @@ end
 
     user.SupplierLink=[]
     (0..@net.stackOrder.length-1).each do |i|
-      supplier = @net.stackOrder[i]
-      
+      supplier = @net.stackOrder[i]      
       case supplier
       when "A"
-        user.SupplierLink = user.SupplierLink + @adhocSupplierLinks
+        if @adhocSupplierLinks.length != 0 then
+          user.SupplierLink = user.SupplierLink + @adhocSupplierLinks
+        else
+        end
       when "F"
-        user.SupplierLink = user.SupplierLink + [@fedSupplierLinks]
+        if @fedSupplierLinks.length !=0 then
+          user.SupplierLink = user.SupplierLink + @fedSupplierLinks
+        else
+        end
       when "R"
-        user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
+        if @RFGSupplierLinks.length != 0 then
+          user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
+        else
+        end
       when "P"
-        user.SupplierLink = user.SupplierLink + [@p2sSupplierLink]
+        if [@p2sSupplierLink].length !=0 then
+          user.SupplierLink = user.SupplierLink + [@p2sSupplierLink]
+        else
+        end
       when "I"
-        user.SupplierLink = user.SupplierLink + @innovateSupplierLink
+        if [@innovateSupplierLink].length !=0 then
+          user.SupplierLink = user.SupplierLink + [@innovateSupplierLink]
+        else
+        end
       end
     end
 
