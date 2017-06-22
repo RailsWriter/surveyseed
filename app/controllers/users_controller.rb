@@ -8563,7 +8563,7 @@ end
     end
      
     if user.employment == nil then
-      @RFGEmployment = '7'
+      @RFGEmployment = '0'
     else
       case user.employment.to_i
       when 1
@@ -8575,9 +8575,9 @@ end
       when 4
         @RFGEmployment = "6"
       when 5
-        @RFGEmployment = "3"
-      when 6
         @RFGEmployment = "4"
+      when 6
+        @RFGEmployment = "5"
       when 7
         @RFGEmployment = "4"      
       when 8
@@ -8587,9 +8587,9 @@ end
       when 10
         @RFGEmployment = "1"
       when 11
-        @RFGEmployment = "7"
+        @RFGEmployment = "4"
       when 12
-        @RFGEmployment = "7"
+        @RFGEmployment = "0"
       end
     end
 
@@ -8597,9 +8597,9 @@ end
     puts
 
     if user.eduation == nil then
-      @RFGEducationUS = '9'
-      @RFGEducationCA = "7"
-      @RFGEducationAU = "7"
+      @RFGEducationUS = '0'
+      @RFGEducationCA = "0"
+      @RFGEducationAU = "0"
     else
       if user.country=="9" then
         case user.eduation.to_i
@@ -8694,7 +8694,7 @@ end
     puts 
     
     if (user.race == nil && user.country==9) then
-      @RFGEthnicity = '7'
+      @RFGEthnicity = '0'
     else
       case user.race.to_i
       when 1
@@ -8773,8 +8773,8 @@ end
     print "----RFGEthnicity--------------------***************__________________", @RFGEthnicity
     puts
 
-    if user.householdincome == nil then
-      @RFGHhi = '12'
+    if user.householdincome.nil? then
+      @RFGHhi = '0'
     else
       if user.country=="9" then
         case user.householdincome.to_i
@@ -8884,10 +8884,6 @@ end
           @RFGHhi = "8"
         when 24
           @RFGHhi = "8"
-        when 25
-          @RFGHhi = "8"
-        when 26
-          @RFGHhi = "8"
         when -3015
           @RFGHhi = "8"
           end          
@@ -8942,10 +8938,6 @@ end
           @RFGHhi = "14"
         when 24
           @RFGHhi = "14"
-        when 25
-          @RFGHhi = "14"
-        when 26
-          @RFGHhi = "14"
         when -3015
           @RFGHhi = "14"
           end      
@@ -8960,7 +8952,7 @@ end
     puts 
 
     if user.jobtitle == nil then
-      @RFGJobTitle = '23'
+      @RFGJobTitle = '0'
     else
       case user.jobtitle.to_i
       when 1
@@ -8992,7 +8984,7 @@ end
     puts 
 
     if user.pindustry == nil then
-      @RFGPindustry = '64'
+      @RFGPindustry = '0'
     else
       case user.pindustry.to_i
       when 1
@@ -9100,17 +9092,32 @@ end
       end
     end
 
+
+
     print "----RFGPindustry -------------------***************__________________", @RFGPindustry
     puts
+
+    if @parsed_user_agent.platform == 'iPhone' then
+      
+      @isMobileDevice = true
+      p "*************************************** RankRFGProjects: isMobileDevice is set TRUE"
+      
+    else
+      @isMobileDevice = false
+      p "*************************************** RankRFGProjects: isMobileDevice is set FALSE"
+      
+    end
+
+
       
     if user.country=="9" then 
-      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
+      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncomePlusUS='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice'=@isMobileDevice
     else
       if user.country=="6" then
-          @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
+          @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&householdIncomePlusCA='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice'=@isMobileDevice
       else
         if user.country=="5" then
-            @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationAU='+@RFGEducationAU+'&householdIncome='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday
+            @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationAU='+@RFGEducationAU+'&householdIncomeAU='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice'=@isMobileDevice
         else
         end
       end
@@ -9174,13 +9181,13 @@ end
     p "--------------------**************>>>>>>>>>>>>>> RFG Offerwall API call with params <<<<<<<<<<<<<<<<<*****************-------------------"
 
     if user.country=="9" then
-      command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :householdIncome => @RFGHhi, :employment => @RFGEmployment, :educationUS => @RFGEducationUS, :ethnicityUS => @RFGEthnicity, :jobTitle => @RFGJobTitle, :employmentIndustry => @RFGPindustry}.to_json
+      command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :householdIncomePlusUS => @RFGHhi, :employment => @RFGEmployment, :educationUS => @RFGEducationUS, :ethnicityUS => @RFGEthnicity, :jobTitle => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice}.to_json
     else
       if user.country=="6" then
-        command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :householdIncome => @RFGHhi, :educationCA => @RFGEducationCA, :employment => @RFGEmployment, :jobTitle => @RFGJobTitle, :employmentIndustry => @RFGPindustry}.to_json
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :householdIncomePlusCA => @RFGHhi, :educationCA => @RFGEducationCA, :employment => @RFGEmployment, :jobTitle => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice}.to_json
       else
         if user.country=="5" then
-      command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :householdIncome => @RFGHhi, :educationAU => @RFGEducationAU, :employment => @RFGEmployment, :jobTitle => @RFGJobTitle, :employmentIndustry => @RFGPindustry}.to_json          
+      command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :householdIncomeAU => @RFGHhi, :educationAU => @RFGEducationAU, :employment => @RFGEmployment, :jobTitle => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice}.to_json          
         else
         end
       end
@@ -9525,60 +9532,86 @@ end
 
     # Order surveys by stackOrder for the user ride
 
-    case @net.stackOrder
-    when "AFRP"
-      user.SupplierLink = @adhocSupplierLinks + @fedSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
-      #user.SupplierLink << @p2sSupplierLink
-      print "************ AFRP user will be sent to these surveys: ", user.SupplierLink
-      puts
 
-    when "ARFP"
-      user.SupplierLink = @adhocSupplierLinks + @RFGSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
-      print "************ ARFP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "FARP"
-      user.SupplierLink = @fedSupplierLinks + @adhocSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
-      print "************ FARP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "FRAP"
-      user.SupplierLink = @fedSupplierLinks + @RFGSupplierLinks + @adhocSupplierLinks + [@p2sSupplierLink]
-      print "************ FRAP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "RAFP"
-      user.SupplierLink = @RFGSupplierLinks + @adhocSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
-      print "************ RAFP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "RFAP"
-      user.SupplierLink = @RFGSupplierLinks + @fedSupplierLinks + @adhocSupplierLinks + [@p2sSupplierLink]
-      print "************ RFAP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "RFP"
-      user.SupplierLink = @RFGSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
-      print "************ RFP user will be sent to these surveys: ", user.SupplierLink
-      puts
-
-    when "FRP"
-      user.SupplierLink = @fedSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
-      print "************ FRP user will be sent to these surveys : ", user.SupplierLink
-      puts
-    when "F"
-      user.SupplierLink = @fedSupplierLinks
-      print "************ F user will be sent to these surveys : ", user.SupplierLink
-      puts
-    when "R"
-      user.SupplierLink = @RFGSupplierLinks
-      print "************ R user will be sent to these surveys : ", user.SupplierLink
-      puts
-    when "P"
-      user.SupplierLink = [@p2sSupplierLink]
-      print "************ P user will be sent to these surveys : ", user.SupplierLink
-      puts
+    user.SupplierLink=[]
+    (0..@net.stackOrder.length-1).each do |i|
+      supplier = @net.stackOrder[i]
+      
+      case supplier
+      when "A"
+        user.SupplierLink = user.SupplierLink + @adhocSupplierLinks
+      when "F"
+        user.SupplierLink = user.SupplierLink + [@fedSupplierLinks]
+      when "R"
+        user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
+      when "P"
+        user.SupplierLink = user.SupplierLink + [@p2sSupplierLink]
+      when "I"
+        user.SupplierLink = user.SupplierLink + @innovateSupplierLink
+      end
     end
+
+
+
+
+
+    # case @net.stackOrder
+    # when "AFRP"
+    #   user.SupplierLink = @adhocSupplierLinks + @fedSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
+    #   #user.SupplierLink << @p2sSupplierLink
+    #   print "************ AFRP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "ARFP"
+    #   user.SupplierLink = @adhocSupplierLinks + @RFGSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
+    #   print "************ ARFP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "FARP"
+    #   user.SupplierLink = @fedSupplierLinks + @adhocSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
+    #   print "************ FARP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "FRAP"
+    #   user.SupplierLink = @fedSupplierLinks + @RFGSupplierLinks + @adhocSupplierLinks + [@p2sSupplierLink]
+    #   print "************ FRAP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "RAFP"
+    #   user.SupplierLink = @RFGSupplierLinks + @adhocSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
+    #   print "************ RAFP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "RFAP"
+    #   user.SupplierLink = @RFGSupplierLinks + @fedSupplierLinks + @adhocSupplierLinks + [@p2sSupplierLink]
+    #   print "************ RFAP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "RFP"
+    #   user.SupplierLink = @RFGSupplierLinks + @fedSupplierLinks + [@p2sSupplierLink]
+    #   print "************ RFP user will be sent to these surveys: ", user.SupplierLink
+    #   puts
+
+    # when "FRP"
+    #   user.SupplierLink = @fedSupplierLinks + @RFGSupplierLinks + [@p2sSupplierLink]
+    #   print "************ FRP user will be sent to these surveys : ", user.SupplierLink
+    #   puts
+    # when "F"
+    #   user.SupplierLink = @fedSupplierLinks
+    #   print "************ F user will be sent to these surveys : ", user.SupplierLink
+    #   puts
+    # when "R"
+    #   user.SupplierLink = @RFGSupplierLinks
+    #   print "************ R user will be sent to these surveys : ", user.SupplierLink
+    #   puts
+    # when "P"
+    #   user.SupplierLink = [@p2sSupplierLink]
+    #   print "************ P user will be sent to these surveys : ", user.SupplierLink
+    #   puts
+    # end
+
+
+
     
     # Remove any blank entries
     if user.SupplierLink !=nil then
