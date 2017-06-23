@@ -92,7 +92,7 @@ class UsersController < ApplicationController
 
       # Initialize data structures to store SupplierLinks
       @fedSupplierLinks = []
-      @adhocSupplierLinks=[]
+      #@adhocSupplierLinks=[]
       @RFGSupplierLinks=[]
       @p2sSupplierLink=""
       @innovateSupplierLink=""
@@ -3076,7 +3076,7 @@ end
     #Initialize an array to store qualified Adhoc surveys
     @adhocQualifiedSurveys = Array.new
     @adhocSurveysWithQuota = Array.new
-    #@adhocSupplierLinks = Array.new  done in Age
+    @adhocSupplierLinks = Array.new
 
     # Validate user network and get/set payout info.
 
