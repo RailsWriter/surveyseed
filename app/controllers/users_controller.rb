@@ -9116,18 +9116,18 @@ end
 
 
       
-    if user.country=="9" then 
-      @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncomePlusUS='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice='+@isMobileDevice
-    else
-      if user.country=="6" then
-          @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice='+@isMobileDevice
-      else
-        if user.country=="5" then
-            @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationAU='+@RFGEducationAU+'&householdIncomeAU='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice='+@isMobileDevice
-        else
-        end
-      end
-    end    
+    # if user.country=="9" then 
+    #   @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&householdIncomePlusUS='+@RFGHhi+'&employment='+@RFGEmployment+'&educationUS='+@RFGEducationUS+'&ethnicityUS='+@RFGEthnicity+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice='+@isMobileDevice
+    # else
+    #   if user.country=="6" then
+    #       @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationCA='+@RFGEducationCA+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice='+@isMobileDevice
+    #   else
+    #     if user.country=="5" then
+    #         @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&educationAU='+@RFGEducationAU+'&householdIncomeAU='+@RFGHhi+'&employment='+@RFGEmployment+'&jobTitle='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&birthday='+@RFGbirthday+'&isMobileDevice='+@isMobileDevice
+    #     else
+    #     end
+    #   end
+    # end    
       
     # if @parsed_user_agent.platform == 'iPhone' then
       
@@ -9252,7 +9252,8 @@ end
       puts
 
       @RFGSupplierLinks = []
-      @RFGSupplierLinks << @RFGOfferwallSupplierLink+@RFGAdditionalValues
+      # @RFGSupplierLinks << @RFGOfferwallSupplierLink+@RFGAdditionalValues
+      @RFGSupplierLinks << @RFGOfferwallSupplierLink
 
       print "************>>>>User will be sent to this RFG link>>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
       puts
