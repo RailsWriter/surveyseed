@@ -16,7 +16,15 @@ secret = "8ef1fe91d92e0602648d157f981bb934"
 #command='{ "command" : "livealert/inventory/1", "country" : "AU"}'
 #command='{ "command" : "livealert/targeting/1", "rfg_id" : "RFG189829-008"}'
 #command = '{ "command" : "livealert/listDatapoints/1"}'
-command = '{ "command" : "livealert/datapoint/1", "name" : "Employment Status"}'
+
+#command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2 STANDARD_EDUCATION_v2"}'
+#command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2 STANDARD_HHI_INT_v2"}'
+#command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2_Employment"}'
+#command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2_Ethnicity"}'
+#command = '{ "command" : "livealert/datapoint/1", "name" : "STANDARD_JOB_TITLE"}'
+#command = '{ "command" : "livealert/datapoint/1", "name" : "Employment Industry"}'
+#command = '{ "command" : "livealert/datapoint/1", "name" : "isMobileDevice"}'
+
 #command='{ "command" : "livealert/createLink/1", "rfg_id" : "RFG117241-010"}'
 #command='{ "command" : "livealert/stats/1", "rfg_id" : "RFG117241-010"}'
 #command='{ "command" : "livealert/log/1", "rfg_id" : "RFG117241-010"}'
