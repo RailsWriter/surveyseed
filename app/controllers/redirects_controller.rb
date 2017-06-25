@@ -31,52 +31,22 @@ class RedirectsController < ApplicationController
     @validateSHA1hash= @validateSHA1hash.gsub '=', '%3D'
     # p 'Validate 4 =', @validateSHA1hash
 
-
-
-
-
-    # @SHA1key = 'uhstarvsuio765jalksrWE'
-    # @Url = request.original_url
-    # @ParsedUrl = @Url.partition ("oenc=")
-    # # print '@BaseUrl=', @ParsedUrl[0]
-    # # puts 
-    # # print '@Signature =', @ParsedUrl[2]   
-    # # puts
-
-    # @BaseUrl = @ParsedUrl[0]
-    # @Signature = @ParsedUrl[2]
-    # @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
-    # # p 'Validate 1 =', @validateSHA1hash  
-    # @validateSHA1hash = @validateSHA1hash.gsub '+', '-'
-    # # p 'Validate 2 =', @validateSHA1hash
-    # @validateSHA1hash = @validateSHA1hash.gsub '/', '_'
-    # # p 'Validate 3 =', @validateSHA1hash
-    # @validateSHA1hash= @validateSHA1hash.gsub '=', ''
-    # # p 'Validate 4 =', @validateSHA1hash
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
     @p2s_redirect = false # set to false as a flag. changes to true if it is a P2S redirect
     @rfg_redirect = false # set to false as a flag. changes to true if it is a RFG redirect
     @adhoc_redirect = false # set to false as a flag. changes to true if it is a ADHOC redirect
     
+    # Pulley returns 'pid' instead of 'PID'
     if params[:PID] == nil then
-      params[:PID] = "PlaceHolder"
+      if params[:pid] != nil then
+        params[:PID] = params[:pid]
+        params[:tsfn] = params[:sur]
+        params[:tis] = params[:l]
+
+      else
+        params[:PID] = "PulleyPlaceHolder"
+      end
+      params[:PID] = "NonPullyPlaceHolder"
     else
     end
     
@@ -1003,7 +973,7 @@ class RedirectsController < ApplicationController
                 end
 
 
-              else # not a P2S or RFG or ADHOC project. it must be a FED survey            
+              else # not a P2S or RFG or ADHOC project. it must be a Pulley survey            
           
                 # save attempt info in User and Survey tables
           
@@ -1432,29 +1402,30 @@ class RedirectsController < ApplicationController
 
                 # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
                 # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
-                if params[:tsfn] != nil then
-                  @user.SurveysAttempted << params[:tsfn]+'-3'+'-ts='+Time.now.to_s                   
-                  @user.save            
+                # if params[:tsfn] != nil then
+                #   @user.SurveysAttempted << params[:tsfn]+'-3'+'-ts='+Time.now.to_s                   
+                #   @user.save            
               
-                  @survey = Survey.find_by SurveyNumber: params[:tsfn]
+                #   @survey = Survey.find_by SurveyNumber: params[:tsfn]
                 
-                  if (@survey == nil) then
-                    sleep(1)
-                    @survey = Survey.find_by SurveyNumber: params[:tsfn]
-                    puts " *********** Retried retrieving survey"
-                  else
-                  end
+                #   if (@survey == nil) then
+                #     sleep(1)
+                #     @survey = Survey.find_by SurveyNumber: params[:tsfn]
+                #     puts " *********** Retried retrieving survey"
+                #   else
+                #   end
                               
-                  # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
-                  @survey.SurveyExactRank = @survey.SurveyExactRank + 1
-                  @survey.FailureCount = @survey.FailureCount + 1
-                  print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn], ' new ExactRank (Failure+OQ+Success) count= ', @survey.SurveyExactRank
-                  puts
+                #   # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
+                #   @survey.SurveyExactRank = @survey.SurveyExactRank + 1
+                #   @survey.FailureCount = @survey.FailureCount + 1
+                #   print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for survey number: ', params[:tsfn], ' new ExactRank (Failure+OQ+Success) count= ', @survey.SurveyExactRank
+                #   puts
                 
-                  @survey.save
+                #   @survey.save
               
-                else # if params[tsfn] != nil
-                end # if params[tsfn] != nil
+                # else # if params[tsfn] != nil
+                #   puts '>>>>>>>>>>>>>>>>>>>********* Pulley does not return survey number for status = 3 ********<<<<<<<<<<<'
+                # end # if params[tsfn] != nil
               
                 # Give user chance to take another survey unless they do not qualify for any (other) survey
 
