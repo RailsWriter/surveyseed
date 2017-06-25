@@ -1054,45 +1054,47 @@ class RedirectsController < ApplicationController
                     @net_name = "Charity"
                   else
                   end          
+
+                  # Pulley survey numbers may not exist in Fulcrum
      
-                  @survey = Survey.find_by SurveyNumber: params[:tsfn]                    
-                  print '************ Successfully completed survey:', @survey.SurveyNumber
-                  puts
+                  # @survey = Survey.find_by SurveyNumber: params[:tsfn]                    
+                  # print '************ Successfully completed survey:', @survey.SurveyNumber
+                  # puts
                 
-                  #@user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
-                  @user.SurveysCompleted[Time.now] = [params[:PID], params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
-                  @user.save
+                  # #@user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
+                  # @user.SurveysCompleted[Time.now] = [params[:PID], params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
+                  # @user.save
                   
-                  # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
+                  # # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
                 
-                  # TEMPORARILY STOP STORING COMPLETEDBY INFO
+                  # # TEMPORARILY STOP STORING COMPLETEDBY INFO
                 
-                  @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
-                  @survey.save
+                  # @survey.CompletedBy[params[:PID]] = [Time.now, params[:tis], @user.clickid, @net_name]
+                  # @survey.save
 
-                  # Save (inverse of) TCR and reset counter for attempts at last complete
+                  # # Save (inverse of) TCR and reset counter for attempts at last complete
                 
-                  @survey.SurveyExactRank = @survey.SurveyExactRank + 1  # SurveyExactRank=Failure+OQ+Success count
-                  @NumberofAttemptsSinceLastComplete = @survey.SurveyExactRank - @survey.NumberofAttemptsAtLastComplete
-                  @survey.TCR = (1.0 / @NumberofAttemptsSinceLastComplete).round(3)
+                  # @survey.SurveyExactRank = @survey.SurveyExactRank + 1  # SurveyExactRank=Failure+OQ+Success count
+                  # @NumberofAttemptsSinceLastComplete = @survey.SurveyExactRank - @survey.NumberofAttemptsAtLastComplete
+                  # @survey.TCR = (1.0 / @NumberofAttemptsSinceLastComplete).round(3)
 
-                  @survey.NumberofAttemptsAtLastComplete = @survey.SurveyExactRank
+                  # @survey.NumberofAttemptsAtLastComplete = @survey.SurveyExactRank
                 
-                  # Move the just converted survey to F or S immediately, if it is already not there
+                  # # Move the just converted survey to F or S immediately, if it is already not there
                 
-                  if (@survey.SurveyGrossRank > 100) then
+                  # if (@survey.SurveyGrossRank > 100) then
           
-                    @survey.SurveyGrossRank = 101 - (@survey.TCR * 100)
-                    print "************** Assigned Just converted to Fast: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
-                    @survey.label = 'JUST CONVERTED'
+                  #   @survey.SurveyGrossRank = 101 - (@survey.TCR * 100)
+                  #   print "************** Assigned Just converted to Fast: ", @survey.SurveyGrossRank, ' Survey number = ', @survey.SurveyNumber
+                  #   @survey.label = 'JUST CONVERTED'
 
-                  else
+                  # else
 
-                    # the survey is already in F i.e. rank is <= 100. do nothing
+                  #   # the survey is already in F i.e. rank is <= 100. do nothing
 
-                  end
+                  # end
 
-                  @survey.save
+                  # @survey.save
 
                   # Postback the network about success with users clickid
                 
