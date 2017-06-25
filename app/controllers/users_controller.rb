@@ -1422,14 +1422,11 @@ class UsersController < ApplicationController
     #    p 'Signature 4 =', @SHA1Signature
 
     @fedSupplierLinks << baseLink+'&hash='+@SHA1Signature
-
-
     
     # Save the FED survey numbers that the user meets the qualifications and quota requirements for in this user's record of database in rank order
     
     user.save
 
-    # @fedSupplierLinks = user.SupplierLink
     print "*********************************** FED SupplierLinks: ", @fedSupplierLinks
     puts
     
@@ -1437,8 +1434,7 @@ class UsersController < ApplicationController
     puts
     
     # Select Adhoc surveys next
-    selectAdhocSurveys(session_id)
-        
+    selectAdhocSurveys(session_id)        
   end # end rankfedsurveys
 
 
@@ -1833,10 +1829,10 @@ class UsersController < ApplicationController
       @parsed_user_agent = UserAgent.parse(user.user_agent)
       if @parsed_user_agent.platform == 'iPhone' then
         @isMobileDevice = "Yes"
-        p "*************************************** RankRFGProjects: isMobileDevice is set TRUE"
+        p "*************************************** RankRFGProjects: isMobileDevice is set YES"
       else
         @isMobileDevice = "No"
-        p "*************************************** RankRFGProjects: isMobileDevice is set FALSE"  
+        p "*************************************** RankRFGProjects: isMobileDevice is set NO"  
       end
         
       if user.country=="9" then 
@@ -1892,8 +1888,8 @@ class UsersController < ApplicationController
       print "Offerwall Response: ", @OfferwallResponse["response"]
       puts
 
-      if @OfferwallResponse["response"].nil? then
-        print "*********No surveys reurned by RFG Offerwall**********"
+      if @OfferwallResponse["response"]["surveys"].length == 0 then
+        print "*********No surveys returned by RFG Offerwall**********"
         puts
         @RFGSupplierLinks = []
       else

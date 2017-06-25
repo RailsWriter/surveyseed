@@ -13,7 +13,7 @@ class RedirectsController < ApplicationController
     @SHA1key = 'dKyEuAdS/pwtc9VK8ihCVsMmSK8JyK6QlTuOLiOSQD1tiXyOTdrMurEi84lrhddMxYcbAvLLMgrKHiroeROYMw=='
     @Url = request.original_url
     @ParsedUrl = @Url.partition ("&hash=")
-    print 'Server Response Url=', @Url
+    print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Server Response Url = ', @Url, ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
     puts
     print '@BaseUrl=', @ParsedUrl[0]
     puts
@@ -157,7 +157,7 @@ class RedirectsController < ApplicationController
         end
       end
     else
-      p '****************** Server Response: Pulley Signature verified **********************'
+      p '>>>>>>>>>>>>>>>>****************** Server Response: Pulley Signature verified **********************<<<<<<<<<<<<<<<<<'
     end
         
     # SurveyExactRank is a counter for failures+OQ+Term on FED    
