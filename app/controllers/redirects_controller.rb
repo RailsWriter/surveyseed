@@ -8,25 +8,68 @@ class RedirectsController < ApplicationController
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
     
     # Check if the response is valid by authenticating SHA-1 encrption
-    
-    @SHA1key = 'uhstarvsuio765jalksrWE'
+
+
+    @SHA1key = 'dKyEuAdS/pwtc9VK8ihCVsMmSK8JyK6QlTuOLiOSQD1tiXyOTdrMurEi84lrhddMxYcbAvLLMgrKHiroeROYMw=='
     @Url = request.original_url
-    @ParsedUrl = @Url.partition ("oenc=")
-    # print '@BaseUrl=', @ParsedUrl[0]
-    # puts 
-    # print '@Signature =', @ParsedUrl[2]   
-    # puts
+    @ParsedUrl = @Url.partition ("&hash=")
+    print 'Server Response Url=', @Url
+    puts
+    print '@BaseUrl=', @ParsedUrl[0]
+    puts
+    print '@Signature =', @ParsedUrl[2]   
+    puts
 
     @BaseUrl = @ParsedUrl[0]
     @Signature = @ParsedUrl[2]
     @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
     # p 'Validate 1 =', @validateSHA1hash  
-    @validateSHA1hash = @validateSHA1hash.gsub '+', '-'
+    @validateSHA1hash = @validateSHA1hash.gsub '+', '%2B'
     # p 'Validate 2 =', @validateSHA1hash
-    @validateSHA1hash = @validateSHA1hash.gsub '/', '_'
+    @validateSHA1hash = @validateSHA1hash.gsub '/', '%2F'
     # p 'Validate 3 =', @validateSHA1hash
-    @validateSHA1hash= @validateSHA1hash.gsub '=', ''
+    @validateSHA1hash= @validateSHA1hash.gsub '=', '%3D'
     # p 'Validate 4 =', @validateSHA1hash
+
+
+
+
+
+    # @SHA1key = 'uhstarvsuio765jalksrWE'
+    # @Url = request.original_url
+    # @ParsedUrl = @Url.partition ("oenc=")
+    # # print '@BaseUrl=', @ParsedUrl[0]
+    # # puts 
+    # # print '@Signature =', @ParsedUrl[2]   
+    # # puts
+
+    # @BaseUrl = @ParsedUrl[0]
+    # @Signature = @ParsedUrl[2]
+    # @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
+    # # p 'Validate 1 =', @validateSHA1hash  
+    # @validateSHA1hash = @validateSHA1hash.gsub '+', '-'
+    # # p 'Validate 2 =', @validateSHA1hash
+    # @validateSHA1hash = @validateSHA1hash.gsub '/', '_'
+    # # p 'Validate 3 =', @validateSHA1hash
+    # @validateSHA1hash= @validateSHA1hash.gsub '=', ''
+    # # p 'Validate 4 =', @validateSHA1hash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     @p2s_redirect = false # set to false as a flag. changes to true if it is a P2S redirect
     @rfg_redirect = false # set to false as a flag. changes to true if it is a RFG redirect
@@ -114,7 +157,7 @@ class RedirectsController < ApplicationController
         end
       end
     else
-      p '****************** Redirects: Signature verified **********************'
+      p '****************** Server Response: Pulley Signature verified **********************'
     end
         
     # SurveyExactRank is a counter for failures+OQ+Term on FED    
