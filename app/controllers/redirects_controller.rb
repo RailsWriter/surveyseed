@@ -38,17 +38,18 @@ class RedirectsController < ApplicationController
     
     # Pulley returns 'pid' instead of 'PID'
     if params[:PID] == nil then
-      if params[:pid] != nil then
-        params[:PID] = params[:pid]
-        params[:tsfn] = params[:sur]
-        params[:tis] = params[:l]
-
-      else
-        params[:PID] = "PulleyPlaceHolder"
-      end
-      params[:PID] = "NonPullyPlaceHolder"
+      params[:PID] = "PlaceHolder"
     else
     end
+
+    if params[:pid] != nil then
+        params[:PID] = params[:pid]
+        print "*********>>>>>>>>>>>>>PID assigned pid, params[:PID] = ", params[:PID], '******<<<<<<<<<<<<<<<<'
+        params[:tsfn] = params[:sur]
+        params[:tis] = params[:l]
+    else
+    end
+    
     
     if (@validateSHA1hash != @Signature) then
       # invalid response, discard
