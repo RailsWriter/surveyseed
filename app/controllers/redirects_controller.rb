@@ -44,7 +44,8 @@ class RedirectsController < ApplicationController
 
     if @BaseUrl.include? '&pid' then
         params[:PID] = params[:pid]
-        print "*********>>>>>>>>>>>>>PID assigned pid, params[:PID] = ", params[:PID], '******<<<<<<<<<<<<<<<<'
+        print "*********>>>>>>>>>>>>> PID assigned pid, params[:PID] = ", params[:PID], '******<<<<<<<<<<<<<<<<'
+        puts
         params[:tsfn] = params[:sur]
         params[:tis] = params[:l]
     else
@@ -341,7 +342,7 @@ class RedirectsController < ApplicationController
                      puts 'HttParty::Error '+ e.message
                      retry
                 end while @RadiumOne2PostBack.code != 200
-  
+                p ">>>>>>>>>>>********** RadiumOne2 Postback *******************<<<<<<<<<<<<<<"
               else
               end
 
@@ -355,7 +356,7 @@ class RedirectsController < ApplicationController
                      puts 'HttParty::Error '+ e.message
                      retry
                 end while @RadiumOne3PostBack.code != 200
-  
+                p ">>>>>>>>>>>********** RadiumOne3 Postback *******************<<<<<<<<<<<<<<"
               else
               end
 
@@ -367,6 +368,7 @@ class RedirectsController < ApplicationController
                   puts 'HttParty::Error '+ e.message
                   retry
                 end while @TapjoyPostBack.code != 200
+                p ">>>>>>>>>>>********** Tapjoy Postback *******************<<<<<<<<<<<<<<"
               else
               end
 
@@ -412,9 +414,11 @@ class RedirectsController < ApplicationController
             tracker.track(@user.ip_address, 'P2S_Completes')
             
             if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
+              p ">>>>>>>>>>>********** MemoLink Postback *******************<<<<<<<<<<<<<<"
               redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=1'
             else
               if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
+                p ">>>>>>>>>>>********** Donate Postback *******************<<<<<<<<<<<<<<"
                 redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=1'
               else
                 redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'   
@@ -1062,9 +1066,9 @@ class RedirectsController < ApplicationController
                   # print '************ Successfully completed survey:', @survey.SurveyNumber
                   # puts
                 
-                  # #@user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
-                  # @user.SurveysCompleted[Time.now] = [params[:PID], params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
-                  # @user.save
+                  #@user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
+                  @user.SurveysCompleted[Time.now] = [params[:PID], params[:tsfn], 'PULLEY', params[:c], @user.clickid, @net_name]
+                  @user.save
                   
                   # # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
                 
