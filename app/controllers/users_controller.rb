@@ -361,7 +361,7 @@ class UsersController < ApplicationController
     
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'IN_PIN')
+    # tracker.track(user.ip_address, 'IN_PIN')
  
     
     if params[:zip].empty? == false
@@ -747,7 +747,7 @@ class UsersController < ApplicationController
 
     if (User.where('session_id=?', session.id).exists?) then
       user=User.find_by session_id: session.id
-      tracker.track(user.ip_address, 'interestedpanelist')
+      # tracker.track(user.ip_address, 'interestedpanelist')
       if (params[:emailid].empty? == false) then
         user.emailId = params[:emailid]
         user.password = 'WelcomeToKetsci'+user.user_id[0..3]
@@ -2441,6 +2441,8 @@ class UsersController < ApplicationController
 
       # No postback needed for TEST survey on Charity Network user as it is our own network. We already record number of completes on each Network.
 
+      # No postback needed for TEST survey on QuickRewards Network user as it is our own network. We only record the number of completes on each Network.
+
       # Keep a count of Test completes on each Network
   
       puts "*************** Track Test completes on each network"
@@ -2509,6 +2511,11 @@ class UsersController < ApplicationController
 
       if user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then 
         @net_name = "Charity"
+      else
+      end
+
+      if user.netid == "L4AnLLfc4rAHpl12as3ggg986" then 
+        @net_name = "QuickRewards"
       else
       end
     

@@ -246,10 +246,14 @@ class RedirectsController < ApplicationController
                 @net_name = "TestNtk"
               else
               end    
-
-              
+            
               if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then 
                 @net_name = "Charity"
+              else
+              end 
+
+              if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then 
+                @net_name = "QuickRewards"
               else
               end 
               
@@ -522,6 +526,11 @@ class RedirectsController < ApplicationController
                   @net_name = "Charity"
                 else
                 end 
+
+                if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then 
+                  @net_name = "QuickRewards"
+                else
+                end
                
                 # @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'RFG', @project.cpi, @user.clickid, @net_name]
                 # @user.save
@@ -811,6 +820,11 @@ class RedirectsController < ApplicationController
                   else
                   end  
 
+                  if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then 
+                    @net_name = "QuickRewards"
+                  else
+                  end
+
 
                   @survey = Adhoc.find_by SurveyNumber: params[:tsfn]                    
                   print '************ Successfully completed ADHOC survey:', @survey.SurveyNumber
@@ -1059,6 +1073,11 @@ class RedirectsController < ApplicationController
                     @net_name = "Charity"
                   else
                   end          
+
+                  if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then 
+                    @net_name = "QuickRewards"
+                  else
+                  end
 
                   # Pulley survey numbers may not exist in Fulcrum
      
