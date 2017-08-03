@@ -2439,9 +2439,20 @@ class UsersController < ApplicationController
       end
 
 
-      # No postback needed for TEST survey on Charity Network user as it is our own network. We already record number of completes on each Network.
+      # No postback needed for TEST survey on Charity Network (KsAnLL23qacAHoi87ytr45bhj8) user as it is our own network.
 
-      # No postback needed for TEST survey on QuickRewards Network user as it is our own network. We only record the number of completes on each Network.
+      
+      if user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+        begin
+          @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+          rescue HTTParty::Error => e
+          puts 'HttParty::Error '+ e.message
+          retry
+        end while @QuickRewardsPostBack.code != 200
+        p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
+      else
+      end
+
 
       # Keep a count of Test completes on each Network
   
@@ -2520,8 +2531,9 @@ class UsersController < ApplicationController
       end
     
       user.SurveysAttempted << 'TESTSURVEY'
-      user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
-      #user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, user.netid.slice(0..2)]
+      user.SurveysCompleted[Time.now] = [user.user_id, 'TESTSURVEY', 'KETSCI', '$0', user.clickid, @net_name]
+
+      #user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
       user.save
     
     end # duplicate is false
