@@ -148,17 +148,6 @@ class RedirectsController < ApplicationController
           
           print '*********** In *Default* for user_id: ', params[:PID], ' CID: ', @user.clickid
           puts
-
-          if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-            begin
-              @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-              rescue HTTParty::Error => e
-              puts 'HttParty::Error '+ e.message
-              retry
-            end while @QuickRewardsPostBack.code != 200
-            p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-          else
-          end
         
           # Is there anything to save from the attempt info in User and Survey tables?
           # params[:tsfn] was being returned empty in one run period.
@@ -386,17 +375,6 @@ class RedirectsController < ApplicationController
                 p ">>>>>>>>>>>********** Tapjoy Postback *******************<<<<<<<<<<<<<<"
               else
               end
-
-              if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-                begin
-                  @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  rescue HTTParty::Error => e
-                  puts 'HttParty::Error '+ e.message
-                  retry
-                end while @QuickRewardsPostBack.code != 200
-                p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-              else
-              end
                                                
               # Keep a count of completes on each Network
             
@@ -439,14 +417,19 @@ class RedirectsController < ApplicationController
             tracker.track(@user.ip_address, 'P2S_Completes')
             
             if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
-              p ">>>>>>>>>>>********** MemoLink Postback *******************<<<<<<<<<<<<<<"
+              p ">>>>>>>>>>>********** MemoLink EndPage *******************<<<<<<<<<<<<<<"
               redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=1'
             else
               if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
-                p ">>>>>>>>>>>********** Donate Postback *******************<<<<<<<<<<<<<<"
+                p ">>>>>>>>>>>********** Charity EndPage *******************<<<<<<<<<<<<<<"
                 redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=1'
               else
-                redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'   
+                if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+                  p ">>>>>>>>>>>********** QuickRewards EndPage *******************<<<<<<<<<<<<<<"
+                  redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+@user.clickid
+                else
+                  redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'  
+                end
               end 
             end     
 
@@ -710,17 +693,6 @@ class RedirectsController < ApplicationController
                   end while @TapjoyPostBack.code != 200
                 else
                 end
-
-                if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-                begin
-                  @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  rescue HTTParty::Error => e
-                  puts 'HttParty::Error '+ e.message
-                  retry
-                end while @QuickRewardsPostBack.code != 200
-                p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-              else
-              end
                              
                 # Keep a count of completes on all Networks
               
@@ -768,7 +740,12 @@ class RedirectsController < ApplicationController
                 if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
                   redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=2'
                 else
-                  redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'   
+                  if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+                    p ">>>>>>>>>>>********** QuickRewards EndPage *******************<<<<<<<<<<<<<<"
+                    redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+@user.clickid
+                  else
+                    redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'  
+                  end
                 end 
               end
 
@@ -981,17 +958,6 @@ class RedirectsController < ApplicationController
                     end while @TapjoyPostBack.code != 200
                   else
                   end
-
-                  if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-                    begin
-                      @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                      rescue HTTParty::Error => e
-                      puts 'HttParty::Error '+ e.message
-                      retry
-                    end while @QuickRewardsPostBack.code != 200
-                    p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-                  else
-                  end
                                                    
                   # Keep a count of completes on each Network
                 
@@ -1030,7 +996,12 @@ class RedirectsController < ApplicationController
                   if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
                     redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=3'
                   else
-                    redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'   
+                    if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+                      p ">>>>>>>>>>>********** QuickRewards EndPage *******************<<<<<<<<<<<<<<"
+                      redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+@user.clickid
+                    else
+                      redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'  
+                    end  
                   end 
                 end
 
@@ -1274,17 +1245,7 @@ class RedirectsController < ApplicationController
                   else
                   end
 
-                  if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-                    begin
-                      @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                      rescue HTTParty::Error => e
-                      puts 'HttParty::Error '+ e.message
-                      retry
-                    end while @QuickRewardsPostBack.code != 200
-                    p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-                  else
-                  end
-                                         
+                                    
                   # Keep a count of completes on all Networks
                 
                   puts "*************** Keeping track of completes on all networks"
@@ -1314,8 +1275,13 @@ class RedirectsController < ApplicationController
                   if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
                     redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=5'
                   else
-                    redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'   
-                  end 
+                    if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+                      p ">>>>>>>>>>>********** QuickRewards EndPage *******************<<<<<<<<<<<<<<"
+                      redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+@user.clickid
+                    else
+                      redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'  
+                    end
+                  end
                 end
 
               end # if ADHOC
@@ -1340,17 +1306,6 @@ class RedirectsController < ApplicationController
             print 'Status = Failure in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
             puts
 
-            if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-              begin
-                @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                rescue HTTParty::Error => e
-                puts 'HttParty::Error '+ e.message
-                retry
-              end while @QuickRewardsPostBack.code != 200
-              p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-            else
-            end
-
             @user.SurveysAttempted << 'P2S-3'+'-ts='+Time.now.to_s
             @user.save        
             
@@ -1365,17 +1320,6 @@ class RedirectsController < ApplicationController
           
               print 'Status = RFG Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
               puts
-
-              if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-                begin
-                  @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  rescue HTTParty::Error => e
-                  puts 'HttParty::Error '+ e.message
-                  retry
-                end while @QuickRewardsPostBack.code != 200
-                p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-              else
-              end
 
               # # Save last attempted project unless user did not qualify for any (other) project from start (no tsfn is attached)
               # # This may not be necessary now that users are stopped in the uer controller if they do not qualify.
@@ -1424,9 +1368,14 @@ class RedirectsController < ApplicationController
 
               else # if SupplierLink empty?
                 tracker.track(@user.ip_address, 'FL-4')
-                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=4'
-              
+
+                if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+                  redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
+                else
+                  redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=4'
+                end              
               end # if SupplierLink empty?
+
             else # Not RFG. Try Adhoc
               if @adhoc_redirect then
                 
@@ -1435,19 +1384,6 @@ class RedirectsController < ApplicationController
             
                 print 'Status = Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
                 puts
-
-
-                if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-                  begin
-                    @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                    rescue HTTParty::Error => e
-                    puts 'HttParty::Error '+ e.message
-                    retry
-                  end while @QuickRewardsPostBack.code != 200
-                  p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-                else
-                end
-
 
                 # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
                 # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
@@ -1504,7 +1440,12 @@ class RedirectsController < ApplicationController
 
                 else # if SupplierLink empty?
                   tracker.track(@user.ip_address, 'FL-6')
-                  redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
+
+                  if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+                    redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
+                  else
+                    redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
+                  end
                 
                 end # if SupplierLink empty?
               else # must be FED            
@@ -1514,18 +1455,6 @@ class RedirectsController < ApplicationController
             
                 print 'Status = Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
                 puts
-
-
-                if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-                  begin
-                    @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                    rescue HTTParty::Error => e
-                    puts 'HttParty::Error '+ e.message
-                    retry
-                  end while @QuickRewardsPostBack.code != 200
-                  p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-                else
-                end
 
                 # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
                 # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
@@ -1580,7 +1509,12 @@ class RedirectsController < ApplicationController
 
                 else # if SupplierLink empty?
                   tracker.track(@user.ip_address, 'FL-5')
-                  redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=5'
+
+                  if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+                    redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
+                  else
+                    redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=5'
+                  end
                 
                 end # if SupplierLink empty?              
               end # if ADHOC
@@ -1605,18 +1539,6 @@ class RedirectsController < ApplicationController
             print 'OQ in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
             puts
 
-            if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-              begin
-                @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                rescue HTTParty::Error => e
-                puts 'HttParty::Error '+ e.message
-                retry
-              end while @QuickRewardsPostBack.code != 200
-              p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-            else
-            end
-
-
             @user.SurveysAttempted << 'P2S-4'+'-ts='+Time.now.to_s
             @user.save  
             
@@ -1632,17 +1554,6 @@ class RedirectsController < ApplicationController
 
               print 'RFG OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
               puts          
-          
-              if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-                begin
-                  @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                  rescue HTTParty::Error => e
-                  puts 'HttParty::Error '+ e.message
-                  retry
-                end while @QuickRewardsPostBack.code != 200
-                p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-              else
-              end
 
               @user.SurveysAttempted << 'RFG-4'+'-ts='+Time.now.to_s
               @user.save  
@@ -1692,19 +1603,7 @@ class RedirectsController < ApplicationController
                 @user = User.find_by user_id: params[:PID]
 
                 print 'Adhoc survey OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
-                puts          
-
-
-                if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-                  begin
-                    @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                    rescue HTTParty::Error => e
-                    puts 'HttParty::Error '+ e.message
-                    retry
-                  end while @QuickRewardsPostBack.code != 200
-                  p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-                else
-                end
+                puts
             
                 @user.SurveysAttempted << params[:tsfn]+'-4'+'-ts='+Time.now.to_s
                 @user.save
@@ -1764,18 +1663,7 @@ class RedirectsController < ApplicationController
 
 
                 print 'OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
-                puts     
-
-                if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-                  begin
-                    @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                    rescue HTTParty::Error => e
-                    puts 'HttParty::Error '+ e.message
-                    retry
-                  end while @QuickRewardsPostBack.code != 200
-                  p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-                else
-                end     
+                puts   
             
                 @user.SurveysAttempted << params[:tsfn]+'-4'+'-ts='+Time.now.to_s
                 @user.save
@@ -1846,34 +1734,11 @@ class RedirectsController < ApplicationController
           print '*********************** QTerm for user_id/PID, CID:', params[:PID], @user.clickid
           puts 
 
-
-          if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-            begin
-              @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-              rescue HTTParty::Error => e
-              puts 'HttParty::Error '+ e.message
-              retry
-            end while @QuickRewardsPostBack.code != 200
-            p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-          else
-          end
-        
           @user.SurveysAttempted << params[:tsfn]+'-5'+'-ts='+Time.now.to_s
           @user.black_listed = true
           @user.save
           
           if @rfg_redirect then
-
-            if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-              begin
-                @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
-                rescue HTTParty::Error => e
-                puts 'HttParty::Error '+ e.message
-                retry
-              end while @QuickRewardsPostBack.code != 200
-              p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-            else
-            end
 
             @user.SurveysAttempted << 'RFG-5'+'-ts='+Time.now.to_s
             @user.save 

@@ -34,6 +34,7 @@ class UsersController < ApplicationController
         @SSnet = Network.find_by netid: netid
         if @SSnet == nil then
           print "************************************ Bad NetworkId ********************"
+          redirect_to '/users/nosuccess'
         else
           if @SSnet.Flag2 == nil then
             @SSnet.Flag2 = "1" 
@@ -51,7 +52,7 @@ class UsersController < ApplicationController
       
       end
 
-      tracker.track(ip_address, 'Age')
+      ##tracker.track(ip_address, 'Age')
       
       # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
       # if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
@@ -732,7 +733,7 @@ class UsersController < ApplicationController
 
     user=User.find_by session_id: session.id
     
-    tracker.track(user.ip_address, 'pleasewait')    
+    ##tracker.track(user.ip_address, 'pleasewait')    
     
     print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ", user.user_id, " of ", user.country, " Time 2 start FED search: ", Time.now
     puts
@@ -1384,18 +1385,29 @@ class UsersController < ApplicationController
       end
     end
 
+    print '*****************>>>> Pulley Arguments: ', 'lid= ', lid, 'pid= ', pid, 'cos= ', cos
+    puts
+
 
     if user.country=="9" then 
       @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&45='+user.ZIP+'&47='+user.ethnicity+'&113='+user.race+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+'&96='+@statePrecode+'&97='+@DMARegionCode+@industriesvalue
+      print '****AV9****>>>>>>', '&42=',user.age,'&43=',user.gender,'&45=',user.ZIP,'&47=',user.ethnicity,'&113=',user.race,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,'&96=',@statePrecode,'&97=',@DMARegionCode,@industriesvalue, '******'
+      puts
     else
       if user.country=="6" then
         @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12345='+user.ZIP.slice(0..2)+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+'&1015='+@provincePrecode+@industriesvalue
+        print '******AV6****>>>>', '&42=',user.age,'&43=',user.gender,'&12345=',user.ZIP.slice(0..2),'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,'&1015=',@provincePrecode,@industriesvalue
+        puts
       else
         if user.country=="5" then
           @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12340='+user.ZIP+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+@industriesvalue
+          print '********AV5****>>', '&42=',user.age,'&43=',user.gender,'&12340=',user.ZIP,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,@industriesvalue
+          puts
         else
           if user.country=="7" then
             @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12357='+user.ZIP+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+@industriesvalue
+            print '******AV7**>>>>>',  '&42=',user.age,'&43=',user.gender,'&12357=',user.ZIP,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,@industriesvalue
+            puts
           else
           end
         end
@@ -2442,16 +2454,7 @@ class UsersController < ApplicationController
       # No postback needed for TEST survey on Charity Network (KsAnLL23qacAHoi87ytr45bhj8) user as it is our own network.
 
       
-      if user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
-        begin
-          @QuickRewardsPostBack = HTTParty.post('http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-          rescue HTTParty::Error => e
-          puts 'HttParty::Error '+ e.message
-          retry
-        end while @QuickRewardsPostBack.code != 200
-        p ">>>>>>>>>>>********** QuickRewards Postback *******************<<<<<<<<<<<<<<"
-      else
-      end
+      # No postback needed for TEST survey on QuickRewards (L4A..) user as it is tracked manually.
 
 
       # Keep a count of Test completes on each Network
@@ -2544,9 +2547,14 @@ class UsersController < ApplicationController
       if user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
         redirect_to '/users/successfulCharity'
       else
-        redirect_to '/users/successful'
+        if user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+          redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+user.clickid
+        else
+          redirect_to '/users/successful'
+        end
       end
     end  
   end # p3action
 
 end
+
