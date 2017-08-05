@@ -34,6 +34,7 @@ class UsersController < ApplicationController
         @SSnet = Network.find_by netid: netid
         if @SSnet == nil then
           print "************************************ Bad NetworkId ********************"
+          puts
           redirect_to '/users/nosuccess'
         else
           if @SSnet.Flag2 == nil then
@@ -47,12 +48,13 @@ class UsersController < ApplicationController
       
       else
         print "************************************ No NetworkId ********************"
+        puts
         redirect_to '/users/nosuccess'
         return
       
       end
 
-      ##tracker.track(ip_address, 'Age')
+      tracker.track(ip_address, 'Age')
       
       # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
       # if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
@@ -733,7 +735,7 @@ class UsersController < ApplicationController
 
     user=User.find_by session_id: session.id
     
-    ##tracker.track(user.ip_address, 'pleasewait')    
+    tracker.track(user.ip_address, 'pleasewait')    
     
     print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ", user.user_id, " of ", user.country, " Time 2 start FED search: ", Time.now
     puts
