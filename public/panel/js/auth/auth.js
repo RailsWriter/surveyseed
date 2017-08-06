@@ -35,11 +35,10 @@ angular.module('auth', []).factory('auth',
 					credData.credentials={
 						emailId:credentials.username,
 						password:credentials.password,
-						netid: "LMq0514UMM20bgf17Yatemoh"
+						netid: "MMq0514UMM20bgf17Yatemoh"
 					}
 					console.log("credData::123::"+JSON.stringify(credData,null,"  "))
-					// $http.post('https://ketsci.com/users/login', credData).success(function(data) {
-					$http.post('/users/login', credData).success(function(data) {
+					$http.post('https://ketsci.com/users/login', credData).success(function(data) {
 						console.log('login success = '+JSON.stringify(data,null,"  "));
 						console.log('$location.path()::'+$location.path())
 						if (data.emailId) {

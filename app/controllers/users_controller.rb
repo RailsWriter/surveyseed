@@ -310,6 +310,8 @@ class UsersController < ApplicationController
           if user.country=="7" then
             redirect_to '/users/qq4_IN'
           else
+            print "BUG Country **********", params[:country], " Session_id ", session_id
+            puts
             # if user.country=="0" then
             #  redirect_to '/users/nosuccess'
             # else

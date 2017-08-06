@@ -239,7 +239,7 @@ angular.module('home', ['ui.bootstrap','datamanager']).controller('home', functi
     });
   };
 
-  $scope.saveSurvey = function(){
+  $scope.saveSurvey = function(surveyStatus){
     var selectedGenderArray = []
       $scope.genderArray.map(function(gender){
         if(gender.Selected == true)
@@ -302,7 +302,7 @@ angular.module('home', ['ui.bootstrap','datamanager']).controller('home', functi
     survey.QuestionAns1=$scope.survey.questionAns1
     survey.Question2=$scope.survey.question2
     survey.QuestionAns2=$scope.survey.questionAns2
-    survey.SurveyStatus="Draft"
+    survey.SurveyStatus=surveyStatus //"Draft"
     adHocSurvey.newAdhocSurvey=survey
     console.log("survey::"+JSON.stringify(adHocSurvey,null,'  '))
 

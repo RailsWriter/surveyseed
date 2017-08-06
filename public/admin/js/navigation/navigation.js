@@ -30,3 +30,14 @@ angular.module('navigation', ['ngRoute', 'auth']).controller(
 			$scope.logout = auth.clear;
 
 		});
+
+angular.module('navigation')
+		.controller('acceptTerms',
+			function($scope, $route) {
+				$scope.acceptTermsTxt='https://www.ketsci.com/users/PrivacyPolicy'
+
+				$scope.acceptTerms = function(){
+
+				}
+			}
+);

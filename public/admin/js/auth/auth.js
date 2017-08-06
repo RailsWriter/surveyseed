@@ -18,7 +18,8 @@ angular.module('auth', []).factory(
 
 				loginPath : '/login',
 				logoutPath : '/logout',
-				homePath : '/acceptedOffer',
+				homePath : '/home',
+				acceptTerms:'/acceptTerms',
 				path : $location.path(),
 
 				authenticate : function(credentials, callback) {
@@ -30,29 +31,39 @@ angular.module('auth', []).factory(
 					} : {};
 					
 					console.log("headers = "+headers);
-					credData = {
-						userName:credentials.username,
-						passWord:credentials.password
+					var credData = {}
+					credData.credentials={
+						emailId:credentials.username,
+						password:credentials.password
 					}
-/*
-					$http.post('/api/v1/auth/bo/login', credData).success(function(data) {
-						console.log('login success = '+data.authId);
-						if (data.value.userName) {
+					console.log("credData"+JSON.stringify(credData,null,"  "))
+					$http.post('https://ketsci.com/users/login', credData).success(function(data) {
+						console.log('login success = '+JSON.stringify(data,null,"  "));
+						console.log('$location.path()::'+$location.path())
+						if (data.emailId) {
 							auth.authenticated = true;
 						} else {
 							auth.authenticated = false;
 						}
 						callback && callback(auth.authenticated);
-						$location.path(auth.path==auth.loginPath ? auth.homePath : auth.path);
+
+						console.log("auth.authenticated:"+auth.authenticated)
+						console.log("data.acceptedTerms:"+data.acceptedTerms)
+
+						if(auth.authenticated && data.acceptedTerms=='f')
+							$location.path(auth.path==auth.loginPath ? auth.acceptTerms : auth.path);
+						else
+							$location.path(auth.path==auth.loginPath ? auth.homePath : auth.path);
 					}).error(function() {
 						console.log('login failure');
 						auth.authenticated = false; 
 						callback && callback(false);
 					});
-*/
+/*
 					auth.authenticated = true;
 					callback && callback(auth.authenticated);
 					$location.path(auth.path==auth.loginPath ? auth.homePath : auth.path);
+*/
 				},
 
 				clear : function() {

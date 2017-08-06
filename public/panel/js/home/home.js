@@ -9,8 +9,7 @@ angular.module('home', []).controller('home', function($scope, $http) {
 		['Oct 2016', 28005, 19006, '']
 	];
 
-	// $http({method: 'GET', url: 'https://www.ketsci.com/users/surveyStats?userRecordId='+$scope.userId}).
-	$http({method: 'GET', url: '/users/surveyStats?userRecordId='+$scope.userId}).
+	$http({method: 'GET', url: 'https://www.ketsci.com/users/surveyStats?userRecordId='+$scope.userId}).
 	then(function(response) {
 		console.log("user panel stats::111::"+JSON.stringify(response,null,'  '));
 		// Load the Visualization API and the corechart package.
@@ -36,15 +35,12 @@ angular.module('home', []).controller('home', function($scope, $http) {
 		var prefs = {}
 		prefs.preferences = {
 				userId : $scope.userId,
-				redeemRewards : "1"
 				surveyFrequency : "0"
 			}
 
 		console.log("model data::"+$scope.contactFreq)
 		console.log("prefs::"+JSON.stringify(prefs,null,'  '));
-		// $http.post('https://www.ketsci.com/users/savePreferences', prefs).success(function(data) {
-		$http.post('/users/savePreferences', prefs).success(function(data) {
-
+		$http.post('https://www.ketsci.com/users/savePreferences', prefs).success(function(data) {
 			console.log("Successfully saved user preferences");
 		}).error(function() {
 			console.log('Unable to save preferences');
@@ -61,9 +57,7 @@ angular.module('home', []).controller('home', function($scope, $http) {
 
 		console.log("model data::"+$scope.contactFreq)
 		console.log("prefs::"+JSON.stringify(prefs,null,'  '));
-		// $http.post('https://www.ketsci.com/users/savePreferences', prefs).success(function(data) {
-
-		$http.post('/users/savePreferences', prefs).success(function(data) {
+		$http.post('https://www.ketsci.com/users/savePreferences', prefs).success(function(data) {
 			console.log("Successfully saved user preferences");
 		}).error(function() {
 			console.log('Unable to save preferences');

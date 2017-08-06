@@ -25,6 +25,9 @@
 		}).when('/login', {
 			templateUrl : 'js/navigation/login.html',
 			controller : 'navigation'
+		}).when('/acceptTerms', {
+			templateUrl : 'js/navigation/acceptTerms.html',
+			controller : 'acceptTerms'
 		}).when('/home', {
 			templateUrl : 'js/home/home.html',
 			controller : 'home'

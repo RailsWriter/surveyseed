@@ -1,0 +1,24 @@
+<div class="panel">
+    <form role="form" ng-submit="acceptTerms()">
+        <div class="row myrow">
+            <div class="col-xs-offset-1 col-xs-10">
+                <div class="pre-info">
+                    <object type="text/html" data="/privacy.html"
+                            style="width:100%; height:100%; margin:1%;">
+                    </object>
+                </div>
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <input type="checkbox" id="acceptTerms" name="acceptTerms" ng-model="acceptTerms"/>
+                  </span>
+                    <label for="acceptTerms" class="form-control">I Accept terms</label>
+                </div><!-- /input-group -->
+                <div class="padSm"></div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>

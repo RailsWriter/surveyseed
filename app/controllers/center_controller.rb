@@ -221,10 +221,11 @@ class CenterController < ApplicationController
       
       a.Screener1 = params[:newAdhocSurvey]["Question1"]
       a.Screener1Resp = params[:newAdhocSurvey]["QuestionAns1"]
-      if params[:newAdhocSurvey]["SurveyStatus"] == "Draft" then
-        a.SurveyStillLive=false
-      else
+      # if params[:newAdhocSurvey]["SurveyStatus"] == "Draft" then
+      if params[:newAdhocSurvey]["SurveyStatus"] == "Launch" then
         a.SurveyStillLive=true
+      else
+        a.SurveyStillLive=false
       end
       a.save
     else

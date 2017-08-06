@@ -55,8 +55,10 @@ th {
 }
 
 .pre-info{
-  background-color: #18303a;
-  color: white
+  background-color: #428bca;
+  color: white;
+  height: 600px;
+  overflow: scroll;
 }
 
 .element-container{
