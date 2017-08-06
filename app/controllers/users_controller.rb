@@ -739,7 +739,7 @@ class UsersController < ApplicationController
     
     tracker.track(user.ip_address, 'pleasewait')    
     
-    print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ", user.user_id, " of ", user.country, " Time 2 start FED search: ", Time.now
+    print "BUG Repeat User: ", user.user_id, " of country ", user.country, " of gender ", user.age, " Time 2 start FED search: ", Time.now
     puts
     
     ranksurveysforuser(session.id)
