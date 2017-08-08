@@ -104,6 +104,9 @@ class UsersController < ApplicationController
       if (first_time_user==false) then
         user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
 
+        print "BUG REPEAT USER: Existing User Record is: ", user
+        puts
+
         # Why do I have to stop at first? Optimizes. But there should be not more than 1 entry.
 
         if user.black_listed==true then
@@ -739,7 +742,7 @@ class UsersController < ApplicationController
     
     tracker.track(user.ip_address, 'pleasewait')    
     
-    print "BUG Repeat User: ", user.user_id, " of country ", user.country, " of gender ", user.age, " Time 2 start FED search: ", Time.now
+    print "BUG Repeat User: ", user.user_id, " of country ", user.country, " of Gender ", user.gender, " Time 2 start FED search: ", Time.now
     puts
     
     ranksurveysforuser(session.id)
