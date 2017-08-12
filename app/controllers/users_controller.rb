@@ -798,7 +798,16 @@ class UsersController < ApplicationController
         if user != nil then
           print "************* Unsuccessful login: This UserID already exists, please provide correct default/chosen password *************"
           puts
-          format.json { render json: { message: "Unsuccessful login: This UserID already exists, please provide correct password" } }
+          #format.json { render json: { message: "Unsuccessful login: This UserID already exists, please provide correct password" } }
+
+          payload = {
+            error: "Unsuccessful login: This UserID already exists, please provide correct password",
+            status: 400
+          }
+          render :json => payload, :status => :bad_request
+
+
+
         else
           
           ip_address = request.remote_ip
@@ -832,7 +841,15 @@ class UsersController < ApplicationController
     else
       respond_to do |format|
         #format.html # home.html.erb
-        format.json { render json: { message: "Unsuccessful login: No login credentials received" } }
+        #format.json { render json: { message: "Unsuccessful login: No login credentials received" } }
+
+        payload = {
+          error: "Unsuccessful login: No login credentials received",
+          status: 400
+        }
+        render :json => payload, :status => :bad_request
+
+
       end 
       p "***************** Unsuccessful login: Email or Password credentials were not received in POST for login **************"
     end
@@ -890,6 +907,10 @@ class UsersController < ApplicationController
     
     else
       # This user has not completed any surveys
+
+      print "LOG: This user has not completed any surveys"
+      puts
+      
       completedSurveyStats = []
       render json: completedSurveyStats.to_json
     end
