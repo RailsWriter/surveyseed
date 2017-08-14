@@ -831,6 +831,7 @@ class UsersController < ApplicationController
           user.emailId=params[:credentials]["emailId"]
           user.password=params[:credentials]["password"]
           user.userType='1'
+          user.redeemRewards='1'
           user.surveyFrequency = '2'
           user.save
           print "***************** Successfully created a new panelist: ", user
@@ -899,6 +900,9 @@ class UsersController < ApplicationController
         k=k+1
         j=j+2
       end while j<@countsArray.length-1
+
+      completedSurveyStats = completedSurveyStats + ['']
+      completedSurveyStats = [['Genre', 'Completed',  {role: 'annotation'}], completedSurveyStats]
 
       print "****************** completedSurveyStats Array of Arrays is = ", completedSurveyStats
       puts
@@ -2483,6 +2487,9 @@ class UsersController < ApplicationController
 
       
       # No postback needed for TEST survey on QuickRewards (L4A..) user as it is tracked manually.
+
+
+      # No postback needed for TEST survey on Panelists Network (MM..) user as it is tracked manually.
 
 
       # Keep a count of Test completes on each Network
