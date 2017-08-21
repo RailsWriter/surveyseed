@@ -62,6 +62,8 @@ class RedirectsController < ApplicationController
       else
         if params[:PID][0..3] == "2222" then
           params[:PID] = params[:PID].sub "2222", ''
+          params[:tsfn] = 'P2S'
+          params[:tis] = '20'
           
           print "********************* Extracted userid from P2S PID to be = ", params[:PID]
           puts
@@ -129,7 +131,8 @@ class RedirectsController < ApplicationController
         end
       end
     else
-      p '>>>>>>>>>>>>>>>>****************** Server Response: Pulley Signature verified **********************<<<<<<<<<<<<<<<<<'
+      @fed_redirect = true
+      p '>>>>>>>>>>>>>>>>****************** Valid Server Response: Pulley Signature verified **********************<<<<<<<<<<<<<<<<<'
     end
         
     # SurveyExactRank is a counter for failures+OQ+Term on FED    
@@ -1019,11 +1022,7 @@ class RedirectsController < ApplicationController
                 if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
                   print "************* Click Id already exists - do not postback to FED again!"
                   puts          
-                else
-
-
-
-          
+                else          
                   @user.SurveysAttempted << params[:tsfn]+'-2'+'-ts='+Time.now.to_s
               
                   # Save completed survey info in a hash with survey number as key {params[:tsfn] => [params[:cost], params[:tsfn]], ..}
@@ -1303,7 +1302,7 @@ class RedirectsController < ApplicationController
           
             @user = User.find_by user_id: params[:PID]
 
-            print 'Status = Failure in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
+            print 'Status = 3 (Failure) in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
             puts
 
             @user.SurveysAttempted << 'P2S-3'+'-ts='+Time.now.to_s
@@ -1536,7 +1535,7 @@ class RedirectsController < ApplicationController
           
             @user = User.find_by user_id: params[:PID]
 
-            print 'OQ in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
+            print 'Status = 4 (OQ) in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
             puts
 
             @user.SurveysAttempted << 'P2S-4'+'-ts='+Time.now.to_s
@@ -1724,69 +1723,68 @@ class RedirectsController < ApplicationController
       when "5"
         # QualityTerminationLink: https://www.ketsci.com/redirects/status?status=5&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]
  
-        if (params[:PID] == 'test') || (@rfg_redirect == false) then
+        if (params[:PID] == 'test') then
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=1'
         else
                   
           # save attempt info in User and Survey tables
           @user = User.find_by user_id: params[:PID]
           
-          print '*********************** QTerm for user_id/PID, CID:', params[:PID], @user.clickid
+          print '*********************** QTerm/Security concern for user_id/PID, CID:', params[:PID], @user.clickid
           puts 
 
           @user.SurveysAttempted << params[:tsfn]+'-5'+'-ts='+Time.now.to_s
           @user.black_listed = true
           @user.save
           
-          if @rfg_redirect then
+          # if @rfg_redirect then
 
-            @user.SurveysAttempted << 'RFG-5'+'-ts='+Time.now.to_s
-            @user.save 
+          #   @user.SurveysAttempted << 'RFG-5'+'-ts='+Time.now.to_s
+          #   @user.save 
             
-          #   # Save attempts counts by project
-          #   @project = RfgProject.find_by rfg_id: params[:tsfn]
+          # #   # Save attempts counts by project
+          # #   @project = RfgProject.find_by rfg_id: params[:tsfn]
             
-          #   if (@project.NumberofAttempts == nil) then
-          #     @project.NumberofAttempts = 0
+          # #   if (@project.NumberofAttempts == nil) then
+          # #     @project.NumberofAttempts = 0
+          # #   else
+          # #   end
+            
+          # #   @project.NumberofAttempts = @project.NumberofAttempts + 1
+          # #  # @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
+          # #   #@project.AttemptsAtLastComplete = @project.NumberofAttempts
+          # # #  if @RFGAttemptsSinceLastComplete  > 20 then
+          # #  #   @project.epc = "$.00"
+          # #   #  @project.projectEPC = "$.00"
+          # #   #else
+          # #   #end
+
+          # #   print "Updating Attempts count for project in TERM: ", @project.rfg_id
+          # #   puts
+          # #   @project.save
+            
+          # else # must be a FED redirect
+            
+          #   @survey = Survey.find_by SurveyNumber: params[:tsfn]
+          
+          #   if (@survey == nil) then
+          #     sleep(1)
+          #     @survey = Survey.find_by SurveyNumber: params[:tsfn]
+          #     puts " *********** Retried retrieving survey"
           #   else
-          #   end
-            
-          #   @project.NumberofAttempts = @project.NumberofAttempts + 1
-          #  # @RFGAttemptsSinceLastComplete = @project.NumberofAttempts - @project.AttemptsAtLastComplete
-          #   #@project.AttemptsAtLastComplete = @project.NumberofAttempts
-          # #  if @RFGAttemptsSinceLastComplete  > 20 then
-          #  #   @project.epc = "$.00"
-          #   #  @project.projectEPC = "$.00"
-          #   #else
-          #   #end
+          #   end    
+          
+          #   # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
 
-          #   print "Updating Attempts count for project in TERM: ", @project.rfg_id
+          #   @survey.SurveyExactRank = @survey.SurveyExactRank + 1
+          #   print '***************************** Unsuccessful attempts count raised by 1 following a TERM for survey number: ', params[:tsfn]
           #   puts
-          #   @project.save
             
-          else # must be a FED redirect
+          #   @survey.save
             
-            @survey = Survey.find_by SurveyNumber: params[:tsfn]
-          
-            if (@survey == nil) then
-              sleep(1)
-              @survey = Survey.find_by SurveyNumber: params[:tsfn]
-              puts " *********** Retried retrieving survey"
-            else
-            end    
-          
-            # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
-
-            @survey.SurveyExactRank = @survey.SurveyExactRank + 1
-            print '***************************** Unsuccessful attempts count raised by 1 following a TERM for survey number: ', params[:tsfn]
-            puts
-            
-            @survey.save
-            
-          end # if RFG redirect
+          # end # if RFG redirect
           tracker.track(@user.ip_address, 'QT-2')
-          redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=2'
-          
+          redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=2'          
         end # if test        
     end # case
   end # status
