@@ -2054,7 +2054,7 @@ class UsersController < ApplicationController
       p2s_hispanic = [0, 6729, 6730, 6898, 6900, 6901, 6902, 6903, 6904, 6905, 6906, 6907, 6908, 6909, 6910, '']
       @p2s_hispanic = p2s_hispanic[user.ethnicity.to_i].to_s
       
-      p2s_employment_status = [0, 7007, 7008, 7006, 7006, 7013, 7013, 7012, 7011, 7009, 7010, 7009, '']
+      p2s_employment_status = [0, 7007, 7008, 7006, 7006, 7013, 7013, 7012, 7011, 7009, 7010, 23562, '']
       @p2s_employment_status = p2s_employment_status[user.employment.to_i].to_s
       
       
@@ -2065,37 +2065,38 @@ class UsersController < ApplicationController
       p2s_race = [0, 10094, 10095, 10101, 10097, 10098, 10104, 10109, 10110, 10111, 10096, 10102, 10106, 10107, 10108, 10103, '']
       @p2s_race = p2s_race[user.race.to_i].to_s
       
-      p2s_education_level = [0, 10157, 10157, 10157, 10158, 10163, 10159, 10160, 10161, 10165, 10162, 10164, '']
+      p2s_education_level = [0, 10157, 10158, 10163, 10159, 10160, 10161, 10162, 10164, '']
       @p2s_education_level = p2s_education_level[user.eduation.to_i].to_s
       
-      p2s_org_id = [0, 22942, 22934, '', '', 22936, '', 22942, '', '', 22938, '', 22957, 22957, 22957, 22957, 22938, '', '', 22939, 22940, '', '', '', '', '', 22943, 22944, 22945, '', 22957, '', '', 22946, 22947, 22949, 22948, 22950, '', 22952, '', 22944, 22953, '', 22954, '', '', '', '', '', 22959, '']
+      p2s_org_id = [0, 22942, 22934, '', '', 22936, '', 22942, '', '', 22938, '', 22957, 22957, 22957, 22957, 22938, '', '', 22939, 22940, 3650829, '', '', '', '', 22943, 22944, 22945, '', 22957, 3651719, '', 22946, 22947, 22949, 22948, 22950, '', 22952, '', 22944, 22953, '', 22954, '', '', '', '', '', 3661207, '']
       @p2s_org_id = p2s_org_id[user.pindustry.to_i].to_s
       
-      p2s_jobtitle = [0, 14899, 14900, 14901, 14902, 14903, 14904, 14905, 14906, 14907, 14908, 14909]
+      p2s_jobtitle = [0, 3673669, 367670, 3673663, 3673668, 3673671, 3673675, 3673675, 3673672, 3673673, 3673674, 3673675]
       @p2s_jobtitle = p2s_jobtitle[user.jobtitle.to_i].to_s
        
-      p2s_children = [0, '', '', '', '', '', '', 6975, 6976, 6977, 6978, 6979, 6980, 6981, 6982, 6983, 6984, 6985, 6986, 6987, 6988, 6989, 6990, 6991, 6992, 6993, 6994, 6995, 6996, 6997, 6998, 6999, 7000, 7001, 7002, 7003, 7004, 7005]
+      p2s_children = [0, 6971, 6972, 6971, 6972, 6973, 6974, 6975, 6976, 6977, 6978, 6979, 6980, 6981, 6982, 6983, 6984, 6985, 6986, 6987, 6988, 6989, 6990, 6991, 6992, 6993, 6994, 6995, 6996, 6997, 6998, 6999, 7000, 7001, 7002, 7003, 7004]
       
       
       if user.children != nil then
-        @p2s_children = p2s_children[user.children[0].to_i].to_s
-        
-        if user.children.length > 1 then
+        if user.children[0] != '-3105' then
+          @p2s_children = p2s_children[user.children[0].to_i].to_s
+          
+          if user.children.length > 1 then            
+            (1..user.children.length-1).each do |i|
             
-          (1..user.children.length-1).each do |i|
-          
-            if p2s_children[user.children[i].to_i] != '' then                  
-              @p2s_children = @p2s_children+','+p2s_children[user.children[i].to_i].to_s
-              
-            else
-            end              
-              
+              if p2s_children[user.children[i].to_i] != '' then                  
+                @p2s_children = @p2s_children+','+p2s_children[user.children[i].to_i].to_s    
+              else
+              end              
+                
+            end        
+          else
           end
-          
         else
-        end
-        
+          @p2s_children = '7005'
+        end        
       else
+        @p2s_children = ''
       end
       
       p2s_province = [0, 20509, 20508, 20511, 20515, 20517, 20519, 20516, 20520, 20512, 20514, 20513, 20510, 20518]
