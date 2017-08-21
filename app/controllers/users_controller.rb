@@ -69,7 +69,7 @@ class UsersController < ApplicationController
 
       if (first_time_user) then
         # Create a new-user record
-#        p '****************** EVAL_AGE: Creating new record for FIRST TIME USER'
+    #        p '****************** EVAL_AGE: Creating new record for FIRST TIME USER'
         #  @user = User.new(user_params)
         @user = User.new
         @user.age = @age
@@ -153,18 +153,17 @@ class UsersController < ApplicationController
       redirect_to '/users/tos'
     else
       redirect_to '/users/tos'
-    end    
-    
+    end        
   end
   
   def sign_tos
 
- #   tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    #   tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
       
     user=User.find_by session_id: session.id
     user.tos=true
 
- #   tracker.track(user.ip_address, 'TOS')
+    #   tracker.track(user.ip_address, 'TOS')
 
     # Update number of attempts in last 24 hrs record of the user
     if ( user.number_of_attempts_in_last_24hrs==nil ) then
@@ -193,21 +192,21 @@ class UsersController < ApplicationController
     end
       
     # set 24 hr survey completes quota here
-#    if (user.SurveysCompleted[count { |x| x > (Time.now-1.day) } == 5) then
-#       p 'Exceeded quota of surveys to fill for today'
-#       redirect_to '/users/24hrsquotaexceeded'
-#       return
-#     else
-#     end
+    #    if (user.SurveysCompleted[count { |x| x > (Time.now-1.day) } == 5) then
+    #       p 'Exceeded quota of surveys to fill for today'
+    #       redirect_to '/users/24hrsquotaexceeded'
+    #       return
+    #     else
+    #     end
   end  
   
   def gender
     
-#  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    #  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
   
     user=User.find_by session_id: session.id
     
-#    tracker.track(user.ip_address, 'Gender')
+    #    tracker.track(user.ip_address, 'Gender')
 
     if params[:gender] != nil
       user.gender=params[:gender]
@@ -215,18 +214,17 @@ class UsersController < ApplicationController
       redirect_to '/users/tq1'
     else
       redirect_to '/users/qq2'
-    end
-    
+    end    
   end
   
   def trap_question_1
     
-  #  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    #  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
   
     
     user=User.find_by session_id: session.id
     
-  #  tracker.track(user.ip_address, 'Trap Q1')
+    #  tracker.track(user.ip_address, 'Trap Q1')
     
     user.trap_question_1_response=params[:color]
     if params[:color]=="Green" then
@@ -292,7 +290,7 @@ class UsersController < ApplicationController
   end    
   
   def country    
-  # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
     
     user=User.find_by session_id: session.id
     
@@ -341,7 +339,6 @@ class UsersController < ApplicationController
     else
       redirect_to '/users/qq4_US'
     end
-
   end
   
   def zip_CA
@@ -358,8 +355,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq7_CA'
     else
       redirect_to '/users/qq4_CA'
-    end
-    
+    end    
   end
   
   def zip_IN
@@ -378,8 +374,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq7_IN'
     else
       redirect_to '/users/qq4_IN'
-    end  
-    
+    end      
   end
   
   def zip_AU
@@ -395,8 +390,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq7_AU'
     else
       redirect_to '/users/qq4_AU'
-    end
-    
+    end    
   end
   
   def ethnicity_US
@@ -413,9 +407,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq6_US'
     else
       redirect_to '/users/qq5_US'
-    end
-    
-    
+    end    
   end
   
   def ethnicity_CA
@@ -428,8 +420,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq6_CA'
     else
       redirect_to '/users/qq5_CA'
-    end
-    
+    end    
   end
   
   def ethnicity_IN
@@ -442,17 +433,16 @@ class UsersController < ApplicationController
       redirect_to '/users/qq6_IN'
     else
       redirect_to '/users/qq5_IN'
-    end  
-    
+    end      
   end
   
   def race_US
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    #    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#    tracker.track(user.ip_address, 'race_US')
+    #    tracker.track(user.ip_address, 'race_US')
     
     if params[:race] != nil
       user.race=params[:race]
@@ -460,8 +450,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq10'
     else
       redirect_to '/users/qq6_US'
-    end  
-    
+    end      
   end
   
   def race_CA
@@ -475,9 +464,7 @@ class UsersController < ApplicationController
   end
   
   def race_IN
-    
-      # NOTE: make QQ6 with radio buttons and race not an array, delete to_s
-
+    # NOTE: make QQ6 with radio buttons and race not an array, delete to_s
     user=User.find_by session_id: session.id
     user.race=params[:race]
     user.save
@@ -488,11 +475,11 @@ class UsersController < ApplicationController
     
     # Note: typo in user.eduation
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    #    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#    tracker.track(user.ip_address, 'education_US')
+    #    tracker.track(user.ip_address, 'education_US')
     
     if params[:education] != nil
       user.eduation=params[:education]
@@ -500,18 +487,17 @@ class UsersController < ApplicationController
       redirect_to '/users/qq8_US'
     else
       redirect_to '/users/qq7_US'
-    end
-    
+    end    
   end
   
   def education_CA
     # Note: typo in user.eduation
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    #    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#     tracker.track(user.ip_address, 'education_CA')
+    #     tracker.track(user.ip_address, 'education_CA')
     
     if params[:education] != nil
       user.eduation=params[:education]
@@ -519,19 +505,17 @@ class UsersController < ApplicationController
       redirect_to '/users/qq8_CA'
     else
       redirect_to '/users/qq7_CA'
-    end
-    
-    
+    end    
   end
   
   def education_IN
     # Note: typo in user.eduation
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    #    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#    tracker.track(user.ip_address, 'education_IN')
+    #    tracker.track(user.ip_address, 'education_IN')
     
     if params[:education] != nil
       user.eduation=params[:education]
@@ -539,18 +523,17 @@ class UsersController < ApplicationController
       redirect_to '/users/qq8_IN'
     else
       redirect_to '/users/qq7_IN'
-    end
-    
+    end    
   end
   
   def education_AU
     # Note: typo in user.eduation
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    #    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#    tracker.track(user.ip_address, 'education_AU')
+    #    tracker.track(user.ip_address, 'education_AU')
     
     if params[:education] != nil
       user.eduation=params[:education]
@@ -558,8 +541,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq8_AU'
     else
       redirect_to '/users/qq7_AU'
-    end
-    
+    end   
   end
 
   def householdincome_US  
@@ -576,8 +558,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq5_US'
     else
       redirect_to '/users/qq8_US'
-    end
-    
+    end    
   end
 
   def householdincome_CA
@@ -594,17 +575,16 @@ class UsersController < ApplicationController
       redirect_to '/users/qq10'
     else
       redirect_to '/users/qq8_CA'
-    end
-    
+    end    
   end
 
   def householdincome_IN  
     
-#    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    #    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     user=User.find_by session_id: session.id
     
-#     tracker.track(user.ip_address, 'hhi_IN')
+    #     tracker.track(user.ip_address, 'hhi_IN')
     
     if params[:hhi] != nil
       user.householdincome=params[:hhi]
@@ -613,7 +593,6 @@ class UsersController < ApplicationController
     else
       redirect_to '/users/qq8_IN'
     end
-
   end
   
   def householdincome_AU  
@@ -630,8 +609,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq10'
     else
       redirect_to '/users/qq8_AU'
-    end
-    
+    end    
   end
   
   def employment
@@ -643,15 +621,14 @@ class UsersController < ApplicationController
     # tracker.track(user.ip_address, 'employment')    
     
     if params[:employment] != nil
-  #    user.householdcomp=params[:employment]
+    #    user.householdcomp=params[:employment]
       user.employment=params[:employment]
       user.save
       redirect_to '/users/qq11'
-#      ranksurveysforuser(session.id)
+    #      ranksurveysforuser(session.id)
     else
       redirect_to '/users/qq10'
-    end
-    
+    end    
   end
   
   def personalindustry  
@@ -668,8 +645,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq13'
     else
       redirect_to '/users/qq11'
-    end
-    
+    end    
   end
   
   def jobtitleaction  
@@ -686,8 +662,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq14'
     else
       redirect_to '/users/qq13'
-    end
-    
+    end    
   end 
   
   def childrenaction  
@@ -708,8 +683,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq15'
     else
       redirect_to '/users/qq14'
-    end
-    
+    end    
   end 
   
   def industriesaction  
@@ -730,8 +704,7 @@ class UsersController < ApplicationController
       redirect_to '/users/qq12'
     else
       redirect_to '/users/qq15'
-    end
-    
+    end    
   end
   
   def pleasewait
@@ -745,8 +718,7 @@ class UsersController < ApplicationController
     print "BUG Repeat User: ", user.user_id, " of country ", user.country, " of Gender ", user.gender, " Time 2 start FED search: ", Time.now
     puts
     
-    ranksurveysforuser(session.id)
-    
+    ranksurveysforuser(session.id)    
   end
 
   def join_panel  
@@ -917,10 +889,8 @@ class UsersController < ApplicationController
       
       completedSurveyStats = []
       render json: completedSurveyStats.to_json
-    end
-  
+    end  
   end
-
 
   def savePreferences
     if params[:preferences] != nil then
@@ -951,7 +921,6 @@ class UsersController < ApplicationController
       p "***************** Nothing was received by savePreferences as preferences **************"
     end
   end
-
   
   # start to rankfedsurveys
 
@@ -972,37 +941,37 @@ class UsersController < ApplicationController
     end    
     
     if user.country == '6' then
-#      print "--------------------------->>>>>> First character of CA postalcode = ", user.ZIP.slice(0)
-#      puts
+    #      print "--------------------------->>>>>> First character of CA postalcode = ", user.ZIP.slice(0)
+    #      puts
       
       case user.ZIP.slice(0)
       when "T"
         @provincePrecode = "1"
-#        puts "Assigned Alberta @provincePrecode = 1"
+    #        puts "Assigned Alberta @provincePrecode = 1"
         
       when "V"
         @provincePrecode = "2"
-#        puts "Assigned BC @provincePrecode = 2"
+    #        puts "Assigned BC @provincePrecode = 2"
         
       when "R"
         @provincePrecode = "3"
-#        puts "Assigned MB @provincePrecode = 3"
+    #        puts "Assigned MB @provincePrecode = 3"
         
       when "E"
         @provincePrecode = "4"
-#        puts "Assigned NB @provincePrecode = 4"
+    #        puts "Assigned NB @provincePrecode = 4"
         
       when "A"
         @provincePrecode = "5"
-#        puts "Assigned NL @provincePrecode = 5"
+    #        puts "Assigned NL @provincePrecode = 5"
         
       when "X"
         @provincePrecode = "6"
-#        puts "Assigned NT @provincePrecode = 6"
+    #        puts "Assigned NT @provincePrecode = 6"
         
       when "B"
         @provincePrecode = "7"
-#        puts "Assigned NS @provincePrecode = 7"
+    #        puts "Assigned NS @provincePrecode = 7"
         
         # when "X"  # X would become a duplicate. Nunavut is teh least populated province so this is it
         # @provincePrecode = "8"
@@ -1010,47 +979,47 @@ class UsersController < ApplicationController
         
       when "K"
         @provincePrecode = "9"
-#        puts "Assigned ON @provincePrecode = 9"
+    #        puts "Assigned ON @provincePrecode = 9"
         
       when "L"
         @provincePrecode = "9"
-#        puts "Assigned ON @provincePrecode = 9"
+    #        puts "Assigned ON @provincePrecode = 9"
         
       when "M"
         @provincePrecode = "9"
-#        puts "Assigned ON @provincePrecode = 9"
+    #        puts "Assigned ON @provincePrecode = 9"
         
       when "N"
         @provincePrecode = "9"
-#        puts "Assigned ON @provincePrecode = 9"
+    #        puts "Assigned ON @provincePrecode = 9"
         
       when "P"
         @provincePrecode = "9"
-#        puts "Assigned ON @provincePrecode = 9"
+    #        puts "Assigned ON @provincePrecode = 9"
 
       when "C"
         @provincePrecode = "10"
-#        puts "Assigned PE @provincePrecode = 10"
+    #        puts "Assigned PE @provincePrecode = 10"
         
       when "G"
         @provincePrecode = "11"
-#        puts "Assigned QC @provincePrecode = 11"
+    #        puts "Assigned QC @provincePrecode = 11"
         
       when "H"
         @provincePrecode = "11"
-#        puts "Assigned QC @provincePrecode = 11"
+    #        puts "Assigned QC @provincePrecode = 11"
         
       when "J"
         @provincePrecode = "11"
-#        puts "Assigned QC @provincePrecode = 11"
+    #        puts "Assigned QC @provincePrecode = 11"
         
       when "S"
         @provincePrecode = "12"
-#        puts "Assigned SK @provincePrecode = 12"
+    #        puts "Assigned SK @provincePrecode = 12"
         
       when "Y"
         @provincePrecode = "13"
-#        puts "Assigned YT @provincePrecode = 13"
+    #        puts "Assigned YT @provincePrecode = 13"
       end
     else
     end # country == 6
@@ -1286,10 +1255,10 @@ class UsersController < ApplicationController
           @statePrecode = "51"
           print "Wyoming PreCode Used for: ", @geo.State
           puts
-#      when "NotApplicable"
-#        @statePrecode = "52"
-#        print "NotApplicable PreCode Used for: ", @geo.State
-#        puts
+    #      when "NotApplicable"
+    #        @statePrecode = "52"
+    #        print "NotApplicable PreCode Used for: ", @geo.State
+    #        puts
         when "AmericanSamoa"
           @statePrecode = "53"
           print "AmericanSamoa PreCode Used for: ", @geo.State
@@ -1481,7 +1450,6 @@ class UsersController < ApplicationController
     selectAdhocSurveys(session_id)        
   end # end rankfedsurveys
 
-
   def selectAdhocSurveys(session_id)
     
     require 'digest/hmac'
@@ -1538,7 +1506,7 @@ class UsersController < ApplicationController
 
 
         if (((survey.CountryLanguageID == 5) &&        
-  #          ( survey.SurveyStillLive ) && 
+        #          ( survey.SurveyStillLive ) && 
           (( survey.QualificationAgePreCodes.empty? ) || ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.empty? ) || ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
           (( survey.QualificationZIPPreCodes.empty? ) || ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
@@ -1550,15 +1518,15 @@ class UsersController < ApplicationController
           (( survey.QualificationPIndustryPreCodes.empty? ) || ( survey.QualificationPIndustryPreCodes.flatten == [ "ALL" ] ) || (([ user.pindustry ] & survey.QualificationPIndustryPreCodes.flatten) == [ user.pindustry ])) &&     
           (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&
           (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationChildrenPreCodes.flatten).empty? == false)) 
-  #          &&
-  #          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
+          #          &&
+          #          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
           ) ||
           
           
           # I have removed .slice(0..2) in the Zip comparison - tripple check it that it is the right thing for Adhoc surveys
           
           ((survey.CountryLanguageID == 6) &&          
-  #          ( survey.SurveyStillLive ) && 
+    #          ( survey.SurveyStillLive ) && 
           (( survey.QualificationAgePreCodes.empty? ) || ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.empty? ) || ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
           (( survey.QualificationZIPPreCodes.empty? ) || ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
@@ -1571,12 +1539,12 @@ class UsersController < ApplicationController
           (( survey.QualificationJobTitlePreCodes.empty? ) || ( survey.QualificationJobTitlePreCodes.flatten == [ "ALL" ] ) || (([ user.jobtitle ] & survey.QualificationJobTitlePreCodes.flatten) == [ user.jobtitle ])) &&
           (( survey.QualificationChildrenPreCodes.empty? ) || ( survey.QualificationChildrenPreCodes.flatten == [ "ALL" ] ) || (( user.children & survey.QualificationChildrenPreCodes.flatten).empty? == false)) &&
           (( survey.QualificationHHCPreCodes.empty? ) || ( survey.QualificationHHCPreCodes.flatten == [ "ALL" ] ) || (([ @provincePrecode ] & survey.QualificationHHCPreCodes.flatten) == [ @provincePrecode ])) 
-  #          &&
-  #          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
+    #          &&
+    #          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
           ) ||        
           
           ( (survey.CountryLanguageID == 9) &&          
-  #          ( survey.SurveyStillLive ) && 
+    #          ( survey.SurveyStillLive ) && 
           (( survey.QualificationAgePreCodes.empty? ) || ( survey.QualificationAgePreCodes.flatten == [ "ALL" ] ) || (([ user.age ] & survey.QualificationAgePreCodes.flatten) == [ user.age ] )) && 
           (( survey.QualificationGenderPreCodes.empty? ) || ( survey.QualificationGenderPreCodes.flatten == [ "ALL" ] ) || ((@GenderPreCode & survey.QualificationGenderPreCodes.flatten) == @GenderPreCode )) && 
           (( survey.QualificationZIPPreCodes.empty? ) || ( survey.QualificationZIPPreCodes.flatten == [ "ALL" ] ) || (([ user.ZIP ] & survey.QualificationZIPPreCodes.flatten) == [ user.ZIP ])) &&
@@ -1592,8 +1560,8 @@ class UsersController < ApplicationController
           (( survey.QualificationStatePreCodes.empty? ) || ( survey.QualificationStatePreCodes.flatten == [ "ALL" ] ) || (([ @statePrecode ] & survey.QualificationStatePreCodes.flatten) == [ @statePrecode ])) && 
           (( survey.QualificationRegionPreCodes.empty? ) || ( survey.QualificationRegionPreCodes.flatten == [ "ALL" ] ) || (([ @regionPrecode ] & survey.QualificationRegionPreCodes.flatten) == [ @regionPrecode ])) && 
           (( survey.QualificationDivisionPreCodes.empty? ) || ( survey.QualificationDivisionPreCodes.flatten == [ "ALL" ] ) || (([ @divisionPrecode ] & survey.QualificationDivisionPreCodes.flatten) == [ @divisionPrecode ])) 
-  #          &&       
-  #          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
+    #          &&       
+    #          (( survey.CPI == nil) || (survey.CPI >= @currentpayout)) 
           ))         
           
         then
@@ -1676,7 +1644,6 @@ class UsersController < ApplicationController
     # Select RFG projects next
     selectRfgProjects(session_id)      
   end # end selectAdhocSurveys
-
   
   def selectRfgProjects(session_id)
     
@@ -1973,27 +1940,25 @@ class UsersController < ApplicationController
     # puts
     
     # Begin the ride next
-    userride (session_id)              
+    selectP2SSurveys (session_id)
+    # userride (session_id)              
   end #selectRfgProjects
 
-
   def selectInnovateSurveys (session_id)
-
     # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     # @innovateNetId = "4444"
     # @innovateSupplierLink = ""
     # @innovateSupplierLink = "http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+@innovateNetId+user.user_id
-
   end
-
        
-  def userride (session_id)
+  def selectP2SSurveys (session_id)
+    # def userride (session_id)
     
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
     
     user = User.find_by session_id: session_id
-    @PID = user.user_id
+    # @PID = user.user_id
 
     # If user is blacklisted, then qterm
     if user.black_listed == true then
@@ -2142,9 +2107,16 @@ class UsersController < ApplicationController
     else
       puts "-------------------********************** P2S is not attached ********************------------------------"
     end #if P2SisAttached
+  end # selectP2SSurveys
 
+  def userride (session_id)
 
-    # Order surveys by stackOrder for the user ride
+    user = User.find_by session_id: session_id
+
+    @netid = user.netid  
+    @net = Network.find_by netid: @netid
+
+    # First order surveys by stackOrder for the user ride
 
     user.SupplierLink=[]
     (0..@net.stackOrder.length-1).each do |i|
@@ -2246,7 +2218,7 @@ class UsersController < ApplicationController
           redirect_to @EntryLink
         end
       end # if user.SupplierLink[0] == @p2sSupplierLink then
-    end # if user.SupplierLink == nil    
+    end # if user.SupplierLink.length == 0    
   end # userride
 
   def Scrnr1Action
@@ -2266,7 +2238,7 @@ class UsersController < ApplicationController
 
       user.save
       @adhocSurveyLookup = Adhoc.where("SurveyNumber = ?", user.SurveysAttempted[-2]).first # Is it always -2? NO, when there are 
-#CHANGE ---- more than 1 SreenerResponses are stored
+    #CHANGE ---- more than 1 SreenerResponses are stored
       
       if @adhocSurveyLookup.Screener1Resp == params[:Scrnr1Resp] then
         #redirect_to '/users/Scrnr2'
@@ -2345,7 +2317,6 @@ class UsersController < ApplicationController
       redirect_to '/users/Pii1'
     end
   end
-
   
   def p1action
     redirect_to '/users/p2'
@@ -2593,4 +2564,3 @@ class UsersController < ApplicationController
   end # p3action
 
 end
-
