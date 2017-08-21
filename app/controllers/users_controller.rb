@@ -2103,9 +2103,10 @@ class UsersController < ApplicationController
       # Save the list of SupplierLinks with P2S, if ACTIVE
     
       user.save
-
+      userride (session_id)
     else
       puts "-------------------********************** P2S is not attached ********************------------------------"
+      userride (session_id)
     end #if P2SisAttached
   end # selectP2SSurveys
 
