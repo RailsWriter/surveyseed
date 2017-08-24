@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<div class="header">
+			<center>
+				<h1>Thanks for attempting our surveys. We have many more. These require your email address.</h1>
+			</center>
+		</header>
+		
+		<div id="content">
+			<center>
+				<p>We will only use your email address to improve your survey experience unless you agree to join our panel explicitly later. </p><br><br>
+			</center>			
+		</content>
+
+
+		<div class="content">
+			<center><br>
+				<p>Enter your Email address:</p>
+			</center>
+				<%= form_tag("/users/getEmail", method: "post") do %>
+					<fieldset>
+						<div class="myyrsinput">
+							<%= text_field_tag 'emailid', nil, maxlength: 100 %>
+							<%= label_tag(:emailid, '') %><br><br>
+						</div>
+					
+						<div class="myinput">
+							<center>				
+								<%= submit_tag "Submit" %><br>
+								<p>or</p>
+								<%= submit_tag "No Thanks" %>
+							</center>
+						</div>
+					</fieldset>
+				<% end %>
+		</content>
+
+
+
+		
+		<br>
+		<br>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('KetsciLogoSm.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

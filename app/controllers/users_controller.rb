@@ -1861,16 +1861,16 @@ class UsersController < ApplicationController
 
       # Instead of LiveLink use Offerwall surveys
 
-      p "--------------------**************>>>>>>>>>>>>>> RFG Offerwall API call with params <<<<<<<<<<<<<<<<<*****************-------------------"
+      p "BUG: *********>>>>>>>>>> RFG Offerwall API call with params <<<<<<<<*******FAILS IF CLOCK OUT OF SYNC-----------"
 
       if user.country=="9" then
-        command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :rfg2_113 => @RFGEthnicity}.to_json
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1, :rfg2_113 => @RFGEthnicity}.to_json
       else
         if user.country=="6" then
-          command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice}.to_json
+          command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1}.to_json
         else
           if user.country=="5" then
-        command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice}.to_json          
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1}.to_json          
           else
           end
         end
