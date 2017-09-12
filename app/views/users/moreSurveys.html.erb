@@ -10,16 +10,9 @@
 	<body class="body">
 		<div class="header">
 			<center>
-				<h1>Thanks for attempting our surveys. We have many more. These require your email address.</h1>
+				<p>Thanks for attempting our surveys. We have many more. They require your email address.</p>
 			</center>
 		</header>
-		
-		<div id="content">
-			<center>
-				<p>We will only use your email address to improve your survey experience unless you agree to join our panel explicitly later. </p><br><br>
-			</center>			
-		</content>
-
 
 		<div class="content">
 			<center><br>
@@ -27,10 +20,10 @@
 			</center>
 				<%= form_tag("/users/getEmail", method: "post") do %>
 					<fieldset>
-						<div class="myyrsinput">
-							<%= text_field_tag 'emailid', nil, maxlength: 100 %>
-							<%= label_tag(:emailid, '') %><br><br>
-						</div>
+							<div class="myyrsinput">
+								<%= text_field_tag 'emailid', nil, maxlength: 300 %>
+								<%= label_tag(:emailid, '') %><br><br>
+							</div>
 					
 						<div class="myinput">
 							<center>				

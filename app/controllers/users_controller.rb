@@ -104,7 +104,7 @@ class UsersController < ApplicationController
       if (first_time_user==false) then
         user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
 
-        print "BUG REPEAT USER: Existing User Record is: ", user
+        print "*** DEBUG ******* REPEAT USER. Existing User Record is: ", user
         puts
 
         # Why do I have to stop at first? Optimizes. But there should be not more than 1 entry.
@@ -181,9 +181,13 @@ class UsersController < ApplicationController
       p 'TOS: A REPEAT USER'
       # set 24 hr survey attempts in separate sessions from same device/IP address here
       if (user.number_of_attempts_in_last_24hrs < 10) then
-        # skip gender and other demo questions due to responses in last 24 hrs
-        #redirect_to '/users/qq2'
-        redirect_to '/users/qq12Returning'
+        if user.ZIP.empty? then
+          # this user did not provide profile info the first time
+          redirect_to '/users/qq2'
+        else
+          # skip gender and other demo questions due to responses in last 24 hrs
+          redirect_to '/users/qq12Returning'
+        end      
       else
         # user has made too many attempts to take surveys
         p '******* More than 10 attempts to take a survey in last 24 hrs ***********'
@@ -777,11 +781,7 @@ class UsersController < ApplicationController
             status: 400
           }
           render :json => payload, :status => :bad_request
-
-
-
-        else
-          
+        else          
           ip_address = request.remote_ip
           session_id = session.id
           netid = params[:netid]
@@ -873,7 +873,7 @@ class UsersController < ApplicationController
         j=j+2
       end while j<@countsArray.length-1
 
-      completedSurveyStats = completedSurveyStats + ['']
+      completedSurveyStats = (completedSurveyStats + ['']).flatten
       completedSurveyStats = [['Genre', 'Completed',  {role: 'annotation'}], completedSurveyStats]
 
       print "****************** completedSurveyStats Array of Arrays is = ", completedSurveyStats
@@ -923,7 +923,6 @@ class UsersController < ApplicationController
   end
   
   # start to rankfedsurveys
-
   def ranksurveysforuser (session_id)
 
     require 'base64'
@@ -1939,19 +1938,11 @@ class UsersController < ApplicationController
     # print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time-4 End RFG selection: ", Time.now
     # puts
     
-    # Begin the ride next
-    selectP2SSurveys (session_id)
-    # userride (session_id)              
+    # Select P2S surveys next
+    selectP2SSurveys (session_id)    
+    # redirect_to '/users/moreSurveys'
   end #selectRfgProjects
 
-  def selectInnovateSurveys (session_id)
-    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
-
-    # @innovateNetId = "4444"
-    # @innovateSupplierLink = ""
-    # @innovateSupplierLink = "http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+@innovateNetId+user.user_id
-  end
-       
   def selectP2SSurveys (session_id)
     # def userride (session_id)
     
@@ -1959,16 +1950,6 @@ class UsersController < ApplicationController
     
     user = User.find_by session_id: session_id
     # @PID = user.user_id
-
-    # If user is blacklisted, then qterm
-    if user.black_listed == true then
-      print '******************** Userride: UserID is BLACKLISTED: ', user.user_id
-      puts
-      tracker.track(user.ip_address, 'NS_BL')
-      redirect_to '/users/nosuccess'
-      return
-    else
-    end
 
     # Queue up additional surveys from P2S. First calculate the additional values to be attached.
     
@@ -2110,12 +2091,31 @@ class UsersController < ApplicationController
     end #if P2SisAttached
   end # selectP2SSurveys
 
+  def selectInnovateSurveys (session_id)
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+
+    # @innovateNetId = "4444"
+    # @innovateSupplierLink = ""
+    # @innovateSupplierLink = "http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+@innovateNetId+user.user_id
+  end
+
   def userride (session_id)
 
     user = User.find_by session_id: session_id
 
     @netid = user.netid  
     @net = Network.find_by netid: @netid
+
+
+    # If user is blacklisted, then qterm
+    if user.black_listed == true then
+      print '******************** Userride: UserID is BLACKLISTED: ', user.user_id
+      puts
+      tracker.track(user.ip_address, 'NS_BL')
+      redirect_to '/users/nosuccess'
+      return
+    else
+    end
 
     # First order surveys by stackOrder for the user ride
 
@@ -2148,8 +2148,10 @@ class UsersController < ApplicationController
           user.SupplierLink = user.SupplierLink + [@innovateSupplierLink]
         else
         end
-      end
-    end
+      when "2"
+          user.SupplierLink = user.SupplierLink + ['/users/moreSurveys']
+      end # case
+    end # do
     
     # Remove any blank entries
     if user.SupplierLink !=nil then
@@ -2167,9 +2169,13 @@ class UsersController < ApplicationController
       redirect_to '/users/nosuccess'
     else      
 
-      if user.SupplierLink[0] == @p2sSupplierLink then
+      # if user.SupplierLink[0] == @p2sSupplierLink then
       
-        print '*************** User will be sent to P2S router as no other surveys are available: ', user.SupplierLink[0]
+      #   print '*************** User will be sent to P2S router as no other surveys are available: ', user.SupplierLink[0]
+      #   puts
+      if user.SupplierLink.length == 1 then
+      
+        print '*************** User will be sent to the only router in stackOrder as no other surveys are available: ', user.SupplierLink[0]
         puts
       
         @EntryLink = user.SupplierLink[0]
@@ -2318,6 +2324,165 @@ class UsersController < ApplicationController
       redirect_to '/users/Pii1'
     end
   end
+
+  def getEmail
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    user = User.find_by session_id: session.id
+    if (params[:emailid].empty? == false) then
+      user.emailId = params[:emailid]
+      # user.password = 'None'
+      user.save
+      tracker.track(user.ip_address, 'gotEmailId')
+      selectP2SPullAPISurveys (session.id)
+    else
+      p "************** Users did not share emailid in getEmail *****************"
+      # Do nothing, userride should go to the next survey link instead on p2sapi links.
+    end      
+  end  
+
+  def selectP2SPullAPISurveys (session_id)
+    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')    
+    user = User.find_by session_id: session_id
+
+    # Queue up additional surveys from P2S. First calculate the additional values to be attached.
+    @P2Sclient = Network.find_by name: "P2S"
+    @SUBID = @P2Sclient.netid+user.user_id
+    print "**************** P2S @SUID = ", @SUBID
+    puts
+    if user.gender == '1' then
+      @p2s_gender = "m"
+    else
+      @p2s_gender = "f"
+    end   
+    
+    p2s_hispanic = [0, 6729, 6730, 6898, 6900, 6901, 6902, 6903, 6904, 6905, 6906, 6907, 6908, 6909, 6910, '']
+    @p2s_hispanic = p2s_hispanic[user.ethnicity.to_i].to_s
+    
+    p2s_employment_status = [0, 7007, 7008, 7006, 7006, 7013, 7013, 7012, 7011, 7009, 7010, 23562, '']
+    @p2s_employment_status = p2s_employment_status[user.employment.to_i].to_s
+    
+    p2s_income_level = [0, 9089, 9089, 9089, 9071, 9072, 9088, 9073, 9087, 9074, 9086, 9090, 9075, 9091, 9076, 9092, 9077, 9093, 9078, 9094, 9079, 9080, 9081, 9082, 9085, 9084, 9084, '']
+    @p2s_income_level = p2s_income_level[user.householdincome.to_i].to_s
+    
+    p2s_race = [0, 10094, 10095, 10101, 10097, 10098, 10104, 10109, 10110, 10111, 10096, 10102, 10106, 10107, 10108, 10103, '']
+    @p2s_race = p2s_race[user.race.to_i].to_s
+    
+    p2s_education_level = [0, 10157, 10158, 10163, 10159, 10160, 10161, 10162, 10164, '']
+    @p2s_education_level = p2s_education_level[user.eduation.to_i].to_s
+    
+    p2s_org_id = [0, 22942, 22934, '', '', 22936, '', 22942, '', '', 22938, '', 22957, 22957, 22957, 22957, 22938, '', '', 22939, 22940, 3650829, '', '', '', '', 22943, 22944, 22945, '', 22957, 3651719, '', 22946, 22947, 22949, 22948, 22950, '', 22952, '', 22944, 22953, '', 22954, '', '', '', '', '', 3661207, '']
+    @p2s_org_id = p2s_org_id[user.pindustry.to_i].to_s
+    
+    p2s_jobtitle = [0, 3673669, 367670, 3673663, 3673668, 3673671, 3673675, 3673675, 3673672, 3673673, 3673674, 3673675]
+    @p2s_jobtitle = p2s_jobtitle[user.jobtitle.to_i].to_s
+     
+    p2s_children = [0, 6971, 6972, 6971, 6972, 6973, 6974, 6975, 6976, 6977, 6978, 6979, 6980, 6981, 6982, 6983, 6984, 6985, 6986, 6987, 6988, 6989, 6990, 6991, 6992, 6993, 6994, 6995, 6996, 6997, 6998, 6999, 7000, 7001, 7002, 7003, 7004]
+    
+    if user.children != nil then
+      if user.children[0] != '-3105' then
+        @p2s_children = p2s_children[user.children[0].to_i].to_s        
+        if user.children.length > 1 then            
+          (1..user.children.length-1).each do |i|          
+            if p2s_children[user.children[i].to_i] != '' then                  
+              @p2s_children = @p2s_children+','+p2s_children[user.children[i].to_i].to_s    
+            else
+            end          
+          end        
+        else
+        end
+      else
+        @p2s_children = '7005'
+      end        
+    else
+      @p2s_children = ''
+    end
+    
+    p2s_province = [0, 20509, 20508, 20511, 20515, 20517, 20519, 20516, 20520, 20512, 20514, 20513, 20510, 20518]
+    @p2s_province = p2s_province[@provincePrecode.to_i].to_s        
+
+    # p2s additional values
+    if user.country=="9" then
+      p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&user_id='+user.user_id+'&email='+user.emailId+'&ip_address='+user.ip_address
+    else
+      if user.country=="6" then
+        p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&canada_regions='+@p2s_province+'&user_id='+user.user_id+'&email='+user.emailId+'&ip_address='+user.ip_address
+      else
+        if user.country=="5" then
+          p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&user_id='+user.user_id+'&email='+user.emailId+'&ip_address='+user.ip_address
+        else
+        end
+      end
+    end  
+
+    print "DEBUG **** p2s_Api_AdditionalValues: ", p2s_Api_AdditionalValues
+    puts
+
+
+    # Ask P2S Api server for top surveys list
+    require 'httparty'
+    api_base_url = "https://www.your-surveys.com/suppliers_api/surveys/user"
+    @failcount = 0
+    user_net = Network.find_by netid: user.netid
+    net_payout = user_net.payout
+
+    puts '*************** CONNECTING TO P2S API SURVEYS'
+    print "***** DEBUG **** Full API URL: ", api_base_url+'?'+p2s_Api_AdditionalValues
+    puts
+
+    begin
+    @failcount = @failcount+1
+    print "P2S API access failcount is: ", @failcount
+    puts
+      @p2sApiResponse = HTTParty.get(api_base_url+'?'+p2s_Api_AdditionalValues,
+        :headers => {'X-YourSurveys-Api-Key' => '9df95db5396d180e786c707415203b95'}
+        )
+      rescue HTTParty::Error => e
+        puts 'HttParty::Error '+ e.message
+      retry
+    end while ((@p2sApiResponse.code != 200) && (@failcount < 10))
+
+    @P2SApiSupplierLinks = []
+    if @failcount == 10 then
+      print "**** DEBUG ***** No response returned by P2S API. No SupplierLinks added. **********"
+      puts
+    else
+      print 'http response', @p2sApiResponse
+      puts    
+      if @p2sApiResponse["surveys"].length == 0 then
+          print "********* No surveys returned by P2S API **********"
+          puts        
+      else
+        @NumberOfP2SSurveys = @p2sApiResponse["surveys"].length       
+        print "************ Number of surveys returned by P2S API: ", @NumberOfP2SSurveys
+        puts
+
+        (0..@NumberOfP2SSurveys-1).each do |i|
+          if (@p2sApiResponse["surveys"][i]["cpi"].to_f > net_payout) then
+            @P2SApiSupplierLinks << @p2sApiResponse["surveys"][i]["entry_link"]
+          else
+          end
+        end #do
+        print "************ Number of surveys on P2S API which Qualify for KETSCI: ", @P2SApiSupplierLinks.length
+        puts
+        print "P2S API Offerwall SupplierLinks: ", @P2SApiSupplierLinks
+        puts
+      end
+    end
+
+    addP2SApiLinks = @P2SApiSupplierLinks + user.SupplierLink
+    user.SupplierLink = addP2SApiLinks
+
+    if user.SupplierLink.length == 0 then
+      redirect_to '/users/nosuccess'
+    else
+      @NewEntryLink = user.SupplierLink[0]
+      user.SupplierLink = user.SupplierLink.drop(1)
+      user.save
+      print "************>>>>User will be sent to this first P2S API Survey Entry link>>>>>>>ooooppppppp ", @P2SApiSupplierLinks[0],  "***************************************************************"
+      puts
+      redirect_to @NewEntryLink
+    end
+  end # selectP2SSurveys
   
   def p1action
     redirect_to '/users/p2'
@@ -2343,12 +2508,10 @@ class UsersController < ApplicationController
     
     if user.SurveysCompleted.flatten(2).include? (user.clickid) then
       # print "************* Click Id already exists - do not postback again!"
-      # puts
-      
+      # puts      
     else
           
-      #Postback that the Test completed 
-    
+      #Postback that the Test completed     
       if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
 
         begin
@@ -2545,8 +2708,7 @@ class UsersController < ApplicationController
       user.SurveysCompleted[Time.now] = [user.user_id, 'TESTSURVEY', 'KETSCI', '$0', user.clickid, @net_name]
 
       #user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
-      user.save
-    
+      user.save    
     end # duplicate is false
     
     if user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
@@ -2563,5 +2725,4 @@ class UsersController < ApplicationController
       end
     end  
   end # p3action
-
 end

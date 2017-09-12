@@ -1308,9 +1308,29 @@ class RedirectsController < ApplicationController
             @user.SurveysAttempted << 'P2S-3'+'-ts='+Time.now.to_s
             @user.save        
             
-            #Tell user that they were not matched in P2S due to Failure
-            tracker.track(@user.ip_address, 'FL-3')
-            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'            
+            # UPDATED
+            # Tell user that they were not matched in P2S due to Failure
+            # tracker.track(@user.ip_address, 'FL-3')
+            # redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'      
+
+
+            # Give user chance to take another survey unless they do not qualify for any (other) survey
+            if (@user.SupplierLink.empty? == false) then                          
+              print 'User will be sent to this survey: ', @user.SupplierLink[0]
+              puts
+              @NextEntryLink = @user.SupplierLink[0]
+              @user.SupplierLink = @user.SupplierLink.drop(1)
+              @user.save
+              redirect_to @NextEntryLink
+            else # if SupplierLink empty?
+              tracker.track(@user.ip_address, 'FL-3')
+              if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+                redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
+              else
+                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
+              end              
+            end # if SupplierLink empty?
+
           else # not p2s redirect                        
             if @rfg_redirect then
               
@@ -1417,9 +1437,9 @@ class RedirectsController < ApplicationController
 
                 if (@user.SupplierLink.empty? == false) then
 
-                  if (@user.SupplierLink.length == 1) then #P2S is the next link
+                  if (@user.SupplierLink.length == 1) then #send to the next link
             
-                    print 'User will be sent to this p2s survey: ', @user.SupplierLink[0]
+                    print 'User will be sent to this next survey: ', @user.SupplierLink[0]
                     puts
                     @NextEntryLink = @user.SupplierLink[0]
                     @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1541,9 +1561,30 @@ class RedirectsController < ApplicationController
             @user.SurveysAttempted << 'P2S-4'+'-ts='+Time.now.to_s
             @user.save  
             
-            #Tell user that they were not matched due to OQ in P2S
-            tracker.track(@user.ip_address, 'FL-6')
-            redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
+            # UPDATED
+            # Tell user that they were not matched due to OQ in P2S
+            # tracker.track(@user.ip_address, 'FL-6')
+            # redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
+
+
+            # Give user chance to take another survey unless they do not qualify for any (other) survey
+            if (@user.SupplierLink.empty? == false) then                          
+              print 'User will be sent to this survey: ', @user.SupplierLink[0]
+              puts
+              @NextEntryLink = @user.SupplierLink[0]
+              @user.SupplierLink = @user.SupplierLink.drop(1)
+              @user.save
+              redirect_to @NextEntryLink
+            else # if SupplierLink empty?
+              tracker.track(@user.ip_address, 'FL-1')
+              if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+                redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
+              else
+                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
+              end              
+            end # if SupplierLink empty?
+
+
           else # not a p2sredirect
             if @rfg_redirect then
             
