@@ -8,7 +8,7 @@ begin
     User.where("updated_at > ?", (Time.now - 1440.minutes)).each do |m|
     # User.where("created_at > ?", (Time.now - 1440.minutes)).each do |m|
       @SurveysCompletedArray = m.SurveysCompleted.to_a
-      (0..SurveysCompleted.length).each do |i|
+      (0..@SurveysCompletedArray.length).each do |i|
         csv << [@SurveysCompletedArray[i]]
         count=count+1
         print @SurveysCompletedArray[i]

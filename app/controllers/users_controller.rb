@@ -180,8 +180,8 @@ class UsersController < ApplicationController
     else
       p 'TOS: A REPEAT USER'
       # set 24 hr survey attempts in separate sessions from same device/IP address here
-      if (user.number_of_attempts_in_last_24hrs < 10) then
-        if user.ZIP.empty? then
+      if (user.number_of_attempts_in_last_24hrs < 20) then
+        if user.ZIP.nil? then
           # this user did not provide profile info the first time
           redirect_to '/users/qq2'
         else
