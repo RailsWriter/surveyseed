@@ -8,18 +8,19 @@ begin
     User.where("updated_at > ?", (Time.now - 1440.minutes)).each do |m|
     # User.where("created_at > ?", (Time.now - 1440.minutes)).each do |m|
       @SurveysCompletedArray = m.SurveysCompleted.to_a
-      (0..@SurveysCompletedArray.length).each do |i|
-        csv << [@SurveysCompletedArray[i]]
-        count=count+1
-        print @SurveysCompletedArray[i]
-        puts
-      end
+      if @SurveysCompletedArray.length > 0 then
+        (0..@SurveysCompletedArray.length).each do |i|
+          csv << [@SurveysCompletedArray[i]]
+          count=count+1
+          print @SurveysCompletedArray[i]
+          puts
+        end
         # csv << [m.country, m.SurveysCompleted.to_a.flatten]
 	      # count=count+1
 	      # print m.SurveysCompleted
       	# puts
-      # else
-      # end
+      else
+      end
     end
   end
   print "Number of completes in last 24 hrs: ", count

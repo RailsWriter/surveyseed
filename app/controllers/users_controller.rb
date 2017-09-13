@@ -1895,8 +1895,8 @@ class UsersController < ApplicationController
         puts e.message
       end
 
-      print "Offerwall Response: ", @OfferwallResponse["response"]
-      puts
+      # print "Offerwall Response: ", @OfferwallResponse["response"]
+      # puts
 
       if @OfferwallResponse["response"]["surveys"].length == 0 then
         print "*********No surveys returned by RFG Offerwall**********"
@@ -1928,7 +1928,7 @@ class UsersController < ApplicationController
         @RFGSupplierLinks = []
         @RFGSupplierLinks << @RFGOfferwallSupplierLink+@RFGAdditionalValues
 
-        print "************>>>>User will be sent to this RFG link>>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
+        print "****DEBUG********>>>>User will be sent to this RFG link>>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
         puts      
       end   
     else
@@ -2336,7 +2336,18 @@ class UsersController < ApplicationController
       selectP2SPullAPISurveys (session.id)
     else
       p "************** Users did not share emailid in getEmail *****************"
-      # Do nothing, userride should go to the next survey link instead on p2sapi links.
+      # Userride should go to the next survey link instead on p2sapi links.
+
+      if user.SupplierLink.length == 0 then
+        redirect_to '/users/nosuccess'
+      else
+        @NextEntryLink = user.SupplierLink[0]
+        user.SupplierLink = user.SupplierLink.drop(1)
+        user.save
+        print "************>>>>User will be sent to the next Survey Entry link>>>>>>>ooooppppppp ", @NextEntryLink,  "***************************************************************"
+        puts
+        redirect_to @NextEntryLink
+      end
     end      
   end  
 
@@ -2478,7 +2489,7 @@ class UsersController < ApplicationController
       @NewEntryLink = user.SupplierLink[0]
       user.SupplierLink = user.SupplierLink.drop(1)
       user.save
-      print "************>>>>User will be sent to this first P2S API Survey Entry link>>>>>>>ooooppppppp ", @P2SApiSupplierLinks[0],  "***************************************************************"
+      print "******DEBUG******>>>>User will be sent to this first P2S API Survey Entry link>>>>>>> ", @P2SApiSupplierLinks[0],  "***************************************************************"
       puts
       redirect_to @NewEntryLink
     end
