@@ -868,12 +868,12 @@ class UsersController < ApplicationController
       k=0  
       completedSurveyStats = []    
       begin
-        completedSurveyStats[k] = [@countsArray[j],@countsArray[j+1]]
+        completedSurveyStats[k] = [@countsArray[j],@countsArray[j+1], '']
         k=k+1
         j=j+2
       end while j<@countsArray.length-1
 
-      completedSurveyStats = (completedSurveyStats + ['']).flatten
+      # completedSurveyStats = (completedSurveyStats + ['']).flatten
       completedSurveyStats = [['Genre', 'Completed',  {role: 'annotation'}], completedSurveyStats]
 
       print "****************** completedSurveyStats Array of Arrays is = ", completedSurveyStats
