@@ -10,15 +10,14 @@ begin
       @SurveysCompletedArray = m.SurveysCompleted.to_a
       if @SurveysCompletedArray.length > 0 then
         (0..@SurveysCompletedArray.length).each do |i|
-          csv << [@SurveysCompletedArray[i]]
-          count=count+1
-          print @SurveysCompletedArray[i]
-          puts
+          if (@SurveysCompletedArray[i][0] >= (Time.now - 1440.minutes)) then
+            csv << @SurveysCompletedArray[i].flatten
+            count=count+1
+            print @SurveysCompletedArray[i].flatten
+            puts
+          else
+          end
         end
-        # csv << [m.country, m.SurveysCompleted.to_a.flatten]
-	      # count=count+1
-	      # print m.SurveysCompleted
-      	# puts
       else
       end
     end

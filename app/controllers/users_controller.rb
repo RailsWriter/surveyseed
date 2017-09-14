@@ -2413,13 +2413,13 @@ class UsersController < ApplicationController
 
     # p2s additional values
     if user.country=="9" then
-      p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&user_id='+user.user_id+'&email='+user.emailId+'&ip_address='+user.ip_address
+      p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&user_id='+@SUBID+'&email='+user.emailId+'&ip_address='+user.ip_address
     else
       if user.country=="6" then
-        p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&canada_regions='+@p2s_province+'&user_id='+user.user_id+'&email='+user.emailId+'&ip_address='+user.ip_address
+        p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&canada_regions='+@p2s_province+'&user_id='+@SUBID+'&email='+user.emailId+'&ip_address='+user.ip_address
       else
         if user.country=="5" then
-          p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&user_id='+user.user_id+'&email='+user.emailId+'&ip_address='+user.ip_address
+          p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&user_id='+@SUBID+'&email='+user.emailId+'&ip_address='+user.ip_address
         else
         end
       end
