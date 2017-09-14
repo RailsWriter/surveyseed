@@ -10,13 +10,15 @@ begin
       @SurveysCompletedArray = m.SurveysCompleted.to_a
       if @SurveysCompletedArray.length > 0 then
         (0..@SurveysCompletedArray.length).each do |i|
-          if (@SurveysCompletedArray[i][0] >= (Time.now - 1440.minutes)) then
+          # if (@SurveysCompletedArray[i][0] > (Time.now - 1440.minutes)) then
+            print @SurveysCompletedArray[i][0]
+            puts
             csv << @SurveysCompletedArray[i].flatten
             count=count+1
             print @SurveysCompletedArray[i].flatten
             puts
-          else
-          end
+          # else
+          # end
         end
       else
       end
