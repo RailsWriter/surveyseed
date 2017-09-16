@@ -1987,7 +1987,7 @@ class UsersController < ApplicationController
       @P2Sclient = Network.find_by name: "P2S"
       @SUBID = @P2Sclient.netid+user.user_id
     
-      print "**************** P2S @SUID = ", @SUBID
+      print "**************** P2S @SUBID = ", @SUBID
       puts
 
       if user.gender == '1' then
@@ -2358,7 +2358,7 @@ class UsersController < ApplicationController
     # Queue up additional surveys from P2S. First calculate the additional values to be attached.
     @P2Sclient = Network.find_by name: "P2S"
     @SUBID = @P2Sclient.netid+user.user_id
-    print "**************** P2S @SUID = ", @SUBID
+    print "**************** P2S API @SUBID = ", @SUBID
     puts
     if user.gender == '1' then
       @p2s_gender = "m"
