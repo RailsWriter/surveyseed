@@ -873,10 +873,10 @@ class UsersController < ApplicationController
         j=j+2
       end while j<@countsArray.length-1
 
-      # completedSurveyStats = (completedSurveyStats + ['']).flatten
-      completedSurveyStats = [['Genre', 'Completed',  {role: 'annotation'}], completedSurveyStats]
+      # remove the double array and format as expected
+      completedSurveyStats = [['Genre', 'Completed',  {role: 'annotation'}], completedSurveyStats.flatten]
 
-      print "****************** completedSurveyStats Array of Arrays is = ", completedSurveyStats
+      print "****************** completedSurveyStats Array of Arrays is = ", completedSurveyStats.flatten
       puts
 
       render json: completedSurveyStats.to_json
