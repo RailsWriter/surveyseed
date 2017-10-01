@@ -1,17 +1,23 @@
 <div>
-	<div class="well well-lg">
-		You may attempt as many surveys as you like. You will earn 1 Star for each complete. Earning every 3 Stars will lead to a $5 Amazon card paid within 30 days of reaching that status
-		<div align="center">
-		<a class="btn btn-warning" role="button" href="https://www.ketsci.com/users/new?NID=MMq0514UMM20bgf17Yatemoh&CID=KETSCI_GUEST" target="_blank">TAKE 
-		Surveys</a>
-		</div>
-	</div>
+	
+    <div clas="row"><label><h3>Total Credits:{{completedSurveys}} </h5></label></div>
 	<div class="row">
-		<div class="col-md-6" id="creditsChart"></div>
-		<div class="col-md-6"><span class="badge">Total Credits:</span></div>
+		<div class="col-md-7" id="creditsChart"></div>
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <div class="well well-lg">
+                You may attempt as many surveys as you like. You will earn 1 Point for each complete. Earning 5 Points will lead to a $5 reward paid within 30 days of reaching that status.
+                <br/>
+                <br/>
+                <div align="center">
+                <a class="btn btn-danger" role="button" href="https://www.ketsci.com/users/new?NID=MMq0514UMM20bgf17Yatemoh&CID=KETSCI_GUEST&userRecordId={{userId}}" target="_blank">Take 
+                Surveys</a>
+                </div>
+           </div>
+        </div>
 	</div>
 	<form role="form">
-		<div clas="row"><label class="badge badge-info"><h5>Subscriptions</h5></label></div>
+		<div clas="row"><label><h3>Subscriptions</h5></label></div>
 		<!--<div class="well well-sm"><h4 class="list-group-item-heading">Survey Info</h4></div>-->
 		<div clas="panel panel-default">
 			<div class="row">
@@ -38,7 +44,7 @@
 				<div  class="form-group">
 					<label class="control-label col-sm-4"><span class="text-muted"><h5>How would you like to redeem your rewards upon reaching a goal?&nbsp;&nbsp;</h5></span> </label>
 					<div class="col-sm-2">
-						<div class="input-group btn btn-primary">
+						<div class="input-group btn btn-default">
 							<input type="radio" value="1" ng-model="redeem" />
 								<span class="input-group-label">
 									<label class="control-label">Amazon Gift Card&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -46,7 +52,7 @@
 						</div>
 					</div>
 					<div class="col-sm-2">
-						<div class="input-group btn btn-primary">
+						<div class="input-group btn btn-default">
 							<input type="radio" value="2" ng-model="redeem" />
 								<span class="input-group-label">
 									<label class="control-label">Donate to Charity&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -85,23 +91,23 @@
 				<div  class="form-group">
 					<label class="control-label col-sm-4"><span class="text-muted"><h5>How frequently you want us to send surveys?&nbsp;&nbsp;</h5></span> </label>
 					<div class="col-sm-1">
-						<div class="input-group btn btn-primary">
+						<div class="input-group btn btn-default">
 							<input type="radio" value="1" ng-model="contactFreq" />
 								<span class="input-group-label">
 									<label class="control-label">Daily&nbsp;&nbsp;&nbsp;&nbsp;</label>
 								</span>
 						</div>
 					</div>
-					<div class="col-sm-1">
-						<div class="input-group btn btn-primary">
+					<div class="col-sm-2">
+						<div class="input-group btn btn-default">
 							<input type="radio" value="2" ng-model="contactFreq" />
 								<span class="input-group-label">
-									<label class="control-label">Alternate Days</label>
+									<label class="control-label">Alternate Days&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
 								</span>
 						</div>
 					</div>
 					<div class="col-sm-1">
-						<div class="input-group btn btn-primary">
+						<div class="input-group btn btn-default">
 							<input type="radio" value="0" ng-model="contactFreq" />
 								<span class="input-group-label">
 									<label class="control-label">Weekly</label>
@@ -109,10 +115,10 @@
 						</div>
 					</div>
 					<div class="col-sm-1">
-						<div class="input-group btn btn-primary">
+						<div class="input-group btn btn-default">
 							<input type="radio" value="3" ng-model="contactFreq" />
 								<span class="input-group-label">
-									<label class="control-label">Never</label>
+									<label class="control-label">Not Now&nbsp;&nbsp;&nbsp;&nbsp;</label>
 								</span>
 						</div>
 					</div>
@@ -120,11 +126,11 @@
 			</div>
 			<br/>
 			<div class="row">
-				<div class="col-md-6">
+				<div class="col-md-4">
 					<span class="text-muted"><h5>Click here to unsubscribe&nbsp;&nbsp;</h5></span>
 				</div>
 				<div class="col-md-6">
-					<button type="submit" class="btn btn-warning" ng-click="unsubscribeSurvey()">Unsubscribe</button>
+					<button type="submit" class="btn btn-danger" ng-click="unsubscribeSurvey()">Unsubscribe</button>
 				</div>
 			</div>
 		</div>
@@ -143,8 +149,8 @@
 
 		<div class="form-group modal-footer">
 			<div class="col-sm-offset-3 col-sm-9">
-				<button type="submit" class="btn btn-default" ng-click="saveUserPrefs()">Save</button>
-				<button class="btn btn-warning" type="button" ng-click="cancelPrefs()">Cancel</button>
+				<button type="submit" class="btn btn-danger" ng-click="saveUserPrefs()">Save</button>
+				<button class="btn btn-default" type="button" ng-click="cancelPrefs()">Cancel</button>
 			</div>
 		</div>
 	</form>

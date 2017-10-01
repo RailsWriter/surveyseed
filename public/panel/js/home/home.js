@@ -19,7 +19,26 @@ angular.module('home', []).controller('home', function($scope, $http) {
 		google.charts.setOnLoadCallback(drawChart);
 
 		console.log("user panel stats::"+response.data);
-		$scope.barData = response.data;
+  /*      var barData =[
+                        ['Genre','Completed',{'role': 'annotation'}],
+                        ['2017-03',1,'']
+                    ];*/
+        var barData = response.data
+        var completedSurveys = 0;
+        for(row in barData){
+            if(row > 0){
+                completedSurveys = completedSurveys + barData[row][1];
+            }
+        }
+        console.log("completedSurveys::"+completedSurveys);
+        $scope.completedSurveys=completedSurveys;
+		$scope.barData = barData;
+//        $scope.barData = [
+//		['Genre', 'Completed',  {role: 'annotation'}],
+//		['Aug 2016', 1000, ''],
+//		['Sep 2016', 16002, ''],
+//		['Oct 2016', 28005, '']
+//	];
 	}, function(response) {
 		// Load the Visualization API and the corechart package.
 		google.charts.load('current', {'packages':['corechart']});
@@ -73,7 +92,12 @@ angular.module('home', []).controller('home', function($scope, $http) {
 			['Oct 2016', 28005, 19006, '']
 		]);
 */
-		var barData = google.visualization.arrayToDataTable($scope.barData);
+        console.log("barData::"+JSON.stringify($scope.barData,null,' '));
+        var barData = google.visualization.arrayToDataTable($scope.barData);
+		/*var barData = google.visualization.arrayToDataTable([
+                        ['Genre','Completed',{'role': 'annotation'}],
+                        ['2017-03',1,'']
+                    ]);*/
 		var view = new google.visualization.DataView(barData);
 		view.setColumns([0, 1,
 			{
@@ -81,22 +105,10 @@ angular.module('home', []).controller('home', function($scope, $http) {
 				sourceColumn: 1,
 				type: "string",
 				role: "annotation"
-			},
-			2, {
-				calc: "stringify",
-				sourceColumn: 2,
-				type: "string",
-				role: "annotation"
-			},
-			3, {
-				calc: "stringify",
-				sourceColumn: 3,
-				type: "string",
-				role: "annotation"
 			}]);
 
 		var options = {
-			title: "Credits earned so far",
+			//title: "Credits earned so far",
 			width: 600,
 			height: 400,
 			bar: {groupWidth: "65%"},

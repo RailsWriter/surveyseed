@@ -14,7 +14,7 @@
 <body ng-app="ketscipanel"  ng-controller="appController">
 <div ng-controller="navigation"/>
 <div class="container">
-  <div class="panel panel-primary">
+  <div class="panel panel-default">
     <div class="panel-heading">
       <div class="row">
         <!-- use ng-if="currentUser.roles.iindexOf('admin')>-1" to display nav bar based on roles-->
@@ -30,7 +30,7 @@
               </button>
               <a class="navbar-brand" href="#">
                 <!--<img src='img/imgTravelerLogo.png' class="img-responsive col-sm-offset-2"  height="65%" width="50%"/>-->
-                FORMULATE
+                MY SURVEYS
               </a>
             </div>
 
@@ -41,10 +41,10 @@
               </ul> -->
               <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle badge badge-primary" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> My Account &nbsp;<span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span></a>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> My Account &nbsp;<span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li><a href="#">Change Password</a></li>
-                    <li role="separator" class="divider"></li>
+<!--                    <li><a href="#">Change Password</a></li>
+                    <li role="separator" class="divider"></li>-->
                     <li><a href="/login">Login</a></li>
                     <li><a href="#" ng-click="logout()">Logout</a></li>
                   </ul>
@@ -66,8 +66,10 @@
 	  <a href="http://ketsci.com" target="_blank">Ketsci</a>
 	  </span>
       <span class="col-sm-offset-4">
+<!--
         <a href="https://ketsci.com/users/Terms">Terms Of Service</a>
         &nbsp;&nbsp;&nbsp;&nbsp;
+-->
         <a href="https://ketsci.com/users/PrivacyPolicy">Privacy Policy</a>
 		&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="mailto:projectsmanagement@ketsci.com">Contact Us</a>

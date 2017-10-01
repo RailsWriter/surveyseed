@@ -2,7 +2,7 @@ require 'csv'
 
 CSV.open('Reports/QuickRewardsCompletesNew', 'a') do |csv|
   csv << ["Time of Complete (UTC)", "Ketsci PID", "Survey Number", "Supply Source", "CPA", "QuickRewards CID", "Network Name"]
-  User.where("updated_at > ?", (Time.now - 75.days)).each do |m|
+  User.where("updated_at > ?", (Time.now - 45.days)).each do |m|
     if m.SurveysCompleted.nil? then
       # do nothing
     else
@@ -13,7 +13,7 @@ CSV.open('Reports/QuickRewardsCompletesNew', 'a') do |csv|
           if (@SurveysCompletedArray[i][0].is_a?String) then
             # ignore - it is older storage format
           else
-            if ((@SurveysCompletedArray[i][0] > (Time.now - 75.days)) && (@SurveysCompletedArray[i].flatten.include?("QuickRewards"))) then
+            if ((@SurveysCompletedArray[i][0] > (Time.now - 45.days)) && (@SurveysCompletedArray[i].flatten.include?("QuickRewards"))) then
               csv << @SurveysCompletedArray[i].flatten
               print @SurveysCompletedArray[i].flatten
               puts
