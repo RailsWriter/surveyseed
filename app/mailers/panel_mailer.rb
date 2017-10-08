@@ -6,8 +6,10 @@ class PanelMailer < ActionMailer::Base
   	mail(to: @user.emailId, subject: 'Welcome to Ketsci')
   end
 
-  def reminder_email(emailId)
-  	# @user = user
+  def reminder_email(user)
+  # def reminder_email(emailId)
+  	@user = user
+    emailId=@user.emailId
   	mail(to: emailId, subject: 'Complete Surveys to Win Rewards at Ketsci')
   	# mail(to: 'akhtarjameel@gmail.com', subject: 'Welcome Email')
   end

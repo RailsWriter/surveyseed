@@ -9,7 +9,7 @@ namespace :sendEmailDaily do
 		
 		User.where('surveyFrequency = ?', '1').each do |dailyUser|
 			emailId=dailyUser.emailId
-			PanelMailer.reminder_email(emailId).deliver_now
+			PanelMailer.reminder_email(dailyUser).deliver_now
 			puts "Daily Reminder Email sent to ", emailId, " at #{Time.now}\n"
 		end
 		

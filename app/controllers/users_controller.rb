@@ -26,7 +26,7 @@ class UsersController < ApplicationController
       session_id = session.id
       netid = params[:netid]
       clickid = params[:clickid]
-      
+      userRecordId = params[:userRecordId]      
       
       # Keep track of clicks on each network as Flag2
       
@@ -44,14 +44,18 @@ class UsersController < ApplicationController
             @SSnet.Flag2 = (@SSnet.Flag2.to_i + 1).to_s
             @SSnet.save
           end
-        end
-      
+        end      
       else
         print "************************************ No NetworkId ********************"
         puts
         redirect_to '/users/nosuccess'
-        return
-      
+        return      
+      end
+
+      if (netid == "MMq0514UMM20bgf17Yatemoh") then
+        print "*******DEBUG************** New start by a Panel User from MMq0514UMM20bgf17Yatemoh netid with userRecordId = ", userRecordId, "*************"
+        puts
+      else
       end
 
       tracker.track(ip_address, 'Age')
@@ -59,7 +63,7 @@ class UsersController < ApplicationController
       # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
       # if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
  
-      if (User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first!=nil)
+      if (netid == "MMq0514UMM20bgf17Yatemoh") || (User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first!=nil)
         first_time_user=false
         # p '********* EVAL_AGE: USER EXISTS'
       else
@@ -69,7 +73,7 @@ class UsersController < ApplicationController
 
       if (first_time_user) then
         # Create a new-user record
-    #        p '****************** EVAL_AGE: Creating new record for FIRST TIME USER'
+        #        p '****************** EVAL_AGE: Creating new record for FIRST TIME USER'
         #  @user = User.new(user_params)
         @user = User.new
         @user.age = @age
@@ -102,24 +106,26 @@ class UsersController < ApplicationController
       # This DB call should be optimized by using the id of record already found before
       
       if (first_time_user==false) then
-        user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
+        if (netid == "MMq0514UMM20bgf17Yatemoh") then
+          user = User.find(userRecordId)
+        else
+          user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
+        end
 
         print "*** DEBUG ******* REPEAT USER. Existing User Record is: ", user
         puts
 
-        # Why do I have to stop at first? Optimizes. But there should be not more than 1 entry.
-
         if user.black_listed==true then
           p '******************* EVAL_AGE: REPEAT USER is Black listed'
-
-          # Send to userride to be termed.
+          # Send to userride to be termed. ***** This can be changed to redirect to nosuccess? *****
           userride (session_id)
         else
-          p '******************* EVAL_AGE: Modifying existing user record of a REPEAT USER'
+          p '******************* EVAL_AGE: Modifying existing user record of a REPEAT USER with current info'
 
           user.age = @age
           user.netid = netid
           user.clickid = clickid
+          user.session_id = session_id
 
           # if deriving country from IP address  => disable country question
           #user.country = @countryPrecode 
@@ -135,6 +141,7 @@ class UsersController < ApplicationController
           user.save
           redirect_to '/users/tos'
         end
+      else
       end
     end
   end
@@ -175,14 +182,14 @@ class UsersController < ApplicationController
     
     # Address good and bad repeat access behaviour after they have resigned TOS (PP)
     if ( user.attempts_time_stamps_array.length==1 ) then
-      p 'TOS: FIRST TIME USER'
+      p '*******DEBUG************ TOS: FIRST TIME USER or First time returning Panelist'
       redirect_to '/users/qq2'
     else
-      p 'TOS: A REPEAT USER'
+      p '**********DEBUG********** TOS: A REPEAT USER'
       # set 24 hr survey attempts in separate sessions from same device/IP address here
       if (user.number_of_attempts_in_last_24hrs < 20) then
-        if user.ZIP.nil? then
-          # this user did not provide profile info the first time
+        if user.industries.nil? then
+          # this user did not provide full profile info the first time
           redirect_to '/users/qq2'
         else
           # skip gender and other demo questions due to responses in last 24 hrs
@@ -190,7 +197,7 @@ class UsersController < ApplicationController
         end      
       else
         # user has made too many attempts to take surveys
-        p '******* More than 10 attempts to take a survey in last 24 hrs ***********'
+        p '******* More than 20 attempts to take a survey in last 24 hrs ***********'
         redirect_to '/users/24hrsquotaexceeded'
       end
     end
@@ -731,33 +738,39 @@ class UsersController < ApplicationController
 
     if (User.where('session_id=?', session.id).exists?) then
       user=User.find_by session_id: session.id
-      # tracker.track(user.ip_address, 'interestedpanelist')
-      if (params[:emailid].empty? == false) then
-        user.emailId = params[:emailid]
-        user.password = 'WelcomeToKetsci'+user.user_id[0..3]
-        user.userType='1'
-        user.surveyFrequency = '2'
 
-        # Sends email to user when panelist is created. Remove netid condition before going live.
-        if user.netid == 'KsAnLL23qacAHoi87ytr45bhj8' then
-          p "========================================================Sending MAIL================================"
-          PanelMailer.welcome_email(user).deliver_now
-        else
-          #do nothing
-        end
-
-        user.save
-
-        tracker.track(user.ip_address, 'panelistregistered')
-        redirect_to '/users/thanks'
+      if user.netid == "MMq0514UMM20bgf17Yatemoh" then
+        # do nothing, because the user is already in the system
+        p "****DEBUG ********** The user is already a Panelist *****************"
+          redirect_to '/users/alreadyPanelist'
       else
-        p "************** We do not have users emailid in join_panel *****************"
-        redirect_to '/users/thanks'
+        if (params[:emailid].empty? == false) then
+          user.emailId = params[:emailid]
+          user.password = 'Ketsci'+user.user_id[0..3]
+          user.userType='1'
+          user.surveyFrequency = '2'
+          # Sends email to user when panelist is created. Remove netid condition before going live.
+          if user.netid == 'KsAnLL23qacAHoi87ytr45bhj8' then
+            p "========================================================Sending MAIL================================"
+            PanelMailer.welcome_email(user).deliver_now
+          else
+            #do nothing
+          end
+
+          user.save
+
+          tracker.track(user.ip_address, 'panelistregistered')
+          redirect_to '/users/thanks'
+        else
+          p "************** We do not have users emailid in join_panel *****************"
+          redirect_to '/users/thanks'
+        end
       end
     else
       p "************** We do not have users session_id in join_panel *****************"
       redirect_to '/users/thanks'
     end
+
   end
 
   def login
@@ -876,7 +889,7 @@ class UsersController < ApplicationController
       # remove the double array and format as expected
       completedSurveyStats = [['Genre', 'Completed',  {role: 'annotation'}], completedSurveyStats.flatten]
 
-      print "****************** completedSurveyStats Array of Arrays is = ", completedSurveyStats.flatten
+      print "****************** completedSurveyStats Array of Arrays is = ", completedSurveyStats
       puts
 
       render json: completedSurveyStats.to_json
@@ -1903,8 +1916,8 @@ class UsersController < ApplicationController
         puts
         @RFGSupplierLinks = []
       else
-      
-        @maxIR = @OfferwallResponse["response"]["surveys"][0]["ir"]
+        @maxIRIndex = 0
+        @maxIR = @OfferwallResponse["response"]["surveys"][@maxIRIndex]["ir"]
         @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][0]["offer_url"]
 
         @NumberOfSurveys = @OfferwallResponse["response"]["surveys"].length
@@ -1912,9 +1925,14 @@ class UsersController < ApplicationController
         print "************ Number of surveys on RFG Offerwall: ", @NumberOfSurveys
         puts
 
-        (0..@NumberOfSurveys-1).each do |i|
+        # Pick RFG survey that has the highest IR and payout more than users net_payout.
 
-          if @maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"] then
+        user_net = Network.find_by netid: user.netid
+        @net_payout = "$"+user_net.payout.to_s
+        
+        (0..@NumberOfSurveys-1).each do |i|
+          if ((@maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"]) && (@net_payout < @OfferwallResponse["response"]["surveys"][i]["payout"])) then
+          # if @maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"] then
             @maxIRIndex = i
             @maxIR = @OfferwallResponse["response"]["surveys"][i]["ir"]
             @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][i]["offer_url"]
@@ -1922,13 +1940,13 @@ class UsersController < ApplicationController
           end
         end
         
-        print "RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxIRIndex, " with IR: ", @maxIR
+        print "***** DEBUG ******** Chosen RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxIRIndex, " with IR: ", @maxIR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxIRIndex]["payout"]
         puts
 
         @RFGSupplierLinks = []
         @RFGSupplierLinks << @RFGOfferwallSupplierLink+@RFGAdditionalValues
 
-        print "****DEBUG********>>>>User will be sent to this RFG link>>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
+        print "**** DEBUG ********>>>>User will be sent to this RFG link >>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
         puts      
       end   
     else
@@ -2440,12 +2458,15 @@ class UsersController < ApplicationController
     print "***** DEBUG **** Full API URL: ", api_base_url+'?'+p2s_Api_AdditionalValues
     puts
 
+    # Router: 9df95db5396d180e786c707415203b95
+    # API: 5b96ba34dc040bf1baf557be93f8459f
+
     begin
     @failcount = @failcount+1
     print "P2S API access failcount is: ", @failcount
     puts
       @p2sApiResponse = HTTParty.get(api_base_url+'?'+p2s_Api_AdditionalValues,
-        :headers => {'X-YourSurveys-Api-Key' => '9df95db5396d180e786c707415203b95'}
+        :headers => {'X-YourSurveys-Api-Key' => '5b96ba34dc040bf1baf557be93f8459f'}
         )
       rescue HTTParty::Error => e
         puts 'HttParty::Error '+ e.message
@@ -2722,6 +2743,8 @@ class UsersController < ApplicationController
       user.save    
     end # duplicate is false
     
+    
+
     if user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
       redirect_to '/users/successfulMML'
     else
@@ -2731,7 +2754,11 @@ class UsersController < ApplicationController
         if user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
           redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+user.clickid
         else
-          redirect_to '/users/successful'
+          if user.netid == "MMq0514UMM20bgf17Yatemoh" then
+            redirect_to '/users/successfulPanelist'
+          else
+            redirect_to '/users/successful'
+          end
         end
       end
     end  

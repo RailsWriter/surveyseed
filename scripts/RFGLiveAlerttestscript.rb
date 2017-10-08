@@ -15,7 +15,7 @@ secret = "8ef1fe91d92e0602648d157f981bb934"
 #command='{ "command" : "test/copy/1", "data1" : "KETSCI TEST"}'
 #command='{ "command" : "livealert/inventory/1", "country" : "AU"}'
 #command='{ "command" : "livealert/targeting/1", "rfg_id" : "RFG189829-008"}'
-#command = '{ "command" : "livealert/listDatapoints/1"}'
+command = '{ "command" : "livealert/listDatapoints/1"}'
 
 #command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2 STANDARD_EDUCATION_v2"}'
 #command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2 STANDARD_HHI_INT_v2"}'

@@ -9,7 +9,7 @@ namespace :sendEmailOnAlternateDays do
 		
 		User.where('surveyFrequency = ?', '2').each do |alternateDayUser|
 			emailId=alternateDayUser.emailId
-			PanelMailer.reminder_email(emailId).deliver_now
+			PanelMailer.reminder_email(alternateDayUser).deliver_now
 			puts "Alternate Days Reminder Email sent to ", emailId, " at #{Time.now}\n"
 		end
 	end

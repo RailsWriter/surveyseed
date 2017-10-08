@@ -431,7 +431,11 @@ class RedirectsController < ApplicationController
                   p ">>>>>>>>>>>********** QuickRewards EndPage *******************<<<<<<<<<<<<<<"
                   redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+@user.clickid
                 else
-                  redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'  
+                  if @user.netid == "MMq0514UMM20bgf17Yatemoh" then
+                    redirect_to 'https://www.ketsci.com/redirects/successPanelist?&SUCCESS=1'
+                  else
+                    redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'  
+                  end
                 end
               end 
             end     
@@ -747,7 +751,11 @@ class RedirectsController < ApplicationController
                     p ">>>>>>>>>>>********** QuickRewards EndPage *******************<<<<<<<<<<<<<<"
                     redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+@user.clickid
                   else
-                    redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'  
+                    if @user.netid == "MMq0514UMM20bgf17Yatemoh" then
+                      redirect_to 'https://www.ketsci.com/redirects/successPanelist?&SUCCESS=1'
+                    else
+                      redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'  
+                    end
                   end
                 end 
               end
@@ -991,22 +999,28 @@ class RedirectsController < ApplicationController
                 end # duplicate is false                 
                 # Happy ending
                 
-                tracker.track(@user.ip_address, 'ADHOC_Completes')     
+                tracker.track(@user.ip_address, 'ADHOC_Completes')
 
                 if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
+                  p ">>>>>>>>>>>********** MemoLink EndPage *******************<<<<<<<<<<<<<<"
                   redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=1'
                 else
                   if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
-                    redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=3'
+                    p ">>>>>>>>>>>********** Charity EndPage *******************<<<<<<<<<<<<<<"
+                    redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=1'
                   else
                     if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
                       p ">>>>>>>>>>>********** QuickRewards EndPage *******************<<<<<<<<<<<<<<"
                       redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+@user.clickid
                     else
-                      redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'  
-                    end  
+                      if @user.netid == "MMq0514UMM20bgf17Yatemoh" then
+                        redirect_to 'https://www.ketsci.com/redirects/successPanelist?&SUCCESS=1'
+                      else
+                        redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'  
+                      end
+                    end
                   end 
-                end
+                end   
 
 
               else # not a P2S or RFG or ADHOC project. it must be a Pulley survey            
@@ -1267,22 +1281,27 @@ class RedirectsController < ApplicationController
                 # Happy ending
                 
                 tracker.track(@user.ip_address, 'FED_Completes')
-                
+
                 if @user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
+                  p ">>>>>>>>>>>********** MemoLink EndPage *******************<<<<<<<<<<<<<<"
                   redirect_to 'https://www.ketsci.com/redirects/successMML?&SUCCESS=1'
                 else
                   if @user.netid == "KsAnLL23qacAHoi87ytr45bhj8" then
-                    redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=5'
+                    p ">>>>>>>>>>>********** Charity EndPage *******************<<<<<<<<<<<<<<"
+                    redirect_to 'https://www.ketsci.com/redirects/successCharity?&SUCCESS=1'
                   else
                     if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
                       p ">>>>>>>>>>>********** QuickRewards EndPage *******************<<<<<<<<<<<<<<"
                       redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=1&s='+@user.clickid
                     else
-                      redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'  
+                      if @user.netid == "MMq0514UMM20bgf17Yatemoh" then
+                        redirect_to 'https://www.ketsci.com/redirects/successPanelist?&SUCCESS=1'
+                      else
+                        redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=1'  
+                      end
                     end
-                  end
+                  end 
                 end
-
               end # if ADHOC
             end # if RFG
           end # if P2S
@@ -1327,7 +1346,11 @@ class RedirectsController < ApplicationController
               if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
                 redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
               else
-                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
+                if @user.netid == "MMq0514UMM20bgf17Yatemoh" then
+                  redirect_to 'https://www.ketsci.com/redirects/failurePanelist?&FAILED=3'
+                else
+                  redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=3'
+                end
               end              
             end # if SupplierLink empty?
 
@@ -1391,8 +1414,12 @@ class RedirectsController < ApplicationController
                 if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
                   redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
                 else
-                  redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=4'
-                end              
+                  if @user.netid == "MMq0514UMM20bgf17Yatemoh" then
+                    redirect_to 'https://www.ketsci.com/redirects/failurePanelist?&FAILED=4'
+                  else
+                    redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=4'
+                  end
+                end                     
               end # if SupplierLink empty?
 
             else # Not RFG. Try Adhoc
@@ -1463,8 +1490,12 @@ class RedirectsController < ApplicationController
                   if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
                     redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
                   else
-                    redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
-                  end
+                    if @user.netid == "MMq0514UMM20bgf17Yatemoh" then
+                      redirect_to 'https://www.ketsci.com/redirects/failurePanelist?&FAILED=6'
+                    else
+                      redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=6'
+                    end
+                  end  
                 
                 end # if SupplierLink empty?
               else # must be FED            
@@ -1532,8 +1563,12 @@ class RedirectsController < ApplicationController
                   if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
                     redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
                   else
-                    redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=5'
-                  end
+                    if @user.netid == "MMq0514UMM20bgf17Yatemoh" then
+                      redirect_to 'https://www.ketsci.com/redirects/failurePanelist?&FAILED=5'
+                    else
+                      redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=5'
+                    end
+                  end  
                 
                 end # if SupplierLink empty?              
               end # if ADHOC
@@ -1577,11 +1612,17 @@ class RedirectsController < ApplicationController
               redirect_to @NextEntryLink
             else # if SupplierLink empty?
               tracker.track(@user.ip_address, 'FL-1')
+              
               if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
                 redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
               else
-                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
-              end              
+                if @user.netid == "MMq0514UMM20bgf17Yatemoh" then
+                  redirect_to 'https://www.ketsci.com/redirects/failurePanelist?&FAILED=1'
+                else
+                  redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
+                end
+              end    
+
             end # if SupplierLink empty?
 
 
@@ -1634,7 +1675,17 @@ class RedirectsController < ApplicationController
                        
               else # if SupplierLink empty
                 tracker.track(@user.ip_address, 'FL-7')
-                redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=7'
+                # redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=7'
+
+                if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+                  redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
+                else
+                  if @user.netid == "MMq0514UMM20bgf17Yatemoh" then
+                    redirect_to 'https://www.ketsci.com/redirects/failurePanelist?&FAILED=7'
+                  else
+                    redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=7'
+                  end
+                end  
             
               end # if SupplierLink empty                     
             else # Adhoc
@@ -1694,7 +1745,20 @@ class RedirectsController < ApplicationController
                   end              
                 else # if SupplierLink empty
                   tracker.track(@user.ip_address, 'FL-9')
-                  redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=9'              
+                  # redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=9'     
+
+                  if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+                    redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
+                  else
+                    if @user.netid == "MMq0514UMM20bgf17Yatemoh" then
+                      redirect_to 'https://www.ketsci.com/redirects/failurePanelist?&FAILED=9'
+                    else
+                      redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=9'
+                    end
+                  end  
+
+
+
                 end # if SupplierLink empty
               else # must be FED
                 
@@ -1753,7 +1817,18 @@ class RedirectsController < ApplicationController
               
                 else # if SupplierLink empty
                   tracker.track(@user.ip_address, 'FL-8')
-                  redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=8'
+                  # redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=8'
+
+                  if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
+                    redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
+                  else
+                    if @user.netid == "MMq0514UMM20bgf17Yatemoh" then
+                      redirect_to 'https://www.ketsci.com/redirects/failurePanelist?&FAILED=8'
+                    else
+                      redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=8'
+                    end
+                  end  
+
               
                 end # if SupplierLink empty
               end # if Adhoc

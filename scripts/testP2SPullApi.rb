@@ -11,7 +11,7 @@ begin
   print "P2S API access failcount is: ", @failcount
   puts
 	p2sApiResponse = HTTParty.get(api_base_url+'?user_id=KET_1&age=32&email=akht@bil.com&gender=m&zip_code=91123&ip_address=76.218.107.128',
-		:headers => {'X-YourSurveys-Api-Key' => '9df95db5396d180e786c707415203b95'}
+		:headers => {'X-YourSurveys-Api-Key' => '5b96ba34dc040bf1baf557be93f8459f'}
 		)
   rescue HTTParty::Error => e
     puts 'HttParty::Error '+ e.message
