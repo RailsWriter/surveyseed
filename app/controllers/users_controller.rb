@@ -322,7 +322,7 @@ class UsersController < ApplicationController
           if user.country=="7" then
             redirect_to '/users/qq4_IN'
           else
-            print "BUG Country **********", params[:country], " Session_id ", session_id
+            print "**** DEBUG Country **********", params[:country], " Session_id ", session_id
             puts
             # if user.country=="0" then
             #  redirect_to '/users/nosuccess'
@@ -2184,7 +2184,13 @@ class UsersController < ApplicationController
     # Start the user ride
     
     if user.SupplierLink.length == 0 then
-      redirect_to '/users/nosuccess'
+
+      if user.netid == "MMq0514UMM20bgf17Yatemoh" then
+        redirect_to '/users/nosuccessPanelist'
+      else
+        redirect_to '/users/nosuccess'
+      end
+
     else      
 
       # if user.SupplierLink[0] == @p2sSupplierLink then
@@ -2357,7 +2363,14 @@ class UsersController < ApplicationController
       # Userride should go to the next survey link instead on p2sapi links.
 
       if user.SupplierLink.length == 0 then
-        redirect_to '/users/nosuccess'
+        # redirect_to '/users/nosuccess'
+
+        if user.netid == "MMq0514UMM20bgf17Yatemoh" then
+          redirect_to '/users/nosuccessPanelist'
+        else
+          redirect_to '/users/nosuccess'
+        end
+
       else
         @NextEntryLink = user.SupplierLink[0]
         user.SupplierLink = user.SupplierLink.drop(1)
@@ -2505,7 +2518,15 @@ class UsersController < ApplicationController
     user.SupplierLink = addP2SApiLinks
 
     if user.SupplierLink.length == 0 then
-      redirect_to '/users/nosuccess'
+      # redirect_to '/users/nosuccess'
+
+      if user.netid == "MMq0514UMM20bgf17Yatemoh" then
+        redirect_to '/users/nosuccessPanelist'
+      else
+        redirect_to '/users/nosuccess'
+      end
+
+
     else
       @NewEntryLink = user.SupplierLink[0]
       user.SupplierLink = user.SupplierLink.drop(1)

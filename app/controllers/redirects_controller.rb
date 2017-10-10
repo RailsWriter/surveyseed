@@ -13,11 +13,15 @@ class RedirectsController < ApplicationController
     @SHA1key = 'dKyEuAdS/pwtc9VK8ihCVsMmSK8JyK6QlTuOLiOSQD1tiXyOTdrMurEi84lrhddMxYcbAvLLMgrKHiroeROYMw=='
     @Url = request.original_url
     @ParsedUrl = @Url.partition ("&hash=")
-    print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Server Response Url = ', @Url, ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+    print '******************************************************************************************************************'
     puts
-    print '@BaseUrl=', @ParsedUrl[0]
+    print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Redirected Server Response Url = ', @Url, ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
     puts
-    print '@Signature =', @ParsedUrl[2]   
+    # print '@BaseUrl=', @ParsedUrl[0]
+    # puts
+    # print '@Signature =', @ParsedUrl[2]   
+    # puts
+    print '******************************************************************************************************************'
     puts
 
     @BaseUrl = @ParsedUrl[0]
