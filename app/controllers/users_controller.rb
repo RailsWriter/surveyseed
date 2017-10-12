@@ -188,11 +188,16 @@ class UsersController < ApplicationController
       p '**********DEBUG********** TOS: A REPEAT USER'
       # set 24 hr survey attempts in separate sessions from same device/IP address here
       if (user.number_of_attempts_in_last_24hrs < 20) then
-        if user.industries.nil? then
+        if (user.industries.length == 0) then 
+          #industries is an Array so verify length and not nil
           # this user did not provide full profile info the first time
+          print '** DEBUG REPEAT USER ***** industries field is empty ***********'
+          puts
           redirect_to '/users/qq2'
         else
           # skip gender and other demo questions due to responses in last 24 hrs
+          print '** DEBUG REPEAT USER ***** industries field is NOT empty ***********'
+          puts
           redirect_to '/users/qq12Returning'
         end      
       else

@@ -69,7 +69,7 @@ class RedirectsController < ApplicationController
           params[:tsfn] = 'P2S'
           params[:tis] = '20'
           
-          print "******DEBUG*************** Extracted userid from P2S PID (@SUBID) to be = ", params[:PID]
+          print "******DEBUG P2S *************** Extracted userid from P2S PID (@SUBID) to be = ", params[:PID]
           puts
           
           @p2s_redirect = true
