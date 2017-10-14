@@ -1878,7 +1878,7 @@ class UsersController < ApplicationController
 
       # Instead of LiveLink use Offerwall surveys
 
-      p "BUG: *********>>>>>>>>>> RFG Offerwall API call with params <<<<<<<<*******FAILS IF CLOCK OUT OF SYNC-----------"
+      p "******* DEBUG: *********>>>>>>>>>> RFG Offerwall API call with params <<<<<<<<*******FAILS IF CLOCK OUT OF SYNC-----------"
 
       if user.country=="9" then
         command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1, :rfg2_113 => @RFGEthnicity}.to_json
@@ -1951,10 +1951,15 @@ class UsersController < ApplicationController
         @maxCRIndex = 0
         @maxCR = @OfferwallResponse["response"]["surveys"][@maxCRIndex]["projectCR"]
         @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][@maxCRIndex]["offer_url"]
-
         @NumberOfSurveys = @OfferwallResponse["response"]["surveys"].length
           
-        print "************ Number of surveys on RFG Offerwall: ", @NumberOfSurveys
+        print "****DEBUG******** Number of surveys on RFG Offerwall: ", @NumberOfSurveys
+        puts
+
+        print "*****DEBUG******* @maxCR initialized to: ", @maxCR
+        puts
+
+        print "****DEBUG******** @RFGOfferwallSupplierLink initialized to: ", @RFGOfferwallSupplierLink
         puts
 
         # Pick RFG survey that has the highest CR and payout more than users net_payout.
@@ -1972,15 +1977,14 @@ class UsersController < ApplicationController
           end
         end
         
-        print "***** DEBUG ******** Chosen RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxCRIndex, " with projectCR: ", @maxCR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxCRIndex]["payout"], " and IR: ", OfferwallResponse["response"]["surveys"][@maxCRIndex]["ir"]
+        print "***** DEBUG ******** Chosen RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxCRIndex, " with projectCR: ", @maxCR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxCRIndex]["payout"], " and IR: ", @OfferwallResponse["response"]["surveys"][@maxCRIndex]["ir"]
         puts
-
 
 
         @RFGSupplierLinks = []
         @RFGSupplierLinks << @RFGOfferwallSupplierLink+@RFGAdditionalValues
 
-        print "**** DEBUG ********>>>>User will be sent to this RFG link >>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
+        print "**** DEBUG ********>>>> User will be sent to this RFG link >>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
         puts      
       end   
     else

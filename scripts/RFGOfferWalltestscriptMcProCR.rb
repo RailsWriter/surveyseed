@@ -55,31 +55,34 @@ puts
 # puts
 
 # Find RFG SupplierLink for max CR in the set of Offerwall surveys
+
+net_payout = "$1.25"
+
 @maxCRIndex = 0
 @maxCR = OfferwallResponse["response"]["surveys"][@maxCRIndex]["projectCR"]
 @RFGOfferwallSupplierLink = OfferwallResponse["response"]["surveys"][@maxCRIndex]["offer_url"]
+NumberOfSurveys = OfferwallResponse["response"]["surveys"].length
+
+print "************ Number of surveys on RFGOfferwall: ", NumberOfSurveys
+puts
 
 print "************ @maxCR initialized to: ", @maxCR
 puts
 
-net_payout = "$1.25"
+print "************ @RFGOfferwallSupplierLink initialized to: ", @RFGOfferwallSupplierLink
+puts
 
-NumberOfSurveys = OfferwallResponse["response"]["surveys"].length
-  
-  print "************ Number of surveys: ", NumberOfSurveys
-  puts
+(0..NumberOfSurveys-1).each do |i|
+  if ((@maxCR < OfferwallResponse["response"]["surveys"][i]["projectCR"]) && (net_payout < OfferwallResponse["response"]["surveys"][i]["payout"])) then
+    @maxCRIndex = i
+		@maxCR = OfferwallResponse["response"]["surveys"][i]["projectCR"]
+		@RFGOfferwallSupplierLink = OfferwallResponse["response"]["surveys"][i]["offer_url"]
+	else
+	end
+end
 
-  (0..NumberOfSurveys-1).each do |i|
-    if ((@maxCR < OfferwallResponse["response"]["surveys"][i]["projectCR"]) && (net_payout < OfferwallResponse["response"]["surveys"][i]["payout"])) then
-      @maxCRIndex = i
-  		@maxCR = OfferwallResponse["response"]["surveys"][i]["projectCR"]
-  		@RFGOfferwallSupplierLink = OfferwallResponse["response"]["surveys"][i]["offer_url"]
-  	else
-  	end
-  end
-
-  print "RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxCRIndex, " with projectCR: ", @maxCR, " and payout: ", OfferwallResponse["response"]["surveys"][@maxCRIndex]["payout"], " and IR: ", OfferwallResponse["response"]["surveys"][@maxCRIndex]["ir"]
-  puts
+print "RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxCRIndex, " with projectCR: ", @maxCR, " and payout: ", OfferwallResponse["response"]["surveys"][@maxCRIndex]["payout"], " and IR: ", OfferwallResponse["response"]["surveys"][@maxCRIndex]["ir"]
+puts
 
 
   # end
