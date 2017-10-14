@@ -13,7 +13,7 @@ class RedirectsController < ApplicationController
     @SHA1key = 'dKyEuAdS/pwtc9VK8ihCVsMmSK8JyK6QlTuOLiOSQD1tiXyOTdrMurEi84lrhddMxYcbAvLLMgrKHiroeROYMw=='
     @Url = request.original_url
     @ParsedUrl = @Url.partition ("&hash=")
-    print '******************************************************************************************************************'
+    print '************* DEBUG *************************************************************************************************************************'
     puts
     print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Redirected Server Response Url = ', @Url, ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
     puts
@@ -21,7 +21,7 @@ class RedirectsController < ApplicationController
     # puts
     # print '@Signature =', @ParsedUrl[2]   
     # puts
-    print '******************************************************************************************************************'
+    print '********* DEBUG *****************************************************************************************************************************'
     puts
 
     @BaseUrl = @ParsedUrl[0]
@@ -69,7 +69,7 @@ class RedirectsController < ApplicationController
           params[:tsfn] = 'P2S'
           params[:tis] = '20'
           
-          print "******DEBUG P2S *************** Extracted userid from P2S PID (@SUBID) to be = ", params[:PID]
+          print "****** DEBUG P2S *************** Extracted userid from P2S PID (@SUBID) to be = ", params[:PID]
           puts
           
           @p2s_redirect = true
@@ -123,7 +123,7 @@ class RedirectsController < ApplicationController
                 
               else
                 @rfg_redirect = true
-                print "**********************RFG HMAC matched!"
+                print "********************** RFG HMAC matched!"
                 puts
               end      
                
@@ -1339,7 +1339,7 @@ class RedirectsController < ApplicationController
 
             # Give user chance to take another survey unless they do not qualify for any (other) survey
             if (@user.SupplierLink.empty? == false) then                          
-              print 'User will be sent to this survey: ', @user.SupplierLink[0]
+              print '******** DEBUG ************ User will be sent to this survey: ', @user.SupplierLink[0]
               puts
               @NextEntryLink = @user.SupplierLink[0]
               @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1364,7 +1364,7 @@ class RedirectsController < ApplicationController
               # save attempt info in User and RfgOroject tables
               @user = User.find_by user_id: params[:PID]          
           
-              print 'Status = RFG Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
+              print '******** DEBUG ************ Status = RFG Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
               puts
 
               # # Save last attempted project unless user did not qualify for any (other) project from start (no tsfn is attached)
@@ -1405,7 +1405,7 @@ class RedirectsController < ApplicationController
 
               if (@user.SupplierLink.empty? == false) then
                           
-                  print 'User will be sent to this survey: ', @user.SupplierLink[0]
+                  print '********************* User will be sent to this survey: ', @user.SupplierLink[0]
                   puts
                   @NextEntryLink = @user.SupplierLink[0]
                   @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1470,7 +1470,7 @@ class RedirectsController < ApplicationController
 
                   if (@user.SupplierLink.length == 1) then #send to the next link
             
-                    print 'User will be sent to this next survey: ', @user.SupplierLink[0]
+                    print '******************* User will be sent to this next survey: ', @user.SupplierLink[0]
                     puts
                     @NextEntryLink = @user.SupplierLink[0]
                     @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1479,7 +1479,7 @@ class RedirectsController < ApplicationController
              
                   else
 
-                    print 'User will be sent to the next adhoc, fed or rfg survey: ', @user.SupplierLink[0]
+                    print '******************* User will be sent to the next adhoc, fed or rfg survey: ', @user.SupplierLink[0]
                     puts
                     @NextEntryLink = @user.SupplierLink[0]
                     @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1507,7 +1507,7 @@ class RedirectsController < ApplicationController
                 # save attempt info in User and Survey tables
                 @user = User.find_by user_id: params[:PID]          
             
-                print 'Status = Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
+                print '**************** Status = Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
                 puts
 
                 # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
@@ -1543,7 +1543,7 @@ class RedirectsController < ApplicationController
 
                   if (@user.SupplierLink.length == 1) then #P2S is the next link
             
-                    print 'User will be sent to this p2s survey: ', @user.SupplierLink[0]
+                    print '********************** User will be sent to this p2s survey: ', @user.SupplierLink[0]
                     puts
                     @NextEntryLink = @user.SupplierLink[0]
                     @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1552,7 +1552,7 @@ class RedirectsController < ApplicationController
              
                   else
 
-                    print 'User will be sent to the next survey: ', @user.SupplierLink[0]
+                    print '***************** User will be sent to the next survey: ', @user.SupplierLink[0]
                     puts
                     @NextEntryLink = @user.SupplierLink[0]
                     @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1608,7 +1608,7 @@ class RedirectsController < ApplicationController
 
             # Give user chance to take another survey unless they do not qualify for any (other) survey
             if (@user.SupplierLink.empty? == false) then                          
-              print 'User will be sent to this survey: ', @user.SupplierLink[0]
+              print '****************** User will be sent to this survey: ', @user.SupplierLink[0]
               puts
               @NextEntryLink = @user.SupplierLink[0]
               @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1637,7 +1637,7 @@ class RedirectsController < ApplicationController
               @user = User.find_by user_id: params[:PID]
 
 
-              print 'RFG OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
+              print '******** DEBUG ************ RFG OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
               puts          
 
               @user.SurveysAttempted << 'RFG-4'+'-ts='+Time.now.to_s
@@ -1670,7 +1670,7 @@ class RedirectsController < ApplicationController
         
                 # See if (@user.SupplierLink.length == 1) then #P2S is the next link (Actually does not matter anyway - just go to next survey)
           
-                print 'User will be sent to this survey: ', @user.SupplierLink[0]
+                print '******** DEBUG ************ User will be sent to this survey: ', @user.SupplierLink[0]
                 puts
                 @NextEntryLink = @user.SupplierLink[0]
                 @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1740,7 +1740,7 @@ class RedirectsController < ApplicationController
                     redirect_to @NextEntryLink               
                   else
             
-                    print 'User will be sent to this survey: ', @user.SupplierLink[0]
+                    print '******** DEBUG ************ User will be sent to this survey: ', @user.SupplierLink[0]
                     puts
                     @NextEntryLink = @user.SupplierLink[0]
                     @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1802,7 +1802,7 @@ class RedirectsController < ApplicationController
           
                 if (@user.SupplierLink.length == 1) then #P2S is the next link
             
-                  print 'User will be sent to this survey: ', @user.SupplierLink[0]
+                  print '******** DEBUG ************ User will be sent to this survey: ', @user.SupplierLink[0]
                   puts
                   @NextEntryLink = @user.SupplierLink[0]
                   @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1811,7 +1811,7 @@ class RedirectsController < ApplicationController
              
                 else
           
-                  print 'User will be sent to this survey: ', @user.SupplierLink[0]
+                  print '******** DEBUG ************ User will be sent to this survey: ', @user.SupplierLink[0]
                   puts
                   @NextEntryLink = @user.SupplierLink[0]
                   @user.SupplierLink = @user.SupplierLink.drop(1)

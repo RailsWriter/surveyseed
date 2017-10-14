@@ -1921,32 +1921,61 @@ class UsersController < ApplicationController
         puts
         @RFGSupplierLinks = []
       else
-        @maxIRIndex = 0
-        @maxIR = @OfferwallResponse["response"]["surveys"][@maxIRIndex]["ir"]
-        @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][0]["offer_url"]
+        # @maxIRIndex = 0
+        # @maxIR = @OfferwallResponse["response"]["surveys"][@maxIRIndex]["ir"]
+        # @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][0]["offer_url"]
+
+        # @NumberOfSurveys = @OfferwallResponse["response"]["surveys"].length
+          
+        # print "************ Number of surveys on RFG Offerwall: ", @NumberOfSurveys
+        # puts
+
+        # # Pick RFG survey that has the highest IR and payout more than users net_payout.
+
+        # user_net = Network.find_by netid: user.netid
+        # @net_payout = "$"+user_net.payout.to_s
+        
+        # (0..@NumberOfSurveys-1).each do |i|
+        #   if ((@maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"]) && (@net_payout < @OfferwallResponse["response"]["surveys"][i]["payout"])) then
+        #   # if @maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"] then
+        #     @maxIRIndex = i
+        #     @maxIR = @OfferwallResponse["response"]["surveys"][i]["ir"]
+        #     @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][i]["offer_url"]
+        #   else
+        #   end
+        # end
+        
+        # print "***** DEBUG ******** Chosen RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxIRIndex, " with IR: ", @maxIR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxIRIndex]["payout"]
+        # puts
+
+        @maxCRIndex = 0
+        @maxCR = @OfferwallResponse["response"]["surveys"][@maxCRIndex]["projectCR"]
+        @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][@maxCRIndex]["offer_url"]
 
         @NumberOfSurveys = @OfferwallResponse["response"]["surveys"].length
           
         print "************ Number of surveys on RFG Offerwall: ", @NumberOfSurveys
         puts
 
-        # Pick RFG survey that has the highest IR and payout more than users net_payout.
+        # Pick RFG survey that has the highest CR and payout more than users net_payout.
 
         user_net = Network.find_by netid: user.netid
         @net_payout = "$"+user_net.payout.to_s
         
         (0..@NumberOfSurveys-1).each do |i|
-          if ((@maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"]) && (@net_payout < @OfferwallResponse["response"]["surveys"][i]["payout"])) then
-          # if @maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"] then
-            @maxIRIndex = i
-            @maxIR = @OfferwallResponse["response"]["surveys"][i]["ir"]
+          if ((@maxCR < @OfferwallResponse["response"]["surveys"][i]["projectCR"]) && (@net_payout < @OfferwallResponse["response"]["surveys"][i]["payout"])) then
+          # if @maxCR < @OfferwallResponse["response"]["surveys"][i]["ir"] then
+            @maxCRIndex = i
+            @maxCR = @OfferwallResponse["response"]["surveys"][i]["projectCR"]
             @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][i]["offer_url"]
           else
           end
         end
         
-        print "***** DEBUG ******** Chosen RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxIRIndex, " with IR: ", @maxIR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxIRIndex]["payout"]
+        print "***** DEBUG ******** Chosen RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxCRIndex, " with projectCR: ", @maxCR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxCRIndex]["payout"], " and IR: ", OfferwallResponse["response"]["surveys"][@maxCRIndex]["ir"]
         puts
+
+
 
         @RFGSupplierLinks = []
         @RFGSupplierLinks << @RFGOfferwallSupplierLink+@RFGAdditionalValues
@@ -2172,6 +2201,11 @@ class UsersController < ApplicationController
         else
         end
       when "2"
+
+          #if (user.emailid.empty? == false) then
+          # add link to pleasewait which should call 
+          # selectP2SPullAPISurveys (session_id) else
+
           user.SupplierLink = user.SupplierLink + ['/users/moreSurveys']
       end # case
     end # do

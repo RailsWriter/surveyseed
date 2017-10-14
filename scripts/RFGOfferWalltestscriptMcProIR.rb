@@ -66,11 +66,12 @@ puts
 # Find RFG SupplierLink for max IR in the set of Offerwall surveys
 @maxIRIndex = 0
 @maxIR = OfferwallResponse["response"]["surveys"][@maxIRIndex]["ir"]
+@RFGOfferwallSupplierLink = OfferwallResponse["response"]["surveys"][@maxIRIndex]["offer_url"]
 
 print "************ @maxIR initialized to: ", @maxIR
 puts
 
-net_payout = "$1.91"
+net_payout = "$1.25"
 
 NumberOfSurveys = OfferwallResponse["response"]["surveys"].length
   
@@ -87,7 +88,7 @@ NumberOfSurveys = OfferwallResponse["response"]["surveys"].length
   	end
   end
 
-  print "RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxIRIndex, " with IR: ", @maxIR, " and payout: ", OfferwallResponse["response"]["surveys"][@maxIRIndex]["payout"]
+  print "RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxIRIndex, " with IR: ", @maxIR, " and payout: ", OfferwallResponse["response"]["surveys"][@maxIRIndex]["payout"], " and projectCR: ", OfferwallResponse["response"]["surveys"][@maxIRIndex]["projectCR"]
   puts
 
 
