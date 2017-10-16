@@ -1682,8 +1682,8 @@ class UsersController < ApplicationController
         
       if user.age != nil then
         @RFGbirthday = (Time.now.year.to_i - user.age.to_i).to_s + "-" + (Random.rand(11)+1).to_s + "-" + (Random.rand(27)+1).to_s
-        print "-----RFGbirthday-------------------***************__________________", @RFGbirthday
-        puts
+        # print "-----RFGbirthday-------------------***************__________________", @RFGbirthday
+        # puts
       else
         @RFGbirthday = "0"
       end
@@ -1694,8 +1694,8 @@ class UsersController < ApplicationController
         @RFGEmployment = user.employment
       end
 
-      print "----RFGEmployment--------------------***************__________________", @RFGEmployment
-      puts
+      # print "----RFGEmployment--------------------***************__________________", @RFGEmployment
+      # puts
 
       if user.eduation == nil then
         @RFGEducation = '0'
@@ -1707,8 +1707,8 @@ class UsersController < ApplicationController
         end
       end
         
-      print "----RFGEducation -------------------***************__________________", @RFGEducation
-      puts 
+      # print "----RFGEducation -------------------***************__________________", @RFGEducation
+      # puts 
       
       if (user.race == nil) then
         @RFGEthnicity = '0'
@@ -1716,8 +1716,8 @@ class UsersController < ApplicationController
         @RFGEthnicity = user.race
       end 
       
-      print "----RFGEthnicity--------------------***************__________________", @RFGEthnicity
-      puts
+      # print "----RFGEthnicity--------------------***************__________________", @RFGEthnicity
+      # puts
 
       if user.householdincome == nil then
         @RFGHhi = '0'
@@ -1729,8 +1729,8 @@ class UsersController < ApplicationController
         end
       end
 
-      print "----RFGHhi -------------------***************__________________", @RFGHhi
-      puts 
+      # print "----RFGHhi -------------------***************__________________", @RFGHhi
+      # puts 
 
       if user.jobtitle == nil then
         @RFGJobTitle = '0'
@@ -1738,8 +1738,8 @@ class UsersController < ApplicationController
         @RFGJobTitle = user.jobtitle
       end
 
-      print "----RFGJobTitle -------------------***************__________________", @RFGJobTitle
-      puts 
+      # print "----RFGJobTitle -------------------***************__________________", @RFGJobTitle
+      # puts 
 
       if user.pindustry == nil then
         @RFGPindustry = '0'
@@ -1850,8 +1850,8 @@ class UsersController < ApplicationController
         end
       end
 
-      print "----RFGPindustry -------------------***************__________________", @RFGPindustry
-      puts
+      # print "----RFGPindustry -------------------***************__________________", @RFGPindustry
+      # puts
 
 
       @parsed_user_agent = UserAgent.parse(user.user_agent)
