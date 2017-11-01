@@ -13,15 +13,15 @@ class RedirectsController < ApplicationController
     @SHA1key = 'dKyEuAdS/pwtc9VK8ihCVsMmSK8JyK6QlTuOLiOSQD1tiXyOTdrMurEi84lrhddMxYcbAvLLMgrKHiroeROYMw=='
     @Url = request.original_url
     @ParsedUrl = @Url.partition ("&hash=")
-    print '************* DEBUG *************************************************************************************************************************'
+    print '************* DEBUG **********************************************************************************************************************************************'
     puts
-    print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Redirected Server Response Url = ', @Url, ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+    print '>>>>>>>>>>>>>>>>>> Redirected Server Response Url = ', @Url, ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
     puts
     # print '@BaseUrl=', @ParsedUrl[0]
     # puts
     # print '@Signature =', @ParsedUrl[2]   
     # puts
-    print '********* DEBUG *****************************************************************************************************************************'
+    print '********* DEBUG **********************************************************************************************************************************************************'
     puts
 
     @BaseUrl = @ParsedUrl[0]
@@ -186,7 +186,7 @@ class RedirectsController < ApplicationController
           
             @user = User.find_by user_id: params[:PID]
 
-            print '******************* Suceess in P2S router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+            print '******************* SUCCESS in P2S router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
             puts
             
             if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
@@ -451,10 +451,9 @@ class RedirectsController < ApplicationController
           
               @user = User.find_by user_id: params[:PID]              
 
-              print '************** Suceess for user_id/PID on RFG: ', params[:PID], ' CID: ', @user.clickid
+              print '************** RFG SUCCESS for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
               puts
           
-              
 
               if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
                 print "************* Click Id already exists - do not postback to RFG again!"
@@ -772,7 +771,7 @@ class RedirectsController < ApplicationController
               
                 @user = User.find_by user_id: params[:PID]
 
-                print '******************* Suceess in ADHOC router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+                print '******************* SUCCESS in ADHOC router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
                 puts
                 
                 if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
@@ -1033,7 +1032,7 @@ class RedirectsController < ApplicationController
           
                 @user = User.find_by user_id: params[:PID]
 
-                print '************** Suceess for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+                print '************** Pulley SUCCESS for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
                 puts
 
 
@@ -1325,7 +1324,7 @@ class RedirectsController < ApplicationController
           
             @user = User.find_by user_id: params[:PID]
 
-            print 'Status = 3 (Failure) in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
+            print 'Status = 3 (FAILED) in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
             puts
 
             @user.SurveysAttempted << 'P2S-3'+'-ts='+Time.now.to_s
@@ -1364,7 +1363,7 @@ class RedirectsController < ApplicationController
               # save attempt info in User and RfgOroject tables
               @user = User.find_by user_id: params[:PID]          
           
-              print '******** DEBUG ************ Status = RFG Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
+              print '******** DEBUG ************ Status = RFG FAILED for user_id: ', params[:PID], ' CID: ', @user.clickid
               puts
 
               # # Save last attempted project unless user did not qualify for any (other) project from start (no tsfn is attached)
@@ -1432,7 +1431,7 @@ class RedirectsController < ApplicationController
                 # save attempt info in User and Survey tables
                 @user = User.find_by user_id: params[:PID]          
             
-                print 'Status = Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
+                print 'Status = FAILED in ADHOC for user_id: ', params[:PID], ' CID: ', @user.clickid
                 puts
 
                 # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
@@ -1507,7 +1506,7 @@ class RedirectsController < ApplicationController
                 # save attempt info in User and Survey tables
                 @user = User.find_by user_id: params[:PID]          
             
-                print '**************** Status = Failure for user_id: ', params[:PID], ' CID: ', @user.clickid
+                print '**************** Status = FAILED in Pulley for user_id: ', params[:PID], ' CID: ', @user.clickid
                 puts
 
                 # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
@@ -1594,7 +1593,7 @@ class RedirectsController < ApplicationController
           
             @user = User.find_by user_id: params[:PID]
 
-            print 'Status = 4 (OQ) in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
+            print 'Status = 4 (OVERQUOTA) in P2S router for user_id/PID, CID: ', params[:PID], @user.clickid
             puts
 
             @user.SurveysAttempted << 'P2S-4'+'-ts='+Time.now.to_s
@@ -1637,7 +1636,7 @@ class RedirectsController < ApplicationController
               @user = User.find_by user_id: params[:PID]
 
 
-              print '******** DEBUG ************ RFG OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
+              print '******** DEBUG ************ RFG OVERQUOTA for user_id: ', params[:PID], ' CID: ', @user.clickid
               puts          
 
               @user.SurveysAttempted << 'RFG-4'+'-ts='+Time.now.to_s
@@ -1697,7 +1696,7 @@ class RedirectsController < ApplicationController
                 # save attempt info in User and Survey tables
                 @user = User.find_by user_id: params[:PID]
 
-                print 'Adhoc survey OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
+                print 'Adhoc survey OVERQUOTA for user_id: ', params[:PID], ' CID: ', @user.clickid
                 puts
             
                 @user.SurveysAttempted << params[:tsfn]+'-4'+'-ts='+Time.now.to_s
@@ -1770,7 +1769,7 @@ class RedirectsController < ApplicationController
                 @user = User.find_by user_id: params[:PID]
 
 
-                print 'OQuota for user_id: ', params[:PID], ' CID: ', @user.clickid
+                print 'OVERQUOTA in Pulley for user_id: ', params[:PID], ' CID: ', @user.clickid
                 puts   
             
                 @user.SurveysAttempted << params[:tsfn]+'-4'+'-ts='+Time.now.to_s
