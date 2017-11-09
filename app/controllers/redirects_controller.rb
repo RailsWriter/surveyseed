@@ -13,6 +13,7 @@ class RedirectsController < ApplicationController
     @SHA1key = 'dKyEuAdS/pwtc9VK8ihCVsMmSK8JyK6QlTuOLiOSQD1tiXyOTdrMurEi84lrhddMxYcbAvLLMgrKHiroeROYMw=='
     @Url = request.original_url
     @ParsedUrl = @Url.partition ("&hash=")
+    puts
     print '************* DEBUG **********************************************************************************************************************************************'
     puts
     print '>>>>>>>>>>>>>>>>>> Redirected Server Response Url = ', @Url, ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
@@ -22,6 +23,7 @@ class RedirectsController < ApplicationController
     # print '@Signature =', @ParsedUrl[2]   
     # puts
     print '********* DEBUG **********************************************************************************************************************************************************'
+    puts
     puts
 
     @BaseUrl = @ParsedUrl[0]
@@ -263,6 +265,11 @@ class RedirectsController < ApplicationController
                 @net_name = "QuickRewards"
               else
               end 
+
+              if @user.netid == "MMq0514UMM20bgf17Yatemoh" then 
+                @net_name = "KetsciPanel"
+              else
+              end
               
                             
               #@user.SurveysCompleted[params[:PID]] = [Time.now, 'P2Ssurvey', 'P2S', '$1.25', @user.clickid, @net_name]
@@ -546,6 +553,11 @@ class RedirectsController < ApplicationController
                 else
                 end
                
+                if @user.netid == "MMq0514UMM20bgf17Yatemoh" then 
+                  @net_name = "KetsciPanel"
+                else
+                end
+
                 # @user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'RFG', @project.cpi, @user.clickid, @net_name]
                 # @user.save
                 
@@ -848,6 +860,11 @@ class RedirectsController < ApplicationController
                   else
                   end
 
+                  if @user.netid == "MMq0514UMM20bgf17Yatemoh" then 
+                    @net_name = "KetsciPanel"
+                  else
+                  end
+
 
                   @survey = Adhoc.find_by SurveyNumber: params[:tsfn]                    
                   print '************ Successfully completed ADHOC survey:', @survey.SurveyNumber
@@ -1106,6 +1123,11 @@ class RedirectsController < ApplicationController
 
                   if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then 
                     @net_name = "QuickRewards"
+                  else
+                  end
+
+                  if @user.netid == "MMq0514UMM20bgf17Yatemoh" then 
+                    @net_name = "KetsciPanel"
                   else
                   end
 

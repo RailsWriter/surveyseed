@@ -1,0 +1,13 @@
+<h1>Winners</h1>
+
+
+<p>Showing <% @winner.count %> Winners at <%= Time.now.utc %></p>
+	
+	<h5>user_id ------------------ CountryID------------------SurveysCompleted ------------------------------------------------</h5>
+	
+	
+	<% @winner.each do |c| %>
+	    <li>
+	       <%= link_to c.id.to_s + '--' + c.country.to_s + '--' + c.SurveysCompleted.to_s, :action =>'panelStats', :id =>c.id  -%>
+	    </li>
+	<% end %>

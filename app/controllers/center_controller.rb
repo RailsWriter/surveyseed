@@ -238,7 +238,27 @@ class CenterController < ApplicationController
       p "***************** Nothing was received as draft_survey **************"
     end
   end
-    
+
+  def panelStats
+    # @winner = User.where('password!=? AND SurveysCompleted.empty?', '',1).each
+    # @winner = User.find(SurveysCompleted.length > 5).each
+
+    # @winner = User.all
+
+    # respond_to do |format|
+    #   format.html
+    #   # format.json { render json: @winner }
+    # end
+  end
+
+  # def show_panelStats
+  #   @winner = User.where('password!=? AND SurveysCompleted!= ?', '',nil).each
+
+  #   respond_to do |format|
+  #     format.html
+  #     format.json { render json: @winner }
+  #   end
+  # end
         
 #    def alllNets
       
