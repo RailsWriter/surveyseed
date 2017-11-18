@@ -755,7 +755,7 @@ class UsersController < ApplicationController
           user.userType='1'
           user.surveyFrequency = '2'
           # Sends email to user when panelist is created. Remove netid condition before going live.
-          if user.netid == 'KsAnLL23qacAHoi87ytr45bhj8' then
+          if user.netid == 'RemoveTheIf' then
             p "========================================================Sending Welcome MAIL to new panelist ================================"
             PanelMailer.welcome_email(user).deliver_now
           else
