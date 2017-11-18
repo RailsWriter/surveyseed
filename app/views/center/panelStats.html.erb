@@ -3,11 +3,14 @@
 
 <p>Showing <% @winner.count %> Winners at <%= Time.now.utc %></p>
 	
-	<h5>user_id ------------------ CountryID------------------SurveysCompleted ------------------------------------------------</h5>
+	<h5>user_id ------------------ CountryID------------------SurveysCompleted --------------------------------------------------Count</h5>
 	
 	
 	<% @winner.each do |c| %>
+	<% if c.SurveysCompleted.count >= 1 then -%>
 	    <li>
-	       <%= link_to c.id.to_s + '--' + c.country.to_s + '--' + c.SurveysCompleted.to_s, :action =>'panelStats', :id =>c.id  -%>
+	       <%= link_to c.id.to_s + '--' + c.country.to_s + '--' + c.SurveysCompleted.to_s + '---------------' + c.SurveysCompleted.count.to_s, :action =>'panelStats', :id =>c.id  -%>
 	    </li>
+	<%    else %>
+	<%    end %>
 	<% end %>

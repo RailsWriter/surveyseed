@@ -39,7 +39,8 @@ begin
   puts
   print "UTC time ", Time.now
   puts
-  print "Local time ", Time.now-7*60*60
+  # print "Local time ", Time.now-7*60*60 # Mar-Nov DST
+  print "Local time ", Time.now-8*60*60 # Nov - Mar PST
   puts
   print "Going to sleep for 9 minutes"
   puts

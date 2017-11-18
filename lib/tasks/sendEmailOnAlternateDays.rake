@@ -1,16 +1,16 @@
 namespace :sendEmailOnAlternateDays do
 	desc "ReminderMail"
 	task :email_sender => :environment do
-		puts "Alternate Days Reminder Email started at #{Time.now}\n"
-
-		# user=User.last
-		# emailId=user.emailId
-		# PanelMailer.reminder_email(emailId).deliver_now
+		print "Alternate Days Reminder Email started at #{Time.now}"
+		puts
 		
-		User.where('surveyFrequency = ?', '2').each do |alternateDayUser|
+		User.where('surveyFrequency = ? AND emailId != ?', '2', "").each do |alternateDayUser|
 			emailId=alternateDayUser.emailId
+			print "Selected AlternateDay emailId: ", emailId
+			puts
 			PanelMailer.reminder_email(alternateDayUser).deliver_now
-			puts "Alternate Days Reminder Email sent to ", emailId, " at #{Time.now}\n"
+			print "Alternate Days Reminder Email sent to ", emailId, " at #{Time.now}"
+			puts
 		end
 	end
 end

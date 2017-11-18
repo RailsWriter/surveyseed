@@ -1,17 +1,16 @@
 namespace :sendEmailDaily do
 	desc "ReminderMail"
 	task :email_sender => :environment do
-		puts "******** Daily Reminder Email Task Starting ************\n"
+		print "******** Daily Reminder Email Task Starting at #{Time.now} ************"
+		puts
 
-		# user=User.last
-		# emailId=user.emailId
-		# PanelMailer.reminder_email(emailId).deliver_now
-		
-		User.where('surveyFrequency = ?', '1').each do |dailyUser|
+		User.where('surveyFrequency = ? AND emailId != ?', '1', "").each do |dailyUser|
 			emailId=dailyUser.emailId
+			print "Selected Daily emailId: ", emailId
+			puts
 			PanelMailer.reminder_email(dailyUser).deliver_now
-			puts "Daily Reminder Email sent to ", emailId, " at #{Time.now}\n"
-		end
-		
+			print "Daily Reminder Email sent to ", emailId, " at #{Time.now}"
+			puts
+		end	
 	end
 end
