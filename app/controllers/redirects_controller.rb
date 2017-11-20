@@ -465,11 +465,7 @@ class RedirectsController < ApplicationController
               if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
                 print "************* Click Id already exists - do not postback to RFG again!"
                 puts
-      
               else
-
-
-
                 #@user.SurveysAttempted << params[:tsfn]+'-2'
                 @user.SurveysAttempted << 'RFG-2'+'-ts='+Time.now.to_s
 
@@ -590,20 +586,13 @@ class RedirectsController < ApplicationController
                 # @project.save
     
 
+                # @user.SurveysCompleted[Time.now] = [params[:PID], 'RFGsurvey', 'RFG', '$3.00', @user.clickid, @net_name]
+                @user.SurveysCompleted[Time.now] = [params[:PID], 'RFGsurvey', 'RFG', params[:payout], @user.clickid, @net_name]
 
-
-
-
-
-                #@user.SurveysCompleted[params[:PID]] = [Time.now, 'RFGsurvey', 'RFG', '$3.00', @user.clickid, @net_name]
-                @user.SurveysCompleted[Time.now] = [params[:PID], 'RFGsurvey', 'RFG', '$3.00', @user.clickid, @net_name]
                 @user.save
               
-                print "*************** User.netid in RFG-2 is: ", @user.netid
-                puts
-
-
-
+                # print "*************** User.netid in RFG-2 is: ", @user.netid
+                # puts
 
                 # Postback the network about success with users clickid
               

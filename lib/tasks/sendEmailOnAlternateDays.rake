@@ -5,12 +5,17 @@ namespace :sendEmailOnAlternateDays do
 		puts
 		
 		User.where('surveyFrequency = ? AND emailId != ?', '2', "").each do |alternateDayUser|
-			emailId=alternateDayUser.emailId
-			print "Selected AlternateDay emailId: ", emailId
-			puts
-			PanelMailer.reminder_email(alternateDayUser).deliver_now
-			print "Alternate Days Reminder Email sent to ", emailId, " at #{Time.now}"
-			puts
+			begin
+				emailId=alternateDayUser.emailId
+				print "Selected Alternate Days emailId: ", emailId
+				puts
+				PanelMailer.reminder_email(alternateDayUser).deliver_now
+				print "Alternate Days Reminder Email sent to ", emailId, " at #{Time.now}"
+				puts
+				rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+				print "Problem sending Alternate Days Reminder mail to ", emailId, "due to message: ", e.message
+				puts
+			end
 		end
 	end
 end

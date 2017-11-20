@@ -743,7 +743,6 @@ class UsersController < ApplicationController
 
     if (User.where('session_id=?', session.id).exists?) then
       user=User.find_by session_id: session.id
-
       if user.netid == "MMq0514UMM20bgf17Yatemoh" then
         # do nothing, because the user is already in the system
         p "****DEBUG ********** The user is already a Panelist *****************"
@@ -753,29 +752,81 @@ class UsersController < ApplicationController
           user.emailId = params[:emailid]
           user.password = 'Ketsci'+user.user_id[0..3]
           user.userType='1'
-          user.surveyFrequency = '2'
-          # Sends email to user when panelist is created. Remove netid condition before going live.
+          user.surveyFrequency = '1'
+          
+          # Sends email to user when panelist is created. 
+          # todo: Remove netid condition before going live.
+          
           if user.netid == 'RemoveTheIf' then
-            p "========================================================Sending Welcome MAIL to new panelist ================================"
-            PanelMailer.welcome_email(user).deliver_now
+            begin
+              p "========================================================Sending Welcome MAIL to new panelist ================================"
+              PanelMailer.welcome_email(user).deliver_now
+              rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+              print "Problem sending Welcome mail to ", emailId, "due to message: ", e.message
+              puts
+            end
           else
             #do nothing
           end
-
+          
           user.save
-
           tracker.track(user.ip_address, 'panelistregistered')
           redirect_to '/users/thanks'
         else
-          p "************** We do not have users emailid in join_panel *****************"
-          redirect_to '/users/thanks'
+          p "************** The user seems to want to join panel but did not give an emailid in join_panel *****************"
+          redirect_to '/users/thanks'  # todo: replace by please enter your email address to join message in future
         end
       end
     else
-      p "************** We do not have users session_id in join_panel *****************"
+      p "************** We do not have this new users session_id in join_panel *****************"
+
+      ip_address = request.remote_ip
+      session_id = session.id
+      netid = "KetsciPanel"
+      clickid = "NEW_PANELIST"
+
+      user=User.new
+      
+      user.QualifiedSurveys = Array.new
+      user.SurveysWithMatchingQuota = Array.new
+      user.SupplierLink = Array.new
+      user.user_agent = env['HTTP_USER_AGENT']
+      user.session_id = session_id
+      user.user_id = SecureRandom.urlsafe_base64
+      user.ip_address = ip_address
+      user.tos = false
+      user.watch_listed=false
+      user.black_listed=false
+      user.number_of_attempts_in_last_24hrs=0       
+
+      user.netid = netid
+      user.clickid = clickid 
+      user.emailId = params[:emailid]
+      user.password = 'Ketsci'+user.user_id[0..3]
+      user.userType='1'
+      user.redeemRewards='1'
+      user.surveyFrequency = '1'
+      user.save
+      print "***************** Successfully created a new panelist: ", user
+      puts
+
+      # Sends email to user when panelist is created. 
+      # todo: Remove the If condition before going live.
+
+      if user.emailId == 'akhtarjameel@gmail.com' then
+        begin
+          p "========================================================Sending Welcome MAIL to new panelist ================================"
+          PanelMailer.welcome_email(user).deliver_now
+          rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+          print "Problem sending Welcome mail to ", emailId, "due to message: ", e.message
+          puts
+        end
+      else
+        #do nothing
+      end
+
       redirect_to '/users/thanks'
     end
-
   end
 
   def login

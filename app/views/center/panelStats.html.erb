@@ -7,7 +7,7 @@
 	
 	
 	<% @winner.each do |c| %>
-	<% if c.SurveysCompleted.count >= 1 then -%>
+	<% if c.SurveysCompleted.count >= 2 then -%>
 	    <li>
 	       <%= link_to c.id.to_s + '--' + c.country.to_s + '--' + c.SurveysCompleted.to_s + '---------------' + c.SurveysCompleted.count.to_s, :action =>'panelStats', :id =>c.id  -%>
 	    </li>
