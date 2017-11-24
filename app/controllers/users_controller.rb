@@ -815,7 +815,7 @@ class UsersController < ApplicationController
 
       if user.emailId == 'ayaanjsiddiqui@gmail.com' then
         begin
-          p "========================================================Sending Welcome MAIL to new panelist ================================"
+          p "========================================================Sending Welcome MAIL to new Leads Panelist ================================"
           PanelMailer.welcome_email(user).deliver_now
           rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
           print "Problem sending Welcome mail to ", emailId, "due to message: ", e.message
