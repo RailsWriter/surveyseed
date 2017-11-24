@@ -778,12 +778,12 @@ class UsersController < ApplicationController
         end
       end
     else
-      p "************** We do not have this new users session_id in join_panel *****************"
+      p "************** A first time User is joining KETSCI Panel from HomePage. We do not have this new users session_id in join_panel *****************"
 
       ip_address = request.remote_ip
       session_id = session.id
       netid = "KetsciPanel"
-      clickid = "NEW_PANELIST"
+      clickid = "LEADS_PANELIST"
 
       user=User.new
       
@@ -813,7 +813,7 @@ class UsersController < ApplicationController
       # Sends email to user when panelist is created. 
       # todo: Remove the If condition before going live.
 
-      if user.emailId == 'akhtarjameel@gmail.com' then
+      if user.emailId == 'ayaanjsiddiqui@gmail.com' then
         begin
           p "========================================================Sending Welcome MAIL to new panelist ================================"
           PanelMailer.welcome_email(user).deliver_now
@@ -2858,7 +2858,7 @@ class UsersController < ApplicationController
       end
     
       user.SurveysAttempted << 'TESTSURVEY'
-      user.SurveysCompleted[Time.now] = [user.user_id, 'TESTSURVEY', 'KETSCI', '$0', user.clickid, @net_name]
+      user.SurveysCompleted[Time.now] = [user.user_id, 'TESTSURVEY', 'KETSCI', '0.0', user.clickid, @net_name]
 
       #user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
       user.save    

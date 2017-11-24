@@ -1,6 +1,6 @@
 <div>
-	
-    <div clas="row"><label><h3>Total Credits:  {{completedSurveys}} </h5></label></div>
+	<div class="row" align="center"><label><h2>Welcome {{emailId}} to your Dashboard.</h2></label></div>
+    <div clas="row"><label><h3>Total Credits:  {{completedSurveys}} </h3></label></div>
 	<div class="row">
 		<div class="col-md-7" id="creditsChart"></div>
         <div class="col-md-1"></div>
@@ -89,7 +89,7 @@
 -->
 
 				<div  class="form-group">
-					<label class="control-label col-sm-4"><span class="text-muted"><h5>How frequently you want us to send surveys?&nbsp;&nbsp;</h5></span> </label>
+					<label class="control-label col-sm-4"><span class="text-muted"><h5>How frequently you want to take surveys?&nbsp;&nbsp;</h5></span> </label>
 					<div class="col-sm-1">
 						<div class="input-group btn btn-default">
 							<input type="radio" value="1" ng-model="contactFreq" />
@@ -148,8 +148,21 @@
 -->
 
 		<div class="form-group modal-footer">
+            
+                       
 			<div class="col-sm-offset-3 col-sm-9">
-				<button type="submit" class="btn btn-danger" ng-click="saveUserPrefs()">Save</button>
+                <div>
+                <div class="badge badge-success" ng-show="save_prefs">
+	               The preferences were saved successfully.&nbsp;<a class="badge badge-dark" href="" ng-click="removeSavePrefAlert()">x</a>
+                </div>
+                <div class="badge badge-danger" ng-show="save_prefs_error">
+                    There was a problem saving your preferences. Please try again.&nbsp;<a class="badge badge-dark" href="" ng-click="removeSavePrefAlert()">x</a>
+                </div>
+                <div class="badge badge-success" ng-show="cancel_prefs">
+	               The preferences will not be saved.&nbsp;<a class="badge badge-dark" href="" ng-click="removeCancelAlert()">x</a>
+                </div> 
+                </div>
+                <button type="submit" class="btn btn-danger" ng-click="saveUserPrefs()">Save</button>
 				<button class="btn btn-default" type="button" ng-click="cancelPrefs()">Cancel</button>
 			</div>
 		</div>

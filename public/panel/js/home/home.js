@@ -67,6 +67,7 @@ angular.module('home', []).controller('home', function($scope, $http) {
 	}
 	
 	$scope.saveUserPrefs = function(){
+         $scope.cancel_prefs=false
 		var prefs = {}
 		prefs.preferences = {
 				userId : $scope.userId,
@@ -77,12 +78,28 @@ angular.module('home', []).controller('home', function($scope, $http) {
 		console.log("model data::"+$scope.contactFreq)
 		console.log("prefs::"+JSON.stringify(prefs,null,'  '));
 		$http.post('https://www.ketsci.com/users/savePreferences', prefs).success(function(data) {
+            $scope.save_prefs=true
 			console.log("Successfully saved user preferences");
 		}).error(function() {
+             $scope.save_prefs_error=true
 			console.log('Unable to save preferences');
 		});	
 	}
 
+    $scope.cancelPrefs = function(){
+        $scope.save_prefs=false
+        $scope.save_prefs_error=false
+        $scope.cancel_prefs=true
+	}
+    
+    $scope.removeSavePrefAlert = function(){
+        $scope.save_prefs=false
+        $scope.save_prefs_error=false
+    }
+    
+    $scope.removeCancelAlert = function(){
+         $scope.cancel_prefs=false
+    }
 	function drawChart() {
 /*
 		var barData = google.visualization.arrayToDataTable([
@@ -92,7 +109,7 @@ angular.module('home', []).controller('home', function($scope, $http) {
 			['Oct 2016', 28005, 19006, '']
 		]);
 */
-        console.log("barData::"+JSON.stringify($scope.barData,null,' '));
+        console.log("barDatca::"+JSON.stringify($scope.barData,null,' '));
         var barData = google.visualization.arrayToDataTable($scope.barData);
 		/*var barData = google.visualization.arrayToDataTable([
                         ['Genre','Completed',{'role': 'annotation'}],
