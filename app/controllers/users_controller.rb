@@ -745,7 +745,7 @@ class UsersController < ApplicationController
       user=User.find_by session_id: session.id
       if user.netid == "MMq0514UMM20bgf17Yatemoh" then
         # do nothing, because the user is already in the system
-        p "****DEBUG ********** The user is already a Panelist *****************"
+        p "****DEBUG ********** join_panel: The user is already a Panelist *****************"
           redirect_to '/users/alreadyPanelist'
       else
         if (params[:emailid].empty? == false) && (params[:commit] != "No Thanks") then

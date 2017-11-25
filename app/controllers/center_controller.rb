@@ -247,56 +247,57 @@ class CenterController < ApplicationController
   def addPanelistAction
     # Flash Admin to pay attention
     # flash[:alert] = "Must use INCOGNITO MODE"
-
     if (params[:emailid].empty? == false) then
-      ip_address = request.remote_ip
-      # session_id = session.id (otherwise all added panelist will have same sessionId and join_panel will have hard time distinguishing them.)
-      netid = "KetsciPanel"
-      clickid = "ADMIN_PANELIST"
-
-      user=User.new
-      
-      user.QualifiedSurveys = Array.new
-      user.SurveysWithMatchingQuota = Array.new
-      user.SupplierLink = Array.new
-      user.user_agent = env['HTTP_USER_AGENT']
-      # user.session_id = session_id
-      user.user_id = SecureRandom.urlsafe_base64
-      user.ip_address = ip_address
-      user.tos = false
-      user.watch_listed=false
-      user.black_listed=false
-      user.number_of_attempts_in_last_24hrs=0       
-
-      user.netid = netid
-      user.clickid = clickid 
-      user.emailId = params[:emailid]
-      user.password = 'Ketsci'+user.user_id[0..3]
-      user.userType='1'
-      user.redeemRewards='1'
-      user.surveyFrequency = '1'
-      user.save
-      print "***************** Admin successfully created a new panelist: ", user
-      puts
-
-      # Sends email to user when panelist is created. 
-      # todo: Remove the If condition before going live.
-      if params[:commit] == "SendWelcomeEmail" && user.emailId == 'akhtarjameel@gmail.com' then
-        begin
-          p "========================================================Sending Welcome MAIL to new Leads Panelist ================================"
-          PanelMailer.welcome_email(user).deliver_now
-          rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-          print "Problem sending Welcome mail to ", emailId, "due to message: ", e.message
-          puts
-        end
+      if (User.where('emailId = ?', params[:emailid]).exists?) then
+        #do nothing as panelist already exists
+        p "****DEBUG ********** addPanelist: The user is already a Panelist *****************"
+        redirect_to '/users/alreadyPanelist'
       else
-        #do nothing
+        ip_address = request.remote_ip
+        # session_id = session.id (otherwise all added panelist will have same sessionId and join_panel will have hard time distinguishing them.)
+        netid = "KetsciPanel"
+        clickid = "ADMIN_PANELIST"
+
+        user=User.new        
+        user.QualifiedSurveys = Array.new
+        user.SurveysWithMatchingQuota = Array.new
+        user.SupplierLink = Array.new
+        user.user_agent = env['HTTP_USER_AGENT']
+        # user.session_id = session_id
+        user.user_id = SecureRandom.urlsafe_base64
+        user.ip_address = ip_address
+        user.tos = false
+        user.watch_listed=false
+        user.black_listed=false
+        user.number_of_attempts_in_last_24hrs=0       
+        user.netid = netid
+        user.clickid = clickid 
+        user.emailId = params[:emailid]
+        user.password = 'Ketsci'+user.user_id[0..3]
+        user.userType='1'
+        user.redeemRewards='1'
+        user.surveyFrequency = '1'
+        user.save
+        print "***************** Admin successfully created a new panelist: ", user
+        puts
+        # Sends email to user when panelist is created. 
+        # todo: Remove the If condition before going live.
+        if params[:commit] == "SendWelcomeEmail" && user.emailId == 'akhtarjameel@gmail.com' then
+          begin
+            p "========================================================Sending Welcome MAIL to new Leads Panelist ================================"
+            PanelMailer.welcome_email(user).deliver_now
+            rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+            print "Problem sending Welcome mail to ", emailId, "due to message: ", e.message
+            puts
+          end
+        else
+          #do nothing
+        end        
+        redirect_to '/users/thanks' # todo: replace by a success page in center controller for adding panelist
       end
-      
-      redirect_to '/users/thanks' # todo: replace by a success page in center controller for adding panelist
     else
-      p "************** The Admin seems to want to add a panelist but did not give an emailid *****************"
-      redirect_to '/users/nosuccess'  # todo: replace by a nosuccess page in center controller for adding panelist
+      p "************** The Admin wants to add a panelist but did not enter an emailid => Retry *****************"
+      redirect_to '/center/addPanelist'  # retry
     end    
   end
    
