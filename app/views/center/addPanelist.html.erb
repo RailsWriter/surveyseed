@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+		<div class="header">
+			<center>
+				<h1>Add Panelist</h1>
+			</center>
+		</header>
+
+
+		<div class="content">
+			<center><br>
+				<p>Enter Email address for the new Panelist:</p>
+			</center>
+				<%= form_tag("/center/addPanelistAction", method: "post") do %>
+					<fieldset>
+						<div class="myyrsinput">
+							<%= text_field_tag 'emailid', nil, maxlength: 100 %>
+							<%= label_tag(:emailid, '') %><br><br>
+						</div>
+					
+						<div class="myinput">
+							<center>				
+								<%= submit_tag "SendWelcomeEmail" %><br>
+								<p>or</p>
+								<%= submit_tag "DontSendWelcomeEmail" %>
+							</center>
+						</div>
+					</fieldset>
+				<% end %>
+		</content>
+		
+		<br>
+		<br>
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('KetsciLogoSm.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>

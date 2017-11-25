@@ -731,7 +731,7 @@ class UsersController < ApplicationController
     
     tracker.track(user.ip_address, 'pleasewait')    
     
-    print "BUG Repeat User: ", user.user_id, " of country ", user.country, " of Gender ", user.gender, " Time 2 start FED search: ", Time.now
+    print "DEBUG Repeat User: ", user.user_id, " of country ", user.country, " of Gender ", user.gender, " Time 2 start FED search: ", Time.now
     puts
     
     ranksurveysforuser(session.id)    
@@ -748,7 +748,10 @@ class UsersController < ApplicationController
         p "****DEBUG ********** The user is already a Panelist *****************"
           redirect_to '/users/alreadyPanelist'
       else
-        if (params[:emailid].empty? == false) then
+        if (params[:emailid].empty? == false) && (params[:commit] != "No Thanks") then
+  
+          #  We assume that 2 or more Panelist will not use same computer (session_id) - if they do then this will overwrite previous value of emailId.
+
           user.emailId = params[:emailid]
           user.password = 'Ketsci'+user.user_id[0..3]
           user.userType='1'
@@ -762,7 +765,7 @@ class UsersController < ApplicationController
               p "========================================================Sending Welcome MAIL to new panelist ================================"
               PanelMailer.welcome_email(user).deliver_now
               rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-              print "Problem sending Welcome mail to ", emailId, "due to message: ", e.message
+              print "Problem sending Welcome mail to ", user.emailId, "due to message: ", e.message
               puts
             end
           else
@@ -771,61 +774,65 @@ class UsersController < ApplicationController
           
           user.save
           tracker.track(user.ip_address, 'panelistregistered')
+          p '********** Added EmailId and Pswd for a Panelist where a session_id exists from before ****************** '
           redirect_to '/users/thanks'
         else
-          p "************** The user seems to want to join panel but did not give an emailid in join_panel *****************"
+          p "************** The user did not give an emailid or chose No Thanks in join_panel *****************"
           redirect_to '/users/thanks'  # todo: replace by please enter your email address to join message in future
         end
       end
     else
-      p "************** A first time User is joining KETSCI Panel from HomePage. We do not have this new users session_id in join_panel *****************"
+      p "************** New session_id => New user is joining KETSCI Panel from HomePage. We do not have this new users session_id in join_panel *****************"
+      if (params[:emailid].empty? == false) && (params[:commit] != "No Thanks") then
+        ip_address = request.remote_ip
+        session_id = session.id
+        netid = "KetsciPanel"
+        clickid = "LEADS_PANELIST"
 
-      ip_address = request.remote_ip
-      session_id = session.id
-      netid = "KetsciPanel"
-      clickid = "LEADS_PANELIST"
+        user=User.new
+        
+        user.QualifiedSurveys = Array.new
+        user.SurveysWithMatchingQuota = Array.new
+        user.SupplierLink = Array.new
+        user.user_agent = env['HTTP_USER_AGENT']
+        user.session_id = session_id
+        user.user_id = SecureRandom.urlsafe_base64
+        user.ip_address = ip_address
+        user.tos = false
+        user.watch_listed=false
+        user.black_listed=false
+        user.number_of_attempts_in_last_24hrs=0       
 
-      user=User.new
-      
-      user.QualifiedSurveys = Array.new
-      user.SurveysWithMatchingQuota = Array.new
-      user.SupplierLink = Array.new
-      user.user_agent = env['HTTP_USER_AGENT']
-      user.session_id = session_id
-      user.user_id = SecureRandom.urlsafe_base64
-      user.ip_address = ip_address
-      user.tos = false
-      user.watch_listed=false
-      user.black_listed=false
-      user.number_of_attempts_in_last_24hrs=0       
+        user.netid = netid
+        user.clickid = clickid 
+        user.emailId = params[:emailid]
+        user.password = 'Ketsci'+user.user_id[0..3]
+        user.userType='1'
+        user.redeemRewards='1'
+        user.surveyFrequency = '1'
+        user.save
+        print "***************** Successfully created a new panelist: ", user
+        puts
 
-      user.netid = netid
-      user.clickid = clickid 
-      user.emailId = params[:emailid]
-      user.password = 'Ketsci'+user.user_id[0..3]
-      user.userType='1'
-      user.redeemRewards='1'
-      user.surveyFrequency = '1'
-      user.save
-      print "***************** Successfully created a new panelist: ", user
-      puts
+        # Sends email to user when panelist is created. 
+        # todo: Remove the If condition before going live.
 
-      # Sends email to user when panelist is created. 
-      # todo: Remove the If condition before going live.
-
-      if user.emailId == 'ayaanjsiddiqui@gmail.com' then
-        begin
-          p "========================================================Sending Welcome MAIL to new Leads Panelist ================================"
-          PanelMailer.welcome_email(user).deliver_now
-          rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-          print "Problem sending Welcome mail to ", emailId, "due to message: ", e.message
-          puts
+        if user.emailId == 'ayaanjsiddiqui@gmail.com' then
+          begin
+            p "========================================================Sending Welcome MAIL to new Leads Panelist ================================"
+            PanelMailer.welcome_email(user).deliver_now
+            rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+            print "Problem sending Welcome mail to ", user.emailId, "due to message: ", e.message
+            puts
+          end
+        else
+          #do nothing
         end
+        redirect_to '/users/thanks'
       else
-        #do nothing
+        p "************** The user did not give an emailid or chose No Thanks in join_panel *****************"
+        redirect_to '/users/thanks'  # todo: replace by please enter your email address to join message in future
       end
-
-      redirect_to '/users/thanks'
     end
   end
 
