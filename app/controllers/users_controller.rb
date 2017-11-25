@@ -1113,7 +1113,7 @@ class UsersController < ApplicationController
         @DMARegionCode = "0"
         @regionPrecode = "0"
         @dividionPrecode = "0"
-        puts "NotApplicable PreCodes Used for INVALID ZIPCODE"
+        puts "NotApplicable PreCodes Used for INVALID ZIPCODE" # This was useful for quota matching approach. With Pulley invalid codes are passed as is.
         
       else
       
