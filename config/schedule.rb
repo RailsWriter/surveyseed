@@ -25,7 +25,7 @@ set :output, "log/cron_log.log"
 # 	rake "sendEmailDaily:email_sender", :environment => "development"
 # end
 
-every :day, :at => '7:00pm' do
+every :day, :at => '03:10:00' do
     rake "sendEmailDaily:email_sender", :environment => "production"
 end
 
