@@ -273,7 +273,7 @@ class RedirectsController < ApplicationController
               
                             
               #@user.SurveysCompleted[params[:PID]] = [Time.now, 'P2Ssurvey', 'P2S', '$1.25', @user.clickid, @net_name]
-              @user.SurveysCompleted[Time.now] = [params[:PID], 'P2Ssurvey', 'P2S', '$1.25', @user.clickid, @net_name]
+              @user.SurveysCompleted[Time.now] = [params[:PID], 'P2Ssurvey', 'P2S', '1.25', @user.clickid, @net_name]
               @user.save
             
               print "*************** User.netid in P2S-2 is: ", @user.netid

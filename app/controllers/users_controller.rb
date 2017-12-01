@@ -1739,11 +1739,12 @@ class UsersController < ApplicationController
       puts
         
       if user.age != nil then
-        @RFGbirthday = (Time.now.year.to_i - user.age.to_i).to_s + "-" + (Random.rand(11)+1).to_s + "-" + (Random.rand(27)+1).to_s
-        # print "-----RFGbirthday-------------------***************__________________", @RFGbirthday
-        # puts
+        # @RFGbirthday = (Time.now.year.to_i - user.age.to_i).to_s + "-" + (Random.rand(11)+1).to_s + "-" + (Random.rand(27)+1).to_s
+        @RFGbirthday = (Time.now.year.to_i - user.age.to_i).to_s + "-" + (sprintf '%02d', (Random.rand(11)+1)).to_s + "-" + (sprintf '%02d', (Random.rand(27)+1)).to_s
+        print "-----RFGbirthday-------------------***************__________________", @RFGbirthday
+        puts
       else
-        @RFGbirthday = "0"
+        @RFGbirthday = "1963-11-30"
       end
        
       if user.employment == nil then
