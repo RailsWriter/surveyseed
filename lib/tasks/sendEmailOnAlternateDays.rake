@@ -13,7 +13,7 @@ namespace :sendEmailOnAlternateDays do
 				print "Alternate Days Reminder Email sent to ", emailId, " at #{Time.now}"
 				puts
 				rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-				print "Problem sending Alternate Days Reminder mail to ", emailId, "due to message: ", e.message
+				print "Problem sending Alternate Days Reminder mail to ", emailId, " due to message: ", e.message
 				puts
 			end
 		end

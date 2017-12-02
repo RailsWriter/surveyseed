@@ -2605,13 +2605,13 @@ class UsersController < ApplicationController
 
         (0..@NumberOfP2SSurveys-1).each do |i|
           if (@p2sApiResponse["surveys"][i]["cpi"].to_f > net_payout) then
-            @P2SApiSupplierLinks << @p2sApiResponse["surveys"][i]["entry_link"]
+            @P2SApiSupplierLinks << @p2sApiResponse["surveys"][i]["entry_link"].sub('ssi=SUBID','ssi='+@SUBID)
           else
           end
         end #do
         print "************ Number of surveys on P2S API which Qualify for KETSCI: ", @P2SApiSupplierLinks.length
         puts
-        print "P2S API Offerwall SupplierLinks: ", @P2SApiSupplierLinks
+        print "**** DEBUG **** P2S API Offerwall SupplierLinks: ", @P2SApiSupplierLinks
         puts
       end
     end

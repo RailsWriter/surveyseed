@@ -35,7 +35,7 @@ else
 
     (0..NumberOfSurveys-1).each do |i|
       if (p2sApiResponse["surveys"][i]["cpi"].to_f > net_payout) then
-        P2SApiSupplierLinks << p2sApiResponse["surveys"][i]["entry_link"]
+        P2SApiSupplierLinks << p2sApiResponse["surveys"][i]["entry_link"].sub('ssi=SUBID','ssi='+'KET')
       else
       end
     end #do
