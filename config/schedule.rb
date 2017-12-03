@@ -23,9 +23,9 @@
 set :output, "/tmp/cron_log.log" # todo: figure out how to write tp log/ folder instead
 env :PATH, ENV['PATH']
 
-# every :day, :at => '8:00pm' do
-# 	rake "sendEmailDaily:email_sender", :environment => "development"
-# end
+every :day, :at => '11:41pm' do
+ 	rake "sendEmailDaily:email_sender", :environment => "development"
+end
 
 every :day, :at => '3:22am' do
      rake "sendEmailDaily:email_sender", :environment => "production"

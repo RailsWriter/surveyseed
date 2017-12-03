@@ -9,7 +9,7 @@ namespace :sendEmailDaily do
 				emailId=dailyUser.emailId
 				print "Selected Daily emailId: ", emailId
 				puts
-				if (emailId == 'akhtarjameel@gmail.com') || (emailId == '2@3.4') || (emailId == 'dasriharsha@gmail.com') then
+				if (emailId == 'akhtarjameel@gmail.com') || (emailId == '2@3.4') then
 					begin
 						PanelMailer.reminder_email(dailyUser).deliver_now
 						print "Daily Reminder Email sent to ", emailId, " at #{Time.now}"

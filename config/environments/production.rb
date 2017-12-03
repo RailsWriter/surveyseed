@@ -20,6 +20,22 @@ Rails.application.configure do
   # NGINX, varnish or squid.
   # config.action_dispatch.rack_cache = true
 
+  # SMTP settings for aws ses.
+  # Show if the mailer can't send.
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+   :address              => "email-smtp.us-west-2.amazonaws.com",
+   :port                 => 587,
+   :user_name            => ENV['aws_smtp_username'],
+   :password             => ENV['aws_smtp_password'],
+   :authentication       => :login,
+   :enable_starttls_auto => true
+  }
+
+  config.action_mailer.default_url_options = {host: "ketsci.com"}  
+
   # Disable Rails's static asset server (Apache or NGINX will already do this).
   config.serve_static_assets = false
 
@@ -61,18 +77,18 @@ Rails.application.configure do
   # SMTP settings for aws ses.
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-   :address              => "email-smtp.us-west-2.amazonaws.com",
-   :port                 => 587,
-   :user_name            => ENV['awsses_username'],
-   :password             => ENV['awsses_password'],
-   :authentication       => :login,
-   :enable_starttls_auto => true
-  }
-  config.action_mailer.default_url_options = { host: "ketsci.com"}
+  # config.action_mailer.raise_delivery_errors = true
+  # config.action_mailer.perform_deliveries = true
+  # config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.smtp_settings = {
+  #  :address              => "email-smtp.us-west-2.amazonaws.com",
+  #  :port                 => 587,
+  #  :user_name            => ENV['aws_smtp_username'],
+  #  :password             => ENV['aws_smtp_password'],
+  #  :authentication       => :login,
+  #  :enable_starttls_auto => true
+  # }
+  # config.action_mailer.default_url_options = {host: "ketsci.com"}
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back toz
   # Do not dump schema after migrations.
