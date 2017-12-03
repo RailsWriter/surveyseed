@@ -2611,7 +2611,7 @@ class UsersController < ApplicationController
         end #do
         print "************ Number of surveys on P2S API which Qualify for KETSCI: ", @P2SApiSupplierLinks.length
         puts
-        print "**** DEBUG **** P2S API Offerwall SupplierLinks: ", @P2SApiSupplierLinks
+        print "**** DEBUG 2API **** P2S API Offerwall SupplierLinks: ", @P2SApiSupplierLinks
         puts
       end
     end

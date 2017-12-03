@@ -27,9 +27,9 @@ env :PATH, ENV['PATH']
 # 	rake "sendEmailDaily:email_sender", :environment => "development"
 # end
 
-# every :day, :at => '3:22am' do
-#     rake "sendEmailDaily:email_sender", :environment => "production"
-# end
+every :day, :at => '3:22am' do
+     rake "sendEmailDaily:email_sender", :environment => "production"
+end
 
 # every :monday, :at => '12:00am' do
 #     rake "sendEmailOnAlternateDays:email_sender", :environment => "development"
