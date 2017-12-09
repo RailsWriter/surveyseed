@@ -1536,8 +1536,8 @@ class UsersController < ApplicationController
     @adhocClient = Network.find_by name: "ADHOC"
     if (@adhocClient.status == "ACTIVE") then
       @adhocNetId = @adhocClient.netid
-      print "**************** Assigned ADHOC @adhocNetId = ", @adhocNetId
-      puts
+      # print "**************** Assigned ADHOC @adhocNetId = ", @adhocNetId
+      # puts
 
       #Initialize an array to store qualified Adhoc surveys
       @adhocQualifiedSurveys = Array.new
@@ -1701,16 +1701,15 @@ class UsersController < ApplicationController
           puts
           
           print '********** Adhoc In total This USER_ID: ', user.user_id, ' has created for the following survey Links: ', @adhocSupplierLinks
-          puts
-              
+          puts      
         else
           # No qualified Adhoc surveys found for if qualification conditions
           print '???????????????????????????????????------------------------>>>> NO QUALIFIED ADHOC SURVEYS FOUND **************'
           puts
         end
-
       end # do loop for all Adhoc surveys in db
-
+      print "***************** No more Qualified Adhoc surveys found. ************************"
+      puts
     else
       print "***************** Adhoc surveys are not ACTIVE ************************"
       puts

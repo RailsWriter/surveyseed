@@ -34,8 +34,17 @@ begin
         end
       end
     end
+    @hits = 0
+    Network.where("updated_at < ?", Time.now).each do |n|
+      if n.Flag2 != "" then
+        @hits = @hits + n.Flag2.to_i
+      else
+      end
+    end
   end
   print "Number of completes in last 24 hrs: ", count
+  puts
+  print "Lifetime number of hits to survey inventory: ", @hits
   puts
   print "UTC time ", Time.now
   puts
