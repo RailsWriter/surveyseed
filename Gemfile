@@ -40,8 +40,8 @@ gem 'ruby-hmac'
 gem 'useragent', '0.10.0'
 gem 'newrelic_rpm'
 gem 'geocoder'
-
 gem 'rack-cors', :require => 'rack/cors'
+gem 'email_validator'
 
 group :development, :test do
   gem 'sqlite3',     '1.3.9'

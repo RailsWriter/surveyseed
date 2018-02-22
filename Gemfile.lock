@@ -59,6 +59,8 @@ GEM
     columnize (0.8.9)
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
+    email_validator (1.6.0)
+      activemodel
     erubis (2.7.0)
     execjs (2.2.2)
     ffi (1.9.6)
@@ -221,6 +223,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   coffee-rails (~> 4.0.0)
+  email_validator
   geocoder
   guard-minitest (= 2.3.1)
   httparty

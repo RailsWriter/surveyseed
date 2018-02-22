@@ -749,33 +749,37 @@ class UsersController < ApplicationController
           redirect_to '/users/alreadyPanelist'
       else
         if (params[:emailid].empty? == false) && (params[:commit] != "No Thanks") then
-  
-          #  We assume that 2 or more Panelist will not use same computer (session_id) - if they do then this will overwrite previous value of emailId.
+          if EmailValidator.valid?(params[:emailid]) then          
+            #  We assume that 2 or more Panelist will not use same computer (session_id) - if they do then this will overwrite previous value of emailId.
 
-          user.emailId = params[:emailid]
-          user.password = 'Ketsci'+user.user_id[0..3]
-          user.userType='1'
-          user.surveyFrequency = '1'
-          
-          # Sends email to user when panelist is created. 
-          # todo: Remove netid condition before going live.
-          
-          if user.netid == 'RemoveTheIf' then
-            begin
-              p "========================================================Sending Welcome MAIL to new panelist ================================"
-              PanelMailer.welcome_email(user).deliver_now
-              rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-              print "Problem sending Welcome mail to ", user.emailId, "due to message: ", e.message
-              puts
+            user.emailId = params[:emailid]
+            user.password = 'Ketsci'+user.user_id[0..3]
+            user.userType='1'
+            user.surveyFrequency = '1'
+            
+            # Sends email to user when panelist is created. 
+            # todo: Remove netid condition before going live.
+            
+            if user.netid == 'RemoveThisIf' then
+              begin
+                p "========================================================Sending Welcome MAIL to new panelist ================================"
+                PanelMailer.welcome_email(user).deliver_now
+                rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+                print "Problem sending Welcome mail to ", user.emailId, "due to message: ", e.message
+                puts
+              end
+            else
+              #do nothing
             end
+                        
+            user.save
+            tracker.track(user.ip_address, 'panelistregistered')
+            p '********** Added EmailId and Pswd for a Panelist where a session_id exists from before ****************** '
+            redirect_to '/users/thanks'
           else
-            #do nothing
+            p "************** Invalid EmailId Entered *****************"
+            redirect_to '/users/thanks'  # todo: replace by please enter a correct email address to join message
           end
-          
-          user.save
-          tracker.track(user.ip_address, 'panelistregistered')
-          p '********** Added EmailId and Pswd for a Panelist where a session_id exists from before ****************** '
-          redirect_to '/users/thanks'
         else
           p "************** The user did not give an emailid or chose No Thanks in join_panel *****************"
           redirect_to '/users/thanks'  # todo: replace by please enter your email address to join message in future
@@ -1661,8 +1665,7 @@ class UsersController < ApplicationController
 
           puts "---------------------------------->>>  Replace QualificationHHCPrecodes with CA_provincePrecodes column"
         
-          print '************ Adhoc User QUALIFIED for survey number = ', survey.SurveyNumber, ' RANK= ', survey.SurveyGrossRank, ' User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ..... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.employment, ' Std_Employment PreCode from survey: ', survey.QualificationEmploymentPreCodes, ' User Entered PIndustry: ', user.pindustry, ' PIndustry PreCode from survey: ', survey.QualificationPIndustryPreCodes, ' User Entered JobTitle: ', user.jobtitle, ' JobTitle PreCode from survey: ', survey.QualificationJobTitlePreCodes, ' User Entered Children: ', user.children, ' Children PreCodes from survey: ', survey.QualificationChildrenPreCodes, ' User Entered Industries: ', user.industries, ' Industries PreCodes from survey: ....', ' Network Payout: ', @currentpayout, ' CPI from survey: ', survey.CPI, ' SurveyStillAlive: ', survey.SurveyStillLive
-         
+          print '************ Adhoc User QUALIFIED for survey number = ', survey.SurveyNumber, 'User record id: ', user.id, 'User enetered Gender: ', @GenderPreCode, ' Gender from Survey= ', survey.QualificationGenderPreCodes, ' USER ENTERED AGE= ', user.age, ' AGE PreCodes from Survey= ', survey.QualificationAgePreCodes, ' User Entered ZIP: ', user.ZIP, ' ZIP PreCodes from Survey: ..... ', ' User Entered Race: ', user.race, ' Race PreCode from survey: ', survey.QualificationRacePreCodes, ' User Entered ethnicity: ', user.ethnicity, ' Ethnicity PreCode from survey: ', survey.QualificationEthnicityPreCodes, ' User Entered education: ', user.eduation, ' Education PreCode from survey: ', survey.QualificationEducationPreCodes, ' User Entered HHI: ', user.householdincome, ' HHI PreCode from survey: ', survey.QualificationHHIPreCodes, ' User Entered Employment: ', user.employment, ' Std_Employment PreCode from survey: ', survey.QualificationEmploymentPreCodes, ' User Entered PIndustry: ', user.pindustry, ' PIndustry PreCode from survey: ', survey.QualificationPIndustryPreCodes, ' User Entered JobTitle: ', user.jobtitle, ' JobTitle PreCode from survey: ', survey.QualificationJobTitlePreCodes, ' User Entered Children: ', user.children, ' Children PreCodes from survey: ', survey.QualificationChildrenPreCodes, ' User Entered Industries: ', user.industries, ' Industries PreCodes from survey: ....', ' Network Payout: ', @currentpayout, ' CPI from survey: ', survey.CPI, ' SurveyStillAlive: ', survey.SurveyStillLive
           puts
           
           print '************* Adhoc Gender match: ', @_gender, ' Age match: ', @_age, ' Age_logic value: ', @_age_value, ' Race match: ', @_race, ' Ethnicity match: ', @_ethnicity, ' Education match: ', @_education, ' HHI match: ', @_HHI, ' Employment match: ', @_employment, ' PIndustry match: ', @_pindustry, ' JobTitle match: ', @_jobtitle, ' Children match: ', @_children, ' Children_logic value: ', @_children_logic,  ' Industries match: ', @_industries, ' Industries_logic value: ', @_industries_logic, ' CPI check: ', @_CPI_check
