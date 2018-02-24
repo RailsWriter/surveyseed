@@ -740,7 +740,8 @@ class UsersController < ApplicationController
   def join_panel  
 
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
-
+    
+    #  We assume that 2 or more Panelist will not use same computer (session_id) - if they do then this will overwrite previous value of emailId.
     if (User.where('session_id=?', session.id).exists?) then
       user=User.find_by session_id: session.id
       if user.netid == "MMq0514UMM20bgf17Yatemoh" then
@@ -749,9 +750,7 @@ class UsersController < ApplicationController
           redirect_to '/users/alreadyPanelist'
       else
         if (params[:emailid].empty? == false) && (params[:commit] != "No Thanks") then
-          if EmailValidator.valid?(params[:emailid]) then          
-            #  We assume that 2 or more Panelist will not use same computer (session_id) - if they do then this will overwrite previous value of emailId.
-
+          if EmailValidator.valid?(params[:emailid]) && !User.exists?(emailId: params[:emailid]) then          
             user.emailId = params[:emailid]
             user.password = 'Ketsci'+user.user_id[0..3]
             user.userType='1'
@@ -771,13 +770,13 @@ class UsersController < ApplicationController
             else
               #do nothing
             end
-                        
+
             user.save
             tracker.track(user.ip_address, 'panelistregistered')
             p '********** Added EmailId and Pswd for a Panelist where a session_id exists from before ****************** '
             redirect_to '/users/thanks'
           else
-            p "************** Invalid EmailId Entered *****************"
+            p "************** Invalid or Duplicate EmailId Entered *****************"
             redirect_to '/users/thanks'  # todo: replace by please enter a correct email address to join message
           end
         else
