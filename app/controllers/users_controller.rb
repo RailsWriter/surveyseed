@@ -63,12 +63,12 @@ class UsersController < ApplicationController
       # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
       # if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
  
-      if (netid == "MMq0514UMM20bgf17Yatemoh") || (User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first!=nil)
+      if (netid == "MMq0514UMM20bgf17Yatemoh") or (User.where("ip_address = ? or session_id = ?", ip_address, session_id).first!=nil)
         first_time_user=false
         # p '********* EVAL_AGE: USER EXISTS'
       else
         first_time_user=true
-        # p 'EVAL_AGE: USER DOES NOT EXIST'
+        # p '******* EVAL_AGE: USER DOES NOT EXIST'
       end
 
       if (first_time_user) then
@@ -109,7 +109,7 @@ class UsersController < ApplicationController
         if (netid == "MMq0514UMM20bgf17Yatemoh") then
           user = User.find(userRecordId)
         else
-          user = User.where("ip_address = ? AND session_id = ?", ip_address, session_id).first
+          user = User.where("ip_address = ? or session_id = ?", ip_address, session_id).first
         end
 
         print "*** DEBUG ******* REPEAT USER. Existing User Record is: ", user
