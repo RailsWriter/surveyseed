@@ -1442,9 +1442,12 @@ class UsersController < ApplicationController
     end
 
 
-    pulley_base_url = "https://pulley.samplicio.us/entry?"
-    lid = user.country
-    sid = "f162681e-268a-46af-906e-eb4443a4013a"
+    # pulley_base_url = "https://pulley.samplicio.us/entry?"
+    pulley_base_url = "https://www.samplicio.us/s/default.aspx?"
+    #lid = user.country
+    clid = user.country
+    # sid = "f162681e-268a-46af-906e-eb4443a4013a"
+    sid = "9cc5d631-aa07-4dde-bbbd-09aa05eed1a7"
     pid = user.user_id
     loi = "not set"
     cos = @currentpayout.to_s
@@ -1464,7 +1467,8 @@ class UsersController < ApplicationController
       end
     end
 
-    print '*****************>>>> Pulley Arguments: ', 'lid= ', lid, 'pid= ', pid, 'cos= ', cos
+    # print '*****************>>>> Pulley Arguments: ', 'lid= ', lid, 'pid= ', pid, 'cos= ', cos
+    print '*****************>>>> Pulley Arguments: ', 'clid= ', clid, 'pid= ', pid, 'cos= ', cos
     puts
 
 
@@ -1494,7 +1498,8 @@ class UsersController < ApplicationController
     end
 
 
-    baseLink = pulley_base_url+'lid='+lid+'&sid='+sid+'&pid='+pid+'&cos='+cos+@Pulley_AdditionalValues
+    # baseLink = pulley_base_url+'lid='+lid+'&sid='+sid+'&pid='+pid+'&cos='+cos+@Pulley_AdditionalValues
+    baseLink = pulley_base_url+'clid='+clid+'&sid='+sid+'&pid='+pid+'&cos='+cos+@Pulley_AdditionalValues
 
     print "**************************** Puley baseLink = ", baseLink
     puts
