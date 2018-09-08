@@ -42,6 +42,7 @@ gem 'newrelic_rpm'
 gem 'geocoder'
 gem 'rack-cors', :require => 'rack/cors'
 gem 'email_validator'
+gem 'whenever', :require => false
 
 group :development, :test do
   gem 'sqlite3',     '1.3.9'
@@ -54,7 +55,7 @@ group :development, :test do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring', '1.2.0'
-  gem 'whenever', :require => false
+  
   
 end
 

@@ -20,16 +20,41 @@
 # Learn more: http://github.com/javan/whenever
 
 # set :output, "log/cron_log.log"
-set :output, "/tmp/cron_log.log" # todo: figure out how to write tp log/ folder instead
-env :PATH, ENV['PATH']
+# set :output, "/tmp/cron_log.log" # todo: figure out how to write tp log/ folder instead
+# env :PATH, ENV['PATH']
 
-every :day, :at => '11:41pm' do
- 	rake "sendEmailDaily:email_sender", :environment => "development"
+# every :day, :at => '11:41pm' do
+#  	rake "sendEmailDaily:email_sender", :environment => "development"
+# end
+
+# every :day, :at => '10:03pm' do
+#      runner :sendEmailDaily => :production do 
+#      	email_sender
+#      end
+# end
+
+case @environment
+
+when 'production'
+
+every 1.hours do
+	puts "Running in Production"
+
+   rake "sendEmailDaily:email_sender"
+
+  end
+
+when 'development'
+
+every 1.hours do
+	puts "Running in Dev"
+
+  rake "sendEmailDaily:email_sender"
+
+  end
+
 end
 
-every :day, :at => '3:22am' do
-     rake "sendEmailDaily:email_sender", :environment => "production"
-end
 
 # every :monday, :at => '12:00am' do
 #     rake "sendEmailOnAlternateDays:email_sender", :environment => "development"

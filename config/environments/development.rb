@@ -27,6 +27,8 @@ Rails.application.configure do
    :enable_starttls_auto => true
   }
 
+  puts "Message from config/development.rb"
+
   config.action_mailer.default_url_options = {host:'localhost', port: '3000'}
 
   # Print deprecation notices to the Rails logger.

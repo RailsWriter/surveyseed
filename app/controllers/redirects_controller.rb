@@ -60,7 +60,9 @@ class RedirectsController < ApplicationController
     
     if (@validateSHA1hash != @Signature) then
       # invalid response, discard
-      print '************ Redirects: Signature NOT verified, Validate 4 =', @validateSHA1hash
+      print '>>>>>>>>>>>>>>>> Redirects: Signature NOT verified, Validate 4 =', @validateSHA1hash
+      puts
+      print '>>>>>>>>>>>>>>>> Redirects: Signature NOT verified, Signature =', @Signature
       puts
       if params[:PID] == 'test' then
         print '***************** PID = TEST found. Staging server does not generate Signatures '
@@ -130,6 +132,7 @@ class RedirectsController < ApplicationController
               end      
                
             else
+              p '>>>>>>>>>>>>>>>>>>>> Not Valid HASH Response from Pulley <<<<<<<<<<<<<<<<<'
               redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=0b'
               return
             end
@@ -138,7 +141,7 @@ class RedirectsController < ApplicationController
       end
     else
       @fed_redirect = true
-      p '>>>>>>>>>>>>>>>>****************** Valid Server Response: Pulley Signature verified **********************<<<<<<<<<<<<<<<<<'
+      p '>>>>>>>>>>>>>>>> Valid Server Response: Pulley Signature verified <<<<<<<<<<<<<<<<<'
     end
         
     # SurveyExactRank is a counter for failures+OQ+Term on FED    
