@@ -2033,7 +2033,7 @@ class UsersController < ApplicationController
         @net_payout = "$"+user_net.payout.to_s
         
         (0..@NumberOfSurveys-1).each do |i|
-          if ((@maxCR < @OfferwallResponse["response"]["surveys"][i]["projectCR"]) && (@net_payout < @OfferwallResponse["response"]["surveys"][i]["payout"])) then
+          if ((@maxCR < @OfferwallResponse["response"]["surveys"][i]["projectCR"]) && (@net_payout.gsub(/[$,]/,'').to_f < @OfferwallResponse["response"]["surveys"][i]["payout"].gsub(/[$,]/,'').to_f)) then
           # if @maxCR < @OfferwallResponse["response"]["surveys"][i]["ir"] then
             @maxCRIndex = i
             @maxCR = @OfferwallResponse["response"]["surveys"][i]["projectCR"]

@@ -33,7 +33,7 @@
 #      end
 # end
 
-case @environment
+case Rails.env
 
 when 'production'
 

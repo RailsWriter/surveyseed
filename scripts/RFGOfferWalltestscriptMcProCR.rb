@@ -73,7 +73,7 @@ print "************ @RFGOfferwallSupplierLink initialized to: ", @RFGOfferwallSu
 puts
 
 (0..NumberOfSurveys-1).each do |i|
-  if ((@maxCR < OfferwallResponse["response"]["surveys"][i]["projectCR"]) && (net_payout < OfferwallResponse["response"]["surveys"][i]["payout"])) then
+  if ((@maxCR < OfferwallResponse["response"]["surveys"][i]["projectCR"]) && (net_payout.gsub(/[$,]/,'').to_f < OfferwallResponse["response"]["surveys"][i]["payout"].gsub(/[$,]/,'').to_f)) then
     @maxCRIndex = i
 		@maxCR = OfferwallResponse["response"]["surveys"][i]["projectCR"]
 		@RFGOfferwallSupplierLink = OfferwallResponse["response"]["surveys"][i]["offer_url"]
@@ -84,6 +84,15 @@ end
 print "RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxCRIndex, " with projectCR: ", @maxCR, " and payout: ", OfferwallResponse["response"]["surveys"][@maxCRIndex]["payout"], " and IR: ", OfferwallResponse["response"]["surveys"][@maxCRIndex]["ir"]
 puts
 
+if net_payout.gsub(/[$,]/,'').to_f < OfferwallResponse["response"]["surveys"][@maxCRIndex]["payout"].gsub(/[$,]/,'').to_f then
+	print "GOOD that net_payout: ", net_payout, " is LOWER than RFG payout for this survey"
+	puts
+else
+	print "BAD that net_payout: ", net_payout, " is HIGHER than RFG payout for this survey"
+	puts
+	print "Since no RFG survey meets the payout criteria, the algorithm has picked the first available survey"
+	puts
+end
 
   # end
 
