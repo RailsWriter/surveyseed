@@ -750,7 +750,12 @@ class UsersController < ApplicationController
           redirect_to '/users/alreadyPanelist'
       else
         if (params[:emailid].empty? == false) && (params[:commit] != "No Thanks") then
-          if EmailValidator.valid?(params[:emailid]) && !User.exists?(emailId: params[:emailid]) then          
+          print "********** emailId param is not empty and param commit is NOT No Thanks for a existing user ****************"
+          puts
+          # Check if the email address is valid and if it does not already exists in our database
+          if EmailValidator.valid?(params[:emailid]) && !User.exists?(emailId: params[:emailid]) then 
+          
+
             user.emailId = params[:emailid]
             user.password = 'Ketsci'+user.user_id[0..3]
             user.userType='1'
@@ -776,64 +781,74 @@ class UsersController < ApplicationController
             p '********** Added EmailId and Pswd for a Panelist where a session_id exists from before ****************** '
             redirect_to '/users/thanks'
           else
-            p "************** Invalid or Duplicate EmailId Entered *****************"
+            p "************** Invalid or Duplicate EmailId Entered by existing user *****************"
             redirect_to '/users/thanks'  # todo: replace by please enter a correct email address to join message
           end
         else
-          p "************** The user did not give an emailid or chose No Thanks in join_panel *****************"
+          p "************** The existing user did not give an emailid or chose No Thanks in join_panel *****************"
           redirect_to '/users/thanks'  # todo: replace by please enter your email address to join message in future
         end
       end
     else
       p "************** New session_id => New user is joining KETSCI Panel from HomePage. We do not have this new users session_id in join_panel *****************"
       if (params[:emailid].empty? == false) && (params[:commit] != "No Thanks") then
-        ip_address = request.remote_ip
-        session_id = session.id
-        netid = "KetsciPanel"
-        clickid = "LEADS_PANELIST"
-
-        user=User.new
-        
-        user.QualifiedSurveys = Array.new
-        user.SurveysWithMatchingQuota = Array.new
-        user.SupplierLink = Array.new
-        user.user_agent = env['HTTP_USER_AGENT']
-        user.session_id = session_id
-        user.user_id = SecureRandom.urlsafe_base64
-        user.ip_address = ip_address
-        user.tos = false
-        user.watch_listed=false
-        user.black_listed=false
-        user.number_of_attempts_in_last_24hrs=0       
-
-        user.netid = netid
-        user.clickid = clickid 
-        user.emailId = params[:emailid]
-        user.password = 'Ketsci'+user.user_id[0..3]
-        user.userType='1'
-        user.redeemRewards='1'
-        user.surveyFrequency = '1'
-        user.save
-        print "***************** Successfully created a new panelist: ", user
+        print "********** emailId param is not empty and param commit is NOT No Thanks for a lead from Homepage ****************"
         puts
 
-        # Sends email to user when panelist is created. 
-        # todo: Remove the If condition before going live.
+        # Check if the email address is valid and if it does not already exists in our database
+        if EmailValidator.valid?(params[:emailid]) && !User.exists?(emailId: params[:emailid]) then 
 
-        if user.emailId == 'ayaanjsiddiqui@gmail.com' then
-          begin
-            p "========================================================Sending Welcome MAIL to new Leads Panelist ================================"
-            PanelMailer.welcome_email(user).deliver_now
-            rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-            print "Problem sending Welcome mail to ", user.emailId, "due to message: ", e.message
-            puts
+          ip_address = request.remote_ip
+          session_id = session.id
+          netid = "KetsciPanel"
+          clickid = "LEADS_PANELIST"
+
+          user=User.new
+          
+          user.QualifiedSurveys = Array.new
+          user.SurveysWithMatchingQuota = Array.new
+          user.SupplierLink = Array.new
+          user.user_agent = env['HTTP_USER_AGENT']
+          user.session_id = session_id
+          user.user_id = SecureRandom.urlsafe_base64
+          user.ip_address = ip_address
+          user.tos = false
+          user.watch_listed=false
+          user.black_listed=false
+          user.number_of_attempts_in_last_24hrs=0       
+
+          user.netid = netid
+          user.clickid = clickid 
+          user.emailId = params[:emailid]
+          user.password = 'Ketsci'+user.user_id[0..3]
+          user.userType='1'
+          user.redeemRewards='1'
+          user.surveyFrequency = '1'
+          user.save
+          print "***************** Successfully created a new panelist: ", user
+          puts
+
+          # Sends email to user when panelist is created. 
+          # todo: Remove the If condition before going live.
+
+          if user.emailId == 'akhtarjameel@gmail.com' then
+            begin
+              p "========================================================Sending Welcome MAIL to new HomePage Panelist ================================"
+              PanelMailer.welcome_email(user).deliver_now
+              rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
+              print "Problem sending Welcome mail to ", user.emailId, "due to message: ", e.message
+              puts
+            end
+          else
+            #do nothing
           end
+          redirect_to '/users/thanks'
         else
-          #do nothing
+          p "************** Invalid or Duplicate EmailId Entered by user from Homepage *****************"
+          redirect_to '/users/thanks'  # todo: replace by please enter a correct email address to join message
         end
-        redirect_to '/users/thanks'
       else
-        p "************** The user did not give an emailid or chose No Thanks in join_panel *****************"
+        p "************** The user from Homepage did not give an emailid or chose No Thanks in join_panel *****************"
         redirect_to '/users/thanks'  # todo: replace by please enter your email address to join message in future
       end
     end
@@ -924,7 +939,10 @@ class UsersController < ApplicationController
     if @user.SurveysCompleted.length > 0 then
       @CompletedSurveysTimestampsArray = @user.SurveysCompleted.keys
       (0..@CompletedSurveysTimestampsArray.length-1).each do |i|
-        @CompletedSurveysTimestampsArray[i] = @CompletedSurveysTimestampsArray[i].to_s[0..6]
+        if @user.SurveysCompleted.values_at(@CompletedSurveysTimestampsArray[i]).flatten.include? "KetsciPanel" then
+          @CompletedSurveysTimestampsArray[i] = @CompletedSurveysTimestampsArray[i].to_s[0..6]
+        else
+        end
       end
 
       print "****************** @CompletedSurveysTimestampsArray is = ", @CompletedSurveysTimestampsArray
@@ -932,6 +950,7 @@ class UsersController < ApplicationController
 
       @counts = Hash.new 0
       @CompletedSurveysTimestampsArray.each do |month|
+
         @counts[month] += 1
       end
 
