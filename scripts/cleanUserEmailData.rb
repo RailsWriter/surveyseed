@@ -6,6 +6,19 @@ begin
   print "******** cleanUserEmailData Script Starting at #{Time.now} ************"
   puts
 
+  # Start by validating all email addresses or set them to nil
+  User.where.not(emailId: [nil, ""]).each do |c|
+    if EmailValidator.valid?(c.emailId) then
+      # do nothing
+    else
+      print "********** Setting emailId ", c.emailId, " to nil ************"
+      puts
+    #   c.emailId=nil
+    #   c.save
+    end
+  end
+
+
   # Collect ids of all users with nil or empty emailId fields
   n = User.count
   noEmail_ids_1 = User.where(emailId: [nil, ""]).first(n/2).collect(&:id)
@@ -18,14 +31,17 @@ begin
 
   print "Duplicate email addresses count = ", User.where.not(id: unique_ids).count
   puts
+  
 
   # Now convert all duplicate emails into empty strings
-  # User.where.not(id: unique_ids).each do |r|
-  #   r.emailId=""
-  #   r.save
-  #   print "********** Setting emailId to nil for user id ", r.id, " *************"
-  #   puts
-  # end
+  User.where.not(id: unique_ids).each do |r|
+    print "Duplicate emailId: ", r.emailId
+    puts
+    # r.emailId=nil
+    # r.save
+    print "********** Setting emailId to nil for user id ", r.id, " *************"
+    puts
+  end
 
   print "UTC time ", Time.now
   puts	
