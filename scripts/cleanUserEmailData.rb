@@ -7,9 +7,11 @@ begin
   puts
 
   # Collect ids of all users with nil or empty emailId fields
-  noEmail_ids = User.where(emailId: [nil, ""]).collect(&:id)
+  n = User.count
+  noEmail_ids_1 = User.where(emailId: [nil, ""]).first(n/2).collect(&:id)
+  noEmail_ids_2 = User.where(emailId: [nil, ""]).last(n/2).collect(&:id)
   duplicateEmail_ids = User.select("MIN(id) as id").group(:emailId).collect(&:id)
-  unique_ids = (noEmail_ids + duplicateEmail_ids).uniq
+  unique_ids = (noEmail_ids_1 + noEmail_ids_2 + duplicateEmail_ids).uniq
 
   print "******** unique_ids and unique_ids count: ", unique_ids, " ************ ", unique_ids.count
   puts
