@@ -13,8 +13,8 @@ begin
     else
       print "********** Setting emailId ", c.emailId, " to nil ************"
       puts
-    #   c.emailId=nil
-    #   c.save
+      c.emailId=nil
+      c.save
     end
   end
 
@@ -35,12 +35,10 @@ begin
 
   # Now convert all duplicate emails into empty strings
   User.where.not(id: unique_ids).each do |r|
-    print "Duplicate emailId: ", r.emailId
+    print "********** Setting duplicate emailId ", r.emailId, " to nil for user id ", r.id, " *************"
     puts
-    # r.emailId=nil
-    # r.save
-    print "********** Setting emailId to nil for user id ", r.id, " *************"
-    puts
+    r.emailId=nil
+    r.save
   end
 
   print "UTC time ", Time.now
