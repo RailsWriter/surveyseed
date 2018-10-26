@@ -34,6 +34,18 @@
 		background-color: white;
 	}
 	
+
+.myemailinput input {
+	/* Styling for the age entry field on new user landing page */
+	/* width: 20%; */
+	width: 350px;
+	height: 30px;
+	text-align: center;
+	margin-left: 39%;
+	color:black;
+	background-color:white;
+}
+
 	#container1 {
 	    margin-left: auto;
 	    margin-right: auto;
@@ -83,6 +95,8 @@
 	
 	@media only screen and (max-width: 600px) {
 
+	/* For mobile screens */
+
 		h1 {
 			font-weight: 100;
 			font-size: 20px;	
@@ -125,6 +139,22 @@
 			background-position: center top;
 	/*		background-size: 100% auto; worst because picture resizes to keep full picture in view */
 	/*		background-attachment: fixed; worst as it makes the rest of the body rollover hero image */
+		}
+
+		.myemailinput input {
+			/* Styling for the age entry field on new user landing page */
+			/* width: 20%; */
+			width: 250px;
+			height: 30px;
+			text-align: center;
+			margin-left: 20%;
+			color:black;
+			background-color:white;
+		}
+
+		.myinput {
+			margin-top: 3%;
+			font-size: 0.8em;
 		}
 
 		.panelbutton {
@@ -602,6 +632,8 @@
 				font-size: 30px;
 				color: black;
 			}
+
+			
 
 			fieldset {
 				padding-left: 60px;

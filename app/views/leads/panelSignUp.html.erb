@@ -21,8 +21,8 @@
 			</center>
 				<%= form_tag("/users/join_panel", method: "post") do %>
 					<fieldset>
-						<div class="myyrsinput">
-							<%= text_field_tag 'emailid', nil, maxlength: 100 %>
+						<div class="myemailinput">
+							<%= text_field_tag 'emailid', nil, maxlength: 150 %>
 							<%= label_tag(:emailid, '') %><br><br>
 						</div>
 					

@@ -13,7 +13,7 @@ begin
       emailId=dailyUser.emailId
       print "Selected Daily emailId: ", emailId
       puts
-      if (emailId == 'akhtarjameel@gmail.com') || (emailId == '2@3.4') then
+      if (emailId == 'akhtarjameel@gmail.com') then
         begin
           PanelMailer.reminder_email(dailyUser).deliver_now
           print "Daily Reminder Email sent to ", emailId, " at #{Time.now}"
@@ -32,6 +32,6 @@ begin
   # print "Local time ", Time.now-7*60*60 # Mar-Nov DST
   print "Local time ", Time.now-8*60*60 # Nov - Mar PST	
   puts
-  puts "Sent Emails To Panelists. Going to sleep for 9 minutes"
-  sleep (9.minutes)
+  puts "Sent Emails To Panelists. Going to sleep for 1 day"
+  sleep (1.day)
 end while timetorepeat
