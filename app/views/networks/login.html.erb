@@ -1,0 +1,19 @@
+<% provide(:title, "Log in") %>
+<center><h1>Log in</h1></center>
+<p></p>
+<br></br>
+<div class="row">
+  <div class="col-md-10 col-md-offset-10">
+    <%= form_for(:networks, url: networks_create_path) do |f| %>
+      <center>
+        <%= f.label :email %><p></p>
+        <%= f.email_field :email, class: 'form-control' %>
+        <p></p>
+        <%= f.label :password %> <p></p>
+        <%= f.password_field :password, class: 'form-control' %>
+        <p></p>
+        <%= f.submit "Log in", class: "btn btn-primary" %>
+      </center>
+    <% end %>
+  </div>
+</div>

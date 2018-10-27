@@ -2685,135 +2685,150 @@ class UsersController < ApplicationController
     user = User.find_by session_id: session_id
     # print '******************************Test SUCCESS for CID= ', user.clickid, ' NetId= ', user.netid
     # puts
-    
+    @net = Network.find_by netid: user.netid
+
     if user.SurveysCompleted.flatten(2).include? (user.clickid) then
       # print "************* Click Id already exists - do not postback again!"
       # puts      
     else
+
+      if @net.status == "EXTTEST" then
+        # do not try to Postback
+      else
           
-      #Postback that the Test completed     
-      if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
+        #Postback that the Test completed     
+        if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
 
-        begin
-          @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-          rescue HTTParty::Error => e
-            puts 'HttParty::Error '+ e.message
-            retry
-          end while @FyberPostBack.code != 200
-    
-      else
-      end
-    
-      if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
-       
-        begin
-          @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-          rescue HTTParty::Error => e
-            puts 'HttParty::Error '+ e.message
-            retry
-          end while @SupersonicPostBack.code != 200
-    
-      else
-      end  
-  
-      if user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
-
-        begin
-          # @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-          @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-          rescue HTTParty::Error => e
-           puts 'HttParty::Error '+ e.message
-          retry
-        end while @RadiumOnePostBack.code != 200
-
-      else
-      end  
-    
-      if user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
-       
-        begin
-          @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+          begin
+            @FyberPostBack = HTTParty.post('http://www2.balao.de/SPM4u?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
             rescue HTTParty::Error => e
               puts 'HttParty::Error '+ e.message
-            retry
-          end while @SS2PostBack.code != 200
-    
-      else
-      end
-            
-      if user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then
-
-        begin
-          @Fyber2PostBack = HTTParty.post('http://www2.balao.de/SPNcu?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-          rescue HTTParty::Error => e
-            puts 'HttParty::Error '+ e.message
-            retry
-          end while @Fyber2PostBack.code != 200
-    
-      else
-      end
+              retry
+            end while @FyberPostBack.code != 200
+      
+        else
+        end
+      
+        if user.netid == "BAiuy55520xzLwL2rtwsxcAjklHxsdh" then
          
-      if user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
-        begin
-          @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-          rescue HTTParty::Error => e
-            puts 'HttParty::Error '+ e.message
+          begin
+            @SupersonicPostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+            rescue HTTParty::Error => e
+              puts 'HttParty::Error '+ e.message
+              retry
+            end while @SupersonicPostBack.code != 200
+      
+        else
+        end  
+    
+        if user.netid == "CyAghLwsctLL98rfgyAHplqa1iuytIA" then
+
+          begin
+            # @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+            @RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+            rescue HTTParty::Error => e
+             puts 'HttParty::Error '+ e.message
             retry
-          end while @SS3PostBack.code != 200    
-      else
-      end
+          end while @RadiumOnePostBack.code != 200
+
+        else
+        end  
       
-      if user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
-
-        begin
-          #@RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-          @RadiumOne2PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-         rescue HTTParty::Error => e
-           puts 'HttParty::Error '+ e.message
-          retry
-        end while @RadiumOne2PostBack.code != 200
-      else
-      end  
-
-      if user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
-
-        begin
-          #puts "************************* TEST SENDING RADIUMONE3 POSTBACK **************************************"
-          #@RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-          @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-          rescue HTTParty::Error => e
-           puts 'HttParty::Error '+ e.message
-          retry
-        end while @RadiumOne3PostBack.code != 200
-      else
-      end
-
-      if user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
-
-        begin
-          @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
-         rescue HTTParty::Error => e
-           puts 'HttParty::Error '+ e.message
-          retry
-        end while @TapjoyPostBack.code != 200
-      else
-      end
-
-
-      # No postback needed for TEST survey on Charity Network (KsAnLL23qacAHoi87ytr45bhj8) user as it is our own network.
-
+        if user.netid == "Dajsyu4679bsdALwwwLrtgarAKK98jawnbvcHiur" then
+         
+          begin
+            @SS2PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+              rescue HTTParty::Error => e
+                puts 'HttParty::Error '+ e.message
+              retry
+            end while @SS2PostBack.code != 200
       
-      # No postback needed for TEST survey on QuickRewards (L4A..) user as it is tracked manually.
+        else
+        end
+              
+        if user.netid == "Ebkujsawin54rrALffLAki10c7654Hnms" then
+
+          begin
+            @Fyber2PostBack = HTTParty.post('http://www2.balao.de/SPNcu?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+            rescue HTTParty::Error => e
+              puts 'HttParty::Error '+ e.message
+              retry
+            end while @Fyber2PostBack.code != 200
+      
+        else
+        end
+           
+        if user.netid == "FmsuA567rw21345f54rrLLswaxzAHnms" then
+          begin
+            @SS3PostBack = HTTParty.post('http://track.supersonicads.com/api/v1/processCommissionsCallback.php?advertiserId=54318&password=9b9b6ff8&dynamicParameter='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+            rescue HTTParty::Error => e
+              puts 'HttParty::Error '+ e.message
+              retry
+            end while @SS3PostBack.code != 200    
+        else
+        end
+        
+        if user.netid == "Hch1oti456bgafqaxr67lj9fmlp" then
+
+          begin
+            #@RadiumOnePostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+            @RadiumOne2PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+           rescue HTTParty::Error => e
+             puts 'HttParty::Error '+ e.message
+            retry
+          end while @RadiumOne2PostBack.code != 200
+        else
+        end  
+
+        if user.netid == "IS1oti09bgaHqaTIxr67lj9fmAQ" then
+
+          begin
+            #puts "************************* TEST SENDING RADIUMONE3 POSTBACK **************************************"
+            #@RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?sid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+            @RadiumOne3PostBack = HTTParty.post('http://panel.gwallet.com/network-node/postback/ketsciinc?CID='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+            rescue HTTParty::Error => e
+             puts 'HttParty::Error '+ e.message
+            retry
+          end while @RadiumOne3PostBack.code != 200
+        else
+        end
+
+        if user.netid == "JAL123sdegaLqaAHxr77ljedfmwqa" then
+
+          begin
+            @TapjoyPostBack = HTTParty.post('http://tapjoy.go2cloud.org/SP1mD?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+           rescue HTTParty::Error => e
+             puts 'HttParty::Error '+ e.message
+            retry
+          end while @TapjoyPostBack.code != 200
+        else
+        end
 
 
-      # No postback needed for TEST survey on Panelists Network (MM..) user as it is tracked manually.
+        # No postback needed for TEST survey on Charity Network (KsAnLL23qacAHoi87ytr45bhj8) user as it is our own network.
+
+        
+        # No postback needed for TEST survey on QuickRewards (L4A..) user as it is tracked manually.
+
+
+        # No postback needed for TEST survey on Panelists Network (MM..) user as it is tracked manually.
+
+        if user.netid == "Na34dAasIY09muLqxd59A" then
+
+          begin
+            @AaniccaPostBack = HTTParty.post('http://.....go2cloud.org/SP1mD?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+           rescue HTTParty::Error => e
+             puts 'HttParty::Error '+ e.message
+            retry
+          end while @AaniccaPostBack.code != 200
+        else
+        end
+      end # for EXTTEST
 
 
       # Keep a count of Test completes on each Network
   
       puts "*************** Track Test completes on each network"
-  
-      @net = Network.find_by netid: user.netid
 
       if @net.Flag4 == nil then
         @net.Flag4 = "1" 
@@ -2889,15 +2904,18 @@ class UsersController < ApplicationController
         @net_name = "KetsciPanel"
       else
       end
+
+      if user.netid == "Na34dAasIY09muLqxd59A" then 
+        @net_name = "Aanicca"
+      else
+      end
     
       user.SurveysAttempted << 'TESTSURVEY'
       user.SurveysCompleted[Time.now] = [user.user_id, 'TESTSURVEY', 'KETSCI', '0.0', user.clickid, @net_name]
-
-      #user.SurveysCompleted[user.user_id] = [Time.now, 'TESTSURVEY', user.clickid, @net_name]
       user.save    
     end # duplicate is false
-    
-    
+        
+    # At end take user to a Success page
 
     if user.netid == "Gd7a7dAkkL333frcsLA21aaH" then
       redirect_to '/users/successfulMML'
