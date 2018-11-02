@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">		
+	</head>
+
+
+
+	<body class="body">
+				
+		<div class="header">
+			<center>
+				<h1>WELCOME!</h1>
+			</center>
+		</header>
+		
+		<div class="topcontent">
+			<center>
+				<br>
+				<br>
+				<p><h4><b>ENTER PROFILE INFO then COMPLETE A SURVEY to GET REWARD</b></h4></p>
+			</center>
+		</topcontent>
+		<br>
+		<div class="content">
+			<center>
+				<p>What is your date of birth?</p>
+			</center>
+				<%= form_tag("/users/eval_age", method: "post") do %>
+					<fieldset>
+						<div class="myyrsinput">
+							<%= text_field_tag 'day', nil, maxlength: 2 %>
+							<%= label_tag(:day, 'DD') %>
+							<%= text_field_tag 'month', nil, maxlength: 2 %>
+							<%= label_tag(:month, 'MM') %>
+							<%= text_field_tag 'year', nil, maxlength: 4 %>
+							<%= label_tag(:year, 'YYYY') %><br><br>
+						</div>
+												
+						<%= hidden_field_tag :clickid, params[:CID] %>
+						<%= hidden_field_tag :netid, params[:NID] %>
+						<%= hidden_field_tag :userRecordId, params[:userRecordId] %>
+						<%= hidden_field_tag :session_id, session.id %>
+						<%= hidden_field_tag :ip_address, request.remote_ip %>
+					
+						<div class="myinput">
+							<center>				
+								<%= submit_tag "Next" %>
+							</center>
+						</div>
+					</fieldset>
+				<% end %>
+		</content>		
+		
+		
+		
+		<br>
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('KetsciLogoSm.png') %>
+			</center>
+		</footer>
+	</body>	
+	
+</html>

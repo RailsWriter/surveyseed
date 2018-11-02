@@ -14,7 +14,7 @@ class RedirectsController < ApplicationController
     @Url = request.original_url
     @ParsedUrl = @Url.partition ("&hash=")
     puts
-    print '************* DEBUG **********************************************************************************************************************************************'
+    print '************* DEBUG *****************************************************************************************************************************************'
     puts
     print '>>>>>>>>>>>>>>>>>> Redirected Server Response Url = ', @Url, ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
     puts
@@ -22,7 +22,7 @@ class RedirectsController < ApplicationController
     # puts
     # print '@Signature =', @ParsedUrl[2]   
     # puts
-    print '********* DEBUG **********************************************************************************************************************************************************'
+    print '********* DEBUG ****************************************************************************************************************************************************'
     puts
     puts
 
@@ -193,6 +193,8 @@ class RedirectsController < ApplicationController
 
             print '******************* SUCCESS-P2S router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
             puts
+
+            @net = Network.find_by netid: @user.netid
             
             if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
               print "************* Click Id already exists - do not postback to P2S again!"
@@ -271,6 +273,11 @@ class RedirectsController < ApplicationController
 
               if @user.netid == "MMq0514UMM20bgf17Yatemoh" then 
                 @net_name = "KetsciPanel"
+              else
+              end
+
+              if @user.netid == "Na34dAasIY09muLqxd59A" then 
+                @net_name = "Aanicca"
               else
               end
               
@@ -390,12 +397,29 @@ class RedirectsController < ApplicationController
                 p ">>>>>>>>>>>********** Tapjoy Postback *******************<<<<<<<<<<<<<<"
               else
               end
+
+              # No postback needed for survey on Charity Network (KsAnLL23qacAHoi87ytr45bhj8) user as it is our own network.
+        
+              # No postback needed for survey on QuickRewards (L4A..) user as it is tracked manually.
+
+              # No postback needed for survey on Panelists Network (MM..) user as it is tracked manually.
+
+              if @user.netid == "Na34dAasIY09muLqxd59A" then
+                begin
+                  @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s,+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  rescue HTTParty::Error => e
+                  puts 'HttParty::Error '+ e.message
+                  retry
+                end while @AaniccaPostBack.code != 200
+                p ">>>>>>>>>>>********** Aanicca Postback Completed *******************<<<<<<<<<<<<<<"
+              else
+              end
                                                
               # Keep a count of completes on each Network
             
               puts "*************** Keeping track of completes on the corresponding network"
             
-              @net = Network.find_by netid: @user.netid
+              # @net = Network.find_by netid: @user.netid # (moved up)
             
               if @net.Flag3 == nil then
               
@@ -461,6 +485,8 @@ class RedirectsController < ApplicationController
 
               print '************** SUCCESS-RFG for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
               puts
+
+              @net = Network.find_by netid: @user.netid
           
 
               if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
@@ -552,6 +578,11 @@ class RedirectsController < ApplicationController
                
                 if @user.netid == "MMq0514UMM20bgf17Yatemoh" then 
                   @net_name = "KetsciPanel"
+                else
+                end
+
+                if @user.netid == "Na34dAasIY09muLqxd59A" then 
+                  @net_name = "Aanicca"
                 else
                 end
 
@@ -703,12 +734,29 @@ class RedirectsController < ApplicationController
                   end while @TapjoyPostBack.code != 200
                 else
                 end
+
+                # No postback needed for survey on Charity Network (KsAnLL23qacAHoi87ytr45bhj8) user as it is our own network.
+        
+                # No postback needed for survey on QuickRewards (L4A..) user as it is tracked manually.
+
+                # No postback needed for survey on Panelists Network (MM..) user as it is tracked manually.
+
+                if @user.netid == "Na34dAasIY09muLqxd59A" then
+                  begin
+                    @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s,+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    rescue HTTParty::Error => e
+                    puts 'HttParty::Error '+ e.message
+                    retry
+                  end while @AaniccaPostBack.code != 200
+                  p ">>>>>>>>>>>********** Aanicca Postback Completed *******************<<<<<<<<<<<<<<"
+                else
+                end
                              
                 # Keep a count of completes on all Networks
               
                 puts "*************** Keeping track of completes on all networks"
               
-                @net = Network.find_by netid: @user.netid
+                # @net = Network.find_by netid: @user.netid # moved up
                 if @net.Flag3 == nil then
                 
                   @net.Flag3 = "1" 
@@ -763,8 +811,6 @@ class RedirectsController < ApplicationController
                 end 
               end
 
-
-
             else # not a RFG project. Try ADHOC next
               if @adhoc_redirect then
                 # save attempt info in User and Survey tables
@@ -773,6 +819,8 @@ class RedirectsController < ApplicationController
 
                 print '******************* SUCCESS-ADHOC router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
                 puts
+
+                @net = Network.find_by netid: @user.netid
                 
                 if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
                   print "************* Click Id already exists - do not postback to ADHOC again!"
@@ -850,6 +898,11 @@ class RedirectsController < ApplicationController
 
                   if @user.netid == "MMq0514UMM20bgf17Yatemoh" then 
                     @net_name = "KetsciPanel"
+                  else
+                  end
+
+                  if @user.netid == "Na34dAasIY09muLqxd59A" then 
+                    @net_name = "Aanicca"
                   else
                   end
 
@@ -975,12 +1028,29 @@ class RedirectsController < ApplicationController
                     end while @TapjoyPostBack.code != 200
                   else
                   end
+
+                  # No postback needed for survey on Charity Network (KsAnLL23qacAHoi87ytr45bhj8) user as it is our own network.
+        
+                  # No postback needed for survey on QuickRewards (L4A..) user as it is tracked manually.
+
+                  # No postback needed for survey on Panelists Network (MM..) user as it is tracked manually.
+
+                  if @user.netid == "Na34dAasIY09muLqxd59A" then
+                    begin
+                      @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s,+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      rescue HTTParty::Error => e
+                      puts 'HttParty::Error '+ e.message
+                      retry
+                    end while @AaniccaPostBack.code != 200
+                    p ">>>>>>>>>>>********** Aanicca Postback Completed *******************<<<<<<<<<<<<<<"
+                  else
+                  end
                                                    
                   # Keep a count of completes on each Network
                 
                   puts "*************** Keeping track of completes on the corresponding networks"
                 
-                  @net = Network.find_by netid: @user.netid
+                  # @net = Network.find_by netid: @user.netid # moved up
                 
                   if @net.Flag3 == nil then                 
                     @net.Flag3 = "1" 
@@ -1038,6 +1108,7 @@ class RedirectsController < ApplicationController
                 print '************** SUCCESS-Pulley for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
                 puts
 
+                @net = Network.find_by netid: @user.netid
 
                 if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
                   print "************* Click Id already exists - do not postback to FED again!"
@@ -1114,6 +1185,11 @@ class RedirectsController < ApplicationController
 
                   if @user.netid == "MMq0514UMM20bgf17Yatemoh" then 
                     @net_name = "KetsciPanel"
+                  else
+                  end
+
+                  if @user.netid == "Na34dAasIY09muLqxd59A" then 
+                    @net_name = "Aanicca"
                   else
                   end
 
@@ -1271,12 +1347,29 @@ class RedirectsController < ApplicationController
                   else
                   end
 
+                  # No postback needed for survey on Charity Network (KsAnLL23qacAHoi87ytr45bhj8) user as it is our own network.
+        
+                  # No postback needed for survey on QuickRewards (L4A..) user as it is tracked manually.
+
+                  # No postback needed for survey on Panelists Network (MM..) user as it is tracked manually.                
+
+                  if @user.netid == "Na34dAasIY09muLqxd59A" then
+                    begin
+                      @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s,+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      rescue HTTParty::Error => e
+                      puts 'HttParty::Error '+ e.message
+                      retry
+                    end while @AaniccaPostBack.code != 200
+                    p ">>>>>>>>>>>********** Aanicca Postback Completed *******************<<<<<<<<<<<<<<"
+                  else
+                  end
+
                                     
                   # Keep a count of completes on all Networks
                 
                   puts "*************** Keeping track of completes on all networks"
                           
-                  @net = Network.find_by netid: @user.netid
+                  # @net = Network.find_by netid: @user.netid # moved up
                   if @net.Flag3 == nil then
                   
                   @net.Flag3 = "1" 

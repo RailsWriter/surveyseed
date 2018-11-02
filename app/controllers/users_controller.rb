@@ -1763,14 +1763,41 @@ class UsersController < ApplicationController
       print "**************** Assigned RFG @rid = ", @rid
       puts
         
-      if user.age != nil then
-        # @RFGbirthday = (Time.now.year.to_i - user.age.to_i).to_s + "-" + (Random.rand(11)+1).to_s + "-" + (Random.rand(27)+1).to_s
-        @RFGbirthday = (Time.now.year.to_i - user.age.to_i).to_s + "-" + (sprintf '%02d', (Random.rand(11)+1)).to_s + "-" + (sprintf '%02d', (Random.rand(27)+1)).to_s
-        print "-----RFGbirthday-------------------***************__________________", @RFGbirthday
+      # if user.age != nil then
+      #   # @RFGbirthday = (Time.now.year.to_i - user.age.to_i).to_s + "-" + (Random.rand(11)+1).to_s + "-" + (Random.rand(27)+1).to_s
+      #   @RFGbirthday = (Time.now.year.to_i - user.age.to_i).to_s + "-" + (sprintf '%02d', (Random.rand(11)+1)).to_s + "-" + (sprintf '%02d', (Random.rand(27)+1)).to_s
+      #   print "-----RFGbirthday-------------------***************__________________", @RFGbirthday
+      #   puts
+      # else
+      #   @RFGbirthday = "1963-11-30"
+      # end
+
+      if user.age == nil then
+        @RFGbirthday = "1993-11-30"
+        print "-----RFGbirthday-----User did not give Age ??--------------***************__________________", @RFGbirthday
         puts
       else
-        @RFGbirthday = "1963-11-30"
+        if user.birth_date == nil then
+          @RFGbirthday = (Time.now.year.to_i - user.age.to_i).to_s + "-" + (sprintf '%02d', (Random.rand(11)+1)).to_s + "-" + (sprintf '%02d', (Random.rand(27)+1)).to_s
+          print "-----RFGbirthday-------New User------------***************__________________", @RFGbirthday
+          puts
+          user.birth_year = @RFGbirthday[0..3].to_i
+          user.birth_month = @RFGbirthday[5..6].to_i
+          user.birth_date = @RFGbirthday[8..9].to_i
+          user.save
+          print "-----RFGbirth_year-------------------***************__________________", user.birth_year
+          puts
+          print "-----RFGbirth_month-------------------***************__________________", user.birth_month
+          puts
+          print "-----RFGbirth_date-------------------***************__________________", user.birth_date
+          puts
+        else
+          @RFGbirthday = user.birth_year.to_s + "-" + user.birth_month.to_s + "-" + user.birth_date.to_s
+          print "-----RFGbirthday-----Existing User--------------***************__________________", @RFGbirthday
+          puts
+        end        
       end
+
        
       if user.employment == nil then
         @RFGEmployment = '0'
@@ -1948,13 +1975,13 @@ class UsersController < ApplicationController
       end
         
       if user.country=="9" then 
-        @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&rfg2_113='+@RFGEthnicity
+        @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&rfg2_113='+@RFGEthnicity
       else
         if user.country=="6" then
-            @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice
+            @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice
         else
           if user.country=="5" then
-              @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice
+              @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice
           else
           end
         end
@@ -1965,13 +1992,13 @@ class UsersController < ApplicationController
       p "******* DEBUG: *********>>>>>>>>>> RFG Offerwall API call with params <<<<<<<<*******FAILS IF CLOCK OUT OF SYNC-----------"
 
       if user.country=="9" then
-        command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1, :rfg2_113 => @RFGEthnicity}.to_json
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1, :rfg2_113 => @RFGEthnicity}.to_json
       else
         if user.country=="6" then
-          command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1}.to_json
+          command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1}.to_json
         else
           if user.country=="5" then
-        command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1}.to_json          
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1}.to_json          
           else
           end
         end
@@ -2693,10 +2720,9 @@ class UsersController < ApplicationController
     else
 
       if @net.status == "EXTTEST" then
-        # do not try to Postback
-      else
-          
-        #Postback that the Test completed     
+        # do not try to Postback while testing with EXTTEST
+      else          
+        #Postback that the Test completed for TEST survey using ACTIVE/Flag1     
         if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
 
           begin
@@ -2805,22 +2831,22 @@ class UsersController < ApplicationController
         end
 
 
-        # No postback needed for TEST survey on Charity Network (KsAnLL23qacAHoi87ytr45bhj8) user as it is our own network.
+        # No postback needed for TEST survey using ACTIVE/Flag1 on Charity Network (KsAnLL23qacAHoi87ytr45bhj8) user as it is our own network.
 
         
-        # No postback needed for TEST survey on QuickRewards (L4A..) user as it is tracked manually.
+        # No postback needed for TEST survey using ACTIVE/Flag1 on QuickRewards (L4A..) user as it is tracked manually.
 
 
-        # No postback needed for TEST survey on Panelists Network (MM..) user as it is tracked manually.
+        # No postback needed for TEST survey using ACTIVE/Flag1 on Panelists Network (MM..) user as it is tracked manually.
 
         if user.netid == "Na34dAasIY09muLqxd59A" then
-
           begin
-            @AaniccaPostBack = HTTParty.post('http://.....go2cloud.org/SP1mD?transaction_id='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+            @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s,+'&subid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
            rescue HTTParty::Error => e
              puts 'HttParty::Error '+ e.message
             retry
           end while @AaniccaPostBack.code != 200
+          p ">>>>>>>>>>>********** Aanicca Postback Completed in TEST using ACTIVE/Flag1 *******************<<<<<<<<<<<<<<"
         else
         end
       end # for EXTTEST
