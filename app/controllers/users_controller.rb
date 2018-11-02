@@ -1785,14 +1785,14 @@ class UsersController < ApplicationController
           user.birth_month = @RFGbirthday[5..6].to_i
           user.birth_date = @RFGbirthday[8..9].to_i
           user.save
-          print "-----RFGbirth_year-------------------***************__________________", user.birth_year
+          print "-----RFGbirth_year-------------------***************__________________", user.birth_year.to_s
           puts
-          print "-----RFGbirth_month-------------------***************__________________", user.birth_month
+          print "-----RFGbirth_month-------------------***************__________________", (sprintf '%02d', user.birth_month).to_s
           puts
-          print "-----RFGbirth_date-------------------***************__________________", user.birth_date
+          print "-----RFGbirth_date-------------------***************__________________", (sprintf '%02d', user.birth_date).to_s
           puts
         else
-          @RFGbirthday = user.birth_year.to_s + "-" + user.birth_month.to_s + "-" + user.birth_date.to_s
+          @RFGbirthday = user.birth_year.to_s + "-" + (sprintf '%02d', user.birth_month).to_s + "-" + (sprintf '%02d', user.birth_date).to_s
           print "-----RFGbirthday-----Existing User--------------***************__________________", @RFGbirthday
           puts
         end        
