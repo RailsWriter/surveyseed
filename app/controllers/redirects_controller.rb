@@ -406,7 +406,7 @@ class RedirectsController < ApplicationController
 
               if @user.netid == "Na34dAasIY09muLqxd59A" then
                 begin
-                  @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s,+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                  @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                   rescue HTTParty::Error => e
                   puts 'HttParty::Error '+ e.message
                   retry
@@ -743,7 +743,7 @@ class RedirectsController < ApplicationController
 
                 if @user.netid == "Na34dAasIY09muLqxd59A" then
                   begin
-                    @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s,+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                     rescue HTTParty::Error => e
                     puts 'HttParty::Error '+ e.message
                     retry
@@ -1037,7 +1037,7 @@ class RedirectsController < ApplicationController
 
                   if @user.netid == "Na34dAasIY09muLqxd59A" then
                     begin
-                      @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s,+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                       rescue HTTParty::Error => e
                       puts 'HttParty::Error '+ e.message
                       retry
@@ -1355,7 +1355,7 @@ class RedirectsController < ApplicationController
 
                   if @user.netid == "Na34dAasIY09muLqxd59A" then
                     begin
-                      @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s,+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
                       rescue HTTParty::Error => e
                       puts 'HttParty::Error '+ e.message
                       retry

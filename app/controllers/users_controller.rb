@@ -1785,11 +1785,11 @@ class UsersController < ApplicationController
           user.birth_month = @RFGbirthday[5..6].to_i
           user.birth_date = @RFGbirthday[8..9].to_i
           user.save
-          print "-----RFGbirth_year-------------------***************__________________", user.birth_year.to_s
+          print "-----RFGbirth_year as string -------------------***************__________________", user.birth_year.to_s
           puts
-          print "-----RFGbirth_month-------------------***************__________________", (sprintf '%02d', user.birth_month).to_s
+          print "-----RFGbirth_month as string -------------------***************__________________", (sprintf '%02d', user.birth_month).to_s
           puts
-          print "-----RFGbirth_date-------------------***************__________________", (sprintf '%02d', user.birth_date).to_s
+          print "-----RFGbirth_date as string -------------------***************__________________", (sprintf '%02d', user.birth_date).to_s
           puts
         else
           @RFGbirthday = user.birth_year.to_s + "-" + (sprintf '%02d', user.birth_month).to_s + "-" + (sprintf '%02d', user.birth_date).to_s
@@ -2722,7 +2722,8 @@ class UsersController < ApplicationController
       if @net.status == "EXTTEST" then
         # do not try to Postback while testing with EXTTEST
       else          
-        #Postback that the Test completed for TEST survey using ACTIVE/Flag1     
+        p "******** Starting Postback for the completed TEST survey using ACTIVE/Flag1 *************************"
+
         if user.netid == "Aiuy56420xzLL7862rtwsxcAHxsdhjkl" then
 
           begin
@@ -2841,7 +2842,7 @@ class UsersController < ApplicationController
 
         if user.netid == "Na34dAasIY09muLqxd59A" then
           begin
-            @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s,+'&subid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+            @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s+'&subid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
            rescue HTTParty::Error => e
              puts 'HttParty::Error '+ e.message
             retry
