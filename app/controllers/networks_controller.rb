@@ -3,16 +3,17 @@ class NetworksController < ApplicationController
   end
 
   def create
-    if params[:networks][:email] == "a@b.com" && params[:networks][:password] == "a@b.com" then
+    if params[:networks][:email] == "pm@aanicca.com" && params[:networks][:password] == "revenue" then
       # Log the user in and redirect to the user's show page.
       print "*********** email and password matched = ", params[:networks][:email], params[:networks][:password], " **************"
       puts
-      redirect_to '/users/new'
+      redirect_to '/networks/KETSCIdashboard'
     else
       # Create an error message.
-      print "*********** email and password did not match = ", params[:networks][:email], params[:networks][:password], " **************"
+      print "*********** email and password did not match = ", params[:networks][:email], ',', params[:networks][:password], " **************"
       puts
-      render 'networks/login'
+      flash[:alert] = "Please check your email address or password."
+      redirect_to '/networks/login'
     end
   end
   

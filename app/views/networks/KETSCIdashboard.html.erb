@@ -1,0 +1,21 @@
+<h1>KETSCI Dashboard</h1>
+<p><%= Time.now.utc %></p>
+
+<br>
+
+<% Network.where('netid =?', "Na34dAasIY09muLqxd59A").each do |n| %>
+	<p> Lifetime Clicks &emsp; <%= link_to n.Flag2.to_s -%> </p>
+	<p> Lifetime Completes &emsp; <%= link_to n.Flag3.to_s -%> </p>
+<% end %>
+
+<br>
+
+<h2> Last 7 days Completes information </h2>
+<p> &emsp;&emsp;&emsp;&emsp; UTC &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Id </p>
+<% @anniccaCompleter = User.where('netid =? AND updated_at > ?', "Na34dAasIY09muLqxd59A", (Time.now - 7.days)).each do |c| %>
+	<li>
+       <%= link_to c.SurveysCompleted.flatten(2).at(-4).to_s -%>
+       &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+       <%= link_to c.clickid.to_s -%>
+    </li>        
+<% end %>

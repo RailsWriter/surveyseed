@@ -241,7 +241,6 @@ class CenterController < ApplicationController
 
   def panelStats
     @winner = User.where.not('password = ?', "").each
-    # @winner = User.all
   end
 
   def addPanelistAction

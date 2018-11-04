@@ -1785,11 +1785,11 @@ class UsersController < ApplicationController
           user.birth_month = @RFGbirthday[5..6].to_i
           user.birth_date = @RFGbirthday[8..9].to_i
           user.save
-          print "-----RFGbirth_year as string -------------------***************__________________", user.birth_year.to_s
+          print "-----RFGbirth_year as string -------New User------------***************__________________", user.birth_year.to_s
           puts
-          print "-----RFGbirth_month as string -------------------***************__________________", (sprintf '%02d', user.birth_month).to_s
+          print "-----RFGbirth_month as string --------New User-----------***************__________________", (sprintf '%02d', user.birth_month).to_s
           puts
-          print "-----RFGbirth_date as string -------------------***************__________________", (sprintf '%02d', user.birth_date).to_s
+          print "-----RFGbirth_date as string ---------New User----------***************__________________", (sprintf '%02d', user.birth_date).to_s
           puts
         else
           @RFGbirthday = user.birth_year.to_s + "-" + (sprintf '%02d', user.birth_month).to_s + "-" + (sprintf '%02d', user.birth_date).to_s
@@ -1966,22 +1966,25 @@ class UsersController < ApplicationController
 
 
       @parsed_user_agent = UserAgent.parse(user.user_agent)
-      if @parsed_user_agent.platform == 'iPhone' then
+      # if @parsed_user_agent.platform == 'iPhone' then
+      if @parsed_user_agent.platform.include?("Android") || @parsed_user_agent.platform.include?("Linux") || @parsed_user_agent.platform.include?("iPhone") then
         @isMobileDevice = "Yes"
+        @computerCheck = "3"
         p "*************************************** RankRFGProjects: isMobileDevice is set YES"
       else
         @isMobileDevice = "No"
+        @computerCheck = "1"
         p "*************************************** RankRFGProjects: isMobileDevice is set NO"  
       end
         
       if user.country=="9" then 
-        @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&rfg2_113='+@RFGEthnicity
+        @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&rfg2_113='+@RFGEthnicity+'&computerCheck='+@computerCheck
       else
         if user.country=="6" then
-            @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice
+            @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&computerCheck='+@computerCheck
         else
           if user.country=="5" then
-              @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice
+              @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&computerCheck='+@computerCheck
           else
           end
         end
@@ -1992,13 +1995,13 @@ class UsersController < ApplicationController
       p "******* DEBUG: *********>>>>>>>>>> RFG Offerwall API call with params <<<<<<<<*******FAILS IF CLOCK OUT OF SYNC-----------"
 
       if user.country=="9" then
-        command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1, :rfg2_113 => @RFGEthnicity}.to_json
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :rfg2_113 => @RFGEthnicity, :computerCheck => @computerCheck, :type => 1}.to_json
       else
         if user.country=="6" then
-          command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1}.to_json
+          command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :computerCheck => @computerCheck, :type => 1}.to_json
         else
           if user.country=="5" then
-        command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :type => 1}.to_json          
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :computerCheck => @computerCheck, :type => 1}.to_json          
           else
           end
         end
