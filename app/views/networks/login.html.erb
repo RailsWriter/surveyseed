@@ -19,6 +19,8 @@
             <%= f.password_field :password, class: 'form-control' %>
           </div>
 
+          <%= f.hidden_field :session_id, value: session.id %>
+
           <div class="myinput">
             <h2><%= f.submit "Log in", class: "myinput" %></h2>
           </div>
