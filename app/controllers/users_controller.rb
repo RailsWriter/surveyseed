@@ -2030,7 +2030,8 @@ class UsersController < ApplicationController
       # print "Offerwall Response: ", @OfferwallResponse["response"]
       # puts
 
-      if @OfferwallResponse["response"]["surveys"].length == 0 then
+      if @OfferwallResponse["response"]["surveys"].empty? then
+      # if @OfferwallResponse["response"]["surveys"].length == 0 then  
         print "*********No surveys returned by RFG Offerwall**********"
         puts
         @RFGSupplierLinks = []
