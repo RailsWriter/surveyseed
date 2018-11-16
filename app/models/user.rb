@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
 					(0..c.SurveysCompleted.count-1).each do |i|
 						print "**********DateCompleted**************************", c.SurveysCompleted.flatten(2).at(-7-7*i).to_date
 						puts
-						if (c.SurveysCompleted.flatten(2).at(-7-7*i).to_date.mon <= Date.today.beginning_of_month.mon) && (c.SurveysCompleted.flatten(2).at(-7-7*i).to_date.mon >= Date.today.end_of_month.mon) then
+						if (c.SurveysCompleted.flatten(2).at(-7-7*i).to_date.mon >= Date.today.beginning_of_month.mon) && (c.SurveysCompleted.flatten(2).at(-7-7*i).to_date.mon <= Date.today.end_of_month.mon) then
 						# if (c.SurveysCompleted.flatten(2).at(-7-7*i).to_date.mon <= Date.today.last_month.beginning_of_month.mon) && (c.SurveysCompleted.flatten(2).at(-7-7*i).to_date.mon >= Date.today.last_month.end_of_month.mon) then
 							print "**********MonthCompleted**************************", c.SurveysCompleted.flatten(2).at(-7-7*i).to_date.mon
 							puts
