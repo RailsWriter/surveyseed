@@ -7,15 +7,20 @@
 <% if n.Flag5 == session.id then %>
 
 	<% Network.where('netid =?', "Na34dAasIY09muLqxd59A").each do |n| %>
-		<p> Lifetime Clicks &emsp; <%= link_to n.Flag2 %> </p>
+		<p> Lifetime Starts &emsp; <%= link_to n.Flag2 %> </p>
 		<p> Lifetime Completes &emsp; <%= link_to n.Flag3 %> </p>
 	<% end %>
 
 	<br>
 
-	<h2> Last 7 days Completes information </h2>
+	<h2> Download </h2>
+	<p><%= link_to("Generate Previous Months Report", users_path(format: :csv), class: "btn btn-success",) %></p>
+
+	<br>
+
+	<h2> Last 7 days Completes </h2>
 	<p> &emsp;&emsp;&emsp;&emsp; UTC &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Id </p>
-	<% @anniccaCompleter = User.where('netid =? AND updated_at > ?', "Na34dAasIY09muLqxd59A", (Time.now - 7.days)).order("updated_at").each do |c| %>
+	<% @anniccaCompleter = User.where('netid =? AND updated_at >= ?', "Na34dAasIY09muLqxd59A", (Time.now - 7.days)).order("updated_at").each do |c| %>
 	<% if c.SurveysCompleted.flatten(2).length > 0 then %>
 			<p>
 		       <%= link_to c.SurveysCompleted.flatten(2).at(-7) %>

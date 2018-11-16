@@ -132,9 +132,10 @@ class RedirectsController < ApplicationController
               end      
                
             else
-              p '>>>>>>>>>>>>>>>>>>>> Not Valid HASH Response from Pulley <<<<<<<<<<<<<<<<<'
-              redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=0b'
-              return
+              p '>>>>>>>>>>>>>>>>>>>> Not Valid HASH Response from Pulley (go to the next router) <<<<<<<<<<<<<<<<<'
+              @fed_redirect = true
+              # redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=0b'
+              # return
             end
           end
         end
@@ -1604,7 +1605,7 @@ class RedirectsController < ApplicationController
                   end  
                 
                 end # if SupplierLink empty?
-              else # must be FED            
+              else # must be Pulley redirect           
               
                 # save attempt info in User and Survey tables
                 @user = User.find_by user_id: params[:PID]          
