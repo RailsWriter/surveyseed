@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
 							# if (c.SurveysCompleted.flatten(2).at(-7-7*i).to_date.mon >= Date.today.last_month.beginning_of_month.mon) && (c.SurveysCompleted.flatten(2).at(-7-7*i).to_date.mon =< Date.today.last_month.end_of_month.mon) then
 								print "**********MonthCompleted**************************", c.SurveysCompleted.flatten(2).at(-7-7*i).to_date.mon
 								puts
-								csv << [c.SurveysCompleted.flatten(2).at(-7-7*i), c.SurveysCompleted.flatten(2).at(-2-7*i)]
+								csv << [c.SurveysCompleted.flatten(2).at(-7-7*i), "\"#{c.SurveysCompleted.flatten(2).at(-2-7*i)}\""]
 							else
 							end
 						end
