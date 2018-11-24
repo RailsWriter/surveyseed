@@ -5,7 +5,7 @@
 <% ip_address = request.remote_ip %>
 <% n=Network.find_by netid: "Na34dAasIY09muLqxd59A" %>
 <% if n.Flag5 == session.id then %>
-
+	<h2> Stats </h2>
 	<% Network.where('netid =?', "Na34dAasIY09muLqxd59A").each do |n| %>
 		<p> Lifetime Starts &emsp; <%= link_to n.Flag2 %> </p>
 		<p> Lifetime Completes &emsp; <%= link_to n.Flag3 %> </p>
@@ -13,10 +13,10 @@
 
 	<br>
 
-	<!-- <h2> Download </h2>
-	<p><%= link_to("Generate Previous Months Report", users_path(format: :csv), class: "btn btn-success",) %></p>
+	<h2> Download </h2>
+	<h3><%= link_to("Generate Previous Months Completes Report", users_path(format: :csv), class: "btn btn-success",) %></h3>
 
-	<br> -->
+	<br>
 
 	<h2> Last 7 days Completes </h2>
 	<p> &emsp;&emsp;&emsp;&emsp; UTC &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Id </p>
