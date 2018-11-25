@@ -2968,10 +2968,19 @@ class UsersController < ApplicationController
   end # p3action
 
   def index
-    @users = User.all.order(:id)
+    @users = User.unscoped.all.order(:id)
     respond_to do |format|
       format.html
       format.csv { send_data @users.to_csv, filename: "ketsci-completes-report-#{Date.today}.csv" }
     end
   end
+
+  def lmcsv
+    @users = User.unscoped.all.order(:id)
+    respond_to do |format|
+      format.html
+      format.csv { send_data @users.to_lmcsv, filename: "ketsci-lastmonth_completes-report-#{Date.today}.csv" }
+    end
+  end
+
 end

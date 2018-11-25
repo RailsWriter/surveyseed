@@ -14,13 +14,13 @@
 	<br>
 
 	<h2> Download </h2>
-	<h3><%= link_to("Generate Previous Months Completes Report", users_path(format: :csv), class: "btn btn-success",) %></h3>
-
+	<p><%= link_to("Generate This Months Completes Report", users_path(format: :csv), class: "btn btn-success",) %></p>
+	<p><%= link_to("Generate Previous Months Completes Report", controller: "users", action: "lmcsv", format: "csv", class: "btn btn-success",) %></p>
 	<br>
 
 	<h2> Last 7 days Completes </h2>
 	<p> &emsp;&emsp;&emsp;&emsp; UTC &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Id </p>
-	<% @anniccaCompleter = User.where('netid =? AND updated_at >= ?', "Na34dAasIY09muLqxd59A", (Time.now - 7.days)).order("updated_at").each do |c| %>
+	<% @anniccaCompleter = User.unscoped.where('netid =? AND updated_at >= ?', "Na34dAasIY09muLqxd59A", (Time.now - 7.days)).order("updated_at").each do |c| %>
 	<% if c.SurveysCompleted.flatten(2).length > 0 then %>
 			<p>
 		       <%= link_to c.SurveysCompleted.flatten(2).at(-7) %>

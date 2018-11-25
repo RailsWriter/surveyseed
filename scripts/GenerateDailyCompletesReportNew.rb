@@ -5,7 +5,7 @@ begin
   count=0
   CSV.open('Reports/Dailycompletes', 'a') do |csv|
     #  csv << "Titles"
-    User.where("updated_at > ?", (Time.now - 1440.minutes)).order( "updated_at ASC").each do |m|
+    User.unscoped {User.where("updated_at > ?", (Time.now - 1440.minutes)).order( "updated_at DESC").each do |m|
       if m.SurveysCompleted.nil? then
         # do nothing
       else
@@ -32,7 +32,7 @@ begin
         else
         end
       end
-    end
+    end}
     @hits = 0
     Network.where("updated_at < ?", Time.now).each do |n|
       if n.Flag2 != "" then
