@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
 
   	def self.to_csv
 	  	CSV.generate do |csv|
-		  csv << %w{ UTC ID }
+		  csv << %w{ UTC ID (Please-ignore-16994*-and-any-other-non-standard-IDs)}
 			User.where('netid =? AND updated_at >= ?', "Na34dAasIY09muLqxd59A", Date.today.beginning_of_month).order("updated_at").each do |c|
 			# User.where('netid =? AND updated_at >= ?', "Na34dAasIY09muLqxd59A", Date.today.last_month.beginning_of_month).order("updated_at").each do |c|
 			# User.where('netid =? AND updated_at BETWEEN ? AND ?', "Na34dAasIY09muLqxd59A", Date.today.last_month.beginning_of_month, Date.today.last_month.end_of_month).order("updated_at").each do |c|
@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
 
 	def self.to_lmcsv
 	  	CSV.generate do |csv|
-		  csv << %w{ UTC ID }
+		  csv << %w{ UTC ID (Please-ignore-16994*-and-any-other-non-standard-IDs)}
 			# User.where('netid =? AND updated_at >= ?', "Na34dAasIY09muLqxd59A", Date.today.beginning_of_month).order("updated_at").each do |c|
 			User.where('netid =? AND updated_at >= ?', "Na34dAasIY09muLqxd59A", Date.today.last_month.beginning_of_month).order("updated_at").each do |c|
 			# User.where('netid =? AND updated_at BETWEEN ? AND ?', "Na34dAasIY09muLqxd59A", Date.today.last_month.beginning_of_month, Date.today.last_month.end_of_month).order("updated_at").each do |c|
