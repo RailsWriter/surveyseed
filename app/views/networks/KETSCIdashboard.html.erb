@@ -7,8 +7,8 @@
 <% if n.Flag5 == session.id then %>
 	<h2> Stats </h2>
 	<% Network.where('netid =?', "Na34dAasIY09muLqxd59A").each do |n| %>
-		<p> Lifetime Starts &emsp; <%= link_to n.Flag2 %> </p>
-		<p> Lifetime Completes &emsp; <%= link_to n.Flag3 %> </p>
+		<p> Lifetime Starts: &emsp; <%= n.Flag2 %> </p>
+		<p> Lifetime Completes: &emsp; <%= n.Flag3 %> </p>
 	<% end %>
 
 	<br>
@@ -23,7 +23,7 @@
 	<% @anniccaCompleter = User.unscoped.where('netid =? AND updated_at >= ?', "Na34dAasIY09muLqxd59A", (Time.now - 7.days)).order("updated_at").each do |c| %>
 	<% if c.SurveysCompleted.flatten(2).length > 0 then %>
 			<p>
-		       <%= link_to c.SurveysCompleted.flatten(2).at(-7) %>
+		       <%= c.SurveysCompleted.flatten(2).at(-7) %>
 		       &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
 		       <%= c.clickid.to_s %>
 		    </p>
