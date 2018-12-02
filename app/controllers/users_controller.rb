@@ -63,12 +63,18 @@ class UsersController < ApplicationController
       # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
       # if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
  
-      if (netid == "MMq0514UMM20bgf17Yatemoh") or (User.where("ip_address = ? or session_id = ?", ip_address, session_id).first!=nil)
+      if (netid == "MMq0514UMM20bgf17Yatemoh") or (User.where("ip_address = ? or session_id = ?", ip_address, session_id).first!=nil) then
         first_time_user=false
         # p '********* EVAL_AGE: USER EXISTS'
       else
         first_time_user=true
         # p '******* EVAL_AGE: USER DOES NOT EXIST'
+      end
+
+      # Use this in Dev testing only.
+      if (clickid == "LetMeInAsANewUser") then
+        first_time_user=true
+      else
       end
 
       if (first_time_user) then
@@ -753,9 +759,7 @@ class UsersController < ApplicationController
           print "********** emailId param is not empty and param commit is NOT No Thanks for a existing user ****************"
           puts
           # Check if the email address is valid and if it does not already exists in our database
-          if EmailValidator.valid?(params[:emailid]) && !User.exists?(emailId: params[:emailid]) then 
-          
-
+          if EmailValidator.valid?(params[:emailid]) && !User.exists?(emailId: params[:emailid]) then
             user.emailId = params[:emailid]
             user.password = 'Ketsci'+user.user_id[0..3]
             user.userType='1'

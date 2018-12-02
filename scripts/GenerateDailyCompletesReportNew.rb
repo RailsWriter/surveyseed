@@ -5,7 +5,7 @@ begin
   count=0
   CSV.open('Reports/Dailycompletes', 'a') do |csv|
     #  csv << "Titles"
-    User.where("updated_at > ?", (Time.now - 1440.minutes)).unscoped.order( "updated_at").each do |m|
+    User.where("updated_at > ?", (Time.now - 1440.minutes)).order("updated_at").each do |m|
       if m.SurveysCompleted.nil? then
         # do nothing
       else
