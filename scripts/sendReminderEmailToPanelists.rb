@@ -5,10 +5,10 @@ begin
   #rm /tmp/sendEmailCronAWS.log
   # sudo bundle exec rake sendEmailDaily:email_sender RAILS_ENV=production --silent >> /tmp/sendEmailCronAWS.log
     
-  print "******** sendEmailCronAWS Script Starting at #{Time.now} ************"
+  print "******** sendReminderEmailToPanelists Script Starting at #{Time.now} ************"
   puts
 
-  User.where('surveyFrequency = ? AND emailId != ?', '1', "").each do |dailyUser|
+  User.where('emailId != ?', "").each do |dailyUser|
     begin
       emailId=dailyUser.emailId
       print "Selected Daily emailId: ", emailId
@@ -33,5 +33,6 @@ begin
   print "Local time ", Time.now-8*60*60 # Nov - Mar PST	
   puts
   puts "Sent Emails To Panelists. Going to sleep for 1 day"
-  sleep (1.day)
+  # sleep (1.days)
+  sleep (15.minutes)
 end while timetorepeat
