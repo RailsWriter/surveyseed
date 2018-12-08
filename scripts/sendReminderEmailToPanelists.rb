@@ -34,5 +34,5 @@ begin
   puts
   puts "Sent Emails To Panelists. Going to sleep for 1 day"
   # sleep (1.days)
-  sleep (15.minutes)
+  sleep (24.hours)
 end while timetorepeat

@@ -2024,19 +2024,45 @@ class UsersController < ApplicationController
           req.body = command
           req.content_type = 'application/json'
           response = http.request req
-          @OfferwallResponse = JSON.parse(response.body)  
+          # @OfferwallResponse = JSON.parse(response.body)  
         end
-            
-        rescue Net::ReadTimeout => e  
-        puts e.message
+
+        rescue Timeout::Error => error
+          HoptoadNotifier.notify error
+          false    # non-success response
+        else # for rescue
+          case response
+          when Net::HTTPOK
+            true   # success response
+          when Net::HTTPClientError,
+               Net::HTTPInternalServerError
+            false  # non-success response
+          end
+
+        if response == true then
+          @OfferwallResponse = JSON.parse(response.body)
+        else
+          @OfferwallResponse = {}
+        end
+
+        # rescue OpenURI::HTTPError => e
+        # # it's 404, etc. (do nothing)   
+        # puts e.message 
+        # rescue SocketError, Net::OpenTimeout, Net::HTTPClientError, Net::HTTPInternalServerError => e  
+        # puts e.message
       end
 
-      # print "Offerwall Response: ", @OfferwallResponse["response"]
-      # puts
+      print "Offerwall Response: ", @OfferwallResponse["response"]
+      puts
 
-      if @OfferwallResponse["response"]["surveys"].empty? then
+      if @OfferwallResponse == {} then
+      # if @OfferwallResponse["response"]["surveys"].empty? then
       # if @OfferwallResponse["response"]["surveys"].length == 0 then  
-        print "*********No surveys returned by RFG Offerwall**********"
+        print "*********************** No surveys returned by RFG Offerwall ***********************"
+        puts
+        print "*********************** No surveys returned by RFG Offerwall ***********************"
+        puts
+        print "*********************** No surveys returned by RFG Offerwall ***********************"
         puts
         @RFGSupplierLinks = []
       else
