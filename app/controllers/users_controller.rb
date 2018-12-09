@@ -193,7 +193,7 @@ class UsersController < ApplicationController
     else
       p '**********DEBUG********** TOS: A REPEAT USER'
       # set 24 hr survey attempts in separate sessions from same device/IP address here
-      if (user.number_of_attempts_in_last_24hrs < 20) then
+      if (user.number_of_attempts_in_last_24hrs < 50) then
         if (user.industries.length == 0) then 
           #industries is an Array so verify length and not nil
           # this user did not provide full profile info the first time
@@ -1748,10 +1748,12 @@ class UsersController < ApplicationController
     # Select RFG projects next
     selectRfgProjects(session_id)      
   end # end selectAdhocSurveys
-  
+
+
   def selectRfgProjects(session_id)
     
     require 'digest/hmac'
+    require 'openssl'
     require 'net/http'
     require 'uri'
     
@@ -1982,13 +1984,18 @@ class UsersController < ApplicationController
       end
         
       if user.country=="9" then 
-        @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&rfg2_113='+@RFGEthnicity+'&computerCheck='+@computerCheck
+        # @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&rfg2_113='+@RFGEthnicity+'&computerCheck='+@computerCheck
+        @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&rfg2_113='+@RFGEthnicity+'&computerCheck='+@computerCheck
+
       else
         if user.country=="6" then
-            @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&computerCheck='+@computerCheck
+            # @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&computerCheck='+@computerCheck
+            @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&computerCheck='+@computerCheck
         else
           if user.country=="5" then
-              @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&computerCheck='+@computerCheck
+              # @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&computerCheck='+@computerCheck
+              @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&computerCheck='+@computerCheck
+
           else
           end
         end
@@ -1999,22 +2006,38 @@ class UsersController < ApplicationController
       p "******* DEBUG: *********>>>>>>>>>> RFG Offerwall API call with params <<<<<<<<*******FAILS IF CLOCK OUT OF SYNC-----------"
 
       if user.country=="9" then
-        command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :rfg2_113 => @RFGEthnicity, :computerCheck => @computerCheck, :type => 1}.to_json
+        # command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :rfg2_113 => @RFGEthnicity, :computerCheck => @computerCheck, :type => 1}.to_json
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "US", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :rfg2_113 => @RFGEthnicity, :computerCheck => @computerCheck, :type => 1}.to_json
       else
         if user.country=="6" then
-          command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :computerCheck => @computerCheck, :type => 1}.to_json
+          # command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :computerCheck => @computerCheck, :type => 1}.to_json
+          command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :computerCheck => @computerCheck, :type => 1}.to_json
+
         else
           if user.country=="5" then
-        command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :computerCheck => @computerCheck, :type => 1}.to_json          
+        # command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :computerCheck => @computerCheck, :type => 1}.to_json          
+        command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :computerCheck => @computerCheck, :type => 1}.to_json          
+
           else
           end
         end
       end
 
+
+# print "RFG Offerwall Command 1: ", command
+#       puts
+
+# command = '{ "command" : "offerwall/query/1", "rid" : "KETSCI_TEST", "country" : "US", "postalCode" : "94303", "gender" : "1", "birthday" : "1977-01-01"}'
+# command = '{"command":"offerwall/query/1","rid":"3333ov_ymdunAFO6xab42nl9hA","country":"AU","fingerprint":1742828321,"ip":"::1","postalCode":"3e4r5t","gender":"1","birthday":"1963-09-25","rfg2_61076":"4","rfg2_2189":"4","rfg7145":"4","rfg2_48741":"2","rfg2_15297":"3","rfg775":"3","employmentIndustry":"5","isMobileDevice":"No","computerCheck":"1","type":1}'
+# command = '{"command":"offerwall/query/1","rid":"3333ov_ymdunAFO6xab42nl9hA","country":"AU","fingerprint":1742828321,"ip":"::1","postalCode":"3e4r5t","gender":"1","birthday":"1963-09-25","rfg2_61076":"4","rfg2_2189":"4","rfg7145":"4","rfg2_48741":"2","rfg2_15297":"3","rfg775":"3","employmentIndustry":"5","computerCheck":"1","type":1}'
+
       print "RFG Offerwall Command: ", command
       puts
 
+
       time=Time.now.to_i
+      # @result=0
+
       hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.scan(/../).map {|x| x.to_i(16).chr}.join, Digest::SHA1)
       uri = URI("https://www.saysoforgood.com/API?apid=#{apid}&time=#{time}&hash=#{hash}")
     
@@ -2024,38 +2047,22 @@ class UsersController < ApplicationController
           req.body = command
           req.content_type = 'application/json'
           response = http.request req
+          puts response.body
+          puts JSON.parse(response.body)["result"]
+          @result = JSON.parse(response.body)["result"]
           # @OfferwallResponse = JSON.parse(response.body)  
+          @OfferwallResponse = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil
         end
-
-        rescue Timeout::Error => error
-          HoptoadNotifier.notify error
-          false    # non-success response
-        else # for rescue
-          case response
-          when Net::HTTPOK
-            true   # success response
-          when Net::HTTPClientError,
-               Net::HTTPInternalServerError
-            false  # non-success response
-          end
-
-        if response == true then
-          @OfferwallResponse = JSON.parse(response.body)
-        else
-          @OfferwallResponse = {}
-        end
-
-        # rescue OpenURI::HTTPError => e
-        # # it's 404, etc. (do nothing)   
-        # puts e.message 
-        # rescue SocketError, Net::OpenTimeout, Net::HTTPClientError, Net::HTTPInternalServerError => e  
-        # puts e.message
+        rescue SocketError, Net::OpenTimeout, Net::HTTPClientError, Net::HTTPInternalServerError, OpenURI::HTTPError => e  
+          puts e.message
       end
 
       print "Offerwall Response: ", @OfferwallResponse["response"]
       puts
 
-      if @OfferwallResponse == {} then
+      if @OfferwallResponse["response"]["surveys"] == [] then
+      # if @result == 3 then
+      # if @OfferwallResponse == {} then
       # if @OfferwallResponse["response"]["surveys"].empty? then
       # if @OfferwallResponse["response"]["surveys"].length == 0 then  
         print "*********************** No surveys returned by RFG Offerwall ***********************"
@@ -3013,4 +3020,10 @@ class UsersController < ApplicationController
     end
   end
 
+end
+
+class String
+  def hex2bin
+    scan(/../).map {|x| x.to_i(16).chr}.join
+  end
 end
