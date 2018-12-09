@@ -2047,14 +2047,20 @@ class UsersController < ApplicationController
           req.body = command
           req.content_type = 'application/json'
           response = http.request req
-          puts response.body
-          puts JSON.parse(response.body)["result"]
-          @result = JSON.parse(response.body)["result"]
+          # puts response.body
+          puts "**************************************************************************************************************************"
+          print "RFG Server response.code = ",response.code
+          puts
+          puts "**************************************************************************************************************************"
+          # print "response.result = ", JSON.parse(response.body)["result"]
+          # puts
+          # @result = JSON.parse(response.body)["result"]
           # @OfferwallResponse = JSON.parse(response.body)  
           @OfferwallResponse = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil
         end
-        rescue SocketError, Net::OpenTimeout, Net::HTTPClientError, Net::HTTPInternalServerError, OpenURI::HTTPError => e  
-          puts e.message
+        rescue SocketError, Net::OpenTimeout, Net::HTTPClientError, Net::HTTPInternalServerError => e  
+          print "e.message: ", e.message
+          puts
       end
 
       print "Offerwall Response: ", @OfferwallResponse["response"]
@@ -2065,11 +2071,11 @@ class UsersController < ApplicationController
       # if @OfferwallResponse == {} then
       # if @OfferwallResponse["response"]["surveys"].empty? then
       # if @OfferwallResponse["response"]["surveys"].length == 0 then  
-        print "*********************** No surveys returned by RFG Offerwall ***********************"
+        print "*************************************************************************************************************************"
         puts
-        print "*********************** No surveys returned by RFG Offerwall ***********************"
+        print "No surveys returned by RFG Offerwall"
         puts
-        print "*********************** No surveys returned by RFG Offerwall ***********************"
+        print "*************************************************************************************************************************"
         puts
         @RFGSupplierLinks = []
       else

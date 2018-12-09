@@ -55,9 +55,13 @@ begin
 	  req.body = command
 	  req.content_type = 'application/json'
 	  response = http.request req
-	  puts response.body
+	  # puts response.body
+	  puts "**************************************************************************************************************************"
+	  print "RFG Server response.code = ",response.code
+	  puts
+	  puts "**************************************************************************************************************************"
 	  # puts JSON.parse(response.body)["result"]
-	  @result = JSON.parse(response.body)["result"]
+	  # @result = JSON.parse(response.body)["result"]
 	  # OfferwallResponse = JSON.parse(response.body)  
 	  OfferwallResponse = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil
 	end
