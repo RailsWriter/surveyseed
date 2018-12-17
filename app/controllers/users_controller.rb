@@ -1985,16 +1985,16 @@ class UsersController < ApplicationController
         
       if user.country=="9" then 
         # @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&rfg2_113='+@RFGEthnicity+'&computerCheck='+@computerCheck
-        @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&rfg2_113='+@RFGEthnicity+'&computerCheck='+@computerCheck
+        @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&rfg2_113='+@RFGEthnicity+'&computerCheck='+@computerCheck+'&ip='+user.ip_address
 
       else
         if user.country=="6" then
             # @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&computerCheck='+@computerCheck
-            @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&computerCheck='+@computerCheck
+            @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&computerCheck='+@computerCheck+'&ip='+user.ip_address
         else
           if user.country=="5" then
               # @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&computerCheck='+@computerCheck
-              @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&computerCheck='+@computerCheck
+              @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&computerCheck='+@computerCheck+'&ip='+user.ip_address
 
           else
           end
