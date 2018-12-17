@@ -2063,8 +2063,8 @@ class UsersController < ApplicationController
           puts
       end
 
-      print "Offerwall Response: ", @OfferwallResponse["response"]
-      puts
+      # print "Offerwall Response: ", @OfferwallResponse["response"]
+      # puts
 
       if @OfferwallResponse["response"]["surveys"] == [] then
       # if @result == 3 then

@@ -14,16 +14,15 @@ class RedirectsController < ApplicationController
     @Url = request.original_url
     @ParsedUrl = @Url.partition ("&hash=")
     puts
-    print '************* DEBUG *****************************************************************************************************************************************'
+    print '************* REDIRECTED RESPONSE *****************************************************************************************************************************************'
     puts
-    print '>>>>>>>>>>>>>>>>>> Redirected Server Response Url = ', @Url, ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+    print 'Redirected Server Response Url = ', @Url
     puts
     # print '@BaseUrl=', @ParsedUrl[0]
     # puts
     # print '@Signature =', @ParsedUrl[2]   
     # puts
-    print '********* DEBUG ****************************************************************************************************************************************************'
-    puts
+    print '********* REDIRECTED RESPONSE ****************************************************************************************************************************************************'
     puts
 
     @BaseUrl = @ParsedUrl[0]
@@ -44,16 +43,16 @@ class RedirectsController < ApplicationController
     
     # Pulley returns 'pid' instead of 'PID'
     if params[:PID] == nil then
-      params[:PID] = "PlaceHolder"
+      params[:PID] = "ReturnedPidIsNil"
     else
     end
 
     if @BaseUrl.include? '&pid' then
-        params[:PID] = params[:pid]
-        print "*********>>>>>>>>>>>>> PID assigned pid, params[:PID] = ", params[:PID], '******<<<<<<<<<<<<<<<<'
-        puts
-        params[:tsfn] = params[:sur]
-        params[:tis] = params[:l]
+      params[:PID] = params[:pid]
+      print "*********>>>>>>>>>>>>> PID assigned pid, params[:PID] = ", params[:PID], '******<<<<<<<<<<<<<<<<'
+      puts
+      params[:tsfn] = params[:sur]
+      params[:tis] = params[:l]
     else
     end
 
@@ -195,7 +194,7 @@ class RedirectsController < ApplicationController
             puts
             print '************* P2S SUCCESS *****************************************************************************************************************************************'
             puts
-            print '******************* SUCCESS-P2S router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+            print 'SUCCESS-P2S router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
             puts
             puts
             print '************* P2S SUCCESS *****************************************************************************************************************************************'
@@ -493,7 +492,7 @@ class RedirectsController < ApplicationController
               puts
               print '************* RFG SUCCESS *****************************************************************************************************************************************'
               puts
-              print '************** SUCCESS-RFG for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+              print 'SUCCESS-RFG for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
               puts
               print '************* RFG SUCCESS *****************************************************************************************************************************************'
               puts
@@ -832,7 +831,7 @@ class RedirectsController < ApplicationController
                 puts
                 print '************* ADHOC SUCCESS *****************************************************************************************************************************************'
                 puts
-                print '******************* SUCCESS-ADHOC router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+                print 'SUCCESS-ADHOC router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
                 puts
                 print '************* ADHOC SUCCESS *****************************************************************************************************************************************'
                 puts
@@ -1124,7 +1123,7 @@ class RedirectsController < ApplicationController
                 puts
                 print '************* PULLEY SUCCESS *****************************************************************************************************************************************'
                 puts                
-                print '************** SUCCESS-Pulley for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+                print 'SUCCESS-Pulley for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
                 puts
                 print '************* PULLEY SUCCESS *****************************************************************************************************************************************'
                 puts
@@ -1467,12 +1466,17 @@ class RedirectsController < ApplicationController
 
             # Give user chance to take another survey unless they do not qualify for any (other) survey
             if (@user.SupplierLink.empty? == false) then                          
-              print '******** DEBUG ************ User will be sent to this survey: ', @user.SupplierLink[0]
+              print '************* P2S FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
+              puts
+              print 'User will be sent to this survey: ', @user.SupplierLink[0]
+              puts
+              print '************* P2S FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
               puts
               @NextEntryLink = @user.SupplierLink[0]
               @user.SupplierLink = @user.SupplierLink.drop(1)
               @user.save
               redirect_to @NextEntryLink
+
             else # if SupplierLink empty?
               tracker.track(@user.ip_address, 'FL-3')
               if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
@@ -1494,7 +1498,7 @@ class RedirectsController < ApplicationController
               puts
               print '************* RFG FAILURE *****************************************************************************************************************************************'
               puts
-              print '******** DEBUG ************ Status FAILED-RFG for user_id: ', params[:PID], ' CID: ', @user.clickid
+              print 'Status FAILED-RFG for user_id: ', params[:PID], ' CID: ', @user.clickid
               puts
               print '************* RFG FAILURE *****************************************************************************************************************************************'
               puts
@@ -1536,8 +1540,11 @@ class RedirectsController < ApplicationController
               # Give user chance to take another survey unless they do not qualify for any (other) survey
 
               if (@user.SupplierLink.empty? == false) then
-                          
-                  print '********************* User will be sent to this survey: ', @user.SupplierLink[0]
+                  print '************* RFG FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
+                  puts        
+                  print 'User will be sent to this survey: ', @user.SupplierLink[0]
+                  puts
+                  print '************* RFG FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
                   puts
                   @NextEntryLink = @user.SupplierLink[0]
                   @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1605,8 +1612,11 @@ class RedirectsController < ApplicationController
                 if (@user.SupplierLink.empty? == false) then
 
                   if (@user.SupplierLink.length == 1) then #send to the next link
-            
-                    print '******************* User will be sent to this next survey: ', @user.SupplierLink[0]
+                    print '************* ADHOC FAILED - REDIRECTED TO ENDING P2S SURVEY *****************************************************************************************************************************************'
+                    puts
+                    print 'User will be sent to this next survey: ', @user.SupplierLink[0]
+                    puts
+                    print '************* ADHOC FAILED - REDIRECTED TO ENDING P2S SURVEY *****************************************************************************************************************************************'
                     puts
                     @NextEntryLink = @user.SupplierLink[0]
                     @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1614,8 +1624,11 @@ class RedirectsController < ApplicationController
                     redirect_to @NextEntryLink
              
                   else
-
-                    print '******************* User will be sent to the next adhoc, fed or rfg survey: ', @user.SupplierLink[0]
+                    print '************* ADHOC FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
+                    puts
+                    print 'User will be sent to the next adhoc, fed or rfg survey: ', @user.SupplierLink[0]
+                    puts
+                    print '************* ADHOC FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
                     puts
                     @NextEntryLink = @user.SupplierLink[0]
                     @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1645,7 +1658,7 @@ class RedirectsController < ApplicationController
                 puts
                 print '************* PULLEY FAILURE *****************************************************************************************************************************************'
                 puts
-                print '**************** Status FAILED-Pulley for user_id: ', params[:PID], ' CID: ', @user.clickid
+                print 'Status FAILED-Pulley for user_id: ', params[:PID], ' CID: ', @user.clickid
                 puts
                 print '************* PULLEY FAILURE *****************************************************************************************************************************************'
                 puts
@@ -1682,8 +1695,11 @@ class RedirectsController < ApplicationController
                 if (@user.SupplierLink.empty? == false) then
 
                   if (@user.SupplierLink.length == 1) then #P2S is the next link
-            
-                    print '********************** User will be sent to this p2s survey: ', @user.SupplierLink[0]
+                    print '************* PULLEY FAILED - REDIRECTED TO ENDING P2S SURVEY *****************************************************************************************************************************************'
+                    puts
+                    print 'User will be sent to this p2s survey: ', @user.SupplierLink[0]
+                    puts
+                    print '************* PULLEY FAILED - REDIRECTED TO ENDING P2S SURVEY *****************************************************************************************************************************************'
                     puts
                     @NextEntryLink = @user.SupplierLink[0]
                     @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1691,8 +1707,11 @@ class RedirectsController < ApplicationController
                     redirect_to @NextEntryLink
              
                   else
-
-                    print '***************** User will be sent to the next survey: ', @user.SupplierLink[0]
+                    print '************* PULLEY FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
+                    puts
+                    print 'User will be sent to the next survey: ', @user.SupplierLink[0]
+                    puts
+                    print '************* PULLEY FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
                     puts
                     @NextEntryLink = @user.SupplierLink[0]
                     @user.SupplierLink = @user.SupplierLink.drop(1)
@@ -1781,7 +1800,7 @@ class RedirectsController < ApplicationController
               @user = User.find_by user_id: params[:PID]
               print '************* RFG OQ *****************************************************************************************************************************************'
               puts
-              print '******** DEBUG ************ OVERQUOTA-RFG for user_id: ', params[:PID], ' CID: ', @user.clickid
+              print 'OVERQUOTA-RFG for user_id: ', params[:PID], ' CID: ', @user.clickid
               puts
               print '************* RFG OQ *****************************************************************************************************************************************'
               puts         
@@ -2000,7 +2019,7 @@ class RedirectsController < ApplicationController
           puts
           print '************* SECURITY *****************************************************************************************************************************************'
           puts
-          print '*********************** QTERM/Security concern for user_id/PID, CID:', params[:PID], @user.clickid
+          print 'QTERM/Security concern for user_id/PID, CID:', params[:PID], @user.clickid
           puts 
           print '************* SECURITY *****************************************************************************************************************************************'
           puts
