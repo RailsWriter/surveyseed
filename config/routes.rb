@@ -18,8 +18,10 @@ Rails.application.routes.draw do
   resources :networks
   resources :center
 
+  # Since Panel is not a controller routes are handled as below
   get '/panel/home', :to => redirect('/panel/index.html')
   get '/panel/login', :to => redirect('/panel/index.html')
+  post '/panel/logout', :to => redirect('/panel/index.html')
 
   match "*path", :to => proc {|env| [200, {
   'Access-Control-Allow-Origin' => '*',

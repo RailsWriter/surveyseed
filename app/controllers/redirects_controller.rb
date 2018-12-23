@@ -13,17 +13,19 @@ class RedirectsController < ApplicationController
     @SHA1key = 'dKyEuAdS/pwtc9VK8ihCVsMmSK8JyK6QlTuOLiOSQD1tiXyOTdrMurEi84lrhddMxYcbAvLLMgrKHiroeROYMw=='
     @Url = request.original_url
     @ParsedUrl = @Url.partition ("&hash=")
-    puts
+    puts ""
+    puts ""
     print '************* REDIRECTED RESPONSE *****************************************************************************************************************************************'
-    puts
+    puts ""
     print 'Redirected Server Response Url = ', @Url
-    puts
     # print '@BaseUrl=', @ParsedUrl[0]
     # puts
     # print '@Signature =', @ParsedUrl[2]   
     # puts
+    puts ""
     print '********* REDIRECTED RESPONSE ****************************************************************************************************************************************************'
-    puts
+    puts ""
+    puts ""
 
     @BaseUrl = @ParsedUrl[0]
     @Signature = @ParsedUrl[2]
@@ -191,14 +193,15 @@ class RedirectsController < ApplicationController
           
             @user = User.find_by user_id: params[:PID]
 
-            puts
+            puts ""
+            puts ""
             print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>************* P2S SUCCESS *****************************************************************************************************************************************'
             puts
             print 'SUCCESS-P2S router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
             puts
-            puts
             print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>************* P2S SUCCESS *****************************************************************************************************************************************'
-            puts
+            puts ""
+            puts ""
 
             @net = Network.find_by netid: @user.netid
             
@@ -1120,13 +1123,15 @@ class RedirectsController < ApplicationController
                 # save attempt info in User and Survey tables
           
                 @user = User.find_by user_id: params[:PID]
-                puts
+                puts ""
+                puts ""
                 print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>************* PULLEY SUCCESS *****************************************************************************************************************************************'
-                puts                
+                puts ""                
                 print 'SUCCESS-Pulley for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
-                puts
+                puts ""
                 print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>************* PULLEY SUCCESS *****************************************************************************************************************************************'
-                puts
+                puts ""
+                puts ""
 
                 @net = Network.find_by netid: @user.netid
 
@@ -1220,7 +1225,7 @@ class RedirectsController < ApplicationController
                   # puts
                 
                   #@user.SurveysCompleted[params[:PID]] = [Time.now, params[:tsfn], 'FED', @survey.CPI, @user.clickid, @net_name]
-                  @user.SurveysCompleted[Time.now] = [params[:PID], params[:tsfn], 'PULLEY', params[:c], @user.clickid, @net_name]
+                  @user.SurveysCompleted[Time.now] = [params[:PID], params[:tsfn], 'PULLEY', '%.2f' % params[:c], @user.clickid, @net_name]
                   @user.save
                   
                   # # Save completed survey info in a hash with User_id number as key {params[:PID] => [params[:tis], params[:tsfn]], ..}          
@@ -1387,7 +1392,7 @@ class RedirectsController < ApplicationController
                                     
                   # Keep a count of completes on all Networks
                 
-                  puts "*************** Keeping track of completes on all networks"
+                  # puts "*************** Keeping track of completes on all networks"
                           
                   # @net = Network.find_by netid: @user.netid # moved up
                   if @net.Flag3 == nil then
@@ -1594,13 +1599,13 @@ class RedirectsController < ApplicationController
                   end
                               
                   # Increment unsuccessful attempts. SurveyExactRank is used to keep count of unsuccessful attempts on a survey
-                  if @survey.FailureCount == nil then
-                    @survey.FailureCount = 1
-                  else
-                    @survey.FailureCount = @survey.FailureCount + 1
-                  end
-                  print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for adhoc survey number: ', params[:tsfn], ' Failurecount= ', @survey.FailureCount
-                  puts
+                  # if @survey.FailureCount == nil then
+                  #   @survey.FailureCount = 1
+                  # else
+                  #   @survey.FailureCount = @survey.FailureCount + 1
+                  # end
+                  # print '********************************* Unsuccessful attempts count raised by 1 following a Failuare for adhoc survey number: ', params[:tsfn], ' Failurecount= ', @survey.FailureCount
+                  # puts
                 
                   @survey.save
               
