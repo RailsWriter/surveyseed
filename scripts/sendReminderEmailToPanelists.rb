@@ -13,7 +13,7 @@ begin
       emailId=dailyUser.emailId
       print "Selected Daily emailId: ", emailId
       puts
-      if (emailId == 'akhtarjameel@gmail.com') then
+      if (emailId == 'akhtarjameel@gmail.com') || (emailId == 'mohsinashakir@gmail.com') || (emailId == '@dasriharsha@gmail.com') then
         begin
           PanelMailer.reminder_email(dailyUser).deliver_now
           print "Daily Reminder Email sent to ", emailId, " at #{Time.now}"
