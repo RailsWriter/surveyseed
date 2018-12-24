@@ -1483,7 +1483,7 @@ class RedirectsController < ApplicationController
               redirect_to @NextEntryLink
 
             else # if SupplierLink empty?
-              tracker.track(@user.ip_address, 'FL-3')
+              # tracker.track(@user.ip_address, 'FL-3')
               if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
                 redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
               else
@@ -1557,7 +1557,7 @@ class RedirectsController < ApplicationController
                   redirect_to @NextEntryLink
 
               else # if SupplierLink empty?
-                tracker.track(@user.ip_address, 'FL-4')
+                # tracker.track(@user.ip_address, 'FL-4')
 
                 if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
                   redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
@@ -1643,7 +1643,7 @@ class RedirectsController < ApplicationController
                   end
 
                 else # if SupplierLink empty?
-                  tracker.track(@user.ip_address, 'FL-6')
+                  # tracker.track(@user.ip_address, 'FL-6')
 
                   if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
                     redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
@@ -1726,7 +1726,7 @@ class RedirectsController < ApplicationController
                   end
 
                 else # if SupplierLink empty?
-                  tracker.track(@user.ip_address, 'FL-5')
+                  # tracker.track(@user.ip_address, 'FL-5')
 
                   if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
                     redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
@@ -1783,7 +1783,7 @@ class RedirectsController < ApplicationController
               @user.save
               redirect_to @NextEntryLink
             else # if SupplierLink empty?
-              tracker.track(@user.ip_address, 'FL-1')
+              # tracker.track(@user.ip_address, 'FL-1')
               
               if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
                 redirect_to 'http://apps.intapi.com/rd.int?o=ke&si=KE1234KE&r=0&s='+@user.clickid
@@ -1848,7 +1848,7 @@ class RedirectsController < ApplicationController
                 redirect_to @NextEntryLink
                        
               else # if SupplierLink empty
-                tracker.track(@user.ip_address, 'FL-7')
+                # tracker.track(@user.ip_address, 'FL-7')
                 # redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=7'
 
                 if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
@@ -1922,7 +1922,7 @@ class RedirectsController < ApplicationController
                     redirect_to @NextEntryLink
                   end              
                 else # if SupplierLink empty
-                  tracker.track(@user.ip_address, 'FL-9')
+                  # tracker.track(@user.ip_address, 'FL-9')
                   # redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=9'     
 
                   if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
@@ -1994,7 +1994,7 @@ class RedirectsController < ApplicationController
                 end
               
                 else # if SupplierLink empty
-                  tracker.track(@user.ip_address, 'FL-8')
+                  # tracker.track(@user.ip_address, 'FL-8')
                   # redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=8'
 
                   if @user.netid == "L4AnLLfc4rAHpl12as3ggg986" then
@@ -2079,7 +2079,7 @@ class RedirectsController < ApplicationController
           #   @survey.save
             
           # end # if RFG redirect
-          tracker.track(@user.ip_address, 'QT-2')
+          # tracker.track(@user.ip_address, 'QT-2')
           redirect_to 'https://www.ketsci.com/redirects/qterm?&QTERM=2'          
         end # if test        
     end # case

@@ -2,9 +2,9 @@ class UsersController < ApplicationController
 
   require 'mixpanel-ruby'
   require 'hmac-md5'
-    
-  def eval_age  
 
+
+  def eval_age  
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     if (params[:age].empty? == false) then
@@ -18,7 +18,7 @@ class UsersController < ApplicationController
 
     if @age.to_i<13 then
       ip_address = request.remote_ip
-      tracker.track(ip_address, 'NS<13')
+      # tracker.track(ip_address, 'Age<13')
       redirect_to '/users/nosuccess'
     else  
       # Enter the user with the following credentials in our system or find user's record  
@@ -382,7 +382,7 @@ class UsersController < ApplicationController
   
   def zip_IN
 
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
     
     
     user=User.find_by session_id: session.id
@@ -2160,7 +2160,7 @@ class UsersController < ApplicationController
   def selectP2SSurveys (session_id)
     # def userride (session_id)
     
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
     
     user = User.find_by session_id: session_id
     # @PID = user.user_id
@@ -2325,7 +2325,7 @@ class UsersController < ApplicationController
     if user.black_listed == true then
       print '******************** Userride: UserID is BLACKLISTED: ', user.user_id
       puts
-      tracker.track(user.ip_address, 'NS_BL')
+      # tracker.track(user.ip_address, 'NS_BL')
       redirect_to '/users/nosuccess'
       return
     else
@@ -2584,7 +2584,7 @@ class UsersController < ApplicationController
   end  
 
   def selectP2SPullAPISurveys (session_id)
-    tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')    
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')    
     user = User.find_by session_id: session_id
 
     # Queue up additional surveys from P2S. First calculate the additional values to be attached.
