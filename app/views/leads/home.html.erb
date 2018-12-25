@@ -34,7 +34,7 @@ mixpanel.init("e5606382b5fdf6308a1aa86a678d6674");</script><!-- end Mixpanel -->
 	 <p></p>
 	<center>
 		<p2> 
-			KETSCI is a market research technology company. We provide access to high quality audiences for Researchers. Businesses, organizations and individuals use our products to get answers to their questions from target audiences. Our products are designed to increase automation, speed, and efficiency of market research by leveraging cutting edge technology. Mobile and web developers integrate our APIs in their products for monetization, and to reward their users everytime they respond to questions e.g. complete a survey.
+			KETSCI is a market research technology company. We provide access to high quality audiences for Researchers. Businesses, organizations and individuals use our products to get answers to their questions from target audiences. Our products are designed to increase automation, speed, and efficiency of market research by leveraging cutting edge technology. Mobile and web developers integrate our APIs in their products for monetization, and to reward their users everytime they respond to questions by completing a survey.
 	 	</p2>
 	</center>
  </div>
@@ -70,21 +70,22 @@ mixpanel.init("e5606382b5fdf6308a1aa86a678d6674");</script><!-- end Mixpanel -->
  </div>
 
  <div id="monetize">
+ 		<br>
 		 <h1><center> Publish & Monetize </center></h1>
-			<center><p2> Add a link to our inventory of surveys to earn additional revenue from users who visit your website or use your app. We are extremely flexible in the ways to integrate our offer on any platform e.g. iOS, Android, Win, Web, etc. You will always be in full control of how and where your users interact and complete KETSCI surveys. A Publisher membership comes with your own Dashboard where you can monitor user completes in realtime and download activity reports. It only takes only a few minutes to integrate our API in your code. 
+			<center><p2> Any publisher of a Website or an App can become part of the KETSCI research network. Add a link to our inventory of surveys to earn additional revenue from users who visit your website or use your app. It is extremely easy to integrate our offers on any platform e.g. iOS, Android, Win, Web, etc. You will always be in full control of how and where your users interact and complete KETSCI surveys. A Publisher membership comes with your own Dashboard where you can monitor user completes in realtime and download activity reports. It takes a few minutes only to integrate our API in your code. 
 			<p></p>
-			<a href="mailto:projectsmanagement@ketsci.com"> Contact</a> us to become a publishing member and start earning.
+			<b>Contact us by <a href="mailto:projectsmanagement@ketsci.com"> email</a> or use the form below to become a publishing member of the KETSCI research network and start earning.</b>
 			<p></p>	 
-			 </p2></center>
+			</p2></center>
  </div>
 
 <div id="research">
 		 <h1><center> Research </center></h1>
-			 <center><p2> KETSCI reaches millions of users through a wide network of mobile and web apps. As a result, we get answers to questions quickly from target audience. Currently we operate in USA, Canada and Australia. We ensure the highest sample quality by using modern technical solutions and perform a number of validation checks before allowing a user to take a survey. We operate by using state-of-the-art security protocols to ensure data integrity at all times. Researchers can find out about feasibility of the project before starting. See our <a href="/KETSCI_PanelFacts.pdf">Panel Facts Sheet</a> to learn more about our high quality and diverse community of panelists.
-				 <p></p>
-			<a href="mailto:projectsmanagement@ketsci.com"> Contact</a> us to partner in your research project.
+			<center><p2> KETSCI reaches millions of users through a wide network of mobile and web apps. As a result, we get answers to questions quickly from target audiences. Currently we operate in USA, Canada and Australia. We ensure the highest sample quality by using modern technical solutions and perform a number of validation checks before allowing a user to take a survey. We have the capability to link directly to your existing online survey as well as to create and host a survey. We operate by using state-of-the-art security protocols to ensure data integrity at all times. Researchers can find out about feasibility of the project before starting. See our <a href="/KETSCI_PanelFacts.pdf">Panel Facts Sheet</a> to learn more about our high quality and diverse community of panelists.
 			<p></p>
-			 </p2></center>
+			<b>Contact us by <a href="mailto:projectsmanagement@ketsci.com"> email</a> or use the form below to partner with the KETSCI research network for your research projects.</b>
+			<p></p>
+			</p2></center>
  </div> 
  
  <div id="contact">
@@ -94,8 +95,8 @@ mixpanel.init("e5606382b5fdf6308a1aa86a678d6674");</script><!-- end Mixpanel -->
 				<%= form_for @lead do |f| %>	
 					<%= f.text_field :name, placeholder: "Name", :class => "input" %><br><br>
 					<%= f.text_field :email, placeholder: "Email", :class => "input" %><br><br>
-					<%= f.text_field :phone, placeholder: "Phone [Optional]", :class => "input" %><br><br>
-					<%= f.text_area :message, placeholder: "Message", :class => "textarea" %><br><br>
+					<%= f.text_area :message, placeholder: "Message (please include a phone number, if you prefer us to reach you by voice or text)", :class => "textarea" %><br><br>
+					<%= f.text_field :phone, placeholder: "For Publishers Only: Do you have own way to reward users? Yes or No", :class => "input" %><br><br>
 					<%= f.submit "Send", :class => "button" %>				
 				<% end %>
 		</center>

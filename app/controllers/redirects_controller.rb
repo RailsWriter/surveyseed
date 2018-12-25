@@ -1660,13 +1660,13 @@ class RedirectsController < ApplicationController
               
                 # save attempt info in User and Survey tables
                 @user = User.find_by user_id: params[:PID]          
-                puts
-                print '************* PULLEY FAILURE *****************************************************************************************************************************************'
-                puts
+                # puts
+                # print '************* PULLEY FAILURE *****************************************************************************************************************************************'
+                puts ""
                 print 'Status FAILED-Pulley for user_id: ', params[:PID], ' CID: ', @user.clickid
-                puts
-                print '************* PULLEY FAILURE *****************************************************************************************************************************************'
-                puts
+                puts ""
+                # print '************* PULLEY FAILURE *****************************************************************************************************************************************'
+                # puts
 
                 # Save last attempted survey unless user did not qualify for any (other) survey from start (no tsfn is attached)
                 # This if may not be necessary now that users are stopped in the uer controller if they do not qualify.
@@ -1705,7 +1705,7 @@ class RedirectsController < ApplicationController
                     print 'User will be sent to this p2s survey: ', @user.SupplierLink[0]
                     puts
                     print '************* PULLEY FAILED - REDIRECTED TO ENDING P2S SURVEY *****************************************************************************************************************************************'
-                    puts
+                    puts ""
                     @NextEntryLink = @user.SupplierLink[0]
                     @user.SupplierLink = @user.SupplierLink.drop(1)
                     @user.save

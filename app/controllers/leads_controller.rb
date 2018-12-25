@@ -7,7 +7,7 @@ class LeadsController < ApplicationController
     @lead = Lead.new
     @ip_address = request.remote_ip
 			
-    tracker.track(@ip_address, 'Home Page')
+    tracker.track(@ip_address, 'LeadsPage')
     
   end
 
