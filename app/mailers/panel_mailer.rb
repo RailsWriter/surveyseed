@@ -4,11 +4,11 @@ class PanelMailer < ActionMailer::Base
 
   def welcome_email(user)
   	@user = user
-  	mail(to: @user.emailId, subject: 'Welcome to Ketsci. Complete surveys and win!')
+  	mail(to: @user.emailId, subject: 'Welcome to KETSCI. Complete surveys to win rewards!')
   end
 
   def reminder_email(user)
   	@user = user
-  	mail(to: @user.emailId, subject: 'Complete Surveys to Win Rewards at Ketsci')
+  	mail(to: @user.emailId, subject: 'Complete Surveys to win rewards!')
   end
 end

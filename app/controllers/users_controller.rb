@@ -747,7 +747,7 @@ class UsersController < ApplicationController
 
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
     
-    #  We assume that 2 or more Panelist will not use same computer (session_id) - if they do then this will overwrite previous value of emailId.
+    #  We assume that 2 or more Panelist will not use same computer (session_id) - if they do then this will overwrite previous value of emailId e.g. when I tried akhtarjameel@yahoo.com it overwrote akhtarjameel@GMAIL.COM
     if (User.where('session_id=?', session.id).exists?) then
       user=User.find_by session_id: session.id
       if user.netid == "MMq0514UMM20bgf17Yatemoh" then
@@ -756,19 +756,20 @@ class UsersController < ApplicationController
           redirect_to '/users/alreadyPanelist'
       else
         if (params[:emailid].empty? == false) && (params[:commit] != "No Thanks") then
-          print "********** emailId param is not empty and param commit is NOT No Thanks for a existing user ****************"
+          print "********** emailId param is not empty and param commit is NOT No Thanks for a existing user who wants to join KETSCI Panel****************"
           puts
           # Check if the email address is valid and if it does not already exists in our database
           if EmailValidator.valid?(params[:emailid]) && !User.exists?(emailId: params[:emailid]) then
             user.emailId = params[:emailid]
             user.password = 'Ketsci'+user.user_id[0..3]
             user.userType='1'
+            user.redeemRewards='1'
             user.surveyFrequency = '1'
             
             # Sends email to user when panelist is created. 
             # todo: Remove netid condition before going live.
             
-            if user.emailId == 'akhtarjameel@gmail.com' then
+            if user.emailId == 'akhtarjameel@gmail.com' || user.emailId == 'akhtarjameel@yahoo.com' then
               begin
                 p "========================================================Sending Welcome MAIL to new panelist ================================"
                 PanelMailer.welcome_email(user).deliver_now
@@ -831,11 +832,12 @@ class UsersController < ApplicationController
           user.save
           print "***************** Successfully created a new panelist: ", user
           puts
+          tracker.track(user.ip_address, 'panelistregistered')
 
           # Sends email to user when panelist is created. 
           # todo: Remove the If condition before going live.
 
-          if user.emailId == 'akhtarjameel@gmail.com' then
+          if user.emailId == 'akhtarjameel@gmail.com' || user.emailId == 'akhtarjameel@yahoo.com' then
             begin
               p "========================================================Sending Welcome MAIL to new HomePage Panelist ================================"
               PanelMailer.welcome_email(user).deliver_now
