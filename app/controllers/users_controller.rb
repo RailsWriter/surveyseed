@@ -1543,7 +1543,7 @@ class UsersController < ApplicationController
     #    p 'Signature 4 =', @SHA1Signature
 
     # @fedSupplierLinks << baseLink+'&hash='+@SHA1Signature
-    @fedSupplierLinks << baseLink+'&hash='+@SHA1Signature
+    @fedSupplierLinks << baseLink+'hash='+@SHA1Signature
     
     # Save the FED survey numbers that the user meets the qualifications and quota requirements for in this user's record of database in rank order
     

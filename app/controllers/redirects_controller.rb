@@ -12,16 +12,17 @@ class RedirectsController < ApplicationController
 
     @SHA1key = 'dKyEuAdS/pwtc9VK8ihCVsMmSK8JyK6QlTuOLiOSQD1tiXyOTdrMurEi84lrhddMxYcbAvLLMgrKHiroeROYMw=='
     @Url = request.original_url
-    @ParsedUrl = @Url.partition ("&hash=")
+    # @ParsedUrl = @Url.partition ("&hash=")
+    @ParsedUrl = @Url.partition ("hash=")
     puts ""
     puts ""
     print '************* REDIRECTED RESPONSE *****************************************************************************************************************************************'
     puts ""
     print 'Redirected Server Response Url = ', @Url
-    # print '@BaseUrl=', @ParsedUrl[0]
-    # puts
-    # print '@Signature =', @ParsedUrl[2]   
-    # puts
+    print '@BaseUrl=', @ParsedUrl[0]
+    puts
+    print '@Signature =', @ParsedUrl[2]   
+    puts
     puts ""
     print '********* REDIRECTED RESPONSE ****************************************************************************************************************************************************'
     puts ""
@@ -63,7 +64,6 @@ class RedirectsController < ApplicationController
 
     
     if (@validateSHA1hash != @Signature) then
-      # invalid response, discard
       print '>>>>>>>>>>>>>>>> Redirects: Signature NOT verified, Validate 4 =', @validateSHA1hash
       puts
       print '>>>>>>>>>>>>>>>> Redirects: Signature NOT verified, Signature =', @Signature
@@ -133,11 +133,11 @@ class RedirectsController < ApplicationController
                 @rfg_redirect = true
                 print "********************** RFG HMAC matched!"
                 puts
-              end      
-               
+              end                     
             else
-              p '>>>>>>>>>>>>>>>>>>>> Not Valid HASH Response from Pulley (go to the next router) <<<<<<<<<<<<<<<<<'
-              @fed_redirect = true
+              p '>>>>>>>>>>>>>>>>>>>> Not Valid HASH Response from Pulley (also not any other router) <<<<<<<<<<<<<<<<<'
+              # @fed_redirect = true
+              @fed_redirect = false
               # redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=0b'
               # return
             end
