@@ -31,11 +31,14 @@ class RedirectsController < ApplicationController
     @Signature = @ParsedUrl[2]
     @validateSHA1hash = Base64.encode64((HMAC::SHA1.new(@SHA1key) << @BaseUrl).digest).strip
     # p 'Validate 1 =', @validateSHA1hash  
-    @validateSHA1hash = @validateSHA1hash.gsub '+', '%2B'
+    # @validateSHA1hash = @validateSHA1hash.gsub '+', '%2B'
+    @validateSHA1hash = @validateSHA1hash.gsub '+', '-'
     # p 'Validate 2 =', @validateSHA1hash
-    @validateSHA1hash = @validateSHA1hash.gsub '/', '%2F'
+    # @validateSHA1hash = @validateSHA1hash.gsub '/', '%2F'
+    @validateSHA1hash = @validateSHA1hash.gsub '/', '_'    
     # p 'Validate 3 =', @validateSHA1hash
-    @validateSHA1hash= @validateSHA1hash.gsub '=', '%3D'
+    # @validateSHA1hash= @validateSHA1hash.gsub '=', '%3D'
+    @validateSHA1hash= @validateSHA1hash.gsub '=', ''    
     # p 'Validate 4 =', @validateSHA1hash
 
     

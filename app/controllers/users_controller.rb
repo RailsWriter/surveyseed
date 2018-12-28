@@ -1499,22 +1499,22 @@ class UsersController < ApplicationController
 
     if user.country=="9" then 
       @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&45='+user.ZIP+'&47='+user.ethnicity+'&113='+user.race+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+'&96='+@statePrecode+'&97='+@DMARegionCode+@industriesvalue
-      print '****AV9****>>>>>>', '&42=',user.age,'&43=',user.gender,'&45=',user.ZIP,'&47=',user.ethnicity,'&113=',user.race,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,'&96=',@statePrecode,'&97=',@DMARegionCode,@industriesvalue, '******'
+      print '**** Additional_Values_US ****>>>>>>', '&42=',user.age,'&43=',user.gender,'&45=',user.ZIP,'&47=',user.ethnicity,'&113=',user.race,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,'&96=',@statePrecode,'&97=',@DMARegionCode,@industriesvalue, '******'
       puts
     else
       if user.country=="6" then
         @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12345='+user.ZIP.slice(0..2)+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+'&1015='+@provincePrecode+@industriesvalue
-        print '******AV6****>>>>', '&42=',user.age,'&43=',user.gender,'&12345=',user.ZIP.slice(0..2),'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,'&1015=',@provincePrecode,@industriesvalue
+        print '****** Additional_Values_CA ****>>>>', '&42=',user.age,'&43=',user.gender,'&12345=',user.ZIP.slice(0..2),'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,'&1015=',@provincePrecode,@industriesvalue
         puts
       else
         if user.country=="5" then
           @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12340='+user.ZIP+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+@industriesvalue
-          print '********AV5****>>', '&42=',user.age,'&43=',user.gender,'&12340=',user.ZIP,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,@industriesvalue
+          print '******** Additional_Values_AU ****>>', '&42=',user.age,'&43=',user.gender,'&12340=',user.ZIP,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,@industriesvalue
           puts
         else
           if user.country=="7" then
             @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12357='+user.ZIP+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+@industriesvalue
-            print '******AV7**>>>>>',  '&42=',user.age,'&43=',user.gender,'&12357=',user.ZIP,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,@industriesvalue
+            print '****** Additional_Values_IN **>>>>>',  '&42=',user.age,'&43=',user.gender,'&12357=',user.ZIP,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,@industriesvalue
             puts
           else
           end
@@ -1522,26 +1522,27 @@ class UsersController < ApplicationController
       end
     end
 
-
-    # baseLink = pulley_base_url+'lid='+lid+'&sid='+sid+'&pid='+pid+'&cos='+cos+@Pulley_AdditionalValues
-    baseLink = pulley_base_url+'clid='+clid+'&sid='+sid+'&pid='+pid+'&cos='+cos+@Pulley_AdditionalValues
+    baseLink = pulley_base_url+'clid='+clid+'&sid='+sid+'&pid='+pid+'&cos='+cos+@Pulley_AdditionalValues+'&'
 
     print "**************************** Puley baseLink = ", baseLink
     puts
-
 
     # Compute SHA-1 encryption for the baseLink and make it URL encoded
     @SHA1Signature = Base64.encode64((HMAC::SHA1.new(@SHA1key) << baseLink).digest).strip
 
     # Base-64 URL encode the Hash signature
     #    p 'Signature 1 =', @SHA1Signature  
-    @SHA1Signature = @SHA1Signature.gsub '+', '%2B'
+    # @SHA1Signature = @SHA1Signature.gsub '+', '%2B'
+    @SHA1Signature = @SHA1Signature.gsub '+', '-'
     #    p 'Signature 2 =', @SHA1Signature
-    @SHA1Signature = @SHA1Signature.gsub '/', '%2F'
+    # @SHA1Signature = @SHA1Signature.gsub '/', '%2F'
+    @SHA1Signature = @SHA1Signature.gsub '/', '_'
     #    p 'Signature 3 =', @SHA1Signature
-    @SHA1Signature= @SHA1Signature.gsub '=', '%3D'
+    # @SHA1Signature= @SHA1Signature.gsub '=', '%3D'
+    @SHA1Signature= @SHA1Signature.gsub '=', ''
     #    p 'Signature 4 =', @SHA1Signature
 
+    # @fedSupplierLinks << baseLink+'&hash='+@SHA1Signature
     @fedSupplierLinks << baseLink+'&hash='+@SHA1Signature
     
     # Save the FED survey numbers that the user meets the qualifications and quota requirements for in this user's record of database in rank order
