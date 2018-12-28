@@ -769,9 +769,9 @@ class UsersController < ApplicationController
             # Sends email to user when panelist is created. 
             # todo: Remove netid condition before going live.
             
-            if user.emailId == 'akhtarjameel@gmail.com' || user.emailId == 'akhtarjameel@yahoo.com' then
+            if (user.emailId == 'akhtarjameel@gmail.com') || (user.emailId == 'akhtarjameel@yahoo.com') then
               begin
-                p "========================================================Sending Welcome MAIL to new panelist ================================"
+                p "========================================================Sending Welcome MAIL to a new panelist potentially signed up at end of a successful/failed survey ================================"
                 PanelMailer.welcome_email(user).deliver_now
                 rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
                 print "Problem sending Welcome mail to ", user.emailId, "due to message: ", e.message
@@ -784,7 +784,7 @@ class UsersController < ApplicationController
             user.save
             tracker.track(user.ip_address, 'panelistregistered')
             p '********** Added EmailId and Pswd for a Panelist where a session_id exists from before ****************** '
-            redirect_to '/users/thanks'
+            redirect_to '/users/thanksNewSignUp'
           else
             p "************** Invalid or Duplicate EmailId Entered by existing user *****************"
             redirect_to '/users/thanks'  # todo: replace by please enter a correct email address to join message
@@ -820,8 +820,7 @@ class UsersController < ApplicationController
           user.tos = false
           user.watch_listed=false
           user.black_listed=false
-          user.number_of_attempts_in_last_24hrs=0       
-
+          user.number_of_attempts_in_last_24hrs=0
           user.netid = netid
           user.clickid = clickid 
           user.emailId = params[:emailid]
@@ -829,6 +828,7 @@ class UsersController < ApplicationController
           user.userType='1'
           user.redeemRewards='1'
           user.surveyFrequency = '1'
+          
           user.save
           print "***************** Successfully created a new panelist: ", user
           puts
@@ -837,9 +837,9 @@ class UsersController < ApplicationController
           # Sends email to user when panelist is created. 
           # todo: Remove the If condition before going live.
 
-          if user.emailId == 'akhtarjameel@gmail.com' || user.emailId == 'akhtarjameel@yahoo.com' then
+          if (user.emailId == 'akhtarjameel@gmail.com') || (user.emailId == 'akhtarjameel@yahoo.com') then
             begin
-              p "========================================================Sending Welcome MAIL to new HomePage Panelist ================================"
+              p "========================================================Sending Welcome MAIL to new HomePage Signup ================================"
               PanelMailer.welcome_email(user).deliver_now
               rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
               print "Problem sending Welcome mail to ", user.emailId, "due to message: ", e.message
@@ -848,7 +848,7 @@ class UsersController < ApplicationController
           else
             #do nothing
           end
-          redirect_to '/users/thanks'
+          redirect_to '/users/thanksNewSignUp'
         else
           p "************** Invalid or Duplicate EmailId Entered by user from Homepage *****************"
           redirect_to '/users/thanks'  # todo: replace by please enter a correct email address to join message
@@ -1493,7 +1493,7 @@ class UsersController < ApplicationController
     end
 
     # print '*****************>>>> Pulley Arguments: ', 'lid= ', lid, 'pid= ', pid, 'cos= ', cos
-    print '*****************>>>> Pulley Arguments: ', 'clid= ', clid, 'pid= ', pid, 'cos= ', cos
+    print '*****************>>>> Pulley Arguments: ', 'clid= ', clid, ' pid= ', pid, ' cos= ', cos
     puts
 
 

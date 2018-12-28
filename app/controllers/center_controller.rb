@@ -281,7 +281,9 @@ class CenterController < ApplicationController
         puts
         # Sends email to user when panelist is created. 
         # todo: Remove the If condition before going live.
+        
         if params[:commit] == "SendWelcomeEmail" && user.emailId == 'akhtarjameel@gmail.com' then
+        # if params[:commit] == "SendWelcomeEmail" then
           begin
             p "========================================================Sending Welcome MAIL to new Leads Panelist ================================"
             PanelMailer.welcome_email(user).deliver_now
