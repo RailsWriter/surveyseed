@@ -737,7 +737,7 @@ class UsersController < ApplicationController
     
     tracker.track(user.ip_address, 'pleasewait')    
     
-    print "DEBUG Repeat User: ", user.user_id, " of country ", user.country, " of Gender ", user.gender, " Time 2 start FED search: ", Time.now
+    print "++++++++++++++TIMESTAMP++++++++++++ Repeat User: ", user.user_id, " of country ", user.country, " of Gender ", user.gender, " Time 2 start FED search: ", Time.now
     puts
     
     ranksurveysforuser(session.id)    
@@ -769,7 +769,7 @@ class UsersController < ApplicationController
             # Sends email to user when panelist is created. 
             # todo: Remove netid condition before going live.
             
-            if (user.emailId == 'akhtarjameel@gmail.com') || (user.emailId == 'akhtarjameel@yahoo.com') then
+            # if (user.emailId == 'akhtarjameel@gmail.com') || (user.emailId == 'akhtarjameel@yahoo.com') then
               begin
                 p "========================================================Sending Welcome MAIL to a new panelist potentially signed up at end of a successful/failed survey ================================"
                 PanelMailer.welcome_email(user).deliver_now
@@ -777,9 +777,9 @@ class UsersController < ApplicationController
                 print "Problem sending Welcome mail to ", user.emailId, "due to message: ", e.message
                 puts
               end
-            else
-              #do nothing
-            end
+            # else
+            #   #do nothing
+            # end
 
             user.save
             tracker.track(user.ip_address, 'panelistregistered')
@@ -837,7 +837,7 @@ class UsersController < ApplicationController
           # Sends email to user when panelist is created. 
           # todo: Remove the If condition before going live.
 
-          if (user.emailId == 'akhtarjameel@gmail.com') || (user.emailId == 'akhtarjameel@yahoo.com') then
+          # if (user.emailId == 'akhtarjameel@gmail.com') || (user.emailId == 'akhtarjameel@yahoo.com') then
             begin
               p "========================================================Sending Welcome MAIL to new HomePage Signup ================================"
               PanelMailer.welcome_email(user).deliver_now
@@ -845,9 +845,9 @@ class UsersController < ApplicationController
               print "Problem sending Welcome mail to ", user.emailId, "due to message: ", e.message
               puts
             end
-          else
-            #do nothing
-          end
+          # else
+          #   #do nothing
+          # end
           redirect_to '/users/thanksNewSignUp'
         else
           p "************** Invalid or Duplicate EmailId Entered by user from Homepage *****************"
@@ -1422,8 +1422,8 @@ class UsersController < ApplicationController
         @currentpayout = 1.85 # assumes this is the minimum payout for FED surveys across networks including the 30% fees
       else
         @currentpayout = (1.44*net.payout).round(2) # FED CPI must be higher than net.payout + 30% of survey CPI. This approximation with 30% of net.payout is a good approximation.
-        print '****************************** minimum payout for FED set to: ', @currentpayout
-        puts
+        # print '****************************** minimum payout for FED set to: ', @currentpayout
+        # puts
       end
              
              
@@ -1492,30 +1492,29 @@ class UsersController < ApplicationController
       end
     end
 
-    # print '*****************>>>> Pulley Arguments: ', 'lid= ', lid, 'pid= ', pid, 'cos= ', cos
-    print '*****************>>>> Pulley Arguments: ', 'clid= ', clid, ' pid= ', pid, ' cos= ', cos
-    puts
+    # print '*****************>>>> Pulley Arguments: ', 'clid= ', clid, ' pid= ', pid, ' cos= ', cos
+    # puts
 
 
     if user.country=="9" then 
       @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&45='+user.ZIP+'&47='+user.ethnicity+'&113='+user.race+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+'&96='+@statePrecode+'&97='+@DMARegionCode+@industriesvalue
-      print '**** Additional_Values_US ****>>>>>>', '&42=',user.age,'&43=',user.gender,'&45=',user.ZIP,'&47=',user.ethnicity,'&113=',user.race,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,'&96=',@statePrecode,'&97=',@DMARegionCode,@industriesvalue, '******'
-      puts
+      # print '**** Additional_Values_US ****>>>>>>', '&42=',user.age,'&43=',user.gender,'&45=',user.ZIP,'&47=',user.ethnicity,'&113=',user.race,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,'&96=',@statePrecode,'&97=',@DMARegionCode,@industriesvalue, '******'
+      # puts
     else
       if user.country=="6" then
         @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12345='+user.ZIP.slice(0..2)+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+'&1015='+@provincePrecode+@industriesvalue
-        print '****** Additional_Values_CA ****>>>>', '&42=',user.age,'&43=',user.gender,'&12345=',user.ZIP.slice(0..2),'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,'&1015=',@provincePrecode,@industriesvalue
-        puts
+        # print '****** Additional_Values_CA ****>>>>', '&42=',user.age,'&43=',user.gender,'&12345=',user.ZIP.slice(0..2),'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,'&1015=',@provincePrecode,@industriesvalue
+        # puts
       else
         if user.country=="5" then
           @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12340='+user.ZIP+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+@industriesvalue
-          print '******** Additional_Values_AU ****>>', '&42=',user.age,'&43=',user.gender,'&12340=',user.ZIP,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,@industriesvalue
-          puts
+          # print '******** Additional_Values_AU ****>>', '&42=',user.age,'&43=',user.gender,'&12340=',user.ZIP,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,@industriesvalue
+          # puts
         else
           if user.country=="7" then
             @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12357='+user.ZIP+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+@industriesvalue
-            print '****** Additional_Values_IN **>>>>>',  '&42=',user.age,'&43=',user.gender,'&12357=',user.ZIP,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,@industriesvalue
-            puts
+            # print '****** Additional_Values_IN **>>>>>',  '&42=',user.age,'&43=',user.gender,'&12357=',user.ZIP,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,@industriesvalue
+            # puts
           else
           end
         end
@@ -1552,7 +1551,7 @@ class UsersController < ApplicationController
     print "*********************************** FED SupplierLinks: ", @fedSupplierLinks
     puts
     
-    print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time 3 End FED search: ", Time.now
+    print "+++++++TIMESTAMP++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time 3 End FED search: ", Time.now
     puts
     
     # Select Adhoc surveys next
@@ -1588,8 +1587,8 @@ class UsersController < ApplicationController
           @currentpayout = 1.25 # assumes this is the minimum payout of $1.25 across networks. There is no extra cost.
         else
           @currentpayout = net.payout
-          print '****************************** minimum payout for ADHOC set to: ', @currentpayout
-          puts
+          # print '****************************** minimum payout for ADHOC set to: ', @currentpayout
+          # puts
         end
       else
         # Bad netid, Network is not known
@@ -1602,7 +1601,7 @@ class UsersController < ApplicationController
       
       #Prints for testing code
 
-      print '???????????????????????????????????------------------------>>>> Assumed instance variables Codes in ADHOC survey selection for Gender: ', @GenderPreCode, ' DMA: ', @DMARegionCode, ' State: ', @statePrecode, ' Region: ', @regionPrecode, ' Division: ',@divisionPrecode
+      print '**************************** Assumed instance variables Codes in ADHOC survey selection for Gender: ', @GenderPreCode, ' DMA: ', @DMARegionCode, ' State: ', @statePrecode, ' Region: ', @regionPrecode, ' Division: ',@divisionPrecode
       puts
 
 
@@ -1783,7 +1782,7 @@ class UsersController < ApplicationController
 
       if user.age == nil then
         @RFGbirthday = "1993-11-30"
-        print "-----RFGbirthday-----User did not give Age ??--------------***************__________________", @RFGbirthday
+        print "-----RFGbirthday-----User did not give Age--------------***************__________________", @RFGbirthday
         puts
       else
         if user.birth_date == nil then
@@ -1794,12 +1793,12 @@ class UsersController < ApplicationController
           user.birth_month = @RFGbirthday[5..6].to_i
           user.birth_date = @RFGbirthday[8..9].to_i
           user.save
-          print "-----RFGbirth_year as string -------New User------------***************__________________", user.birth_year.to_s
-          puts
-          print "-----RFGbirth_month as string --------New User-----------***************__________________", (sprintf '%02d', user.birth_month).to_s
-          puts
-          print "-----RFGbirth_date as string ---------New User----------***************__________________", (sprintf '%02d', user.birth_date).to_s
-          puts
+          # print "-----RFGbirth_year as string -------New User------------***************__________________", user.birth_year.to_s
+          # puts
+          # print "-----RFGbirth_month as string --------New User-----------***************__________________", (sprintf '%02d', user.birth_month).to_s
+          # puts
+          # print "-----RFGbirth_date as string ---------New User----------***************__________________", (sprintf '%02d', user.birth_date).to_s
+          # puts
         else
           @RFGbirthday = user.birth_year.to_s + "-" + (sprintf '%02d', user.birth_month).to_s + "-" + (sprintf '%02d', user.birth_date).to_s
           print "-----RFGbirthday-----Existing User--------------***************__________________", @RFGbirthday

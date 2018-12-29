@@ -19,9 +19,10 @@ class RedirectsController < ApplicationController
     print '************* REDIRECTED RESPONSE *****************************************************************************************************************************************'
     puts ""
     print 'Redirected Server Response Url = ', @Url
-    print '@BaseUrl=', @ParsedUrl[0]
+    puts ""
+    print '@BaseUrl= ', @ParsedUrl[0]
     puts
-    print '@Signature =', @ParsedUrl[2]   
+    print '@Signature=' , @ParsedUrl[2]   
     puts
     puts ""
     print '********* REDIRECTED RESPONSE ****************************************************************************************************************************************************'
@@ -41,6 +42,8 @@ class RedirectsController < ApplicationController
     # @validateSHA1hash= @validateSHA1hash.gsub '=', '%3D'
     @validateSHA1hash= @validateSHA1hash.gsub '=', ''    
     # p 'Validate 4 =', @validateSHA1hash
+    print 'Redirected @BaseUrl Hash result after substitutions= ', @validateSHA1hash
+    puts ""
 
     
     @p2s_redirect = false # set to false as a flag. changes to true if it is a P2S redirect
