@@ -208,6 +208,7 @@
 
 	}
 	
+	<!-- // For Tablets 768x1024 -->
 	@media only screen and (min-width: 601px) and (max-width: 1023px) {
 
 		h1 {
@@ -255,7 +256,7 @@
 		}
 		
 		#aboutus {
-			height: 350px;
+			height: 400px;
 			padding-top: 10px;
 			padding-left:100px;
 			padding-right:100px;
@@ -265,7 +266,7 @@
 		}
 
 		#research {
-			height: 500px;
+			height: 700px;
 			padding-top: 10px;
 			padding-left:100px;
 			padding-right:100px;
@@ -275,7 +276,7 @@
 		}
 
 		#user {
-			height: 400px;
+			height: 500px;
 			padding-top: 10px;
 			padding-left:100px;
 			padding-right:100px;
@@ -358,6 +359,8 @@
 			color: black;
 		}
 	}
+
+	<!-- // For Laptops and above 2880x1800(w) -->
 	
 	@media only screen and (min-width: 1024px) and (max-width: 2023px) {	
 		h1 {
@@ -406,7 +409,7 @@
 	  	}
 		
 		#aboutus {
-			height:400px;
+			height:350px;
 			padding-top:10px;
 			padding-left:100px;
 			padding-right:100px;
@@ -417,7 +420,7 @@
 		}
 		
 		#research {
-			height:450px;
+			height:600px;
 			padding-top:10px;
 			padding-left:100px;
 			padding-right:100px;
@@ -512,6 +515,8 @@
 		}
 	}
 		
+		<!-- // For Larger than laptop screens -->
+
 		@media only screen and (min-width: 2024px) {
 
 			h1 {
