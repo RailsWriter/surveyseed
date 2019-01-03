@@ -774,7 +774,7 @@ class UsersController < ApplicationController
                 p "========================================================Sending Welcome MAIL to a new panelist potentially signed up at end of a successful/failed survey ================================"
                 PanelMailer.welcome_email(user).deliver_now
                 rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-                print "Problem sending Welcome mail to ", user.emailId, "due to message: ", e.message
+                print "Problem sending Welcome mail to ", user.emailId, " due to message: ", e.message
                 puts
               end
             # else
@@ -842,7 +842,7 @@ class UsersController < ApplicationController
               p "========================================================Sending Welcome MAIL to new HomePage Signup ================================"
               PanelMailer.welcome_email(user).deliver_now
               rescue Net::SMTPAuthenticationError, Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, Net::SMTPUnknownError => e
-              print "Problem sending Welcome mail to ", user.emailId, "due to message: ", e.message
+              print "Problem sending Welcome mail to ", user.emailId, " due to message: ", e.message
               puts
             end
           # else

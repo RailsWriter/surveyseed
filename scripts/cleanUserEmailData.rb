@@ -26,10 +26,19 @@ begin
   duplicateEmail_ids = User.select("MIN(id) as id").group(:emailId).collect(&:id)
   unique_ids = (noEmail_ids_1 + noEmail_ids_2 + duplicateEmail_ids).uniq
 
-  print "******** unique_ids and unique_ids count: ", unique_ids, " ************ ", unique_ids.count
+  print "******** unique_ids and blanks: ", unique_ids
   puts
 
+  puts "**************************************************"
+  print "Unique_ids count: ", unique_ids.count
+  puts
+  puts "**************************************************"  
+  puts
+
+  puts "**************************************************"
   print "Duplicate email addresses count = ", User.where.not(id: unique_ids).count
+  puts
+  puts "**************************************************"
   puts
   
 
@@ -47,5 +56,5 @@ begin
   print "Local time ", Time.now-8*60*60 # Nov - Mar PST	
   puts
   puts "cleanUserEmailData script Going to sleep for 7 days"
-  sleep (7.days)
+  sleep (168.hours)
 end while timetorepeat

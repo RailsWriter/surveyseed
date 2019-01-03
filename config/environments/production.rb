@@ -34,6 +34,8 @@ Rails.application.configure do
    :enable_starttls_auto => true
   }
 
+  puts "Message from config/production.rb"
+
   config.action_mailer.default_url_options = {host: "ketsci.com"}  
 
   # Disable Rails's static asset server (Apache or NGINX will already do this).
