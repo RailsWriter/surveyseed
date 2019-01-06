@@ -4,7 +4,7 @@ class PanelMailer < ActionMailer::Base
 
   def welcome_email(user)
   	puts "*********************************************************************"
-    print "ENV is ", Figaro.env.aws_smtp_username
+    print "ENV is ", ENV["aws_smtp_username"]
     puts
     puts "*********************************************************************"
     @user = user
@@ -13,7 +13,7 @@ class PanelMailer < ActionMailer::Base
 
   def reminder_email(user)
     puts "*********************************************************************"
-    print "ENV is ", Figaro.env.aws_smtp_username
+    print "ENV is ", ENV["aws_smtp_username"]
     puts
     puts "*********************************************************************"
     puts
