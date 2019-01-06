@@ -7,12 +7,14 @@ begin
     
   print "******** sendReminderEmailToPanelists Script Starting at #{Time.now} ************"
   puts
+  emailIdsCount=0
 
   User.where('emailId != ?', "").each do |dailyUser|
     begin
       emailId=dailyUser.emailId
       print "Selected Daily emailId: ", emailId
       puts
+      emailIdsCount=emailIdsCount+1
       # if (emailId == 'aokaybb@yahoo.com') || (emailId == 'nietov2011@gmail.com') || (emailId == 'Kzkhang18@gmail.com') || (emailId == 'julienmethot@gmail.com') || (emailId == 'Amerie.roberts4108@gamil.com') then
       if (emailId == 'akhtarjameel@gmail.com') then
       # if (emailId == 'Kzkhang18@gmail.com') || (emailId == 'julienmethot@gmail.com') || (emailId == 'Amerie.roberts4108@gmail.com') then
@@ -27,8 +29,11 @@ begin
       else
       end
     end
-  end 
-
+  end
+  puts "*********************************************************************"
+  print "Number of Email addresses (unique if validation script has run recently): ", emailIdsCount
+  puts
+  puts "*********************************************************************"
   print "UTC time ", Time.now
   puts	
   # print "Local time ", Time.now-7*60*60 # Mar-Nov DST
