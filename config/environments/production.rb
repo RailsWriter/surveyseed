@@ -28,11 +28,14 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
    :address              => "email-smtp.us-west-2.amazonaws.com",
    :port                 => 587,
-   :user_name            => ENV['aws_smtp_username'],
-   :password             => ENV['aws_smtp_password'],
+   :user_name            => Figaro.env.aws_smtp_username,
+   :password             => Figaro.env.aws_smtp_password,
    :authentication       => :login,
    :enable_starttls_auto => true
   }
+
+  # :user_name            => ENV['aws_smtp_username'],
+  #  :password             => ENV['aws_smtp_password'],
 
   puts "Message from config/production.rb"
 
