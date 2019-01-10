@@ -5,6 +5,11 @@ begin
   
   print "******** cleanUserEmailData Script Starting at #{Time.now} ************"
   puts
+  puts "**************************************************"
+  print "Setting, if any, invalid email addresses to NIL "
+  puts
+  puts "**************************************************"
+  puts
 
   # Start by validating all email addresses or set them to nil
   User.where.not(emailId: [nil, ""]).each do |c|
@@ -26,14 +31,14 @@ begin
   duplicateEmail_ids = User.select("MIN(id) as id").group(:emailId).collect(&:id)
   unique_ids = (noEmail_ids_1 + noEmail_ids_2 + duplicateEmail_ids).uniq
 
-  print "******** unique_ids and blanks: ", unique_ids
-  puts
+  # print "******** unique_ids and blanks: ", unique_ids
+  # puts
 
-  puts "**************************************************"
-  print "Unique_ids count: ", unique_ids.count
-  puts
-  puts "**************************************************"  
-  puts
+  # puts "**************************************************"
+  # print "Unique_ids count: ", unique_ids.count
+  # puts
+  # puts "**************************************************"  
+  # puts
 
   puts "**************************************************"
   print "Duplicate email addresses count = ", User.where.not(id: unique_ids).count
