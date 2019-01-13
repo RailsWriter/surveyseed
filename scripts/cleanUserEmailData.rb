@@ -16,7 +16,7 @@ begin
     if EmailValidator.valid?(c.emailId) then
       # do nothing
     else
-      print "********** Setting emailId ", c.emailId, " to nil ************"
+      print "********** Setting emailId ", c.emailId, " to nil for user record_id ", c.id, " ************"
       puts
       c.emailId=nil
       c.save
@@ -25,27 +25,34 @@ begin
 
 
   # Collect ids of all users with nil or empty emailId fields
-  n = User.count
-  noEmail_ids_1 = User.where(emailId: [nil, ""]).first(n/2).collect(&:id)
-  noEmail_ids_2 = User.where(emailId: [nil, ""]).last(n/2).collect(&:id)
-  duplicateEmail_ids = User.select("MIN(id) as id").group(:emailId).collect(&:id)
-  unique_ids = (noEmail_ids_1 + noEmail_ids_2 + duplicateEmail_ids).uniq
+  # n = User.count
+  # noEmail_ids_1 = User.where(emailId: [nil, ""]).first(n/2).collect(&:id)
+  # noEmail_ids_2 = User.where(emailId: [nil, ""]).last(n/2).collect(&:id)
+  # duplicateEmail_ids = User.select("MIN(id) as id").group(:emailId).collect(&:id)
+  # unique_ids = (noEmail_ids_1 + noEmail_ids_2 + duplicateEmail_ids).uniq
 
-  # print "******** unique_ids and blanks: ", unique_ids
-  # puts
 
-  # puts "**************************************************"
-  # print "Unique_ids count: ", unique_ids.count
-  # puts
-  # puts "**************************************************"  
-  # puts
+  # n = User.count
+  noEmail_ids_1 = User.where(emailId: [nil, ""]).map(&:id)
+  # noEmail_ids_2 = User.where(emailId: [nil, ""]).last(n/2).collect(&:id)
+  duplicateEmail_ids = User.select("MIN(id) as id").group(:emailId).map(&:id)
+  unique_ids = (noEmail_ids_1 + duplicateEmail_ids).uniq
 
   puts "**************************************************"
   print "Duplicate email addresses count = ", User.where.not(id: unique_ids).count
   puts
   puts "**************************************************"
   puts
-  
+
+  print "******** unique_ids and blanks: ", unique_ids
+  puts
+  puts
+
+  puts "**************************************************"
+  print "Unique_ids count: ", unique_ids.count
+  puts
+  puts "**************************************************"  
+  puts
 
   # Now convert all duplicate emails into empty strings
   User.where.not(id: unique_ids).each do |r|
