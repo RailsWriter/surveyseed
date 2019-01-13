@@ -33,23 +33,28 @@ begin
 
 
   n = User.count
+  
   noEmail_ids_1 = User.where(emailId: [nil, ""]).first(n/2).map(&:id)
   puts "**************************************************"
   print "noEmail_ids_1: ", noEmail_ids_1
   puts
   puts
+  
   noEmail_ids_2 = User.where(emailId: [nil, ""]).last(n/2).map(&:id)
   puts "**************************************************"
   print "noEmail_ids_2: ", noEmail_ids_2
   puts
   puts
+  
   duplicateEmail_ids = User.select("MIN(id) as id").group(:emailId).collect(&:id)
   puts "**************** all emailids that could be duplicate **********************************"
   print "duplicateEmail_ids: ", duplicateEmail_ids
   puts
+  puts "**************************************************"
   puts
+  
   unique_ids = (noEmail_ids_1 + noEmail_ids_2 + duplicateEmail_ids).uniq
-
+  puts
   puts "**************************************************"
   print "Duplicate email addresses count = ", User.where.not(id: unique_ids).count
   puts
