@@ -32,11 +32,23 @@ begin
   # unique_ids = (noEmail_ids_1 + noEmail_ids_2 + duplicateEmail_ids).uniq
 
 
-  # n = User.count
-  noEmail_ids_1 = User.where(emailId: [nil, ""]).map(&:id)
-  # noEmail_ids_2 = User.where(emailId: [nil, ""]).last(n/2).collect(&:id)
-  duplicateEmail_ids = User.select("MIN(id) as id").group(:emailId).map(&:id)
-  unique_ids = (noEmail_ids_1 + duplicateEmail_ids).uniq
+  n = User.count
+  noEmail_ids_1 = User.where(emailId: [nil, ""]).first(n/2).map(&:id)
+  puts "**************************************************"
+  print "noEmail_ids_1: ", noEmail_ids_1
+  puts
+  puts
+  noEmail_ids_2 = User.where(emailId: [nil, ""]).last(n/2).map(&:id)
+  puts "**************************************************"
+  print "noEmail_ids_2: ", noEmail_ids_2
+  puts
+  puts
+  duplicateEmail_ids = User.select("MIN(id) as id").group(:emailId).collect(&:id)
+  puts "**************** all emailids that could be duplicate **********************************"
+  print "duplicateEmail_ids: ", duplicateEmail_ids
+  puts
+  puts
+  unique_ids = (noEmail_ids_1 + noEmail_ids_2 + duplicateEmail_ids).uniq
 
   puts "**************************************************"
   print "Duplicate email addresses count = ", User.where.not(id: unique_ids).count
@@ -56,7 +68,10 @@ begin
 
   # Now convert all duplicate emails into empty strings
   User.where.not(id: unique_ids).each do |r|
-    print "********** Setting duplicate emailId ", r.emailId, " to nil for user id ", r.id, " *************"
+    puts "**************************************************"
+    print "Setting duplicate emailId ", r.emailId, " to nil for user id ", r.id, " *************"
+    puts
+    puts "**************************************************"  
     puts
     r.emailId=nil
     r.save
