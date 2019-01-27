@@ -10,7 +10,14 @@ begin
   @failcount = @failcount+1
   print "P2S API access failcount is: ", @failcount
   puts
-	p2sApiResponse = HTTParty.get(api_base_url+'?user_id=KET_1&age=32&email=akht@bil.com&gender=m&zip_code=91123&ip_address=76.218.107.128',
+  puts "*****************************************************"
+  print "Full API call: ", api_base_url+'?user_id=KET_1&age=32&email=akht@bil.com&gender=m&zip_code=91123&ip_address=76.218.107.128'
+  puts
+  puts "*****************************************************"
+
+# Must include a good ip address not ::1, a valid zipcode
+
+	p2sApiResponse = HTTParty.get(api_base_url+'?user_id=KET_1&age=32&email=akht@bil.com&gender=m&zip_code=91123&ip_address=76.218.107.128&basic=1',
 		:headers => {'X-YourSurveys-Api-Key' => '5b96ba34dc040bf1baf557be93f8459f'}
 		)
   rescue HTTParty::Error => e

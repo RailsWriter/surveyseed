@@ -3,6 +3,8 @@ class UsersController < ApplicationController
   require 'mixpanel-ruby'
   require 'hmac-md5'
 
+  # attr_accessor :reverseOrderFor2
+
 
   def eval_age  
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
@@ -1028,6 +1030,9 @@ class UsersController < ApplicationController
   
   # start to rankfedsurveys
   def ranksurveysforuser (session_id)
+    puts "*****************************************"
+    puts "Start selecting Lucid Surveys"
+    puts "*****************************************"
 
     require 'base64'
     require 'hmac-sha1'
@@ -1553,12 +1558,20 @@ class UsersController < ApplicationController
     
     print "+++++++TIMESTAMP++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time 3 End FED search: ", Time.now
     puts
+
+    puts "*****************************************"
+    puts "End selecting Lucid Surveys"
+    puts "*****************************************"
     
     # Select Adhoc surveys next
     selectAdhocSurveys(session_id)        
   end # end rankfedsurveys
 
   def selectAdhocSurveys(session_id)
+
+    puts "*****************************************"
+    puts "Start selecting Adhoc Surveys"
+    puts "*****************************************"
     
     require 'digest/hmac'
     require 'net/http'
@@ -1747,12 +1760,20 @@ class UsersController < ApplicationController
       puts
     end # If Adhoc surveys are ACTIVE
 
+    puts "*****************************************"
+    puts "End selecting Adhoc Surveys"
+    puts "*****************************************"
+
     # Select RFG projects next
     selectRfgProjects(session_id)      
   end # end selectAdhocSurveys
 
 
   def selectRfgProjects(session_id)
+
+    puts "*****************************************"
+    puts "Start selecting RFG Surveys"
+    puts "*****************************************"
     
     require 'digest/hmac'
     require 'openssl'
@@ -2153,169 +2174,60 @@ class UsersController < ApplicationController
     
     # print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++a ", user.user_id, " of ", user.country, " Time-4 End RFG selection: ", Time.now
     # puts
+
+    puts "*****************************************"
+    puts "End selecting RFG Surveys"
+    puts "*****************************************"
     
-    # Select P2S surveys next
-    selectP2SSurveys (session_id)    
+    # Select Innovate surveys next
+    selectInnovateSurveys (session_id)    
     # redirect_to '/users/moreSurveys'
   end #selectRfgProjects
 
-  def selectP2SSurveys (session_id)
-    # def userride (session_id)
-    
-    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
-    
-    user = User.find_by session_id: session_id
-    # @PID = user.user_id
-
-    # Queue up additional surveys from P2S. First calculate the additional values to be attached.
-    
-    @netid = user.netid  
-    @net = Network.find_by netid: @netid
-    
-    if (user.country == '9') then
-      if @net.P2S_US == 1 then
-        @P2SisAttached = true
-      else
-        @P2SisAttached = false
-      end
-    else
-    end
-  
-    if (user.country == '6') then
-      if @net.P2S_CA == 1 then
-        @P2SisAttached = true
-      else
-        @P2SisAttached = false
-      end
-    else
-    end
-    
-    if (user.country == '5') then
-      if @net.P2S_AU == 1 then
-        @P2SisAttached = true
-      else
-        @P2SisAttached = false
-      end
-    else
-    end   
-    
-    if (@P2SisAttached) then
-      @P2Sclient = Network.find_by name: "P2S"
-      @SUBID = @P2Sclient.netid+user.user_id
-    
-      print "**************** P2S @SUBID = ", @SUBID
-      puts
-
-      if user.gender == '1' then
-        @p2s_gender = "m"
-      else
-        @p2s_gender = "f"
-      end
-             
-      
-      p2s_hispanic = [0, 6729, 6730, 6898, 6900, 6901, 6902, 6903, 6904, 6905, 6906, 6907, 6908, 6909, 6910, '']
-      @p2s_hispanic = p2s_hispanic[user.ethnicity.to_i].to_s
-      
-      p2s_employment_status = [0, 7007, 7008, 7006, 7006, 7013, 7013, 7012, 7011, 7009, 7010, 23562, '']
-      @p2s_employment_status = p2s_employment_status[user.employment.to_i].to_s
-      
-      
-      p2s_income_level = [0, 9089, 9089, 9089, 9071, 9072, 9088, 9073, 9087, 9074, 9086, 9090, 9075, 9091, 9076, 9092, 9077, 9093, 9078, 9094, 9079, 9080, 9081, 9082, 9085, 9084, 9084, '']
-      @p2s_income_level = p2s_income_level[user.householdincome.to_i].to_s
-      
-      
-      p2s_race = [0, 10094, 10095, 10101, 10097, 10098, 10104, 10109, 10110, 10111, 10096, 10102, 10106, 10107, 10108, 10103, '']
-      @p2s_race = p2s_race[user.race.to_i].to_s
-      
-      p2s_education_level = [0, 10157, 10158, 10163, 10159, 10160, 10161, 10162, 10164, '']
-      @p2s_education_level = p2s_education_level[user.eduation.to_i].to_s
-      
-      p2s_org_id = [0, 22942, 22934, '', '', 22936, '', 22942, '', '', 22938, '', 22957, 22957, 22957, 22957, 22938, '', '', 22939, 22940, 3650829, '', '', '', '', 22943, 22944, 22945, '', 22957, 3651719, '', 22946, 22947, 22949, 22948, 22950, '', 22952, '', 22944, 22953, '', 22954, '', '', '', '', '', 3661207, '']
-      @p2s_org_id = p2s_org_id[user.pindustry.to_i].to_s
-      
-      p2s_jobtitle = [0, 3673669, 367670, 3673663, 3673668, 3673671, 3673675, 3673675, 3673672, 3673673, 3673674, 3673675]
-      @p2s_jobtitle = p2s_jobtitle[user.jobtitle.to_i].to_s
-       
-      p2s_children = [0, 6971, 6972, 6971, 6972, 6973, 6974, 6975, 6976, 6977, 6978, 6979, 6980, 6981, 6982, 6983, 6984, 6985, 6986, 6987, 6988, 6989, 6990, 6991, 6992, 6993, 6994, 6995, 6996, 6997, 6998, 6999, 7000, 7001, 7002, 7003, 7004]
-      
-      
-      if user.children != nil then
-        if user.children[0] != '-3105' then
-          @p2s_children = p2s_children[user.children[0].to_i].to_s
-          
-          if user.children.length > 1 then            
-            (1..user.children.length-1).each do |i|
-            
-              if p2s_children[user.children[i].to_i] != '' then                  
-                @p2s_children = @p2s_children+','+p2s_children[user.children[i].to_i].to_s    
-              else
-              end              
-                
-            end        
-          else
-          end
-        else
-          @p2s_children = '7005'
-        end        
-      else
-        @p2s_children = ''
-      end
-      
-      p2s_province = [0, 20509, 20508, 20511, 20515, 20517, 20519, 20516, 20520, 20512, 20514, 20513, 20510, 20518]
-      @p2s_province = p2s_province[@provincePrecode.to_i].to_s
-      
-      
-
-      # p2s additional values
-
-      if user.country=="9" then
-        @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children
-      else
-        if user.country=="6" then
-          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&canada_regions='+@p2s_province
-        else
-          if user.country=="5" then
-            @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children
-          else
-          end
-        end
-      end  
-      
-      #p2s hmac(md5) calculation
-      
-      p2ssecretkey = '9df95db5396d180e786c707415203b95'      
-      @hmac = HMAC::MD5.new(p2ssecretkey).update(@p2s_AdditionalValues).hexdigest
-
-      #p2s supplier link
-      @p2sSupplierLink = ""
-      @p2sSupplierLink = 'http://www.your-surveys.com/?si=55&ssi='+@SUBID+'&'+@p2s_AdditionalValues+'&hmac='+@hmac
-      
-      print "**************P2S SupplierLink = ", @p2sSupplierLink
-      puts
-
-       # THIS LINE BELOW CAN BE DELETED AS THE SECTION ELOW RESETS IT CORRECTLY.
-      
-      # user.SupplierLink << @p2sSupplierLink
-
-      # Save the list of SupplierLinks with P2S, if ACTIVE
-    
-      user.save
-      userride (session_id)
-    else
-      puts "-------------------********************** P2S is not attached ********************------------------------"
-      userride (session_id)
-    end #if P2SisAttached
-  end # selectP2SSurveys
-
   def selectInnovateSurveys (session_id)
+
+    puts "*****************************************"
+    puts "Start selecting Innovate Surveys"
+    puts "*****************************************"
     # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
-    # @innovateNetId = "4444"
-    # @innovateSupplierLink = ""
-    # @innovateSupplierLink = "http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+@innovateNetId+user.user_id
+    @innovateNetId = "4444"
+    @innovateSupplierLink = []
+    # @innovateSupplierLink = ["http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+@innovateNetId+user.user_id]
+    
+    puts "*****************************************"
+    puts "End selecting Innovate Surveys"
+    puts "*****************************************"
+    selectPollFishSurveys (session_id)
   end
 
+
+  def selectPollFishSurveys (session_id)
+    puts "*****************************************"
+    puts "Start selecting PollFish Surveys"
+    puts "*****************************************"
+ 
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+
+    @pollfishNetId = "5555"
+    @pollfishSupplierLink = []
+    # @pollfishSupplierLink = ["http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+@innovateNetId+user.user_id]
+
+    puts "*****************************************"
+    puts "End selecting PollFish Surveys"
+    puts "*****************************************"
+    userride (session_id)
+  end
+
+
   def userride (session_id)
+
+    puts "*****************************************"
+    puts "Start useride"
+    puts "*****************************************"
+
+    session[:orderP] = "PhasNOTbeenCalled"
+    session[:order2] = "2hasNOTbeenCalled"
 
     user = User.find_by session_id: session_id
 
@@ -2342,47 +2254,102 @@ class UsersController < ApplicationController
       when "A"
         if @adhocSupplierLinks.length != 0 then
           user.SupplierLink = user.SupplierLink + @adhocSupplierLinks
+          user.save
         else
         end
+      
       when "F"
         if @fedSupplierLinks.length !=0 then
           user.SupplierLink = user.SupplierLink + @fedSupplierLinks
+          user.save
         else
         end
+      
       when "R"
         if @RFGSupplierLinks.length != 0 then
           user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
+          user.save
         else
         end
+      
       when "P"
-        if [@p2sSupplierLink].length !=0 then
-          user.SupplierLink = user.SupplierLink + [@p2sSupplierLink]
-        else
-        end
-      when "I"
-        if [@innovateSupplierLink].length !=0 then
-          user.SupplierLink = user.SupplierLink + [@innovateSupplierLink]
-        else
-        end
-      when "2"
-
-          #if (user.emailid.empty? == false) then
+        # if [@p2sSupplierLink].length !=0 then
+        #   user.SupplierLink = user.SupplierLink + [@p2sSupplierLink]
+        #   user.save
+        # else
+        # end
+        session[:orderP] = "PhasBeenCalled"
+        if !((user.emailId.nil?) || (user.emailId.length==0)) then
           # add link to pleasewait which should call 
-          # selectP2SPullAPISurveys (session_id) else
-
-          user.SupplierLink = user.SupplierLink + ['/users/moreSurveys']
+          puts "**************** EmailId is Available in P ************************"
+          print "emailId: ", user.emailId
+          puts
+          puts "***********************************************************"
+            selectP2SSurveys (session_id)
+          else
+            puts "**************** EmailId is NIL in P ************************"
+            if session[:order2]=="2hasBeenCalled" then
+              user.SupplierLink = user.SupplierLink + ['P2S_KETSCI']
+            else
+              user.SupplierLink = user.SupplierLink + ['/users/moreSurveys']
+            end
+            user.save
+          end
+      
+      when "I"
+        if @innovateSupplierLink.length !=0 then
+          user.SupplierLink = user.SupplierLink + @innovateSupplierLink
+          user.save
+        else
+        end
+      
+      when "H"
+        if @pollfishSupplierLink.length !=0 then
+          user.SupplierLink = user.SupplierLink + @pollfishSupplierLink
+          user.save
+        else
+        end
+      
+      when "2"
+          session[:order2] = "2hasBeenCalled"
+          if !((user.emailId.nil?) || (user.emailId.length==0)) then
+          # add link to pleasewait which should call 
+          puts "**************** EmailId is Available in 2 ************************"
+          print "emailId: ", user.emailId
+          puts
+          puts "***********************************************************"
+            selectP2SPullAPISurveys (session_id)
+          else
+            puts "**************** EmailId is NIL in 2 ************************"
+            if session[:orderP]=="PhasBeenCalled" then
+              user.SupplierLink = user.SupplierLink + ['2API_KETSCI']
+            else
+              user.SupplierLink = user.SupplierLink + ['/users/moreSurveys']
+            end
+            user.save
+          end
       end # case
     end # do
+
+    # This should not be needed .. but don't know why user is lost when the call to selectP2SPullAPISurveys comes back ...
+    user = User.find_by session_id: session_id
     
-    # Remove any blank entries
+    puts "*****************************************"
+    puts "Continue useride"
+    puts "*****************************************"
+    print "******************before removing************************************* user: ", user.id, user.SupplierLink
+    puts
+
+    # Remove any blank and duplicate entries
     if user.SupplierLink !=nil then
       user.SupplierLink.reject! { |c| c == nil}
+      user.SupplierLink=user.SupplierLink.uniq
+      user.save
     else
     end
 
-    print "************ After removing blank entries, user will be sent to these surveys: ", user.SupplierLink
+    print "************ After removing blank and duplicate entries, user will be sent to these surveys: ", user.SupplierLink
     puts
-
 
     # Start the user ride
     
@@ -2453,7 +2420,15 @@ class UsersController < ApplicationController
         end
       end # if user.SupplierLink[0] == @p2sSupplierLink then
     end # if user.SupplierLink.length == 0    
+
+    puts "*****************************************"
+    puts "End userride"
+    puts "*****************************************"
   end # userride
+
+  # def supplierLinkOrder(session_id, order)
+  #   @reverseOrderFor2=order
+  # end
 
   def Scrnr1Action
     session_id = session.id
@@ -2560,10 +2535,44 @@ class UsersController < ApplicationController
       # user.password = 'None'
       user.save
       tracker.track(user.ip_address, 'gotEmailId')
-      selectP2SPullAPISurveys (session.id)
+      # render 'users/thanks'
+
+      print "************ session[orderP] and session[order2] values in getEmail *********: ", session[:orderP], session[:order2]
+      puts
+      
+      if (session[:order2]=="2hasBeenCalled") then
+        selectP2SPullAPISurveys (session.id)
+      else
+      end
+      if (session[:orderP]=="PhasBeenCalled") then
+        selectP2SSurveys (session.id)
+      else
+      end
+
+      puts "**************** Back to getEmail ******************"
+      user = User.find_by session_id: session.id
+
+      if user.SupplierLink.length == 0 then
+        # redirect_to '/users/nosuccess'
+
+        if user.netid == "MMq0514UMM20bgf17Yatemoh" then
+          redirect_to '/users/nosuccessPanelist'
+        else
+          redirect_to '/users/nosuccess'
+        end
+
+      else
+        @NextEntryLink = user.SupplierLink[0]
+        user.SupplierLink = user.SupplierLink.drop(1)
+        user.save
+        print "************>>>>User will be sent to the next Survey Entry link>>>>>>>ooooppppppp ", @NextEntryLink,  "***************************************************************"
+        puts
+        redirect_to @NextEntryLink
+      end
+
     else
       p "************** Users did not share emailid in getEmail *****************"
-      # Userride should go to the next survey link instead on p2sapi links.
+      # Userride should go to the next survey link instead on p2s links.
 
       if user.SupplierLink.length == 0 then
         # redirect_to '/users/nosuccess'
@@ -2585,7 +2594,179 @@ class UsersController < ApplicationController
     end      
   end  
 
+  def selectP2SSurveys (session_id)
+    puts "*****************************************"
+    puts "Start selecting P2S Surveys"
+    puts "*****************************************"
+    
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+    
+    user = User.find_by session_id: session_id
+    # @PID = user.user_id
+
+    # Queue up additional surveys from P2S. First calculate the additional values to be attached.
+    
+    @netid = user.netid  
+    @net = Network.find_by netid: @netid
+    
+    # if (user.country == '9') then
+    #   if @net.P2S_US == 1 then
+    #     @P2SisAttached = true
+    #   else
+    #     @P2SisAttached = false
+    #   end
+    # else
+    # end
+  
+    # if (user.country == '6') then
+    #   if @net.P2S_CA == 1 then
+    #     @P2SisAttached = true
+    #   else
+    #     @P2SisAttached = false
+    #   end
+    # else
+    # end
+    
+    # if (user.country == '5') then
+    #   if @net.P2S_AU == 1 then
+    #     @P2SisAttached = true
+    #   else
+    #     @P2SisAttached = false
+    #   end
+    # else
+    # end   
+    
+    # if (@P2SisAttached) then
+    @P2Sclient = Network.find_by name: "P2S"
+    @SUBID = @P2Sclient.netid+user.user_id
+  
+    print "**************** P2S @SUBID = ", @SUBID
+    puts
+
+    if user.gender == '1' then
+      @p2s_gender = "m"
+    else
+      @p2s_gender = "f"
+    end
+           
+    
+    p2s_hispanic = [0, 6729, 6730, 6898, 6900, 6901, 6902, 6903, 6904, 6905, 6906, 6907, 6908, 6909, 6910, '']
+    @p2s_hispanic = p2s_hispanic[user.ethnicity.to_i].to_s
+    
+    p2s_employment_status = [0, 7007, 7008, 7006, 7006, 7013, 7013, 7012, 7011, 7009, 7010, 23562, '']
+    @p2s_employment_status = p2s_employment_status[user.employment.to_i].to_s
+    
+    
+    p2s_income_level = [0, 9089, 9089, 9089, 9071, 9072, 9088, 9073, 9087, 9074, 9086, 9090, 9075, 9091, 9076, 9092, 9077, 9093, 9078, 9094, 9079, 9080, 9081, 9082, 9085, 9084, 9084, '']
+    @p2s_income_level = p2s_income_level[user.householdincome.to_i].to_s
+    
+    
+    p2s_race = [0, 10094, 10095, 10101, 10097, 10098, 10104, 10109, 10110, 10111, 10096, 10102, 10106, 10107, 10108, 10103, '']
+    @p2s_race = p2s_race[user.race.to_i].to_s
+    
+    p2s_education_level = [0, 10157, 10158, 10163, 10159, 10160, 10161, 10162, 10164, '']
+    @p2s_education_level = p2s_education_level[user.eduation.to_i].to_s
+    
+    p2s_org_id = [0, 22942, 22934, '', '', 22936, '', 22942, '', '', 22938, '', 22957, 22957, 22957, 22957, 22938, '', '', 22939, 22940, 3650829, '', '', '', '', 22943, 22944, 22945, '', 22957, 3651719, '', 22946, 22947, 22949, 22948, 22950, '', 22952, '', 22944, 22953, '', 22954, '', '', '', '', '', 3661207, '']
+    @p2s_org_id = p2s_org_id[user.pindustry.to_i].to_s
+    
+    p2s_jobtitle = [0, 3673669, 367670, 3673663, 3673668, 3673671, 3673675, 3673675, 3673672, 3673673, 3673674, 3673675]
+    @p2s_jobtitle = p2s_jobtitle[user.jobtitle.to_i].to_s
+     
+    p2s_children = [0, 6971, 6972, 6971, 6972, 6973, 6974, 6975, 6976, 6977, 6978, 6979, 6980, 6981, 6982, 6983, 6984, 6985, 6986, 6987, 6988, 6989, 6990, 6991, 6992, 6993, 6994, 6995, 6996, 6997, 6998, 6999, 7000, 7001, 7002, 7003, 7004]
+    
+    
+    if user.children != nil then
+      if user.children[0] != '-3105' then
+        @p2s_children = p2s_children[user.children[0].to_i].to_s
+        
+        if user.children.length > 1 then            
+          (1..user.children.length-1).each do |i|
+          
+            if p2s_children[user.children[i].to_i] != '' then                  
+              @p2s_children = @p2s_children+','+p2s_children[user.children[i].to_i].to_s    
+            else
+            end              
+              
+          end        
+        else
+        end
+      else
+        @p2s_children = '7005'
+      end        
+    else
+      @p2s_children = ''
+    end
+    
+    p2s_province = [0, 20509, 20508, 20511, 20515, 20517, 20519, 20516, 20520, 20512, 20514, 20513, 20510, 20518]
+    @p2s_province = p2s_province[@provincePrecode.to_i].to_s
+    
+    
+
+    # p2s additional values
+
+    if user.country=="9" then
+      @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&email='+user.emailId+'&ip_address='+user.ip_address
+    else
+      if user.country=="6" then
+        @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&canada_regions='+@p2s_province+'&email='+user.emailId+'&ip_address='+user.ip_address
+      else
+        if user.country=="5" then
+          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&email='+user.emailId+'&ip_address='+user.ip_address
+        else
+        end
+      end
+    end  
+    
+    #p2s hmac(md5) calculation
+    
+    p2ssecretkey = '9df95db5396d180e786c707415203b95'      
+    @hmac = HMAC::MD5.new(p2ssecretkey).update(@p2s_AdditionalValues).hexdigest
+
+    #p2s supplier link
+    @p2sSupplierLink = ""
+    @p2sSupplierLink = 'http://www.your-surveys.com/?si=55&ssi='+@SUBID+'&'+@p2s_AdditionalValues+'&hmac='+@hmac
+    
+    print "**************P2S SupplierLink = ", @p2sSupplierLink
+    puts
+
+     # THIS LINE BELOW CAN BE DELETED AS THE SECTION BELOW RESETS IT CORRECTLY.
+    
+    # user.SupplierLink << @p2sSupplierLink
+
+    # Save the list of SupplierLinks with P2S, if ACTIVE
+  
+    print "*************** user.SupplierLink in P2S 1 ********: ", user.SupplierLink
+    puts
+    addP2SLinks = []
+    if user.SupplierLink.include? "P2S_KETSCI" then 
+      user.SupplierLink = user.SupplierLink.map { |x| x == "P2S_KETSCI" ? @p2sSupplierLink : x }
+    else
+      addP2SLinks = [@p2sSupplierLink] + user.SupplierLink
+      user.SupplierLink = addP2SLinks
+    end
+    print "*************** user.SupplierLink in P2S 2 ********: ", user.SupplierLink
+    puts
+    user.save
+
+      # userride (session_id)
+      # selectP2SPullAPISurveys (session_id)
+    # else
+    #   puts "-------------------********************** P2S is not attached ********************------------------------"    
+    #   # userride (session_id)
+    #   # selectP2SPullAPISurveys (session_id)
+    # end #if P2SisAttached
+
+    puts "*****************************************"
+    puts "End selecting P2S Surveys"
+    puts "*****************************************"
+  end # selectP2SSurveys
+
+  
   def selectP2SPullAPISurveys (session_id)
+    puts "*****************************************"
+    puts "Start selecting P2S API Surveys"
+    puts "*****************************************"
     # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')    
     user = User.find_by session_id: session_id
 
@@ -2681,16 +2862,20 @@ class UsersController < ApplicationController
     @failcount = @failcount+1
     print "P2S API access failcount is: ", @failcount
     puts
+
+    # Must include a good ip address not be ::1 (localhost when testing), a valid zipcode
+
       @p2sApiResponse = HTTParty.get(api_base_url+'?'+p2s_Api_AdditionalValues,
+      # @p2sApiResponse = HTTParty.get(api_base_url+'?user_id=2222ov_ymdunAFO6xab42nl9hA&age=32&email=akht@bil.com&gender=m&zip_code=91123&ip_address=76.218.107.128',
         :headers => {'X-YourSurveys-Api-Key' => '5b96ba34dc040bf1baf557be93f8459f'}
         )
       rescue HTTParty::Error => e
         puts 'HttParty::Error '+ e.message
       retry
-    end while ((@p2sApiResponse.code != 200) && (@failcount < 10))
+    end while ((@p2sApiResponse.code != 200) && (@failcount < 5))
 
     @P2SApiSupplierLinks = []
-    if @failcount == 10 then
+    if @failcount == 5 then
       print "**** DEBUG ***** No response returned by P2S API. No SupplierLinks added. **********"
       puts
     else
@@ -2714,31 +2899,77 @@ class UsersController < ApplicationController
         puts
         print "**** DEBUG 2API **** P2S API Offerwall SupplierLinks: ", @P2SApiSupplierLinks
         puts
-      end
+      end            
+      # userride (session_id)
     end
 
-    addP2SApiLinks = @P2SApiSupplierLinks + user.SupplierLink
-    user.SupplierLink = addP2SApiLinks
-
-    if user.SupplierLink.length == 0 then
-      # redirect_to '/users/nosuccess'
-
-      if user.netid == "MMq0514UMM20bgf17Yatemoh" then
-        redirect_to '/users/nosuccessPanelist'
-      else
-        redirect_to '/users/nosuccess'
-      end
-
-
+    print "*************** user.SupplierLink in 2API 1 ********: ", user.SupplierLink
+    puts
+    
+    addP2SApiLinks = []
+    if user.SupplierLink.include? "2API_KETSCI" then 
+        user.SupplierLink = user.SupplierLink.map { |x| x == "2API_KETSCI" ? @P2SApiSupplierLinks : x }
+        user.SupplierLink = user.SupplierLink.flatten
     else
-      @NewEntryLink = user.SupplierLink[0]
-      user.SupplierLink = user.SupplierLink.drop(1)
-      user.save
-      print "******DEBUG******>>>>User will be sent to this first P2S API Survey Entry link>>>>>>> ", @P2SApiSupplierLinks[0],  "***************************************************************"
+      addP2SApiLinks = @P2SApiSupplierLinks + user.SupplierLink
+      print "******************************************************* addP2SApiLinks: ", addP2SApiLinks
       puts
-      redirect_to @NewEntryLink
+      print "****************before*************************************** user.SupplierLink: ", user.SupplierLink
+      puts
+      user.SupplierLink = addP2SApiLinks
+      print "******************after************************************* user.SupplierLink: ", user.SupplierLink
+      puts
     end
-  end # selectP2SSurveys
+
+    user.save
+
+    print "*************** user.SupplierLink in 2API 2 ********: ", user.SupplierLink
+    puts
+
+    # if session[:order]=="reverseOrderFor2" then
+    #   addP2SApiLinks = @P2SApiSupplierLinks + user.SupplierLink
+    #   print "******************************************************* addP2SApiLinks: ", addP2SApiLinks
+    #   puts
+    #   print "****************before*************************************** user.SupplierLink: ", user.SupplierLink
+    #   puts
+    #   user.SupplierLink = addP2SApiLinks
+    #   print "******************after************************************* user.SupplierLink: ", user.SupplierLink
+    #   puts
+    # else
+    #   if session[:order]=="keepOrderFor2" then
+    #     addP2SApiLinks = user.SupplierLink + @P2SApiSupplierLinks
+    #     print "******************************************************* addP2SApiLinks: ", addP2SApiLinks
+    #     puts
+    #     print "****************before*************************************** user.SupplierLink: ", user.SupplierLink
+    #     puts
+    #     user.SupplierLink = addP2SApiLinks
+    #     print "******************after************************************* user.SupplierLink: ", user.SupplierLink
+    #     puts
+    #   else
+    #   end
+    # end    
+
+    # if user.SupplierLink.length == 0 then
+    #   # redirect_to '/users/nosuccess'
+    #   if user.netid == "MMq0514UMM20bgf17Yatemoh" then
+    #     redirect_to '/users/nosuccessPanelist'
+    #   else
+    #     redirect_to '/users/nosuccess'
+    #   end
+    # else
+    #   @NewEntryLink = user.SupplierLink[0]
+    #   user.SupplierLink = user.SupplierLink.drop(1)
+    #   user.save
+    #   print "******DEBUG******>>>>User will be sent to this first P2S API Survey Entry link>>>>>>> ", @P2SApiSupplierLinks[0],  "***************************************************************"
+    #   puts
+    #   redirect_to @NewEntryLink
+    # end
+
+    puts "*****************************************"
+    puts "End selecting P2S API Surveys"
+    puts "*****************************************"
+  end # selectP2SPullApiSurveys
+
   
   def p1action
     redirect_to '/users/p2'
