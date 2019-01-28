@@ -14,7 +14,12 @@ begin
   # Start by validating all email addresses or set them to nil
   User.where.not(emailId: [nil, ""]).each do |c|
     if EmailValidator.valid?(c.emailId) then
-      # do nothing
+      # do nothing (previously)
+      #set or reset password for user c
+      c.password = 'Ketsci'+c.user_id[0..3]
+      print "********** Setting password to ", c.password, " for user record_id ", c.id, " ************"
+      puts
+      c.save
     else
       print "********** Setting emailId ", c.emailId, " to nil for user record_id ", c.id, " ************"
       puts
