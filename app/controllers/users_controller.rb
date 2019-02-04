@@ -2285,16 +2285,19 @@ class UsersController < ApplicationController
           print "emailId: ", user.emailId
           puts
           puts "***********************************************************"
-            selectP2SSurveys (session_id)
+          # insert 'P' surveys using the P2S_KETSCI flag in the order it appears in stackOrder
+          user.SupplierLink = user.SupplierLink + ['P2S_KETSCI']
+          user.save
+          selectP2SSurveys (session_id)
+        else
+          puts "**************** EmailId is NIL in P ************************"
+          if session[:order2]=="2hasBeenCalled" then
+            user.SupplierLink = user.SupplierLink + ['P2S_KETSCI']
           else
-            puts "**************** EmailId is NIL in P ************************"
-            if session[:order2]=="2hasBeenCalled" then
-              user.SupplierLink = user.SupplierLink + ['P2S_KETSCI']
-            else
-              user.SupplierLink = user.SupplierLink + ['/users/moreSurveys']
-            end
-            user.save
+            user.SupplierLink = user.SupplierLink + ['/users/moreSurveys']
           end
+          user.save
+        end
       
       when "I"
         if @innovateSupplierLink.length !=0 then
@@ -2311,23 +2314,26 @@ class UsersController < ApplicationController
         end
       
       when "2"
-          session[:order2] = "2hasBeenCalled"
-          if !((user.emailId.nil?) || (user.emailId.length==0)) then
+        session[:order2] = "2hasBeenCalled"
+        if !((user.emailId.nil?) || (user.emailId.length==0)) then
           # add link to pleasewait which should call 
           puts "**************** EmailId is Available in 2 ************************"
           print "emailId: ", user.emailId
           puts
           puts "***********************************************************"
-            selectP2SPullAPISurveys (session_id)
+          # insert '2' surveys using the 2API_KETSCI flag in the order it appears in stackOrder
+          user.SupplierLink = user.SupplierLink + ['2API_KETSCI']
+          user.save
+          selectP2SPullAPISurveys (session_id)
+        else
+          puts "**************** EmailId is NIL in 2 ************************"
+          if session[:orderP]=="PhasBeenCalled" then
+            user.SupplierLink = user.SupplierLink + ['2API_KETSCI']
           else
-            puts "**************** EmailId is NIL in 2 ************************"
-            if session[:orderP]=="PhasBeenCalled" then
-              user.SupplierLink = user.SupplierLink + ['2API_KETSCI']
-            else
-              user.SupplierLink = user.SupplierLink + ['/users/moreSurveys']
-            end
-            user.save
+            user.SupplierLink = user.SupplierLink + ['/users/moreSurveys']
           end
+          user.save
+        end
       end # case
     end # do
 
