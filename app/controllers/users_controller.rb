@@ -2252,6 +2252,7 @@ class UsersController < ApplicationController
       supplier = @net.stackOrder[i]      
       case supplier
       when "A"
+        user = User.find_by session_id: session_id
         if @adhocSupplierLinks.length != 0 then
           user.SupplierLink = user.SupplierLink + @adhocSupplierLinks
           user.save
@@ -2259,6 +2260,7 @@ class UsersController < ApplicationController
         end
       
       when "F"
+        user = User.find_by session_id: session_id
         if @fedSupplierLinks.length !=0 then
           user.SupplierLink = user.SupplierLink + @fedSupplierLinks
           user.save
@@ -2266,6 +2268,7 @@ class UsersController < ApplicationController
         end
       
       when "R"
+        user = User.find_by session_id: session_id
         if @RFGSupplierLinks.length != 0 then
           user.SupplierLink = user.SupplierLink + @RFGSupplierLinks
           user.save
@@ -2278,6 +2281,7 @@ class UsersController < ApplicationController
         #   user.save
         # else
         # end
+        user = User.find_by session_id: session_id
         session[:orderP] = "PhasBeenCalled"
         if !((user.emailId.nil?) || (user.emailId.length==0)) then
           # add link to pleasewait which should call 
@@ -2300,6 +2304,7 @@ class UsersController < ApplicationController
         end
       
       when "I"
+        user = User.find_by session_id: session_id
         if @innovateSupplierLink.length !=0 then
           user.SupplierLink = user.SupplierLink + @innovateSupplierLink
           user.save
@@ -2307,6 +2312,7 @@ class UsersController < ApplicationController
         end
       
       when "H"
+        user = User.find_by session_id: session_id
         if @pollfishSupplierLink.length !=0 then
           user.SupplierLink = user.SupplierLink + @pollfishSupplierLink
           user.save
@@ -2314,6 +2320,7 @@ class UsersController < ApplicationController
         end
       
       when "2"
+        user = User.find_by session_id: session_id
         session[:order2] = "2hasBeenCalled"
         if !((user.emailId.nil?) || (user.emailId.length==0)) then
           # add link to pleasewait which should call 
@@ -2712,13 +2719,13 @@ class UsersController < ApplicationController
     # p2s additional values
 
     if user.country=="9" then
-      @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&email='+user.emailId+'&ip_address='+user.ip_address
+      @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26399'
     else
       if user.country=="6" then
-        @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&canada_regions='+@p2s_province+'&email='+user.emailId+'&ip_address='+user.ip_address
+        @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&canada_regions='+@p2s_province+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26385'
       else
         if user.country=="5" then
-          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&email='+user.emailId+'&ip_address='+user.ip_address
+          @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26383'
         else
         end
       end
@@ -2834,13 +2841,13 @@ class UsersController < ApplicationController
 
     # p2s additional values
     if user.country=="9" then
-      p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&user_id='+@SUBID+'&email='+user.emailId+'&ip_address='+user.ip_address
+      p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&user_id='+@SUBID+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26399'
     else
       if user.country=="6" then
-        p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&canada_regions='+@p2s_province+'&user_id='+@SUBID+'&email='+user.emailId+'&ip_address='+user.ip_address
+        p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&canada_regions='+@p2s_province+'&user_id='+@SUBID+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26385'
       else
         if user.country=="5" then
-          p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&user_id='+@SUBID+'&email='+user.emailId+'&ip_address='+user.ip_address
+          p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&user_id='+@SUBID+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26383'
         else
         end
       end
@@ -2872,7 +2879,7 @@ class UsersController < ApplicationController
     # Must include a good ip address not be ::1 (localhost when testing), a valid zipcode
 
       @p2sApiResponse = HTTParty.get(api_base_url+'?'+p2s_Api_AdditionalValues,
-      # @p2sApiResponse = HTTParty.get(api_base_url+'?user_id=2222ov_ymdunAFO6xab42nl9hA&age=32&email=akht@bil.com&gender=m&zip_code=91123&ip_address=76.218.107.128',
+      # @p2sApiResponse = HTTParty.get(api_base_url+'?user_id=2222ov_ymdunAFO6xab42nl9hA&age=32&email=akht@bil.com&gender=m&zip_code=91123&ip_address=76.218.107.128&country=26399,
         :headers => {'X-YourSurveys-Api-Key' => '5b96ba34dc040bf1baf557be93f8459f'}
         )
       rescue HTTParty::Error => e

@@ -13,20 +13,23 @@ begin
 
   # Start by validating all email addresses or set them to nil
   User.where.not(emailId: [nil, ""]).each do |c|
-    if EmailValidator.valid?(c.emailId) then
-      # do nothing (previously) or
-      # set or reset password for user c
-      # if (c.user_id.nil? || c.user_id=="") then
-      #   c.user_id = SecureRandom.urlsafe_base64
-      #   print "********** Setting user_id to ", c.user_id, " for user record_id ", c.id, " ************"
-      #   puts
-      #   c.save
-      # else
-      # end
-      c.password = 'Ketsci'+c.user_id[0..3]
-      print "********** Setting password to ", c.password, " for user record_id ", c.id, " ************"
+    # puts "***************** checking if user_ids are valid ******************************"
+    if (c.user_id.nil? || c.user_id=="") then
+      c.user_id = SecureRandom.urlsafe_base64
+      print "********** Setting user_id to ", c.user_id, " for user record_id ", c.id, " ************"
       puts
       c.save
+    else
+    end
+
+    # puts "***************** checking if EmailIds are valid ******************************"
+    if EmailValidator.valid?(c.emailId) then
+      # do nothing (previously) or
+      # set or reset password for all users (useful one time)
+      # c.password = 'Ketsci'+c.user_id[0..3]
+      # print "********** Setting password to ", c.password, " for user record_id ", c.id, " ************"
+      # puts
+      # c.save
     else
       print "********** Setting emailId ", c.emailId, " to nil for user record_id ", c.id, " ************"
       puts

@@ -18,6 +18,7 @@ class PanelMailer < ActionMailer::Base
     # puts "*********************************************************************"
     # puts
   	@user = user
-  	mail(to: @user.emailId, bcc: "projectsmanagement@ketsci.com", subject: 'Complete Surveys to win rewards!')
+  	# mail(to: @user.emailId, bcc: "projectsmanagement@ketsci.com", subject: 'Complete Surveys to win rewards!')
+    mail(to: @user.emailId, subject: 'Complete Surveys to win rewards!')
   end
 end
