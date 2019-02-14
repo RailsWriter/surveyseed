@@ -2065,13 +2065,17 @@ class UsersController < ApplicationController
         if user.country=="6" then
           # command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :computerCheck => @computerCheck, :type => 1}.to_json
           command = { :command => "offerwall/query/1", :rid => @rid, :country => "CA", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :computerCheck => @computerCheck, :type => 1}.to_json
-
         else
           if user.country=="5" then
         # command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :isMobileDevice => @isMobileDevice, :computerCheck => @computerCheck, :type => 1}.to_json          
         command = { :command => "offerwall/query/1", :rid => @rid, :country => "AU", :fingerprint => user.fingerprint, :ip => user.ip_address, :postalCode => user.ZIP, :gender => user.gender, :birthday => @RFGbirthday, :rfg2_61076 => @RFGHhi, :rfg2_2189 => @RFGEmployment, :rfg7145 => @RFGEmployment, :rfg2_48741 => @RFGEducation, :rfg2_15297 => @RFGJobTitle, :rfg775 => @RFGJobTitle, :employmentIndustry => @RFGPindustry, :computerCheck => @computerCheck, :type => 1}.to_json          
-
           else
+            if user.country=="108" then
+              command = { :command => "offerwall/query/1", :rid => @rid, :country => "BR", :fingerprint => user.fingerprint, :ip => user.ip_address, :gender => user.gender, :birthday => @RFGbirthday, :computerCheck => @computerCheck, :type => 1}.to_json
+            else
+              # For any other country
+              command = { :command => "offerwall/query/1", :rid => @rid, :fingerprint => user.fingerprint, :ip => user.ip_address, :gender => user.gender, :birthday => @RFGbirthday, :computerCheck => @computerCheck, :type => 1}.to_json
+            end
           end
         end
       end
