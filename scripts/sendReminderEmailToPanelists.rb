@@ -15,7 +15,7 @@ begin
       print "Selected Daily emailId: ", emailId
       puts
       emailIdsCount=emailIdsCount+1
-      if dailyUser.created_at > Date.parse('september 1 2018').midnight then
+      if dailyUser.created_at > Date.parse('august 1 2018').midnight then
       # if (emailId == 'aokaybb@yahoo.com') || (emailId == 'nietov2011@gmail.com') || (emailId == 'Kzkhang18@gmail.com') || (emailId == 'julienmethot@gmail.com') || (emailId == 'Amerie.roberts4108@gamil.com') then
       #if (emailId == 'akhtarjameel@gmail.com') then
       # if (emailId == 'Kzkhang18@gmail.com') || (emailId == 'julienmethot@gmail.com') || (emailId == 'Amerie.roberts4108@gmail.com') then
@@ -40,7 +40,7 @@ begin
   # print "Local time ", Time.now-7*60*60 # Mar-Nov DST
   print "Local time ", Time.now-8*60*60 # Nov - Mar PST	
   puts
-  puts "Sent Emails To Panelists. Going to sleep for 1 day"
+  puts "Sent Emails To Panelists. Going to sleep for 7 day"
   # sleep (1.days)
-  sleep (24.hours)
+  sleep (168.hours)
 end while timetorepeat

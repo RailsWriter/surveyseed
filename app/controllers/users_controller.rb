@@ -333,15 +333,26 @@ class UsersController < ApplicationController
           redirect_to '/users/qq4_AU'
         else
           if user.country=="7" then
-            redirect_to '/users/qq4_IN'
+            # India
+            redirect_to '/users/qq12'
           else
-            print "**** DEBUG Country **********", params[:country], " Session_id ", session_id
-            puts
-            # if user.country=="0" then
-            #  redirect_to '/users/nosuccess'
-            # else
-             redirect_to '/users/qq3'
-            # end
+            if user.country=="108" then
+              # Brazil
+              redirect_to '/users/qq12'
+            else
+              if user.country=="224" then
+                # Ghana
+                redirect_to '/users/qq12'
+              else
+                print "**** DEBUG Country **********", params[:country], " Session_id ", session_id
+                puts
+                # if user.country=="0" then
+                #  redirect_to '/users/nosuccess'
+                # else
+                 redirect_to '/users/qq3'
+                # end
+              end
+            end
           end
         end
       end
@@ -1502,25 +1513,40 @@ class UsersController < ApplicationController
 
 
     if user.country=="9" then 
+      # USA
       @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&45='+user.ZIP+'&47='+user.ethnicity+'&113='+user.race+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+'&96='+@statePrecode+'&97='+@DMARegionCode+@industriesvalue
       # print '**** Additional_Values_US ****>>>>>>', '&42=',user.age,'&43=',user.gender,'&45=',user.ZIP,'&47=',user.ethnicity,'&113=',user.race,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,'&96=',@statePrecode,'&97=',@DMARegionCode,@industriesvalue, '******'
       # puts
     else
       if user.country=="6" then
+        # Canada
         @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12345='+user.ZIP.slice(0..2)+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+'&1015='+@provincePrecode+@industriesvalue
         # print '****** Additional_Values_CA ****>>>>', '&42=',user.age,'&43=',user.gender,'&12345=',user.ZIP.slice(0..2),'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,'&1015=',@provincePrecode,@industriesvalue
         # puts
       else
         if user.country=="5" then
+          # Australia
           @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12340='+user.ZIP+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+@industriesvalue
           # print '******** Additional_Values_AU ****>>', '&42=',user.age,'&43=',user.gender,'&12340=',user.ZIP,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,@industriesvalue
           # puts
         else
           if user.country=="7" then
-            @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12357='+user.ZIP+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+@industriesvalue
+            # India
+            # @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender+'&12357='+user.ZIP+'&48741='+user.eduation+'&61076='+user.householdincome+'&2189='+user.employment+'&5729='+user.pindustry+'&15297='+user.jobtitle+@industriesvalue
             # print '****** Additional_Values_IN **>>>>>',  '&42=',user.age,'&43=',user.gender,'&12357=',user.ZIP,'&48741=',user.eduation,'&61076=',user.householdincome,'&2189=',user.employment,'&5729=',user.pindustry,'&15297=',user.jobtitle,@industriesvalue
             # puts
+            @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender
           else
+            if user.country=="108" then
+              # Brazil
+              @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender
+            else
+              if user.country=="224" then
+                # Ghana
+                @Pulley_AdditionalValues = '&42='+user.age+'&43='+user.gender
+              else
+              end
+            end
           end
         end
       end
@@ -2005,11 +2031,10 @@ class UsersController < ApplicationController
         @computerCheck = "1"
         p "*************************************** RankRFGProjects: isMobileDevice is set NO"  
       end
-        
+
       if user.country=="9" then 
         # @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&rfg2_113='+@RFGEthnicity+'&computerCheck='+@computerCheck
         @RFGAdditionalValues = '&rid='+@rid+'&country=US'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&rfg2_113='+@RFGEthnicity+'&computerCheck='+@computerCheck+'&ip='+user.ip_address
-
       else
         if user.country=="6" then
             # @RFGAdditionalValues = '&rid='+@rid+'&country=CA'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&computerCheck='+@computerCheck
@@ -2018,8 +2043,13 @@ class UsersController < ApplicationController
           if user.country=="5" then
               # @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&isMobileDevice='+@isMobileDevice+'&computerCheck='+@computerCheck
               @RFGAdditionalValues = '&rid='+@rid+'&country=AU'+'&postalCode='+user.ZIP+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&rfg2_48741='+@RFGEducation+'&rfg2_61076='+@RFGHhi+'&rfg2_2189='+@RFGEmployment+'&rfg7145='+@RFGEmployment+'&rfg2_15297='+@RFGJobTitle+'&rfg775='+@RFGJobTitle+'&employmentIndustry='+@RFGPindustry+'&computerCheck='+@computerCheck+'&ip='+user.ip_address
-
           else
+            if user.country=="108" then
+              @RFGAdditionalValues = '&rid='+@rid+'&country=BR'+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&computerCheck='+@computerCheck+'&ip='+user.ip_address
+            else
+              # For any other country
+              @RFGAdditionalValues = '&rid='+@rid+'&gender='+user.gender+'&birthday='+@RFGbirthday+'&computerCheck='+@computerCheck+'&ip='+user.ip_address
+            end
           end
         end
       end
@@ -2070,7 +2100,7 @@ class UsersController < ApplicationController
           req.body = command
           req.content_type = 'application/json'
           response = http.request req
-          # puts response.body
+          print "response.body = ", response.body
           puts "**************************************************************************************************************************"
           print "RFG Server response.code = ",response.code
           puts
@@ -2078,7 +2108,7 @@ class UsersController < ApplicationController
           # print "response.result = ", JSON.parse(response.body)["result"]
           # puts
           # @result = JSON.parse(response.body)["result"]
-          # @OfferwallResponse = JSON.parse(response.body)  
+          # @OfferwallResponse = JSON.parse(response.body)
           @OfferwallResponse = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil
         end
         rescue SocketError, Net::OpenTimeout, Net::HTTPClientError, Net::HTTPInternalServerError => e  
@@ -2086,88 +2116,98 @@ class UsersController < ApplicationController
           puts
       end
 
-      # print "Offerwall Response: ", @OfferwallResponse["response"]
-      # puts
+      print "Offerwall Response: ", @OfferwallResponse["response"]
+      puts
 
-      if @OfferwallResponse["response"]["surveys"] == [] then
-      # if @result == 3 then
-      # if @OfferwallResponse == {} then
-      # if @OfferwallResponse["response"]["surveys"].empty? then
-      # if @OfferwallResponse["response"]["surveys"].length == 0 then  
+      if @OfferwallResponse["response"].nil? then
         print "*************************************************************************************************************************"
         puts
-        print "No surveys returned by RFG Offerwall"
+        print "No surveys returned by RFG Offerwall - 1"
         puts
         print "*************************************************************************************************************************"
         puts
         @RFGSupplierLinks = []
       else
-        # @maxIRIndex = 0
-        # @maxIR = @OfferwallResponse["response"]["surveys"][@maxIRIndex]["ir"]
-        # @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][0]["offer_url"]
+        if @OfferwallResponse["response"]["surveys"] == [] then
+        # if @result == 3 then
+        # if @OfferwallResponse == {} then
+        # if @OfferwallResponse["response"]["surveys"].empty? then
+        # if @OfferwallResponse["response"]["surveys"].length == 0 then  
+          print "*************************************************************************************************************************"
+          puts
+          print "No surveys returned by RFG Offerwall - 2"
+          puts
+          print "*************************************************************************************************************************"
+          puts
+          @RFGSupplierLinks = []
+        else
+          # @maxIRIndex = 0
+          # @maxIR = @OfferwallResponse["response"]["surveys"][@maxIRIndex]["ir"]
+          # @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][0]["offer_url"]
 
-        # @NumberOfSurveys = @OfferwallResponse["response"]["surveys"].length
+          # @NumberOfSurveys = @OfferwallResponse["response"]["surveys"].length
+            
+          # print "************ Number of surveys on RFG Offerwall: ", @NumberOfSurveys
+          # puts
+
+          # # Pick RFG survey that has the highest IR and payout more than users net_payout.
+
+          # user_net = Network.find_by netid: user.netid
+          # @net_payout = "$"+user_net.payout.to_s
           
-        # print "************ Number of surveys on RFG Offerwall: ", @NumberOfSurveys
-        # puts
-
-        # # Pick RFG survey that has the highest IR and payout more than users net_payout.
-
-        # user_net = Network.find_by netid: user.netid
-        # @net_payout = "$"+user_net.payout.to_s
-        
-        # (0..@NumberOfSurveys-1).each do |i|
-        #   if ((@maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"]) && (@net_payout < @OfferwallResponse["response"]["surveys"][i]["payout"])) then
-        #   # if @maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"] then
-        #     @maxIRIndex = i
-        #     @maxIR = @OfferwallResponse["response"]["surveys"][i]["ir"]
-        #     @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][i]["offer_url"]
-        #   else
-        #   end
-        # end
-        
-        # print "***** DEBUG ******** Chosen RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxIRIndex, " with IR: ", @maxIR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxIRIndex]["payout"]
-        # puts
-
-        @maxCRIndex = 0
-        @maxCR = @OfferwallResponse["response"]["surveys"][@maxCRIndex]["projectCR"]
-        @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][@maxCRIndex]["offer_url"]
-        @NumberOfSurveys = @OfferwallResponse["response"]["surveys"].length
+          # (0..@NumberOfSurveys-1).each do |i|
+          #   if ((@maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"]) && (@net_payout < @OfferwallResponse["response"]["surveys"][i]["payout"])) then
+          #   # if @maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"] then
+          #     @maxIRIndex = i
+          #     @maxIR = @OfferwallResponse["response"]["surveys"][i]["ir"]
+          #     @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][i]["offer_url"]
+          #   else
+          #   end
+          # end
           
-        print "****DEBUG******** Number of surveys on RFG Offerwall: ", @NumberOfSurveys
-        puts
+          # print "***** DEBUG ******** Chosen RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxIRIndex, " with IR: ", @maxIR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxIRIndex]["payout"]
+          # puts
 
-        print "*****DEBUG******* @maxCR initialized to: ", @maxCR
-        puts
+          @maxCRIndex = 0
+          @maxCR = @OfferwallResponse["response"]["surveys"][@maxCRIndex]["projectCR"]
+          @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][@maxCRIndex]["offer_url"]
+          @NumberOfSurveys = @OfferwallResponse["response"]["surveys"].length
+            
+          print "****DEBUG******** Number of surveys on RFG Offerwall: ", @NumberOfSurveys
+          puts
 
-        print "****DEBUG******** @RFGOfferwallSupplierLink initialized to: ", @RFGOfferwallSupplierLink
-        puts
+          print "*****DEBUG******* @maxCR initialized to: ", @maxCR
+          puts
 
-        # Pick RFG survey that has the highest CR and payout more than users net_payout.
+          print "****DEBUG******** @RFGOfferwallSupplierLink initialized to: ", @RFGOfferwallSupplierLink
+          puts
 
-        user_net = Network.find_by netid: user.netid
-        @net_payout = "$"+user_net.payout.to_s
-        
-        (0..@NumberOfSurveys-1).each do |i|
-          if ((@maxCR < @OfferwallResponse["response"]["surveys"][i]["projectCR"]) && (@net_payout.gsub(/[$,]/,'').to_f < @OfferwallResponse["response"]["surveys"][i]["payout"].gsub(/[$,]/,'').to_f)) then
-          # if @maxCR < @OfferwallResponse["response"]["surveys"][i]["ir"] then
-            @maxCRIndex = i
-            @maxCR = @OfferwallResponse["response"]["surveys"][i]["projectCR"]
-            @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][i]["offer_url"]
-          else
+          # Pick RFG survey that has the highest CR and payout more than users net_payout.
+
+          user_net = Network.find_by netid: user.netid
+          @net_payout = "$"+user_net.payout.to_s
+          
+          (0..@NumberOfSurveys-1).each do |i|
+            if ((@maxCR < @OfferwallResponse["response"]["surveys"][i]["projectCR"]) && (@net_payout.gsub(/[$,]/,'').to_f < @OfferwallResponse["response"]["surveys"][i]["payout"].gsub(/[$,]/,'').to_f)) then
+            # if @maxCR < @OfferwallResponse["response"]["surveys"][i]["ir"] then
+              @maxCRIndex = i
+              @maxCR = @OfferwallResponse["response"]["surveys"][i]["projectCR"]
+              @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][i]["offer_url"]
+            else
+            end
           end
-        end
-        
-        print "***** DEBUG ******** Chosen RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxCRIndex, " with projectCR: ", @maxCR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxCRIndex]["payout"], " and IR: ", @OfferwallResponse["response"]["surveys"][@maxCRIndex]["ir"]
-        puts
+          
+          print "***** DEBUG ******** Chosen RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxCRIndex, " with projectCR: ", @maxCR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxCRIndex]["payout"], " and IR: ", @OfferwallResponse["response"]["surveys"][@maxCRIndex]["ir"]
+          puts
 
 
-        @RFGSupplierLinks = []
-        @RFGSupplierLinks << @RFGOfferwallSupplierLink+@RFGAdditionalValues
+          @RFGSupplierLinks = []
+          @RFGSupplierLinks << @RFGOfferwallSupplierLink+@RFGAdditionalValues
 
-        print "**** DEBUG ********>>>> User will be sent to this RFG link >>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
-        puts      
-      end   
+          print "**** DEBUG ********>>>> User will be sent to this RFG link >>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
+          puts      
+        end   
+      end
     else
     # do nothing for RFG
     end # RFG status is ACTIVE / OFF
@@ -2719,14 +2759,29 @@ class UsersController < ApplicationController
     # p2s additional values
 
     if user.country=="9" then
+      # USA
       @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26399'
     else
       if user.country=="6" then
+        # Canada
         @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&canada_regions='+@p2s_province+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26385'
       else
         if user.country=="5" then
+          # Australia
           @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26383'
         else
+          if user.country=="7" then
+            # India
+            @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26391'
+          else
+            if user.country=="108" then
+              # Brazil
+              @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26384'
+            else
+              # Other (Ghana, ...)
+              @p2s_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=3773288'
+            end
+          end
         end
       end
     end  
@@ -2841,14 +2896,29 @@ class UsersController < ApplicationController
 
     # p2s additional values
     if user.country=="9" then
+      # USA
       p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&income_level='+@p2s_income_level+'&education_level='+@p2s_education_level+'&hispanic='+@p2s_hispanic+'&race='+@p2s_race+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&user_id='+@SUBID+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26399'
     else
       if user.country=="6" then
+        # Canada
         p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&canada_regions='+@p2s_province+'&user_id='+@SUBID+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26385'
       else
         if user.country=="5" then
+          # Australia
           p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&zip_code='+user.ZIP+'&employment_status='+@p2s_employment_status+'&education_level='+@p2s_education_level+'&org_id='+@p2s_org_id+'&job_title='+@p2s_jobtitle+'&children_under_18='+@p2s_children+'&user_id='+@SUBID+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26383'
         else
+          if user.country=="7" then
+            # India
+            p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26391'
+          else
+            if user.country=="108" then
+              # Brazil
+              p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=26384'
+            else
+              # Other (Ghana, ...)
+              p2s_Api_AdditionalValues = 'age='+user.age+'&gender='+@p2s_gender+'&email='+user.emailId+'&ip_address='+user.ip_address+'&country=3773288'
+            end
+          end
         end
       end
     end  
