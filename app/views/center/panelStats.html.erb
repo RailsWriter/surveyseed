@@ -1,15 +1,15 @@
-<h1>Winners</h1>
+<h1>KetsciPanel Survey Completes</h1>
 
 
-<p>Showing <% @winner.count %> Winners at <%= Time.now.utc %></p>
+<p>Showing <% @winner.count %> KetsciPanel survey completes count at <%= Time.now.utc %></p>
 	
-	<h5>user_id ------------------ CountryID------------------SurveysCompleted --------------------------------------------------Count ------- EmailId</h5>
+	<h5>user_id ----- SurveysCompleted----------------------------------------KetsciPanel SurveysCompleted Count --------------------------------------------------Total SurveysCompleted Count ------- EmailId</h5>
 	
 	
 	<% @winner.each do |c| %>
 	<% if c.SurveysCompleted.count >= 5 then -%>
 	    <li>
-	       <%= link_to c.id.to_s + '--' + c.country.to_s + '--' + c.SurveysCompleted.to_s + '---------------' + c.SurveysCompleted.count.to_s + '---------------' + c.emailId.to_s, :action =>'panelStats', :id =>c.id  -%>
+	       <%= link_to c.id.to_s + '--' + c.SurveysCompleted.to_s + '-----------------------------------' + c.SurveysCompleted.flatten(2).count("KetsciPanel").to_s + '-------' + c.SurveysCompleted.count.to_s + '------' + c.emailId.to_s, :action =>'panelStats', :id =>c.id  -%>
 	    </li>
 	<%    else %>
 	<%    end %>

@@ -30,6 +30,13 @@ begin
       # print "********** Setting password to ", c.password, " for user record_id ", c.id, " ************"
       # puts
       # c.save
+      if c.emailId.include? ' ' then
+        print "********** Removing empty space in an emailId in ************", c.emailId
+        puts
+        c.emailId = c.emailId.gsub(' ', '')
+        c.save
+      else
+      end
     else
       print "********** Setting emailId ", c.emailId, " to nil for user record_id ", c.id, " ************"
       puts
