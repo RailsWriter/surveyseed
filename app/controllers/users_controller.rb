@@ -773,6 +773,18 @@ class UsersController < ApplicationController
           puts
           # Check if the email address is valid and if it does not already exists in our database
           if EmailValidator.valid?(params[:emailid]) && !User.exists?(emailId: params[:emailid]) then
+
+
+            if params[:emailid].include? ' ' then
+              print "********** Removing empty space in an emailId in ************", params[:emailid]
+              puts
+              params[:emailid] = params[:emailid].gsub(' ', '')
+              print "********** Empty space in an emailId REMOVED ************", params[:emailid]
+              puts
+            else
+            end
+
+
             user.emailId = params[:emailid]
             user.password = 'Ketsci'+user.user_id[0..3]
             user.userType='1'
@@ -2229,7 +2241,6 @@ class UsersController < ApplicationController
   end #selectRfgProjects
 
   def selectInnovateSurveys (session_id)
-
     puts "*****************************************"
     puts "Start selecting Innovate Surveys"
     puts "*****************************************"
@@ -2245,7 +2256,6 @@ class UsersController < ApplicationController
     selectPollFishSurveys (session_id)
   end
 
-
   def selectPollFishSurveys (session_id)
     puts "*****************************************"
     puts "Start selecting PollFish Surveys"
@@ -2260,9 +2270,24 @@ class UsersController < ApplicationController
     puts "*****************************************"
     puts "End selecting PollFish Surveys"
     puts "*****************************************"
-    userride (session_id)
+    selectInnovateMRAPISurveys (session_id)
   end
 
+  def selectInnovateMRAPISurveys (session_id)
+    puts "*****************************************"
+    puts "Start selecting InnovateMR API Surveys"
+    puts "*****************************************"
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+
+    @innovateMRAPINetId = "6666"
+    @innovateMRAPISupplierLink = []
+    # @innovateSupplierLink = ["http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+@innovateNetId+user.user_id]
+    
+    puts "*****************************************"
+    puts "End selecting InnovateMR API Surveys"
+    puts "*****************************************"
+    userride (session_id)
+  end
 
   def userride (session_id)
 

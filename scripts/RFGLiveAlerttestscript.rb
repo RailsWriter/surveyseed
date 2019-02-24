@@ -12,12 +12,13 @@ end
 apid = "54ef65c3e4b04d0ae6f9f4a7"
 secret = "8ef1fe91d92e0602648d157f981bb934"
 
-#command='{ "command" : "test/copy/1", "data1" : "KETSCI TEST"}'
-command='{ "command" : "livealert/inventory/1", "country" : "AU"}'
+# command='{ "command" : "test/copy/1", "data1" : "KETSCI TEST"}'
+# command='{ "command" : "livealert/inventory/1", "country" : "AU"}'
 #command='{ "command" : "livealert/targeting/1", "rfg_id" : "RFG189829-008"}'
 #command = '{ "command" : "livealert/listDatapoints/1"}'
 
-#command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2 STANDARD_EDUCATION_v2"}'
+#command = '{ "command" : "livealert/datapoint/1", "name" : "country"}'
+# command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2 STANDARD_EDUCATION_v2"}'
 #command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2 STANDARD_HHI_INT_v2"}'
 #command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2_Employment"}'
 #command = '{ "command" : "livealert/datapoint/1", "name" : "RFG2_Ethnicity"}'
@@ -29,7 +30,7 @@ command='{ "command" : "livealert/inventory/1", "country" : "AU"}'
 #command='{ "command" : "livealert/stats/1", "rfg_id" : "RFG117241-010"}'
 #command='{ "command" : "livealert/log/1", "rfg_id" : "RFG117241-010"}'
 #command = '{ "command" : "livealert/duplicateCheck/1", "rfg_id" : "RFG108677-024", "fingerprint" : 3825389918, "ip" : "166.78.136.138"}'
-#command = '{ "command" : "offerwall/query/1", "rid" : "KETSCI_TEST", "country" : "US", "postalCode" : "94306", "gender" : "1", "birthday" : "1977-01-01"}'
+command = '{ "command" : "offerwall/query/1", "rid" : "KETSCI_TEST", "country" : "US", "postalCode" : "94306", "gender" : "1", "birthday" : "1977-01-01"}'
 
 
 time=Time.now.to_i

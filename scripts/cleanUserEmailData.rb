@@ -53,6 +53,12 @@ begin
   # duplicateEmail_ids = User.select("MIN(id) as id").group(:emailId).collect(&:id)
   # unique_ids = (noEmail_ids_1 + noEmail_ids_2 + duplicateEmail_ids).uniq
 
+  puts
+  puts "**************************************************"
+  print "Starting removal of duplicate email addresses"
+  puts
+  puts "**************************************************"
+  puts
 
   n = User.count
   
@@ -103,6 +109,13 @@ begin
     r.emailId=nil
     r.save
   end
+
+  puts
+  puts "**************************************************"
+  print "Ending removal of duplicate email addresses"
+  puts
+  puts "**************************************************"
+  puts
 
   print "UTC time ", Time.now
   puts	

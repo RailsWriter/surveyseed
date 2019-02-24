@@ -17,13 +17,19 @@ secret = "8ef1fe91d92e0602648d157f981bb934"
 #command='{ "command" : "livealert/inventory/1", "country" : "AU"}'
 #command='{ "command" : "livealert/targeting/1", "rfg_id" : "RFG189829-008"}'
 #command = '{ "command" : "livealert/listDatapoints/1"}'
-#command = '{ "command" : "livealert/datapoint/1", "name" : "Computer Check"}'
 #command='{ "command" : "livealert/createLink/1", "rfg_id" : "RFG117241-010"}'
 #command='{ "command" : "livealert/stats/1", "rfg_id" : "RFG117241-010"}'
 #command='{ "command" : "livealert/log/1", "rfg_id" : "RFG117241-010"}'
 #command = '{ "command" : "livealert/duplicateCheck/1", "rfg_id" : "RFG108677-024", "fingerprint" : 3825389918, "ip" : "166.78.136.138"}'
-command = '{ "command" : "offerwall/query/1", "rid" : "KETSCI_TEST", "country" : "US", "postalCode" : "94303", "gender" : "1", "birthday" : "1977-01-01", "ip" : "::1"}'
+# command = '{ "command" : "offerwall/query/1", "rid" : "KETSCI_TEST", "country" : "US", "postalCode" : "94303", "gender" : "1", "birthday" : "1977-01-01", "ip" : "::1"}'
+# command = '{ "command" : "offerwall/query/1", "rid" : "KETSCI_TEST", "country" : "US", "postalCode" : "94303", "gender" : "1", "birthday" : "1977-01-01", "ip" : "166.78.136.138"}'
+# command = '{"command":"offerwall/query/1","rid":"3333ov_ymdunAFO6xab42nl9hA","country":"AU","fingerprint":1742828321,"ip":"::1","postalCode":"3e4r5t","gender":"1","birthday":"1963-09-25","rfg2_61076":"4","rfg2_2189":"4","rfg7145":"4","rfg2_48741":"2","rfg2_15297":"3","rfg775":"3","employmentIndustry":"5","computerCheck":"1","type":1}'
+# command='{ "command" : "offerwall/query/1", "name" : "country"}'
 
+# verified commands below on Feb 17, 2019
+# command = '{"command":"offerwall/query/1","rid":"3333ov_ymdunAFO6xab42nl9hA","country":"AU","fingerprint":1742828321,"ip":"76.218.107.128","postalCode":"94303","gender":"1","birthday":"1963-09-25","rfg2_61076":"4","rfg2_2189":"4","rfg7145":"4","rfg2_48741":"2","rfg2_15297":"3","rfg775":"3","employmentIndustry":"5","computerCheck":"1","type":1}'
+# command = '{ "command" : "livealert/datapoint/1", "name" : "Computer Check"}'
+command = '{ "command" : "livealert/datapoint/1", "name" : "LanguageCountry"}'
 
 # time=Time.now.to_i
 # hash = Digest::HMAC.hexdigest("#{time}#{command}", secret.hex2bin, Digest::SHA1)
@@ -65,7 +71,9 @@ begin
 	  # OfferwallResponse = JSON.parse(response.body)  
 	  OfferwallResponse = response.body && response.body.length >= 2 ? JSON.parse(response.body) : nil
 	end
-	rescue SocketError, Net::OpenTimeout, Net::HTTPClientError, Net::HTTPInternalServerError, OpenURI::HTTPError => e  
+	# rescue SocketError, Net::OpenTimeout, Net::HTTPClientError, Net::HTTPInternalServerError, OpenURI::HTTPError => e  
+	rescue SocketError, Net::OpenTimeout, Net::HTTPClientError, Net::HTTPInternalServerError => e  
+
 	  puts e.message
 end
 
