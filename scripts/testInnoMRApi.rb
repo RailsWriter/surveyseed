@@ -1,9 +1,11 @@
 require 'httparty'
 
-api_base_url = "http://innovate-stage-209385288.us-east-1.elb.amazonaws.com/api/v1"
-@failcount = 0
 net_payout = 1.25
 user_id = "KETSCI_TESTER"
+userCountry = "United States"
+
+api_base_url = "http://innovate-stage-209385288.us-east-1.elb.amazonaws.com/api/v1"
+@failcount = 0
 
 begin
   @failcount = @failcount+1
@@ -58,8 +60,8 @@ else
     print "************ Number of surveys returned by InnovateMR API: ", NumberOfSurveys
     puts
 
-    (0..NumberOfSurveys-1).each do |i|
-      if (innovateMRAPIResponse["result"][i]["CPI"].to_f > net_payout) && (innovateMRAPIResponse["result"][i]["isQuota"]) then        
+    (0..NumberOfSurveys-1).each do |i| 
+      if ((innovateMRAPIResponse["result"][i]["CPI"].to_f > net_payout) && (innovateMRAPIResponse["result"][i]["isQuota"]) && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then        
         innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',IMRAPIpid)
       else
       end

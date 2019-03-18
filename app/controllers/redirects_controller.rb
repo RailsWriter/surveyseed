@@ -576,7 +576,7 @@ class RedirectsController < ApplicationController
 
               if (params.has_key?(:payout) && params.has_key?(:lastOfferId)) then
                 @surveyId = params[:lastOfferId]
-                @surveyNet = 'P2SAPIsurvey'
+                @surveyNet = 'P2SAPI'
                 @payout = params[:payout]
               else
               end
