@@ -243,6 +243,11 @@ class RedirectsController < ApplicationController
     else
     end
 
+    if @user.netid == "Oa54dAasILLY01muLAqxd3AH" then 
+      @net_name = "Aanicca_BR"
+    else
+    end
+
         
     # SurveyExactRank is a counter for failures+OQ+Term on FED    
     
@@ -252,7 +257,7 @@ class RedirectsController < ApplicationController
         # DefaultLink: https://www.ketsci.com/redirects/status?status=1&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]        
         p 'Redirected to Default'
         
-        if params[:PID] == 'test' then 
+        if params[:testing] == 'true' then 
           redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=1'
         else
           # save attempt info in User and Survey tables
@@ -409,7 +414,18 @@ class RedirectsController < ApplicationController
                 puts 'HttParty::Error '+ e.message
                 retry
               end while @AaniccaPostBack.code != 200
-              p ">>>>>>>>>>>********** Aanicca Postback Completed *******************<<<<<<<<<<<<<<"
+              p ">>>>>>>>>>>********** Aanicca_USCAAU Postback Completed *******************<<<<<<<<<<<<<<"
+            else
+            end
+
+            if @user.netid == "Oa54dAasILLY01muLAqxd3AH" then
+              begin
+                @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                rescue HTTParty::Error => e
+                puts 'HttParty::Error '+ e.message
+                retry
+              end while @AaniccaPostBack.code != 200
+              p ">>>>>>>>>>>********** Aanicca_BR Postback Completed *******************<<<<<<<<<<<<<<"
             else
             end
                                              
@@ -463,7 +479,7 @@ class RedirectsController < ApplicationController
         else
         end
 
-        if params[:PID] == 'test' then
+        if params[:testing] == 'true' then
           redirect_to 'https://www.ketsci.com/redirects/success?&SUCCESS=0'         
         else  
           if @p2s_redirect then
@@ -712,9 +728,21 @@ class RedirectsController < ApplicationController
                   puts 'HttParty::Error '+ e.message
                   retry
                 end while @AaniccaPostBack.code != 200
-                p ">>>>>>>>>>>********** Aanicca Postback Completed *******************<<<<<<<<<<<<<<"
+                p ">>>>>>>>>>>********** Aanicca_USCAAU Postback Completed *******************<<<<<<<<<<<<<<"
               else
               end
+
+
+              if @user.netid == "Oa54dAasILLY01muLAqxd3AH" then
+              begin
+                @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                rescue HTTParty::Error => e
+                puts 'HttParty::Error '+ e.message
+                retry
+              end while @AaniccaPostBack.code != 200
+              p ">>>>>>>>>>>********** Aanicca_BR Postback Completed *******************<<<<<<<<<<<<<<"
+            else
+            end
                                                
               # Keep a count of completes on each Network
             
@@ -1053,7 +1081,18 @@ class RedirectsController < ApplicationController
                     puts 'HttParty::Error '+ e.message
                     retry
                   end while @AaniccaPostBack.code != 200
-                  p ">>>>>>>>>>>********** Aanicca Postback Completed *******************<<<<<<<<<<<<<<"
+                  p ">>>>>>>>>>>********** Aanicca_USCAAU Postback Completed *******************<<<<<<<<<<<<<<"
+                else
+                end
+
+                if @user.netid == "Oa54dAasILLY01muLAqxd3AH" then
+                  begin
+                    @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                    rescue HTTParty::Error => e
+                    puts 'HttParty::Error '+ e.message
+                    retry
+                  end while @AaniccaPostBack.code != 200
+                  p ">>>>>>>>>>>********** Aanicca_BR Postback Completed *******************<<<<<<<<<<<<<<"
                 else
                 end
                              
@@ -1352,7 +1391,18 @@ class RedirectsController < ApplicationController
                       puts 'HttParty::Error '+ e.message
                       retry
                     end while @AaniccaPostBack.code != 200
-                    p ">>>>>>>>>>>********** Aanicca Postback Completed *******************<<<<<<<<<<<<<<"
+                    p ">>>>>>>>>>>********** Aanicca_USCAAU Postback Completed *******************<<<<<<<<<<<<<<"
+                  else
+                  end
+
+                  if @user.netid == "Oa54dAasILLY01muLAqxd3AH" then
+                    begin
+                      @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                      rescue HTTParty::Error => e
+                      puts 'HttParty::Error '+ e.message
+                      retry
+                    end while @AaniccaPostBack.code != 200
+                    p ">>>>>>>>>>>********** Aanicca_BR Postback Completed *******************<<<<<<<<<<<<<<"
                   else
                   end
                                                    
@@ -1677,7 +1727,18 @@ class RedirectsController < ApplicationController
                         puts 'HttParty::Error '+ e.message
                         retry
                       end while @AaniccaPostBack.code != 200
-                      p ">>>>>>>>>>>********** Aanicca Postback Completed *******************<<<<<<<<<<<<<<"
+                      p ">>>>>>>>>>>********** Aanicca_USCAAU Postback Completed *******************<<<<<<<<<<<<<<"
+                    else
+                    end
+
+                    if @user.netid == "Oa54dAasILLY01muLAqxd3AH" then
+                      begin
+                        @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s+'&subid='+@user.clickid, :headers => { 'Content-Type' => 'application/json' })
+                        rescue HTTParty::Error => e
+                        puts 'HttParty::Error '+ e.message
+                        retry
+                      end while @AaniccaPostBack.code != 200
+                      p ">>>>>>>>>>>********** Aanicca_BR Postback Completed *******************<<<<<<<<<<<<<<"
                     else
                     end
 

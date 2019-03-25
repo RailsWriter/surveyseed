@@ -18,9 +18,9 @@ class UsersController < ApplicationController
 
      # Check for COPA eligibility
 
-    if @age.to_i<13 then
+    if @age.to_i<16 then
       ip_address = request.remote_ip
-      # tracker.track(ip_address, 'Age<13')
+      # tracker.track(ip_address, 'Age<16')
       redirect_to '/users/nosuccess'
     else  
       # Enter the user with the following credentials in our system or find user's record  
@@ -2092,17 +2092,15 @@ class UsersController < ApplicationController
         end
       end
 
+      # print "RFG Offerwall Command 1: ", command
+      # puts
 
-# print "RFG Offerwall Command 1: ", command
-#       puts
+      # command = '{ "command" : "offerwall/query/1", "rid" : "KETSCI_TEST", "country" : "US", "postalCode" : "94303", "gender" : "1", "birthday" : "1977-01-01"}'
+      # command = '{"command":"offerwall/query/1","rid":"3333ov_ymdunAFO6xab42nl9hA","country":"AU","fingerprint":1742828321,"ip":"::1","postalCode":"3e4r5t","gender":"1","birthday":"1963-09-25","rfg2_61076":"4","rfg2_2189":"4","rfg7145":"4","rfg2_48741":"2","rfg2_15297":"3","rfg775":"3","employmentIndustry":"5","isMobileDevice":"No","computerCheck":"1","type":1}'
+      # command = '{"command":"offerwall/query/1","rid":"3333ov_ymdunAFO6xab42nl9hA","country":"AU","fingerprint":1742828321,"ip":"::1","postalCode":"3e4r5t","gender":"1","birthday":"1963-09-25","rfg2_61076":"4","rfg2_2189":"4","rfg7145":"4","rfg2_48741":"2","rfg2_15297":"3","rfg775":"3","employmentIndustry":"5","computerCheck":"1","type":1}'
 
-# command = '{ "command" : "offerwall/query/1", "rid" : "KETSCI_TEST", "country" : "US", "postalCode" : "94303", "gender" : "1", "birthday" : "1977-01-01"}'
-# command = '{"command":"offerwall/query/1","rid":"3333ov_ymdunAFO6xab42nl9hA","country":"AU","fingerprint":1742828321,"ip":"::1","postalCode":"3e4r5t","gender":"1","birthday":"1963-09-25","rfg2_61076":"4","rfg2_2189":"4","rfg7145":"4","rfg2_48741":"2","rfg2_15297":"3","rfg775":"3","employmentIndustry":"5","isMobileDevice":"No","computerCheck":"1","type":1}'
-# command = '{"command":"offerwall/query/1","rid":"3333ov_ymdunAFO6xab42nl9hA","country":"AU","fingerprint":1742828321,"ip":"::1","postalCode":"3e4r5t","gender":"1","birthday":"1963-09-25","rfg2_61076":"4","rfg2_2189":"4","rfg7145":"4","rfg2_48741":"2","rfg2_15297":"3","rfg775":"3","employmentIndustry":"5","computerCheck":"1","type":1}'
-
-      print "RFG Offerwall Command: ", command
-      puts
-
+      # print "RFG Offerwall Command: ", command
+      # puts
 
       time=Time.now.to_i
       # @result=0
@@ -2116,7 +2114,7 @@ class UsersController < ApplicationController
           req.body = command
           req.content_type = 'application/json'
           response = http.request req
-          print "response.body = ", response.body
+          # print "response.body = ", response.body
           puts "**************************************************************************************************************************"
           print "RFG Server response.code = ",response.code
           puts
@@ -2132,8 +2130,8 @@ class UsersController < ApplicationController
           puts
       end
 
-      print "Offerwall Response: ", @OfferwallResponse["response"]
-      puts
+      # print "Offerwall Response: ", @OfferwallResponse["response"]
+      # puts
 
       if @OfferwallResponse["response"].nil? then
         print "*************************************************************************************************************************"
@@ -2614,7 +2612,8 @@ class UsersController < ApplicationController
     user = User.find_by session_id: session.id
     if (params[:emailid].empty? == false) then
       user.emailId = params[:emailid]
-      # user.password = 'None'
+      user.password = 'KetsciUser'+user.user_id[0..3]
+      # user.password added on Mar 24, 2019
       user.save
       tracker.track(user.ip_address, 'gotEmailId')
       # render 'users/thanks'
@@ -3113,6 +3112,8 @@ class UsersController < ApplicationController
 
       if @net.status == "EXTTEST" then
         # do not try to Postback while testing with EXTTEST
+        # if @net.status == "EXTTEST" AND @net.testcompletes["Testing"] == "True" then 
+        # (set n.testcompletes={'Testing'=>'True'} first on the Network record)
       else          
         p "******** Starting Postback for the completed TEST survey using ACTIVE/Flag1 *************************"
 
@@ -3239,7 +3240,18 @@ class UsersController < ApplicationController
              puts 'HttParty::Error '+ e.message
             retry
           end while @AaniccaPostBack.code != 200
-          p ">>>>>>>>>>>********** Aanicca Postback Completed in TEST using ACTIVE/Flag1 *******************<<<<<<<<<<<<<<"
+          p ">>>>>>>>>>>********** Aanicca_USCAAU Postback Completed in TEST using ACTIVE/Flag1 *******************<<<<<<<<<<<<<<"
+        else
+        end
+
+        if user.netid == "Oa54dAasILLY01muLAqxd3AH" then
+          begin
+            @AaniccaPostBack = HTTParty.post('http://anctk.com/r.php?security_token=56c1a1402187130324199ce6a7868791&payout='+@net.payout.to_s+'&subid='+user.clickid, :headers => { 'Content-Type' => 'application/json' })
+           rescue HTTParty::Error => e
+             puts 'HttParty::Error '+ e.message
+            retry
+          end while @AaniccaPostBack.code != 200
+          p ">>>>>>>>>>>********** Aanicca_BR Postback Completed in TEST using ACTIVE/Flag1 *******************<<<<<<<<<<<<<<"
         else
         end
       end # for EXTTEST
@@ -3326,6 +3338,11 @@ class UsersController < ApplicationController
 
       if user.netid == "Na34dAasIY09muLqxd59A" then 
         @net_name = "Aanicca"
+      else
+      end
+
+      if user.netid == "Oa54dAasILLY01muLAqxd3AH" then 
+        @net_name = "Aanicca_BR"
       else
       end
     
