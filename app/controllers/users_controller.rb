@@ -316,12 +316,12 @@ class UsersController < ApplicationController
   def country    
     # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')   
 
-    print "************************ COUNTRY ***************************" 
-    puts
-    print request.location.country
-    puts      
-    print "************************ COUNTRY ***************************" 
-    puts
+    # print "************************ COUNTRY Lookup ***************************" 
+    # puts
+    # print request.location.country
+    # puts      
+    # print "************************ COUNTRY Lookup ***************************" 
+    # puts
 
     user=User.find_by session_id: session.id
     
