@@ -2,7 +2,9 @@ require 'httparty'
 
 net_payout = 1.25
 user_id = "KETSCI_TESTER"
-userCountry = "United States"
+# userCountry = "United States"
+userCountry = "Canada"
+
 
 api_base_url = "http://innovate-stage-209385288.us-east-1.elb.amazonaws.com/api/v1"
 @failcount = 0
@@ -20,13 +22,6 @@ begin
 
   @innovateMRAPINetId = "6666"
   IMRAPIpid = @innovateMRAPINetId + user_id
-
-  
-  # @innovateSupplierLink = ["http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+@innovateNetId+user.user_id]
-
-  puts "*****************************************"
-  puts "End selecting InnovateMR API Surveys"
-  puts "*****************************************"
   
   puts "*****************************************************"
   print "Full API call: ", api_base_url+'/supply/getAllocatedSurveys'
@@ -61,7 +56,17 @@ else
     puts
 
     (0..NumberOfSurveys-1).each do |i| 
-      if ((innovateMRAPIResponse["result"][i]["CPI"].to_f > net_payout) && (innovateMRAPIResponse["result"][i]["isQuota"]) && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then        
+      # if ((innovateMRAPIResponse["result"][i]["CPI"].to_f > net_payout) && (innovateMRAPIResponse["result"][i]["isQuota"]) && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then        
+      #   innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',IMRAPIpid)
+      # else
+      # end
+
+      if ((innovateMRAPIResponse["result"][i]["surveyName"] == "Ketsci US") && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then
+        innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',IMRAPIpid)
+      else
+      end
+      
+      if ((innovateMRAPIResponse["result"][i]["surveyName"] == "Ketsci CA") && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then
         innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',IMRAPIpid)
       else
       end
@@ -75,4 +80,8 @@ else
     print "************>>>>User will be sent to this first InnovateMR API Survey Entry link>>>>>>>ooooppppppp ", innovateMRAPISupplierLink[0],  "***************************************************************"
     puts      
   end
+
+  puts "*****************************************"
+  puts "End selecting InnovateMR API Surveys"
+  puts "*****************************************"
 end

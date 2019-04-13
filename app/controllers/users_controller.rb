@@ -28,7 +28,7 @@ class UsersController < ApplicationController
       session_id = session.id
       netid = params[:netid]
       clickid = params[:clickid]
-      userRecordId = params[:userRecordId]      
+      userRecordId = params[:userRecordId]
       
       # Keep track of clicks on each network as Flag2
       
@@ -314,8 +314,15 @@ class UsersController < ApplicationController
   end    
   
   def country    
-    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
-    
+    # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')   
+
+    print "************************ COUNTRY ***************************" 
+    puts
+    print request.location.country
+    puts      
+    print "************************ COUNTRY ***************************" 
+    puts
+
     user=User.find_by session_id: session.id
     
     # tracker.track(user.ip_address, 'Country')
@@ -2238,6 +2245,7 @@ class UsersController < ApplicationController
     # redirect_to '/users/moreSurveys'
   end #selectRfgProjects
 
+
   def selectInnovateSurveys (session_id)
     puts "*****************************************"
     puts "Start selecting Innovate Surveys"
@@ -2247,7 +2255,7 @@ class UsersController < ApplicationController
     @innovateNetId = "4444"
     @innovateSupplierLink = []
     # @innovateSupplierLink = ["http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+@innovateNetId+user.user_id]
-    
+
     puts "*****************************************"
     puts "End selecting Innovate Surveys"
     puts "*****************************************"
@@ -2277,10 +2285,92 @@ class UsersController < ApplicationController
     puts "*****************************************"
     # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
-    @innovateMRAPINetId = "6666"
-    @innovateMRAPISupplierLink = []
-    # @innovateSupplierLink = ["http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+@innovateNetId+user.user_id]
+    user=User.find_by session_id: session_id
     
+    if user.country == "9" then
+      userCountry = "United States"
+    else
+      if user.country == "6" then
+        userCountry = "Canada"
+        print "*********** User country is Canada ****************"
+        puts
+      else
+        userCountry = "NotQualified"
+      end
+    end
+
+    if (userCountry != "NotQualified") then
+      api_base_url = "http://innovate-stage-209385288.us-east-1.elb.amazonaws.com/api/v1"
+      @failcount = 0
+      
+      puts "*****************************************************"
+      print "Full API call: ", api_base_url+'/supply/getAllocatedSurveys'
+      puts
+      puts "*****************************************************"
+
+      @innovateMRAPINetId = "6666"
+      @IMRAPIpid = @innovateMRAPINetId + user.user_id
+      user_net = Network.find_by netid: user.netid
+      net_payout = user_net.payout
+      @innovateMRAPISupplierLink = []
+
+      begin
+        @failcount = @failcount+1
+        print "InnovateMR API access failcount is: ", @failcount
+        puts
+
+        innovateMRAPIResponse = HTTParty.get(api_base_url+'/supply/getAllocatedSurveys',
+          :headers => {'x-access-token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNjMwMWRkN2M1ZWU5MWI4MDlmZThiYiIsInVzcl9pZCI6NDIyLCJ1c3JfdHlwZSI6InN1cHBsaWVyIiwiaWF0IjoxNTQ5OTkyNDE4fQ.bRm_V-FJ_fLvzVPOvlpRSDtBLaXnDhIduhSSmBfudHY',
+            'Content-Type' => 'application/json'}
+          )
+        rescue HTTParty::Error => e
+          puts 'HttParty::Error '+ e.message
+        retry
+      end while ((innovateMRAPIResponse.code != 200) && (@failcount < 10))
+
+      if @failcount ==10 then
+        print "****DEBUG***** No response returned by InnovateMR API. No SupplierLinks added. **********"
+        puts
+      else
+        # print 'http response: ', innovateMRAPIResponse
+        # puts
+        if innovateMRAPIResponse["result"].length == 0 then
+            print "********* No surveys returned by InnovateMR API **********"
+            puts
+        else
+          @NumberOfSurveys = innovateMRAPIResponse["result"].length
+          print "************ Number of surveys returned by InnovateMR API: ", @NumberOfSurveys
+          puts
+
+          (0..@NumberOfSurveys-1).each do |i| 
+            # if ((innovateMRAPIResponse["result"][i]["CPI"].to_f > net_payout) && (innovateMRAPIResponse["result"][i]["isQuota"]) && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then        
+            #   @innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',@IMRAPIpid)
+            # else
+            # end
+
+            if ((innovateMRAPIResponse["result"][i]["surveyName"] == "Ketsci US") && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then
+              @innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',@IMRAPIpid)
+            else
+            end
+            
+            if ((innovateMRAPIResponse["result"][i]["surveyName"] == "Ketsci CA") && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then
+              @innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',@IMRAPIpid)
+            else
+            end
+          end #do
+
+          print "************ Number of surveys on InnovateMR API which Qualify for KETSCI: ", @innovateMRAPISupplierLink.length
+          puts
+          print "InnovateMR API Offerwall SupplierLinks: ", @innovateMRAPISupplierLink
+          puts
+
+          print "************>>>> This InnovateMR API Survey Entry link will be added to SupplierLinks >>>>>>>ooooppppppp ", @innovateMRAPISupplierLink[0],  "***************************************************************"
+          puts      
+        end
+      end
+    else
+    end
+        
     puts "*****************************************"
     puts "End selecting InnovateMR API Surveys"
     puts "*****************************************"
@@ -2318,6 +2408,7 @@ class UsersController < ApplicationController
     (0..@net.stackOrder.length-1).each do |i|
       supplier = @net.stackOrder[i]      
       case supplier
+
       when "A"
         user = User.find_by session_id: session_id
         if @adhocSupplierLinks.length != 0 then
@@ -2377,7 +2468,15 @@ class UsersController < ApplicationController
           user.save
         else
         end
-      
+
+      when "M"
+        user = User.find_by session_id: session_id
+        if @innovateMRAPISupplierLink.length !=0 then
+          user.SupplierLink = user.SupplierLink + @innovateMRAPISupplierLink
+          user.save
+        else
+        end
+
       when "H"
         user = User.find_by session_id: session_id
         if @pollfishSupplierLink.length !=0 then
@@ -2650,27 +2749,45 @@ class UsersController < ApplicationController
         puts
         redirect_to @NextEntryLink
       end
-
     else
       p "************** Users did not share emailid in getEmail *****************"
-      # Userride should go to the next survey link instead on p2s links.
+      # Userride should go to the next survey link.
 
       if user.SupplierLink.length == 0 then
         # redirect_to '/users/nosuccess'
+        print "************>>>>User will be sent to noSuccess link 1 ***************************************************************"
+        puts
 
         if user.netid == "MMq0514UMM20bgf17Yatemoh" then
           redirect_to '/users/nosuccessPanelist'
         else
           redirect_to '/users/nosuccess'
         end
-
       else
         @NextEntryLink = user.SupplierLink[0]
-        user.SupplierLink = user.SupplierLink.drop(1)
-        user.save
-        print "************>>>>User will be sent to the next Survey Entry link>>>>>>>ooooppppppp ", @NextEntryLink,  "***************************************************************"
-        puts
-        redirect_to @NextEntryLink
+        if (@NextEntryLink == "P2S_KETSCI") || (@NextEntryLink == "2API_KETSCI") then
+          # there is no emailId if they did not give it, so we can not do either of these surveys
+          user.SupplierLink = user.SupplierLink.drop(1)
+          user.save
+        else
+        end
+        if user.SupplierLink.length == 0 then
+          # redirect_to '/users/nosuccess'
+          print "************>>>>User will be sent to noSuccess link 2 ***************************************************************"
+          puts
+          if user.netid == "MMq0514UMM20bgf17Yatemoh" then
+            redirect_to '/users/nosuccessPanelist'
+          else
+            redirect_to '/users/nosuccess'
+          end
+        else
+          @NextEntryLink = user.SupplierLink[0]
+          user.SupplierLink = user.SupplierLink.drop(1)
+          user.save
+          print "************>>>>User will be sent to the next Survey Entry link>>>>>>>ooooppppppp ", @NextEntryLink,  "***************************************************************"
+          puts
+          redirect_to @NextEntryLink
+        end
       end
     end      
   end  

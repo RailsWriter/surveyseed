@@ -42,13 +42,15 @@ class RedirectsController < ApplicationController
     # @validateSHA1hash= @validateSHA1hash.gsub '=', '%3D'
     @validateSHA1hash= @validateSHA1hash.gsub '=', ''    
     # p 'Validate 4 =', @validateSHA1hash
-    print 'Redirected @BaseUrl Hash result after substitutions= ', @validateSHA1hash
-    puts ""
+    print 'Redirected @BaseUrl Hash result after substitutions: ', @validateSHA1hash
+    puts
 
     
+    @adhoc_redirect = false # set to false as a flag. changes to true if it is a ADHOC redirect
     @p2s_redirect = false # set to false as a flag. changes to true if it is a P2S redirect
     @rfg_redirect = false # set to false as a flag. changes to true if it is a RFG redirect
-    @adhoc_redirect = false # set to false as a flag. changes to true if it is a ADHOC redirect
+    @fed_redirect = false
+    
     
     # Pulley returns 'pid' instead of 'PID'
     if params[:PID] == nil then
@@ -64,12 +66,11 @@ class RedirectsController < ApplicationController
       params[:tis] = params[:l]
     else
     end
-
     
     if (@validateSHA1hash != @Signature) then
-      print '>>>>>>>>>>>>>>>> Redirects: Signature NOT verified, Validate 4 =', @validateSHA1hash
+      print '>>>>>>>>>>>>>>>> Redirects: Pulley Signature NOT verified, Validate 4 =', @validateSHA1hash
       puts
-      print '>>>>>>>>>>>>>>>> Redirects: Signature NOT verified, Signature =', @Signature
+      print '>>>>>>>>>>>>>>>> Redirects: Pulley Signature NOT verified, Signature =', @Signature
       puts
       if params[:PID] == 'test' then
         print '***************** PID = TEST found. Staging server does not generate Signatures '
@@ -80,7 +81,7 @@ class RedirectsController < ApplicationController
           params[:tsfn] = 'P2S'
           params[:tis] = '20'
           
-          print "****** DEBUG P2S *************** Extracted userid from P2S PID (@SUBID) to be = ", params[:PID]
+          print "****** DEBUG P2S *************** Extracted Valid userid from P2S PID (@SUBID) to be = ", params[:PID]
           puts
           
           @p2s_redirect = true
@@ -92,7 +93,7 @@ class RedirectsController < ApplicationController
             params[:PID] = @partial.sub params[:tsfn], '' # Remaining PID is actual user.user_id
             params[:tis] = '20' # Assign arbitrary length of survey as 20 mins.
             
-            print "********************* Extracted userid from ADHOC survey to be = ", params[:PID], ' for Survey Number= ', params[:tsfn]
+            print "********************* Extracted Valid userid from ADHOC survey to be = ", params[:PID], ' for Survey Number= ', params[:tsfn]
             puts
 
             @adhoc_redirect = true
@@ -105,7 +106,7 @@ class RedirectsController < ApplicationController
               #params[:tsfn] = params[:rfg_id]
               params[:tsfn] = 'RFG'
               params[:tis] = '20'
-              print "********************* Extracted userid from RFG PID to be = ", params[:PID]
+              print "********************* Extracted Valid userid from RFG PID to be = ", params[:PID]
               puts
               
               @rfgUrl = request.original_url
@@ -122,7 +123,7 @@ class RedirectsController < ApplicationController
       
               if params[:hash] != @rfgHmac then
                 @rfg_redirect = false
-                print "**********************RFG HMAC did NOT match"
+                print "********************** RFG HMAC did NOT match"
                 puts
                 print "params[:hash]= ", params[:hash], ' Calculated @rfgHmac= ', @rfgHmac
                 puts
@@ -138,9 +139,8 @@ class RedirectsController < ApplicationController
                 puts
               end                     
             else
-              p '>>>>>>>>>>>>>>>>>>>> Not Valid HASH Response from Pulley (also not any other router) <<<<<<<<<<<<<<<<<'
-              # @fed_redirect = true
-              @fed_redirect = false
+              p '>>>>>>>>>>>>>>>>>>>> Not Valid Redirect from Pulley and also not from TEST, ADHOC, P2S, RFG Routers <<<<<<<<<<<<<<<<<'
+              # @fed_redirect = false
               # redirect_to 'https://www.ketsci.com/redirects/failure?&FAILED=0b'
               # return
             end
@@ -149,17 +149,45 @@ class RedirectsController < ApplicationController
       end
     else
       @fed_redirect = true
-      p '>>>>>>>>>>>>>>>> Valid Server Response: Pulley Signature verified <<<<<<<<<<<<<<<<<'
+      print '****************************** A Valid HASH Response from Pulley - 1 and not from TEST, ADHOC, P2S, RFG Routers *********************************'
+      puts
     end
 
     @InnoMRAPI_redirect = false
-    if params[:PID][0..3] == "6666" then
-      params[:PID] = params[:PID].sub "6666", '' # InnoMRAPI surveys have 6666 as suffix to userIds in pids
-      params[:tsfn] = 'InnoMRAPI'
-      params[:tis] = '20'
-      print "****** DEBUG InnoMRAPI *************** Extracted userid from InnoMRAPI PID to be = ", params[:PID]
+    if (@validateSHA1hash != @Signature) then
+      if params[:PID][0..3] == "6666" then
+        params[:PID] = params[:PID].sub "6666", '' # InnoMRAPI surveys have 6666 as suffix to userIds in pids
+        params[:tsfn] = 'InnoMRAPI'
+        params[:tis] = '20'
+        print "****** DEBUG *************** Extracted Valid userid from InnoMRAPI PID to be = ", params[:PID]
+        puts
+        @InnoMRAPI_redirect = true
+      else
+        print '****************************** Not Valid Redirect from Pulley and also not a IMR API Redirect *********************************'
+        puts
+      end
+    else
+      # Already handled in last else of ADHOC, P2S and RFG router test (above)
+      # p '>>>>>>>>>>>>>>>>>>>> A Valid HASH Response from Pulley - 2 (and not from IMR API Router) <<<<<<<<<<<<<<<<<'
+      # @fed_redirect = true
+    end
+
+    # @fed_redirect = false
+    # if (@validateSHA1hash == @Signature) then
+    #   @fed_redirect = true
+    #   print '>>>>>>>>>>>>>>>> Valid LUCID Server Response: Pulley Signature verified - 3 <<<<<<<<<<<<<<<<<'
+    #   puts
+    # else
+    # end
+
+    if (@adhoc_redirect == false) && (@p2s_redirect == false) && (@rfg_redirect == false) && (@InnoMRAPI_redirect == false) && (@fed_redirect == false) then
+      # since this is a rouge redirect, let us give it a benefit of doubt to be a fed redirect
+      @fed_redirect = true
       puts
-      @InnoMRAPI_redirect = true
+      print '****************************** BAD Redirect - NOT SURE FROM WHICH ROUTER - so assume it to be Pulley - 2 *********************************'
+      puts
+      print '****************************** BAD Redirect - NOT SURE FROM WHICH ROUTER - so assume it to be Pulley - 2 *********************************'
+      puts
     else
     end
 
@@ -2092,11 +2120,11 @@ class RedirectsController < ApplicationController
                   if (@user.SupplierLink.empty? == false) then
 
                     if (@user.SupplierLink.length == 1) then #P2S is the next link
-                      print '************* PULLEY FAILED - REDIRECTED TO ENDING P2S SURVEY *****************************************************************************************************************************************'
+                      print '************* PULLEY FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
                       puts
                       print 'User will be sent to this p2s survey: ', @user.SupplierLink[0]
                       puts
-                      print '************* PULLEY FAILED - REDIRECTED TO ENDING P2S SURVEY *****************************************************************************************************************************************'
+                      print '************* PULLEY FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
                       puts ""
                       @NextEntryLink = @user.SupplierLink[0]
                       @user.SupplierLink = @user.SupplierLink.drop(1)
