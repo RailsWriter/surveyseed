@@ -153,7 +153,7 @@ class RedirectsController < ApplicationController
       puts
     end
 
-    @InnoMRAPI_redirect = false
+    @InnoMR_redirect = false
     if (@validateSHA1hash != @Signature) then
       if params[:PID][0..3] == "6666" then
         params[:PID] = params[:PID].sub "6666", '' # InnoMRAPI surveys have 6666 as suffix to userIds in pids
@@ -161,9 +161,20 @@ class RedirectsController < ApplicationController
         params[:tis] = '20'
         print "****** DEBUG *************** Extracted Valid userid from InnoMRAPI PID to be = ", params[:PID]
         puts
-        @InnoMRAPI_redirect = true
+        @InnoMR_redirect = true
       else
         print '****************************** Not Valid Redirect from Pulley and also not a IMR API Redirect *********************************'
+        puts
+      end
+      if params[:PID][0..3] == "4444" then
+        params[:PID] = params[:PID].sub "4444", '' # InnoMR Router surveys have 4444 as suffix to userIds in pids
+        params[:tsfn] = 'IMR'
+        params[:tis] = '20'
+        print "****** DEBUG *************** Extracted Valid userid from IMR PID to be = ", params[:PID]
+        puts
+        @InnoMR_redirect = true
+      else
+        print '****************************** Not Valid Redirect from Pulley and also not a IMR Router Redirect *********************************'
         puts
       end
     else
@@ -180,7 +191,7 @@ class RedirectsController < ApplicationController
     # else
     # end
 
-    if (@adhoc_redirect == false) && (@p2s_redirect == false) && (@rfg_redirect == false) && (@InnoMRAPI_redirect == false) && (@fed_redirect == false) then
+    if (@adhoc_redirect == false) && (@p2s_redirect == false) && (@rfg_redirect == false) && (@InnoMR_redirect == false) && (@fed_redirect == false) then
       # since this is a rouge redirect, let us give it a benefit of doubt to be a fed redirect
       @fed_redirect = true
       puts
@@ -316,22 +327,22 @@ class RedirectsController < ApplicationController
         # SuccessLink: https://www.ketsci.com/redirects/status?status=2&PID=[%PID%]&frid=[%fedResponseID%]&tis=[%TimeInSurvey%]&tsfn=[%TSFN%]&cost=[%COST%]
         # save attempt info in User and Survey tables
         
-        if @InnoMRAPI_redirect then
+        if @InnoMR_redirect then
           puts ""
-          print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>************* InnoMRAPI SUCCESS *****************************************************************************************************************************************'
+          print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>************* InnoMR SUCCESS *****************************************************************************************************************************************'
           puts
-          print 'SUCCESS-InnoMRAPI for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+          print 'SUCCESS-InnoMR for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
           puts
-          print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>************* InnoMRAPI SUCCESS *****************************************************************************************************************************************'
+          print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>************* InnoMR SUCCESS *****************************************************************************************************************************************'
           puts ""
           puts ""
 
           if @user.SurveysCompleted.flatten(2).include? (@user.clickid) then
-            print "************* Click Id already exists - do not postback to InnoMRAPI again!"
+            print "************* Click Id already exists - do not postback to InnoMR again!"
             puts      
           else            
             @user.SurveysAttempted << 'InnoMRAPI-2'+'-ts='+Time.now.to_s
-            @user.SurveysCompleted[Time.now] = [params[:PID], 'InnoMRAPIsurvey', 'InnoMRAPI', '1.25', @user.clickid, @net_name]
+            @user.SurveysCompleted[Time.now] = [params[:PID], 'IMRsurvey', params[:tsfn], '1.25', @user.clickid, @net_name]
             @user.save
 
             # Postback the network about success with users clickid
@@ -459,7 +470,7 @@ class RedirectsController < ApplicationController
                                              
             # Keep a count of completes on each user/client Network
           
-            # puts "*************** Keeping track of completes on the corresponding network"                        
+            # puts "*************** Keeping track of completes on the corresponding user/client network"                        
             if @net.Flag3 == nil then              
               @net.Flag3 = "1" 
               @net.save              
@@ -468,16 +479,34 @@ class RedirectsController < ApplicationController
               @net.save
             end
                           
-            # Count InnoMRAPI router/supplier completes count
+            # Count InnoMR router completes count
                           
-            @InnoMRAPInet = Network.find_by netid: "6666"
-            if @InnoMRAPInet.Flag3 == nil then              
-              @InnoMRAPInet.Flag3 = "1" 
-              @InnoMRAPInet.save              
-            else              
-              @InnoMRAPInet.Flag3 = (@InnoMRAPInet.Flag3.to_i + 1).to_s
-              @InnoMRAPInet.save              
-            end                                        
+            if params[:PID][0..3] == "4444" then
+              @InnoMRnet = Network.find_by netid: "4444"
+              if @InnoMRnet.Flag3 == nil then              
+                @InnoMRnet.Flag3 = "1" 
+                @InnoMRnet.save              
+              else              
+                @InnoMRnet.Flag3 = (@InnoMRnet.Flag3.to_i + 1).to_s
+                @InnoMRnet.save              
+              end  
+            else
+            end
+
+            # Count InnoMR API completes count
+                          
+            if params[:PID][0..3] == "6666" then
+              @InnoMRAPInet = Network.find_by netid: "6666"
+              if @InnoMRAPInet.Flag3 == nil then              
+                @InnoMRAPInet.Flag3 = "1" 
+                @InnoMRAPInet.save              
+              else              
+                @InnoMRAPInet.Flag3 = (@InnoMRAPInet.Flag3.to_i + 1).to_s
+                @InnoMRAPInet.save              
+              end 
+            else
+            end   
+
           end # duplicate is false
            
           # Happy ending
@@ -1822,25 +1851,25 @@ class RedirectsController < ApplicationController
         # can be sent to try other surveys. If he/she has not qualified for any survey then take them to failure view.
       
 
-        if @InnoMRAPI_redirect then
+        if @InnoMR_redirect then
           puts
-          print '************* InnoMRAPI FAILURE *****************************************************************************************************************************************'
+          print '************* InnoMR FAILURE *****************************************************************************************************************************************'
           puts
-          print 'Status = FAILED-InnoMRAPI router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
+          print 'Status = FAILED-InnoMR router for user_id/PID: ', params[:PID], ' CID: ', @user.clickid
           puts
-          print '************* InnoMRAPI FAILURE *****************************************************************************************************************************************'
+          print '************* InnoMR FAILURE *****************************************************************************************************************************************'
           puts
 
-          @user.SurveysAttempted << 'InnoMRAPI-3'+'-ts='+Time.now.to_s
+          @user.SurveysAttempted << 'InnoMR-3'+'-ts='+Time.now.to_s
           @user.save
 
           # Give user chance to take another survey unless they do not qualify for any (other) survey
           if (@user.SupplierLink.empty? == false) then                          
-            print '************* InnoMRAPI FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
+            print '************* InnoMR FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
             puts
-            print 'User will be sent to this survey: ', @user.SupplierLink[0]
+            print 'User will be sent to this next survey: ', @user.SupplierLink[0]
             puts
-            print '************* InnoMRAPI FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
+            print '************* InnoMR FAILED - REDIRECTED TO NEXT SURVEY *****************************************************************************************************************************************'
             puts
             @NextEntryLink = @user.SupplierLink[0]
             @user.SupplierLink = @user.SupplierLink.drop(1)

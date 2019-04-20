@@ -15,7 +15,7 @@ begin
       print "Selected Daily emailId: ", emailId
       puts
       emailIdsCount=emailIdsCount+1
-      if dailyUser.created_at > Date.parse('february 1 2018').midnight then
+      if dailyUser.created_at > Date.parse('january 1 2018').midnight then
       # if (emailId == 'aokaybb@yahoo.com') || (emailId == 'nietov2011@gmail.com') || (emailId == 'Kzkhang18@gmail.com') || (emailId == 'julienmethot@gmail.com') || (emailId == 'Amerie.roberts4108@gamil.com') then
       #if (emailId == 'akhtarjameel@gmail.com') then
       # if (emailId == 'Kzkhang18@gmail.com') || (emailId == 'julienmethot@gmail.com') || (emailId == 'Amerie.roberts4108@gmail.com') then

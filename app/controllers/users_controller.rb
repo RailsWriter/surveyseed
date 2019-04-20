@@ -16,7 +16,7 @@ class UsersController < ApplicationController
       return
     end
 
-     # Check for COPA eligibility
+     # Check for COPA, GDPR eligibility
 
     if @age.to_i<16 then
       ip_address = request.remote_ip
@@ -2225,7 +2225,7 @@ class UsersController < ApplicationController
           @RFGSupplierLinks = []
           @RFGSupplierLinks << @RFGOfferwallSupplierLink+@RFGAdditionalValues
 
-          print "**** DEBUG ********>>>> User will be sent to this RFG link >>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
+          print "**** DEBUG ********>>>> Selected RFG link with additional parameters >>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
           puts      
         end   
       end
@@ -2253,8 +2253,17 @@ class UsersController < ApplicationController
     # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     @innovateNetId = "4444"
-    @innovateSupplierLink = []
-    # @innovateSupplierLink = ["http://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="+@innovateNetId+user.user_id]
+    user = User.find_by session_id: session_id
+    @aff_sub = @innovateNetId+user.user_id
+
+    @IMR_AdditionalParameters = ""
+    @IMR_api_base_url = "https://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="
+
+    @IMRRouterSupplierLink = []
+    @IMRRouterSupplierLink = [@IMR_api_base_url+@aff_sub+@IMR_AdditionalParameters]
+
+    print "************************************************ Selected IMR Router link with additional parameters: ", @IMRRouterSupplierLink,  "***************************************************************"
+    puts
 
     puts "*****************************************"
     puts "End selecting Innovate Surveys"
@@ -2463,8 +2472,8 @@ class UsersController < ApplicationController
       
       when "I"
         user = User.find_by session_id: session_id
-        if @innovateSupplierLink.length !=0 then
-          user.SupplierLink = user.SupplierLink + @innovateSupplierLink
+        if @IMRRouterSupplierLink.length !=0 then
+          user.SupplierLink = user.SupplierLink + @IMRRouterSupplierLink
           user.save
         else
         end
