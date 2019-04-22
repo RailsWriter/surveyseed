@@ -2,7 +2,7 @@ require 'httparty'
 
 api_base_url = "https://www.your-surveys.com/suppliers_api/surveys/user"
 @failcount = 0
-net_payout = 1.25
+net_payout = 0.25
 
 puts '*************** CONNECTING TO OFFERWALL for P2S SURVEYS'
 
@@ -19,7 +19,7 @@ begin
 
 	# p2sApiResponse = HTTParty.get(api_base_url+'?user_id=KET_1&age=32&email=akht@bil.com&gender=m&zip_code=91123&ip_address=76.218.107.128&basic=1&country=26399',
   p2sApiResponse = HTTParty.get(api_base_url+'?user_id=KET_1&age=32&email=akht@bil.com&gender=m&zip_code=91123&ip_address=76.218.107.128&country=26399',
-
+  # p2sApiResponse = HTTParty.get(api_base_url, (fails)
 		:headers => {'X-YourSurveys-Api-Key' => '5b96ba34dc040bf1baf557be93f8459f'}
 		)
   rescue HTTParty::Error => e
@@ -45,6 +45,7 @@ else
     (0..NumberOfSurveys-1).each do |i|
       if (p2sApiResponse["surveys"][i]["cpi"].to_f > net_payout) then
         P2SApiSupplierLinks << p2sApiResponse["surveys"][i]["entry_link"].sub('ssi=SUBID','ssi='+'KET')
+        # Link FAILS: P2SApiSupplierLinks << p2sApiResponse["surveys"][i]["entry_link"].sub('ssi=SUBID','ssi='+'KET')+"&user_id=KET_1&age=32&email=akht@bil.com&gender=m&zip_code=91123&ip_address=76.218.107.128&country=26399"
       else
       end
     end #do

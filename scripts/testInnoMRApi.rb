@@ -22,6 +22,12 @@ begin
 
   @innovateMRAPINetId = "6666"
   IMRAPIpid = @innovateMRAPINetId + user_id
+
+
+  @IMRAPI_AdditionalParameters = ""
+  @IMRAPI_AdditionalParameters = '&AGE=' + "34" + '&GENDER=' + "1" + '&ZIPCODES=' + "94303"
+
+
   
   puts "*****************************************************"
   print "Full API call: ", api_base_url+'/supply/getAllocatedSurveys'
@@ -57,17 +63,17 @@ else
 
     (0..NumberOfSurveys-1).each do |i| 
       # if ((innovateMRAPIResponse["result"][i]["CPI"].to_f > net_payout) && (innovateMRAPIResponse["result"][i]["isQuota"]) && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then        
-      #   innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',IMRAPIpid)
+      #   innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',IMRAPIpid)+@IMRAPI_AdditionalParameters
       # else
       # end
 
       if ((innovateMRAPIResponse["result"][i]["surveyName"] == "Ketsci US") && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then
-        innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',IMRAPIpid)
+        innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',IMRAPIpid)+@IMRAPI_AdditionalParameters
       else
       end
       
       if ((innovateMRAPIResponse["result"][i]["surveyName"] == "Ketsci CA") && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then
-        innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',IMRAPIpid)
+        innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',IMRAPIpid)+@IMRAPI_AdditionalParameters
       else
       end
     end #do

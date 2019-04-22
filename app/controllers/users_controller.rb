@@ -2256,8 +2256,10 @@ class UsersController < ApplicationController
     user = User.find_by session_id: session_id
     @aff_sub = @innovateNetId+user.user_id
 
-    @IMR_AdditionalParameters = ""
     @IMR_api_base_url = "https://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="
+    @IMR_AdditionalParameters = ""
+    @IMR_AdditionalParameters = '&AGE=' + user.age + '&GENDER=' + user.gender + '&ZIPCODES=' + user.ZIP
+
 
     @IMRRouterSupplierLink = []
     @IMRRouterSupplierLink = [@IMR_api_base_url+@aff_sub+@IMR_AdditionalParameters]
@@ -2323,6 +2325,10 @@ class UsersController < ApplicationController
       net_payout = user_net.payout
       @innovateMRAPISupplierLink = []
 
+      @IMRAPI_AdditionalParameters = ""
+      @IMRAPI_AdditionalParameters = '&AGE=' + user.age + '&GENDER=' + user.gender + '&ZIPCODES=' + user.ZIP
+
+
       begin
         @failcount = @failcount+1
         print "InnovateMR API access failcount is: ", @failcount
@@ -2353,17 +2359,17 @@ class UsersController < ApplicationController
 
           (0..@NumberOfSurveys-1).each do |i| 
             # if ((innovateMRAPIResponse["result"][i]["CPI"].to_f > net_payout) && (innovateMRAPIResponse["result"][i]["isQuota"]) && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then        
-            #   @innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',@IMRAPIpid)
+            #   @innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',@IMRAPIpid)+ @IMRAPI_AdditionalParameters
             # else
             # end
 
             if ((innovateMRAPIResponse["result"][i]["surveyName"] == "Ketsci US") && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then
-              @innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',@IMRAPIpid)
+              @innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',@IMRAPIpid) + @IMRAPI_AdditionalParameters
             else
             end
             
             if ((innovateMRAPIResponse["result"][i]["surveyName"] == "Ketsci CA") && (innovateMRAPIResponse["result"][i]["Country"] == userCountry)) then
-              @innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',@IMRAPIpid)
+              @innovateMRAPISupplierLink << innovateMRAPIResponse["result"][i]["entryLink"].sub('[%%pid%%]',@IMRAPIpid) + @IMRAPI_AdditionalParameters
             else
             end
           end #do
@@ -2372,7 +2378,6 @@ class UsersController < ApplicationController
           puts
           print "InnovateMR API Offerwall SupplierLinks: ", @innovateMRAPISupplierLink
           puts
-
           print "************>>>> This InnovateMR API Survey Entry link will be added to SupplierLinks >>>>>>>ooooppppppp ", @innovateMRAPISupplierLink[0],  "***************************************************************"
           puts      
         end
