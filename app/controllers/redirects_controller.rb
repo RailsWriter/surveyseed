@@ -808,33 +808,23 @@ class RedirectsController < ApplicationController
               # @net = Network.find_by netid: @user.netid # (moved up)
             
               if @net.Flag3 == nil then
-              
                 @net.Flag3 = "1" 
-                @net.save
-              
+                @net.save              
               else
-
                 @net.Flag3 = (@net.Flag3.to_i + 1).to_s
                 @net.save
-
               end
-              
-              
+                            
               # Count P2S Network completes
                             
               @P2Snet = Network.find_by netid: "2222"
-              if @P2Snet.Flag3 == nil then
-              
+              if @P2Snet.Flag3 == nil then              
                 @P2Snet.Flag3 = "1" 
-                @P2Snet.save
-              
-              else
-              
+                @P2Snet.save              
+              else              
                 @P2Snet.Flag3 = (@P2Snet.Flag3.to_i + 1).to_s
-                @P2Snet.save
-              
-              end
-                                        
+                @P2Snet.save              
+              end                                        
             end # duplicate is false
              
             # Happy ending
@@ -1480,12 +1470,10 @@ class RedirectsController < ApplicationController
                   # Count ADHOC completes
                                 
                   @Adhocnet = Network.find_by netid: "1111"
-                  if @Adhocnet.Flag3 == nil then
-                  
+                  if @Adhocnet.Flag3 == nil then                  
                     @Adhocnet.Flag3 = "1" 
                     @Adhocnet.save                  
-                  else
-                  
+                  else                  
                     @Adhocnet.Flag3 = (@Adhocnet.Flag3.to_i + 1).to_s
                     @Adhocnet.save 
                   end                                            

@@ -1,12 +1,12 @@
 class User < ActiveRecord::Base    
-  serialize :attempts_time_stamps_array, Array
-  serialize :QualifiedSurveys, Array
-  serialize :SurveysWithMatchingQuota, Array
-  serialize :SupplierLink, Array
-  serialize :SurveysAttempted, Array
-  serialize :SurveysCompleted, Hash
-  serialize :children, Array
-  serialize :industries, Array
+  	serialize :attempts_time_stamps_array, Array
+  	serialize :QualifiedSurveys, Array
+  	serialize :SurveysWithMatchingQuota, Array
+  	serialize :SupplierLink, Array
+  	serialize :SurveysAttempted, Array
+  	serialize :SurveysCompleted, Hash
+  	serialize :children, Array
+  	serialize :industries, Array
 
   	def self.to_csv
 	  	CSV.generate do |csv|
@@ -83,6 +83,4 @@ class User < ActiveRecord::Base
 			end
  		end
 	end
-
-
 end

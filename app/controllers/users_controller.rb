@@ -61,6 +61,8 @@ class UsersController < ApplicationController
       end
 
       tracker.track(ip_address, 'Age')
+
+      # this is lower than pleasewait because it only counts Age for unique ip addresses. please wait counts all sessions.
       
       # Change this to include validating a cookie first(more unique compared to IP address id) before verifying by IP address      
       # if ((User.where(ip_address: ip_address).exists?) && (User.where(session_id: session.id).exists?)) then
