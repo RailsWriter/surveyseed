@@ -2289,7 +2289,10 @@ class UsersController < ApplicationController
     puts "*****************************************"
     puts "End selecting PollFish Surveys"
     puts "*****************************************"
-    selectInnovateMRAPISurveys (session_id)
+    # selectInnovateMRAPISurveys (session_id)
+    # causes most significant slowdown in network response
+    userride (session_id)
+
   end
 
   def selectInnovateMRAPISurveys (session_id)
