@@ -10,30 +10,42 @@
 	<body class="body">
 		<div class="header">
 			<center>
-				<h1>I am not a Robot</h1>
+				<h1>Colors</h1>
 			</center>
 		</header>
 		
 		<div class="content">
 			<center>
-				<% u=User.find_by session_id: session.id %>
 				<div id="p1"><h3><%= alert %></h3></div>
-				<p>For quality assurance, please enter this string: <%= u.user_id[0..5] %></p>
+				<p>For quality assurance, please choose green from the options below:</p>
 			</center>
-			
 				<%= form_tag("trap_question_1", method: "post") do %>
 				<fieldset>
-					<div class="myyrsinput">
-							<%= text_field_tag 'entry', nil, maxlength: 8 %>
-							<%= label_tag(:entry, '') %><br><br>
-						</div>
-
+					<div class="mytags">
+				
+					<label>
+					<%= radio_button_tag 'color', 'Red' %>
+				  		Red
+					</label><br>
+					<label>
+					<%= radio_button_tag 'color', 'Green' %>
+				  		Green
+					</label><br>
+					<label>
+					<%= radio_button_tag 'color', 'Purple' %>
+				  		Purple
+					</label><br>
+					<label>						
+					<%= radio_button_tag 'color', 'Blue' %>
+				  		Blue
+					</label><br><br>
+				</div>
 					<div class="myinput">
 						<center>
 							<%= submit_tag "Next" %>
 						</center>
 					</div>
-				</fieldset>
+			</fieldset>
 			<% end %>
 			
 		</content>

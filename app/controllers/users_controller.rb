@@ -75,11 +75,12 @@ class UsersController < ApplicationController
         # p '******* EVAL_AGE: USER DOES NOT EXIST'
       end
 
-      # Use this in Dev testing only.
-      if (clickid == "LetMeInAsANewUser") then
-        first_time_user=true
-      else
-      end
+      # Use LetMeInAsANewUser in Dev testing only. Can be used with normal mode in browser - not incognito.
+      # @first_time_user_exception == false
+      # if (clickid == "LetMeInAsANewUser") then
+      #   @first_time_user_exception=true
+      # else
+      # end
 
       if (first_time_user) then
         # Create a new-user record
@@ -109,7 +110,8 @@ class UsersController < ApplicationController
         @user.number_of_attempts_in_last_24hrs=1
         @user.attempts_time_stamps_array = [Time.now]
         @user.save
-        redirect_to '/users/tos'
+        # redirect_to '/users/tos'
+        redirect_to '/users/tq1'
       else
       end    
     
@@ -149,7 +151,8 @@ class UsersController < ApplicationController
           user.attempts_time_stamps_array = user.attempts_time_stamps_array + [Time.now]
           user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
           user.save
-          redirect_to '/users/tos'
+          # redirect_to '/users/tos'
+          redirect_to '/users/tq1'
         end
       else
       end
@@ -191,7 +194,9 @@ class UsersController < ApplicationController
     user.save
     
     # Address good and bad repeat access behaviour after they have resigned TOS (PP)
-    if ( user.attempts_time_stamps_array.length==1 ) then
+    # Use LetMeInAsANewUser in Dev testing only. Can be used with normal mode in browser - not incognito.
+
+    if ( user.attempts_time_stamps_array.length==1 ) || (user.clickid == "LetMeInAsANewUser") then
       p '*******DEBUG************ TOS: FIRST TIME USER or First time returning Panelist'
       redirect_to '/users/qq2'
     else
@@ -237,25 +242,52 @@ class UsersController < ApplicationController
     if params[:gender] != nil
       user.gender=params[:gender]
       user.save
-      redirect_to '/users/tq1'
+      # redirect_to '/users/tq1'
+      redirect_to '/users/qq3'
     else
       redirect_to '/users/qq2'
     end    
   end
   
+  # def trap_question_1
+    
+  #   #  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+  
+    
+  #   user=User.find_by session_id: session.id
+    
+  #   #  tracker.track(user.ip_address, 'Trap Q1')
+    
+  #   user.trap_question_1_response=params[:color]
+  #   if params[:color]=="Green" then
+  #     user.save           
+  #     redirect_to '/users/qq3'
+  #   else
+  #     user.watch_listed=true
+  #     user.save
+  #     # Flash user to pay attention
+  #     flash[:alert] = "Please pay attention to your responses!"
+  #     redirect_to '/users/tq1'
+  #   end
+  # end
+
   def trap_question_1
     
     #  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
   
     
     user=User.find_by session_id: session.id
-    
+    magicstring = user.user_id[0..5]
+    print "magicstring: ", magicstring
+    puts
     #  tracker.track(user.ip_address, 'Trap Q1')
     
-    user.trap_question_1_response=params[:color]
-    if params[:color]=="Green" then
+    user.trap_question_1_response=params[:entry]
+    if params[:entry]==magicstring then
       user.save           
-      redirect_to '/users/qq3'
+      # redirect_to '/users/qq3'
+      redirect_to '/users/tos'
+
     else
       user.watch_listed=true
       user.save
