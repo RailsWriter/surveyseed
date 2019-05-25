@@ -18,9 +18,9 @@
 			<center>
 				<% u=User.find_by session_id: session.id %>
 				<div id="p1"><h3><%= alert %></h3></div>
-				<p>Note this string: <%= "\'" + u.user_id[0..4] + "\'" %></p>
+				<p>Note this string: <%= u.user_id[0..4] %></p>
 				<p>Add a 'K' at the end of the string and enter below. </p>
-				<p>For example, if the string is 'xxxxx', then enter 'xxxxxK' below.</p>
+				<p>( For example, if the string is xxxxx then enter xxxxxK )</p>
 			</center>
 			
 				<%= form_tag("trap_question_1", method: "post") do %>
