@@ -277,7 +277,7 @@ class UsersController < ApplicationController
   
     
     user=User.find_by session_id: session.id
-    magicstring = user.user_id[0..5]
+    magicstring = user.user_id[0..4]+"K"
     print "magicstring: ", magicstring
     puts
     #  tracker.track(user.ip_address, 'Trap Q1')
@@ -291,6 +291,8 @@ class UsersController < ApplicationController
     else
       user.watch_listed=true
       user.save
+      print "wrong magicstring entry: ", params[:entry], " for ", user.user_id
+      puts
       # Flash user to pay attention
       flash[:alert] = "Please pay attention to your responses!"
       redirect_to '/users/tq1'
