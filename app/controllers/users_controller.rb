@@ -121,11 +121,14 @@ class UsersController < ApplicationController
       if (first_time_user==false) then
         if (netid == "MMq0514UMM20bgf17Yatemoh") then
           user = User.find(userRecordId)
+          user.clickid = "KETSCI_GUEST_"+SecureRandom.urlsafe_base64
+          # can not give a new clickid to any other network users else they can not identify them => how to avoid duplicate postback in redirects??
+          user.save
         else
           user = User.where("ip_address = ? or session_id = ?", ip_address, session_id).first
         end
 
-        print "*** DEBUG ******* REPEAT USER. Existing User Record is: ", user
+        print "*** DEBUG ******* REPEAT USER. Existing User Record Id is: ", user.id
         puts
 
         if user.black_listed==true then
@@ -418,6 +421,7 @@ class UsersController < ApplicationController
     # ret = db.lookup('174.204.19.200') # US Test
     # ret = db.lookup('24.222.111.194') # CA Test
     # ret = db.lookup('220.244.87.112') # AU Test
+    # ret = db.lookup('137.97.119.214') # IN Test
     
     if ret.found? == false then
       print "IP Address Country Not Found in the database: ", user.ip_address, " => Default to US" 
@@ -992,7 +996,7 @@ class UsersController < ApplicationController
       puts
       user = User.where('emailId=? AND password=?', params[:credentials]["emailId"], params[:credentials]["password"]).first      
       if user!=nil then
-        print "***************** Successful login: This person is a registered existing user: ", user
+        print "***************** Successful login: This person is a registered existing user with Record Id: ", user.id
         puts
         render json: user
       else
@@ -1129,13 +1133,13 @@ class UsersController < ApplicationController
       # user = User.where('emailId=? AND password=?', params[:preferences]["emailId"], params[:preferences]["password"]).first    
       user = User.find(params[:preferences]["userId"])  
       if user!=nil then
-        print "***************** Found registered existing user: ", user
+        print "***************** Found registered existing user with Record Id: ", user.id
         puts
 
         user.redeemRewards=params[:preferences]["redeemRewards"]
         user.surveyFrequency=params[:preferences]["surveyFrequency"]
         user.save
-        print "***************** Saved new preferences: ", user
+        print "***************** Saved new preferences for user Id: ", user.id
         puts
         render json: user
       else
@@ -2286,16 +2290,15 @@ class UsersController < ApplicationController
           @maxCRIndex = 0
           @maxCR = @OfferwallResponse["response"]["surveys"][@maxCRIndex]["projectCR"]
           @RFGOfferwallSupplierLink = @OfferwallResponse["response"]["surveys"][@maxCRIndex]["offer_url"]
+
           @NumberOfSurveys = @OfferwallResponse["response"]["surveys"].length
             
-          print "****DEBUG******** Number of surveys on RFG Offerwall: ", @NumberOfSurveys
-          puts
-
-          print "*****DEBUG******* @maxCR initialized to: ", @maxCR
-          puts
-
-          print "****DEBUG******** @RFGOfferwallSupplierLink initialized to: ", @RFGOfferwallSupplierLink
-          puts
+          # print "****DEBUG******** Number of surveys on RFG Offerwall: ", @NumberOfSurveys
+          # puts
+          # print "*****DEBUG******* @maxCR initialized to: ", @maxCR
+          # puts
+          # print "****DEBUG******** @RFGOfferwallSupplierLink initialized to: ", @RFGOfferwallSupplierLink
+          # puts
 
           # Pick RFG survey that has the highest CR and payout more than users net_payout.
 
@@ -2312,15 +2315,41 @@ class UsersController < ApplicationController
             end
           end
           
-          print "***** DEBUG ******** Chosen RFG Offerwall SupplierLink: ", @RFGOfferwallSupplierLink, " at index: ", @maxCRIndex, " with projectCR: ", @maxCR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxCRIndex]["payout"], " and IR: ", @OfferwallResponse["response"]["surveys"][@maxCRIndex]["ir"]
+          print "***** DEBUG ******** Chosen RFG Offerwall SupplierLink based on CR: ", @RFGOfferwallSupplierLink, " at index: ", @maxCRIndex, " with projectCR: ", @maxCR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxCRIndex]["payout"], " and IR: ", @OfferwallResponse["response"]["surveys"][@maxCRIndex]["ir"]
           puts
-
 
           @RFGSupplierLinks = []
           @RFGSupplierLinks << @RFGOfferwallSupplierLink+@RFGAdditionalValues
 
-          print "**** DEBUG ********>>>> Selected RFG link with additional parameters >>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
-          puts      
+          print "**** DEBUG ********>>>> Selected First RFG link with additional parameters >>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
+          puts   
+
+
+          # Looking for highest IR survey and payout more than users net_payout.
+
+          @maxIRIndex = 0
+          @maxIR = @OfferwallResponse["response"]["surveys"][@maxIRIndex]["ir"]
+          @RFGOfferwallSupplierLink_IR = @OfferwallResponse["response"]["surveys"][@maxIRIndex]["offer_url"]
+
+          (0..@NumberOfSurveys-1).each do |i|
+            if ((@maxIR < @OfferwallResponse["response"]["surveys"][i]["ir"]) && (@net_payout.gsub(/[$,]/,'').to_f < @OfferwallResponse["response"]["surveys"][i]["payout"].gsub(/[$,]/,'').to_f)) then
+              @maxIRIndex = i
+              @maxIR = @OfferwallResponse["response"]["surveys"][i]["ir"]
+              @RFGOfferwallSupplierLink_IR = @OfferwallResponse["response"]["surveys"][i]["offer_url"]
+            else
+            end
+          end   
+
+          print "***** DEBUG ******** Chosen 2nd RFG Offerwall SupplierLink based on IR: ", @RFGOfferwallSupplierLink_IR, " at index: ", @maxIRIndex, " with IR: ", @maxIR, " and payout: ", @OfferwallResponse["response"]["surveys"][@maxIRIndex]["payout"], " and CR: ", @OfferwallResponse["response"]["surveys"][@maxIRIndex]["projectCR"]
+          puts
+
+          if @RFGOfferwallSupplierLink != @RFGOfferwallSupplierLink_IR then
+            @RFGSupplierLinks << @RFGOfferwallSupplierLink_IR+@RFGAdditionalValues
+          else
+          end
+
+          print "**** DEBUG ********>>>> Selected Second RFG link with additional parameters >>>>>>>>>>>>>>>>>>>>>>>>>0000ooooooooppppppp ", @RFGSupplierLinks,  "***************************************************************"
+          puts
         end   
       end
     else
@@ -2347,7 +2376,9 @@ class UsersController < ApplicationController
     # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
 
     @innovateNetId = "4444"
-    user = User.find_by session_id: session_id
+    # user = User.find_by session_id: session_id # seems to give nil response at times! (unsure) 
+    user = User.where("session_id=?", session_id).first
+
     @aff_sub = @innovateNetId+user.user_id
 
     @IMR_api_base_url = "https://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="
