@@ -44,6 +44,7 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'email_validator'
 gem 'whenever', :require => false
 gem 'figaro'
+gem 'maxminddb'
 
 group :development, :test do
   gem 'sqlite3',     '1.3.9'

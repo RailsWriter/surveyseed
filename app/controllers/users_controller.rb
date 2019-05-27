@@ -2,6 +2,7 @@ class UsersController < ApplicationController
 
   require 'mixpanel-ruby'
   require 'hmac-md5'
+  require 'maxminddb'
 
   # attr_accessor :reverseOrderFor2
 
@@ -243,7 +244,8 @@ class UsersController < ApplicationController
       user.gender=params[:gender]
       user.save
       # redirect_to '/users/tq1'
-      redirect_to '/users/qq3'
+      # redirect_to '/users/qq3'
+      country(session.id)
     else
       redirect_to '/users/qq2'
     end    
@@ -299,107 +301,163 @@ class UsersController < ApplicationController
     end
   end
   
-  def trap_question_2a_US
-    user=User.find_by session_id: session.id
-    user.trap_question_2a_response=params[:trap_question_2a_response]
-    user.save
-    redirect_to '/users/qq6_US'
-  end
+  # def trap_question_2a_US
+  #   user=User.find_by session_id: session.id
+  #   user.trap_question_2a_response=params[:trap_question_2a_response]
+  #   user.save
+  #   redirect_to '/users/qq6_US'
+  # end
 
-  def trap_question_2a_CA
-    user=User.find_by session_id: session.id
-    user.trap_question_2a_response=params[:trap_question_2a_response]
-    user.save
-    redirect_to '/users/qq6_CA'
-  end
+  # def trap_question_2a_CA
+  #   user=User.find_by session_id: session.id
+  #   user.trap_question_2a_response=params[:trap_question_2a_response]
+  #   user.save
+  #   redirect_to '/users/qq6_CA'
+  # end
   
-  def trap_question_2a_IN
-    user=User.find_by session_id: session.id
-    user.trap_question_2a_response=params[:trap_question_2a_response]
-    user.save
-    redirect_to '/users/qq7_IN'
-  end
+  # def trap_question_2a_IN
+  #   user=User.find_by session_id: session.id
+  #   user.trap_question_2a_response=params[:trap_question_2a_response]
+  #   user.save
+  #   redirect_to '/users/qq7_IN'
+  # end
   
-  def trap_question_2b
-    user=User.find_by session_id: session.id
-    user.trap_question_2b_response=params[:trap_question_2b_response]
-    if params[:trap_question_2b_response] != user.trap_question_2a_response then
-      if user.trap_question_1_response != "Green" then
-        if user.watch_listed then
-          user.black_listed=true
-          user.save
-          # send to quality term the user
-          userride (session_id)
-        else
-          user.watch_listed=true
-          user.save
-          # Flash user to pay attention
-          flash[:alert] = "Please pay attention to your responses!"
-          redirect_to '/users/tq2b'
-        end
-      else
-        user.save
-        # Flash user to pay attention
-        flash[:alert] = "Please pay attention to your responses!"
-        redirect_to '/users/tq2b'
-      end
-    else
-      user.save
-      redirect_to '/users/qq9'
-    end
-  end    
+  # def trap_question_2b
+  #   user=User.find_by session_id: session.id
+  #   user.trap_question_2b_response=params[:trap_question_2b_response]
+  #   if params[:trap_question_2b_response] != user.trap_question_2a_response then
+  #     if user.trap_question_1_response != "Green" then
+  #       if user.watch_listed then
+  #         user.black_listed=true
+  #         user.save
+  #         # send to quality term the user
+  #         userride (session_id)
+  #       else
+  #         user.watch_listed=true
+  #         user.save
+  #         # Flash user to pay attention
+  #         flash[:alert] = "Please pay attention to your responses!"
+  #         redirect_to '/users/tq2b'
+  #       end
+  #     else
+  #       user.save
+  #       # Flash user to pay attention
+  #       flash[:alert] = "Please pay attention to your responses!"
+  #       redirect_to '/users/tq2b'
+  #     end
+  #   else
+  #     user.save
+  #     redirect_to '/users/qq9'
+  #   end
+  # end    
   
-  def country    
+  # def country    
+  #   # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')   
+
+  #   # print "************************ COUNTRY Lookup ***************************" 
+  #   # puts
+  #   # print request.location.country
+  #   # puts      
+  #   # print "************************ COUNTRY Lookup ***************************" 
+  #   # puts
+
+  #   user=User.find_by session_id: session.id
+    
+  #   # tracker.track(user.ip_address, 'Country')
+    
+  #   user.country=params[:country]
+  #   user.save
+    
+  #   if user.country=="9" then 
+  #     redirect_to '/users/qq4_US'
+  #   else
+  #     if user.country=="6" then
+  #       redirect_to '/users/qq4_CA'
+  #     else
+  #       if user.country=="5" then
+  #         redirect_to '/users/qq4_AU'
+  #       else
+  #         if user.country=="7" then
+  #           # India
+  #           redirect_to '/users/qq12'
+  #         else
+  #           if user.country=="108" then
+  #             # Brazil
+  #             redirect_to '/users/qq12'
+  #           else
+  #             if user.country=="224" then
+  #               # Ghana
+  #               redirect_to '/users/qq12'
+  #             else
+  #               print "**** DEBUG Country **********", params[:country], " Session_id ", session_id
+  #               puts
+  #               # if user.country=="0" then
+  #               #  redirect_to '/users/nosuccess'
+  #               # else
+  #                redirect_to '/users/qq3'
+  #               # end
+  #             end
+  #           end
+  #         end
+  #       end
+  #     end
+  #   end  
+  # end
+
+  def country (session_id)
     # tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')   
-
-    # print "************************ COUNTRY Lookup ***************************" 
-    # puts
-    # print request.location.country
-    # puts      
-    # print "************************ COUNTRY Lookup ***************************" 
-    # puts
-
-    user=User.find_by session_id: session.id
-    
+    user=User.find_by session_id: session_id
     # tracker.track(user.ip_address, 'Country')
+
+    db = MaxMindDB.new('geoip/GeoLite2-Country_20190521/GeoLite2-Country.mmdb')
+    # db file downloaded from MaxMind site for GeoLite. Used tar -xzf GeoLite2-Country_20190521.tar.gz to extract db file. did not check md5
+    # docs available at https://github.com/yhirose/maxminddb and 
+    print "************************ START COUNTRY Lookup ***************************" 
+    puts
+    ret = db.lookup(user.ip_address)
+    # ret = db.lookup('174.204.19.200') # US Test
+    # ret = db.lookup('24.222.111.194') # CA Test
+    # ret = db.lookup('220.244.87.112') # AU Test
     
-    user.country=params[:country]
-    user.save
-    
-    if user.country=="9" then 
+    if ret.found? == false then
+      print "IP Address Country Not Found in the database: ", user.ip_address, " => Default to US" 
+      puts
+      user.country = "9"
+      user.save
+      # db.close
       redirect_to '/users/qq4_US'
     else
-      if user.country=="6" then
+      print "Country found in database is: ", ret.country.name
+      puts
+      case ret.country.name
+      when 'United States'
+        user.country = "9"
+        user.save
+        redirect_to '/users/qq4_US'
+      when 'Canada'
+        user.country = "6"
+        user.save
         redirect_to '/users/qq4_CA'
-      else
-        if user.country=="5" then
-          redirect_to '/users/qq4_AU'
-        else
-          if user.country=="7" then
-            # India
-            redirect_to '/users/qq12'
-          else
-            if user.country=="108" then
-              # Brazil
-              redirect_to '/users/qq12'
-            else
-              if user.country=="224" then
-                # Ghana
-                redirect_to '/users/qq12'
-              else
-                print "**** DEBUG Country **********", params[:country], " Session_id ", session_id
-                puts
-                # if user.country=="0" then
-                #  redirect_to '/users/nosuccess'
-                # else
-                 redirect_to '/users/qq3'
-                # end
-              end
-            end
-          end
-        end
+      when 'Australia'
+        user.country = "5"
+        user.save
+        redirect_to '/users/qq4_AU'
+      when 'India'
+        user.country = "7"
+        user.save
+        redirect_to '/users/qq12'
+      when 'Brazil'
+        user.country = "108"
+        user.save
+        redirect_to '/users/qq12'
+      when 'Ghana'
+        user.country = "224"
+        user.save
+        redirect_to '/users/qq12'
       end
-    end  
+    end
+    print "************************ END COUNTRY Lookup ***************************" 
+    puts
   end
   
   def zip_US
