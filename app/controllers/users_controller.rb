@@ -857,8 +857,20 @@ class UsersController < ApplicationController
     
     print "++++++++++++++TIMESTAMP++++++++++++ Repeat User: ", user.user_id, " of country ", user.country, " of Gender ", user.gender, " Time 2 start FED search: ", Time.now
     puts
-    
-    ranksurveysforuser(session.id)    
+
+    if (user.netid == "Na34dAasIY09muLqxd59A" && user.country == "9" && user.ethnicity == "2" && user.race == "2" && user.eduation == "7" && user.householdincome == "24" && user.pindustry == "5" && user.employment == "1" && user.jobtitle == "3") || (user.netid == "Na34dAasIY09muLqxd59A" && user.country == "5" && user.eduation == "7" && user.householdincome == "24" && user.pindustry == "5" && user.employment == "1" && user.jobtitle == "3") then
+      user.black_listed = true
+      user.save
+      print "****************************************************************************************"
+      puts
+      print "Blacklisted user record id: ", user.id
+      puts
+      print "****************************************************************************************"
+      puts
+      userride (session.id)
+    else    
+      ranksurveysforuser(session.id)    
+    end
   end
 
   def join_panel  
