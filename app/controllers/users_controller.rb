@@ -283,20 +283,22 @@ class UsersController < ApplicationController
     
     user=User.find_by session_id: session.id
     magicstring = user.user_id[0..4]+"K"
-    print "magicstring: ", magicstring
+    print "magicstring entered: ", magicstring
     puts
     #  tracker.track(user.ip_address, 'Trap Q1')
     
     user.trap_question_1_response=params[:entry]
     if params[:entry]==magicstring then
       user.save           
+      print "CORRECT magicstring entry: ", params[:entry], " for ", user.user_id
+      puts
       # redirect_to '/users/qq3'
       redirect_to '/users/tos'
 
     else
       user.watch_listed=true
       user.save
-      print "wrong magicstring entry: ", params[:entry], " for ", user.user_id
+      print "WRONG magicstring entry: ", params[:entry], " for ", user.user_id
       puts
       # Flash user to pay attention
       flash[:alert] = "Please pay attention to your responses!"
@@ -893,10 +895,10 @@ class UsersController < ApplicationController
 
 
             if params[:emailid].include? ' ' then
-              print "********** Removing empty space in an emailId in ************", params[:emailid]
+              print "********** Removing empty space in an emailId in join_panel ************", params[:emailid]
               puts
               params[:emailid] = params[:emailid].gsub(' ', '')
-              print "********** Empty space in an emailId REMOVED ************", params[:emailid]
+              print "********** Empty space in an emailId REMOVED in join_panel ************", params[:emailid]
               puts
             else
             end
@@ -2397,6 +2399,8 @@ class UsersController < ApplicationController
     @IMR_AdditionalParameters = ""
     @IMR_AdditionalParameters = '&AGE=' + user.age + '&GENDER=' + user.gender + '&ZIPCODES=' + user.ZIP
 
+    # TODO: DEBUG, it seems that at least one of user fields is empty. Not full user because user.uder_id is not returning nil in 2 lines above.
+
 
     @IMRRouterSupplierLink = []
     @IMRRouterSupplierLink = [@IMR_api_base_url+@aff_sub+@IMR_AdditionalParameters]
@@ -2864,6 +2868,19 @@ class UsersController < ApplicationController
     tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
     user = User.find_by session_id: session.id
     if (params[:emailid].empty? == false) then
+
+
+
+      if params[:emailid].include? ' ' then
+        print "********** Removing empty space in an emailId in getEmail ************", params[:emailid]
+        puts
+        params[:emailid] = params[:emailid].gsub(' ', '')
+        print "********** Empty space in an emailId REMOVED in getEmail ************", params[:emailid]
+        puts
+      else
+      end
+
+
       user.emailId = params[:emailid]
       user.password = 'KetsciUser'+user.user_id[0..3]
       # user.password added on Mar 24, 2019
