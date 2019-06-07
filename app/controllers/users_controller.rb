@@ -206,7 +206,7 @@ class UsersController < ApplicationController
     else
       p '**********DEBUG********** TOS: A REPEAT USER'
       # set 24 hr survey attempts in separate sessions from same device/IP address here
-      if (user.number_of_attempts_in_last_24hrs < 3) then
+      if (user.number_of_attempts_in_last_24hrs < 5) then
         if (user.industries.length == 0) then 
           #industries is an Array so verify length and not nil
           # this user did not provide full profile info the first time
@@ -221,7 +221,7 @@ class UsersController < ApplicationController
         end      
       else
         # user has made too many attempts to take surveys
-        p '******* More than 3 attempts to take a survey in last 24 hrs ***********'
+        p '******* More than 5 attempts to take a survey in last 24 hrs ***********'
         redirect_to '/users/24hrsquotaexceeded'
       end
     end
