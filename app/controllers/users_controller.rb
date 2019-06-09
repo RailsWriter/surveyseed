@@ -201,28 +201,40 @@ class UsersController < ApplicationController
     # Use LetMeInAsANewUser in Dev testing only. Can be used with normal mode in browser - not incognito.
 
     if ( user.attempts_time_stamps_array.length==1 ) || (user.clickid == "LetMeInAsANewUser") then
-      p '*******DEBUG************ TOS: FIRST TIME USER or First time returning Panelist'
+      p '*******DEBUG************ TOS: FIRST TIME USER or First time returning Panelist or Testing with LetMeInAsANewUser'
       redirect_to '/users/qq2'
     else
       p '**********DEBUG********** TOS: A REPEAT USER'
       # set 24 hr survey attempts in separate sessions from same device/IP address here
-      if (user.number_of_attempts_in_last_24hrs < 5) then
-        if (user.industries.length == 0) then 
-          #industries is an Array so verify length and not nil
-          # this user did not provide full profile info the first time
-          print '** DEBUG **** looks like a REPEAT USER but industries field is empty *********** Might be an email invited New User'
-          puts
-          redirect_to '/users/qq2'
+      if user.SurveysCompleted.empty? then
+        if (user.number_of_attempts_in_last_24hrs < 10) then
+          if (user.industries.length == 0) then 
+            #industries is an Array so verify length and not nil
+            # this user did not provide full profile info the first time
+            print '** DEBUG **** looks like a REPEAT USER but industries field is empty *********** Might be an email invited New User'
+            puts
+            redirect_to '/users/qq2'
+          else
+            # skip gender and other demo questions due to responses in last 24 hrs
+            print '** DEBUG REPEAT USER ***** industries field is NOT empty ***********'
+            puts
+            redirect_to '/users/qq12Returning'
+          end      
         else
-          # skip gender and other demo questions due to responses in last 24 hrs
-          print '** DEBUG REPEAT USER ***** industries field is NOT empty ***********'
+          # user has made too many attempts to take surveys
+          print '******* More than 10 attempts to take a survey in last 24 hrs:', user.id
           puts
-          redirect_to '/users/qq12Returning'
-        end      
+          redirect_to '/users/24hrsquotaexceeded'
+        end
       else
-        # user has made too many attempts to take surveys
-        p '******* More than 5 attempts to take a survey in last 24 hrs ***********'
-        redirect_to '/users/24hrsquotaexceeded'
+        # Enforce conditions for number of completes per day.
+        if user.SurveysCompleted.keys[-1] < Time.now - 1.day then
+          # Do nothing. Last completed survey was before 1 day. Make it 0 days to remove this condition.
+        else
+          print '******* User Id has already completed 1 survey in last 24 hrs:', user.id
+          puts
+          redirect_to '/users/24hrsquotaexceeded'
+        end
       end
     end
       
