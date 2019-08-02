@@ -45,6 +45,8 @@ gem 'email_validator'
 gem 'whenever', :require => false
 gem 'figaro'
 gem 'maxminddb'
+gem 'gibberish_detector'
+# gem "recaptcha"
 
 group :development, :test do
   gem 'sqlite3',     '1.3.9'

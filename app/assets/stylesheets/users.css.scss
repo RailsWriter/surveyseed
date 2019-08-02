@@ -147,6 +147,14 @@ form.myform input {
 	background-color:white;
 }
 
+.mytq2a input {
+	width: 30%;
+	height: 30px;
+	text-align: center;
+	color:black;
+	background-color:white;
+}
+
 .myethnicityinput input {
 	width: 4%;
 	height: 30px;
@@ -196,7 +204,7 @@ fieldset input {
 }	
 
 /* ===========================
-   ====== Media Queries ====== 
+   ====== Media Queries from mobile devices ====== 
    =========================== */
 
 @media only screen and (min-width: 50px) and (max-width: 600px)
@@ -249,6 +257,15 @@ fieldset input {
 		height: 40px;
 		text-align: center;
 		margin-left: 35%;
+		color:black;
+		background-color:white;
+	}
+
+	.mytq2a input {
+		/* Styling for the ZIP entry field on mobile */
+		width: 300px;
+		height: 40px;
+		text-align: center;
 		color:black;
 		background-color:white;
 	}

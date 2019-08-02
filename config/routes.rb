@@ -2,11 +2,13 @@ Rails.application.routes.draw do
 
   root 'leads#home'
   
+  post '/users/trap_question_2a'
   post '/users/lmcsv'
   post '/networks/login', '/networks/create'
   post '/center/addPanelistAction'
   post 'users/getEmail', 'users/savePreferences', 'users/login', 'center/draft_survey', 'users/capturefp', 'users/eval_age', 'users/sign_tos', 'users/gender', 'users/country', 'users/zip_US', 'users/zip_CA', 'users/zip_IN', 'users/zip_AU', 'users/ethnicity_US', 'users/ethnicity_CA', 'users/ethnicity_IN', 'users/race_US', 'users/race_CA', 'users/race_IN', 'users/education_US', 'users/education_CA', 'users/education_IN', 'users/education_AU', 'users/householdincome_US', 'users/householdincome_CA', 'users/householdincome_IN', 'users/householdincome_AU', 'users/householdcomp', 'users/employment', 'users/trap_question_1', 'users/trap_question_2a_US', 'users/trap_question_2a_CA', 'users/trap_question_2a_IN', 'users/trap_question_2b', 'users/personalindustry', 'users/pleasewait', 'users/p1action', 'users/p2action', 'users/p25action', 'users/p26action', 'users/p3action', 'users/jobtitleaction', 'users/childrenaction', 'users/industriesaction', 'users/Scrnr1Action', 'users/Pii1Action', 'users/join_panel'
 
+  get '/users/tq2a'
   get '/users/lmcsv', '/users/thanksNewSignUp'
   get 'networks/login', 'networks/KETSCIdashboard'
   get 'center/addPanelist'

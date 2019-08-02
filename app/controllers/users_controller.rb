@@ -305,7 +305,7 @@ class UsersController < ApplicationController
       print "CORRECT magicstring entry: ", params[:entry], " for ", user.user_id
       puts
       # redirect_to '/users/qq3'
-      redirect_to '/users/tos'
+      redirect_to '/users/tq2a'
 
     else
       user.watch_listed=true
@@ -317,6 +317,26 @@ class UsersController < ApplicationController
       redirect_to '/users/tq1'
     end
   end
+
+
+  def trap_question_2a
+    
+    #  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')  
+    
+    user=User.find_by session_id: session.id
+  
+    #  tracker.track(user.ip_address, 'Trap Q2')
+    
+    user.trap_question_2a_response = params[:tq2a_userentry]
+    if params[:tq2a_userentry].gibberish? then
+      user.save
+      redirect_to '/users/nosuccess'
+    else
+      user.save
+      redirect_to '/users/tos'
+    end
+  end
+
   
   # def trap_question_2a_US
   #   user=User.find_by session_id: session.id
