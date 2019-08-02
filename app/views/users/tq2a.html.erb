@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<title>Users HTML5 theme</title>
+		<meta charset="utf-8" />	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+
+	<body class="body">
+
+		<div class="header">
+			<center>
+				<h1>I am not a Robot</h1>
+			</center>
+		</header>
+
+		<center>
+				<p>Write a 5-10 words sentence about anything.</p>
+		</center>
+
+
+		<%= form_tag("trap_question_2a", method: "post") do %>
+			<fieldset>
+
+				<div class="mytq2a">
+					<center>
+					<%= text_field_tag 'tq2a_userentry', nil, maxlength: 200 %>
+					<%= label_tag(:tq2a_userentry, '') %><br><br>
+					</center>
+				</div>
+
+				<div class="myinput">
+					<center>				
+						<%= submit_tag "Next" %>
+					</center>
+				</div>
+
+			</fieldset>
+		<% end %>
+
+				
+		<footer class="footer">
+			<center>
+				<%= image_tag image_path('KetsciLogoSm.png') %>
+			</center>
+		</footer>
+	</body>	
+</html>
