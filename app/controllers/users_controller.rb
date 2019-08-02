@@ -2442,7 +2442,7 @@ class UsersController < ApplicationController
 
     @IMR_api_base_url = "https://innovate.go2cloud.org/aff_c?offer_id=821&aff_id=273&source=273&aff_sub="
     @IMR_AdditionalParameters = ""
-    @IMR_AdditionalParameters = '&AGE=' + user.age + '&GENDER=' + user.gender + '&ZIPCODES=' + user.ZIP
+    # @IMR_AdditionalParameters = '&AGE=' + user.age + '&GENDER=' + user.gender + '&ZIPCODES=' + user.ZIP
 
     # TODO: DEBUG, it seems that at least one of user fields is empty. Not full user because user.uder_id is not returning nil in 2 lines above.
 
