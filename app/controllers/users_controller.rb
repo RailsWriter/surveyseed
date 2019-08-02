@@ -208,15 +208,15 @@ class UsersController < ApplicationController
       # set 24 hr survey attempts in separate sessions from same device/IP address here
       if user.SurveysCompleted.empty? then
         if (user.number_of_attempts_in_last_24hrs < 10) then
-          if (user.industries.length == 0) then 
+          if (user.industries.length == 0) then
             #industries is an Array so verify length and not nil
             # this user did not provide full profile info the first time
-            print '** DEBUG **** looks like a REPEAT USER but industries field is empty *********** Might be an email invited New User'
+            print '** DEBUG **1** looks like a REPEAT USER but industries field is empty *********** Might be an email invited New User'
             puts
             redirect_to '/users/qq2'
           else
             # skip gender and other demo questions due to responses in last 24 hrs
-            print '** DEBUG REPEAT USER ***** industries field is NOT empty ***********'
+            print '** DEBUG REPEAT USER **1*** industries field is NOT empty ***********'
             puts
             redirect_to '/users/qq12Returning'
           end      
@@ -229,7 +229,20 @@ class UsersController < ApplicationController
       else
         # Enforce conditions for number of completes per day.
         if user.SurveysCompleted.keys[-1] < Time.now - 1.day then
-          # Do nothing. Last completed survey was before 1 day. Make it 0 days to remove this condition.
+          # Last completed survey was before 1 day. Make it 0 days to remove this condition.
+          # Take the user to complete a survey. See how much profile we already have. 
+          if (user.industries.length == 0) then
+            # industries is an Array so verify length and not nil
+            # this user did not provide full profile info the first time
+            print '** DEBUG **2** A REPEAT USER but industries field is empty *********** Might be an email invited New User'
+            puts
+            redirect_to '/users/qq2'
+          else
+            # skip gender and other demo questions due to responses in last 24 hrs
+            print '** DEBUG **2** A REPEAT USER ***** industries field is NOT empty ***********'
+            puts
+            redirect_to '/users/qq12Returning'
+          end
         else
           print '******* User Id has already completed 1 survey in last 24 hrs:', user.id
           puts
