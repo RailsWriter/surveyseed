@@ -2,10 +2,10 @@
 
 <h6> Showing last <%= @users.count%> respondents from US at <%= Time.now.utc %></h6>
 
-<p> Block: Id -- Age -- Gender -- Country -- Zip -- Ethnicity -- Race -- Education -- HHI -- Employment -- NetId -- TQ2a -- Attempted -- EmailId -- Completed -- Clickid </p>
+<p> Block: Id -- Age -- Gender -- Country -- Zip -- Ethnicity -- Race -- Education -- HHI -- Employment -- NetId -- TQ2a -- Attempted -- EmailId -- Clickid -- Completed</p>
 
     <% @users.each do |c| %>
     <li>
-       <%= link_to c.id.to_s + '---' + c.age.to_s + '---' + c.gender.to_s + '---' + c.country.to_s + '---' + c.ZIP.to_s + '---' + c.ethnicity.to_s + '---' + c.race.to_s + '---' + c.eduation.to_s + '---' + c.householdincome.to_s + '---' + c.employment.to_s + '-----' + c.netid.slice(0..2).to_s + '-----' + c.trap_question_2a_response.to_s + '-------------' + c.SurveysAttempted.to_s + '-------------' + c.emailId.to_s + '--------------------' + c.SurveysCompleted.flatten(2).at(-4).to_s + ' ' + c.SurveysCompleted.flatten(2).at(-1).to_s + '-------' + c.clickid.to_s, :action =>'show_users_US', :id =>c.id  -%>
+       <%= link_to c.id.to_s + '---' + c.age.to_s + '---' + c.gender.to_s + '---' + c.country.to_s + '---' + c.ZIP.to_s + '---' + c.ethnicity.to_s + '---' + c.race.to_s + '---' + c.eduation.to_s + '---' + c.householdincome.to_s + '---' + c.employment.to_s + '-----' + c.netid.slice(0..2).to_s + '-----' + c.trap_question_2a_response.to_s + '-------------' + c.SurveysAttempted.to_s + '-------------' + c.emailId.to_s + '-------' + c.clickid.to_s  + '--------------------' + c.SurveysCompleted.flatten(2).at(-4).to_s + ' ' + c.SurveysCompleted.flatten(2).at(-1).to_s, :action =>'show_users_US', :id =>c.id  -%>
     </li>
     <% end %>
