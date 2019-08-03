@@ -342,6 +342,8 @@ class UsersController < ApplicationController
     
     user.trap_question_2a_response = params[:tq2a_userentry]
     if params[:tq2a_userentry].gibberish? then
+      print  "******** Gibberish Found *********** userId: ", user.id, "wrote: ", params[:tq2a_userentry]
+      puts
       user.save
       redirect_to '/users/nosuccess'
     else
