@@ -343,6 +343,8 @@ class UsersController < ApplicationController
     user.trap_question_2a_response = params[:tq2a_userentry]
     if (params[:tq2a_userentry].gibberish?) || 
       (params[:tq2a_userentry] == 'I love you thank you') || 
+      (params[:tq2a_userentry] == 'I\'m not a robot, stupid') || 
+      (params[:tq2a_userentry] == 'THANK YOU') || 
       (params[:tq2a_userentry] == 'VERY GOOD') then
       print  "******** Gibberish Found *********** userId: ", user.id, "wrote: ", params[:tq2a_userentry]
       puts
