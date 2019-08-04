@@ -341,9 +341,12 @@ class UsersController < ApplicationController
     #  tracker.track(user.ip_address, 'Trap Q2')
     
     user.trap_question_2a_response = params[:tq2a_userentry]
-    if params[:tq2a_userentry].gibberish? then
+    if (params[:tq2a_userentry].gibberish?) || 
+      (params[:tq2a_userentry] == 'I love you thank you') || 
+      (params[:tq2a_userentry] == 'VERY GOOD') then
       print  "******** Gibberish Found *********** userId: ", user.id, "wrote: ", params[:tq2a_userentry]
       puts
+      user.black_listed = true
       user.save
       redirect_to '/users/nosuccess'
     else
@@ -907,18 +910,25 @@ class UsersController < ApplicationController
     print "++++++++++++++TIMESTAMP++++++++++++ Repeat User: ", user.user_id, " of country ", user.country, " of Gender ", user.gender, " Time 2 start FED search: ", Time.now
     puts
 
-    if (user.netid == "Na34dAasIY09muLqxd59A" && user.country == "9" && user.ethnicity == "2" && user.race == "2" && user.eduation == "7" && user.householdincome == "24" && user.pindustry == "5" && user.employment == "1" && user.jobtitle == "3") || (user.netid == "Na34dAasIY09muLqxd59A" && user.country == "5" && user.eduation == "7" && user.householdincome == "24" && user.pindustry == "5" && user.employment == "1" && user.jobtitle == "3") then
-      user.black_listed = true
-      user.save
-      print "****************************************************************************************"
-      puts
+    # if (user.netid == "Na34dAasIY09muLqxd59A" && user.country == "9" && user.ethnicity == "2" && user.race == "2" && user.eduation == "7" && user.householdincome == "24" && user.pindustry == "5" && user.employment == "1" && user.jobtitle == "3") || (user.netid == "Na34dAasIY09muLqxd59A" && user.country == "5" && user.eduation == "7" && user.householdincome == "24" && user.pindustry == "5" && user.employment == "1" && user.jobtitle == "3") then
+    #   user.black_listed = true
+    #   user.save
+    #   print "****************************************************************************************"
+    #   puts
+    #   print "Blacklisted user record id: ", user.id
+    #   puts
+    #   print "****************************************************************************************"
+    #   puts
+    #   userride (session.id)
+    # else    
+    #   ranksurveysforuser(session.id)    
+    # end
+    if user.black_listed == true then
       print "Blacklisted user record id: ", user.id
       puts
-      print "****************************************************************************************"
-      puts
-      userride (session.id)
-    else    
-      ranksurveysforuser(session.id)    
+      redirect_to '/users/nosuccess'
+    else
+      ranksurveysforuser(session.id)
     end
   end
 
