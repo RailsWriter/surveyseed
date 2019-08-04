@@ -133,8 +133,9 @@ class UsersController < ApplicationController
 
         if user.black_listed==true then
           p '******************* EVAL_AGE: REPEAT USER is Black listed'
-          # Send to userride to be termed. ***** This can be changed to redirect to nosuccess? *****
-          userride (session_id)
+          # Send to userride to be termed. This can be changed to redirect to nosuccess? YES, because user is sometimes not created?
+          # userride (session_id)
+          redirect_to '/users/nosuccess'
         else
           p '******************* EVAL_AGE: Modifying existing user record of a REPEAT USER with current info'
 
@@ -344,7 +345,7 @@ class UsersController < ApplicationController
     if (params[:tq2a_userentry].gibberish?) || 
       (user.clickid[0..4] == "7518c") ||
       (user.clickid[0..4] == "1074c") then
-      print  "******** Blacklisting for Gibberish or Aanicca 7518c or 1074c user Found *********** userId: ", user.id, "wrote: ", params[:tq2a_userentry]
+      print  "******** Blacklisting for Gibberish or Aanicca 7518c or 1074c user Found *********** userId: ", user.id, " wrote: ", params[:tq2a_userentry]
       puts
       user.black_listed = true
       user.save
