@@ -106,6 +106,19 @@ class CenterController < ApplicationController
     @users = User.where("country = ?", '7').each
   end
   
+  def users_BR
+    @users = User.where("country = ?", '108').last(100).reverse.each
+
+      respond_to do |format|
+        format.html # users.html.erb
+        format.json { render json: @users }
+      end
+  end
+
+  def show_users_BR
+    @users = User.where("country = ?", '108').each
+  end
+
   def RFGProjects_CA
     
     @projects = RfgProject.where("country = ?", "CA").order(estimatedIR: :desc).order(projectEPC: :desc).each
