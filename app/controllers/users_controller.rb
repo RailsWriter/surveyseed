@@ -541,7 +541,7 @@ class UsersController < ApplicationController
     # tracker.track(user.ip_address, 'CA_Zip')
     
     if params[:zip].empty? == false
-      user.ZIP=params[:zip].upcase
+      user.ZIP=params[:zip].upcase.delete(' ')
       user.save
       redirect_to '/users/qq7_CA'
     else
