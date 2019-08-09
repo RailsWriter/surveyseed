@@ -111,8 +111,8 @@ class UsersController < ApplicationController
         @user.number_of_attempts_in_last_24hrs=1
         @user.attempts_time_stamps_array = [Time.now]
         @user.save
-        # redirect_to '/users/tos'
-        redirect_to '/users/tq1'
+        # redirect_to '/users/tq1'
+        redirect_to '/users/tq2a'
       else
       end    
     
@@ -156,8 +156,8 @@ class UsersController < ApplicationController
           user.attempts_time_stamps_array = user.attempts_time_stamps_array + [Time.now]
           user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
           user.save
-          # redirect_to '/users/tos'
-          redirect_to '/users/tq1'
+          # redirect_to '/users/tq1'
+          redirect_to '/users/tq2a'
         end
       else
       end
@@ -272,8 +272,6 @@ class UsersController < ApplicationController
     if params[:gender] != nil
       user.gender=params[:gender]
       user.save
-      # redirect_to '/users/tq1'
-      # redirect_to '/users/qq3'
       country(session.id)
     else
       redirect_to '/users/qq2'
@@ -302,35 +300,35 @@ class UsersController < ApplicationController
   #   end
   # end
 
-  def trap_question_1
+  # def trap_question_1
     
-    #  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
+  #   #  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')
   
     
-    user=User.find_by session_id: session.id
-    magicstring = user.user_id[0..4]+"K"
-    print "magicstring entered: ", magicstring
-    puts
-    #  tracker.track(user.ip_address, 'Trap Q1')
+  #   user=User.find_by session_id: session.id
+  #   magicstring = user.user_id[0..4]+"K"
+  #   print "magicstring entered: ", magicstring
+  #   puts
+  #   #  tracker.track(user.ip_address, 'Trap Q1')
     
-    user.trap_question_1_response=params[:entry]
-    if params[:entry]==magicstring then
-      user.save           
-      print "CORRECT magicstring entry: ", params[:entry], " for ", user.user_id
-      puts
-      # redirect_to '/users/qq3'
-      redirect_to '/users/tq2a'
+  #   user.trap_question_1_response=params[:entry]
+  #   if params[:entry]==magicstring then
+  #     user.save           
+  #     print "CORRECT magicstring entry: ", params[:entry], " for ", user.user_id
+  #     puts
+  #     # redirect_to '/users/qq3'
+  #     redirect_to '/users/tq2a'
 
-    else
-      user.watch_listed=true
-      user.save
-      print "WRONG magicstring entry: ", params[:entry], " for ", user.user_id
-      puts
-      # Flash user to pay attention
-      flash[:alert] = "Please pay attention to your responses!"
-      redirect_to '/users/tq1'
-    end
-  end
+  #   else
+  #     user.watch_listed=true
+  #     user.save
+  #     print "WRONG magicstring entry: ", params[:entry], " for ", user.user_id
+  #     puts
+  #     # Flash user to pay attention
+  #     flash[:alert] = "Please pay attention to your responses!"
+  #     redirect_to '/users/tq1'
+  #   end
+  # end
 
 
   def trap_question_2a
