@@ -4,10 +4,9 @@
 	<head>
 		<title>Users HTML5 theme</title>
 		<meta charset="utf-8" />	
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">	
+		<script src="https://www.google.com/recaptcha/api.js?render=6LfwyK8UAAAAABrOjs75jAaUpduKXEWLlQGmqxtf"></script>
 	</head>
-
-
 
 	<body class="body">
 				
@@ -15,7 +14,7 @@
 			<center>
 				<h1>WELCOME!</h1>
 			</center>
-		</header>
+		</header>	
 		
 		<div class="topcontent">
 			<center>
@@ -35,12 +34,13 @@
 							<%= text_field_tag 'age', nil, maxlength: 2 %>
 							<%= label_tag(:age, 'yrs.') %><br><br>
 						</div>
-												
+
 						<%= hidden_field_tag :clickid, params[:CID] %>
 						<%= hidden_field_tag :netid, params[:NID] %>
 						<%= hidden_field_tag :userRecordId, params[:userRecordId] %>
 						<%= hidden_field_tag :session_id, session.id %>
 						<%= hidden_field_tag :ip_address, request.remote_ip %>
+						<%= hidden_field_tag :'g-recaptcha-response', 'g-recaptcha-response' %>
 					
 						<div class="myinput">
 							<center>				
@@ -51,14 +51,20 @@
 				<% end %>
 		</content>		
 		
-		
-		
 		<br>
 		<footer class="footer">
 			<center>
 				<%= image_tag image_path('KetsciLogoSm.png') %>
 			</center>
 		</footer>
-	</body>	
-	
+
+		<script>
+			grecaptcha.ready(function() {
+			  grecaptcha.execute('6LfwyK8UAAAAABrOjs75jAaUpduKXEWLlQGmqxtf', {action: 'action_name'}).then(function(token) {
+			     // console.log(token);
+			     document.getElementById('g-recaptcha-response').value=token;
+			  });
+			});
+		</script>
+	</body>
 </html>

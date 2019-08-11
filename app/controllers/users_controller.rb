@@ -17,6 +17,29 @@ class UsersController < ApplicationController
       return
     end
 
+  # Check for being Human
+
+    gurl = "https://www.google.com/recaptcha/api/siteverify"
+    @failcount = 0
+    @ReCaptchaVefificationResponse=[]
+    
+    begin
+      @ReCaptchaVefificationResponse = HTTParty.get("https://www.google.com/recaptcha/api/siteverify?secret=6LfwyK8UAAAAAKyawD9-Bqr1idg1Yj2xcEb9B_kL&response="+params[:'g-recaptcha-response']+"&remoteip="+request.remote_ip)
+      print "ReCaptchaVefificationResponse: ", @ReCaptchaVefificationResponse      
+      print "ReCaptcha failcount is: ", @failcount
+      puts
+      @failcount = @failcount+1
+    end while ((@ReCaptchaVefificationResponse.code != 200) && (@failcount < 10))
+
+    if (@ReCaptchaVefificationResponse["success"]) && (@ReCaptchaVefificationResponse["score"] > 0.5) then
+      print "@@@@@@@@@@@@@@ You are a human. You may continue with the survey. @@@@@@@@@@@@@@@@@@@@@@@"
+      puts
+    else
+      print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ You are a Robot. @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+      puts
+      redirect_to '/users/nosuccess'
+    end
+
      # Check for COPA, GDPR eligibility
 
     if @age.to_i<16 then
@@ -229,8 +252,9 @@ class UsersController < ApplicationController
         end
       else
         # Enforce conditions for number of completes per day.
-        if user.SurveysCompleted.keys[-1] < Time.now - 1.day then
-          # Last completed survey was before 1 day. Make it 0 days to remove this condition.
+        # if user.SurveysCompleted.keys[-1] < Time.now - 1.day then
+        if user.SurveysCompleted.keys[-1] < Time.now - 12.hours then
+          # Last completed survey was before 1 day. Make it 0 days to remove this condition. Now changed to half a day.
           # Take the user to complete a survey. See how much profile we already have. 
           if (user.industries.length == 0) then
             # industries is an Array so verify length and not nil
