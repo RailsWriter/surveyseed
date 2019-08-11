@@ -25,8 +25,9 @@ class UsersController < ApplicationController
     
     begin
       @ReCaptchaVefificationResponse = HTTParty.get("https://www.google.com/recaptcha/api/siteverify?secret=6LfwyK8UAAAAAKyawD9-Bqr1idg1Yj2xcEb9B_kL&response="+params[:'g-recaptcha-response']+"&remoteip="+request.remote_ip)
-      print "ReCaptchaVefificationResponse: ", @ReCaptchaVefificationResponse      
-      print "ReCaptcha failcount is: ", @failcount
+      print "ReCaptchaVefificationResponse: ", @ReCaptchaVefificationResponse  
+      puts    
+      print "reCAPTCHA failcount is: ", @failcount
       puts
       @failcount = @failcount+1
     end while ((@ReCaptchaVefificationResponse.code != 200) && (@failcount < 10))
@@ -35,9 +36,9 @@ class UsersController < ApplicationController
       print "@@@@@@@@@@@@@@ You are a human. You may continue with the survey. @@@@@@@@@@@@@@@@@@@@@@@"
       puts
     else
-      print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ You are a Robot. @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+      print "@@@@@@@@@@@@@@@@@@@@@@@@@ You are a Robot. NetId and Clickid: ", params[:netid], "and", params[:clickid], " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
       puts
-      redirect_to '/users/nosuccess'
+      redirect_to '/users/nosuccess' and return
     end
 
      # Check for COPA, GDPR eligibility
@@ -45,7 +46,7 @@ class UsersController < ApplicationController
     if @age.to_i<16 then
       ip_address = request.remote_ip
       # tracker.track(ip_address, 'Age<16')
-      redirect_to '/users/nosuccess'
+      redirect_to '/users/nosuccess' and return
     else  
       # Enter the user with the following credentials in our system or find user's record  
       ip_address = request.remote_ip
@@ -365,9 +366,9 @@ class UsersController < ApplicationController
     
     user.trap_question_2a_response = params[:tq2a_userentry]
     if (params[:tq2a_userentry].gibberish?) || 
-      (user.clickid[0..4] == "7518c") ||
-      (user.clickid[0..4] == "1074c") then
-      print  "******** Blacklisting for Gibberish or Aanicca 7518c or 1074c user Found *********** userId: ", user.id, " wrote: ", params[:tq2a_userentry]
+      (user.clickid[0..4] == "7518c") then
+      # (user.clickid[0..4] == "1074c") then
+      print  "******** Blacklisting for Gibberish or Aanicca 7518c user Found *********** userId: ", user.id, " wrote: ", params[:tq2a_userentry]
       puts
       user.black_listed = true
       user.save
@@ -973,16 +974,14 @@ class UsersController < ApplicationController
           # Check if the email address is valid and if it does not already exists in our database
           if EmailValidator.valid?(params[:emailid]) && !User.exists?(emailId: params[:emailid]) then
 
-
             if params[:emailid].include? ' ' then
-              print "********** Removing empty space in an emailId in join_panel ************", params[:emailid]
+              print "********** Removing empty space in an emailId in join_panel 1 ************", params[:emailid]
               puts
               params[:emailid] = params[:emailid].gsub(' ', '')
-              print "********** Empty space in an emailId REMOVED in join_panel ************", params[:emailid]
+              print "********** Empty space in an emailId REMOVED in join_panel 1 ************", params[:emailid]
               puts
             else
             end
-
 
             user.emailId = params[:emailid]
             user.password = 'Ketsci'+user.user_id[0..3]
@@ -1031,6 +1030,15 @@ class UsersController < ApplicationController
           session_id = session.id
           netid = "KetsciPanel"
           clickid = "LEADS_PANELIST"
+
+          if params[:emailid].include? ' ' then
+            print "********** Removing empty space in an emailId in join_panel 2 ************", params[:emailid]
+            puts
+            params[:emailid] = params[:emailid].gsub(' ', '')
+            print "********** Empty space in an emailId REMOVED in join_panel 2 ************", params[:emailid]
+            puts
+          else
+          end
 
           user=User.new
           
@@ -1088,6 +1096,16 @@ class UsersController < ApplicationController
     if ((params[:credentials]["emailId"] != nil) && (params[:credentials]["password"] != nil)) then
       print "****************** Received login credentials ", params[:credentials]
       puts
+
+      if params[:credentials]["emailId"].include? ' ' then
+        print "********** Removing empty space in an emailId in login ************", params[:credentials]["emailId"]
+        puts
+        params[:credentials]["emailId"] = params[:credentials]["emailId"].gsub(' ', '')
+        print "********** Empty space in an emailId REMOVED in login ************", params[:credentials]["emailId"]
+        puts
+      else
+      end
+
       user = User.where('emailId=? AND password=?', params[:credentials]["emailId"], params[:credentials]["password"]).first      
       if user!=nil then
         print "***************** Successful login: This person is a registered existing user with Record Id: ", user.id
@@ -1145,8 +1163,6 @@ class UsersController < ApplicationController
           status: 400
         }
         render :json => payload, :status => :bad_request
-
-
       end 
       p "***************** Unsuccessful login: Email or Password credentials were not received in POST for login **************"
     end
@@ -2949,8 +2965,6 @@ class UsersController < ApplicationController
     user = User.find_by session_id: session.id
     if (params[:emailid].empty? == false) then
 
-
-
       if params[:emailid].include? ' ' then
         print "********** Removing empty space in an emailId in getEmail ************", params[:emailid]
         puts
@@ -2959,7 +2973,6 @@ class UsersController < ApplicationController
         puts
       else
       end
-
 
       user.emailId = params[:emailid]
       user.password = 'KetsciUser'+user.user_id[0..3]
