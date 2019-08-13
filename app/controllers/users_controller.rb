@@ -231,11 +231,12 @@ class UsersController < ApplicationController
       print "@@@@@@@@@@@@@@@@@@ Duplicate Fingerprints Found in last 12 hrs. for user_id: ", user.id, " @@@@@@@@@@@@@@@@@@@@@@@"
       puts
       User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).each do |f|
-        if !f.SurveysCompleted.empty? then
+        if f.SurveysCompleted.empty? then
+          # do nothing
           # It matters only if this user has completed a survey in last 12 hrs otherwise it does not matter to let him continue as a new user.
+        else
           # fingerprint_found_12hr = true
           redirect_to '/users/nosuccess' and return
-        else
         end
       end   
     else
