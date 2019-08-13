@@ -36,7 +36,7 @@ class UsersController < ApplicationController
       print "@@@@@@@@@@@@@@ You are a human. You may continue with the survey. @@@@@@@@@@@@@@@@@@@@@@@"
       puts
     else
-      print "@@@@@@@@@@@@@@@@@@@@@@@@@ You are a Robot. NetId and Clickid: ", params[:netid], "and", params[:clickid], " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+      print "@@@@@@@@@@@@@@@@@@@@@@@@@ You are a Robot. NetId and Clickid: ", params[:netid], " and ", params[:clickid], " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
       puts
       redirect_to '/users/nosuccess' and return
     end
@@ -62,7 +62,7 @@ class UsersController < ApplicationController
         if @SSnet == nil then
           print "************************************ Bad NetworkId ********************"
           puts
-          redirect_to '/users/nosuccess'
+          redirect_to '/users/nosuccess' and return
         else
           if @SSnet.Flag2 == nil then
             @SSnet.Flag2 = "1" 
@@ -225,11 +225,29 @@ class UsersController < ApplicationController
     # Address good and bad repeat access behaviour after they have resigned TOS (PP)
     # Use LetMeInAsANewUser in Dev testing only. Can be used with normal mode in browser - not incognito.
 
-    if ( user.attempts_time_stamps_array.length==1 ) || (user.clickid == "LetMeInAsANewUser") then
-      p '*******DEBUG************ TOS: FIRST TIME USER or First time returning Panelist or Testing with LetMeInAsANewUser'
+    # Check if this fingerprint has completed a survey in last 12 hrs.
+    # fingerprint_found_12hr = false
+    if ((User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).count) > 1) then
+      print "@@@@@@@@@@@@@@@@@@ Duplicate Fingerprints Found in last 12 hrs. for user_id: ", user.id, " @@@@@@@@@@@@@@@@@@@@@@@"
+      puts
+      User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).each do |f|
+        if !f.SurveysCompleted.empty? then
+          # It matters only if this user has completed a survey in last 12 hrs otherwise it does not matter to let him continue as a new user.
+          # fingerprint_found_12hr = true
+          redirect_to '/users/nosuccess' and return
+        else
+        end
+      end   
+    else
+    end
+
+    if (user.clickid == "LetMeInAsANewUser") || (user.attempts_time_stamps_array.length==1 ) then
+      print '******************* TOS: FIRST TIME USER or First time returning Panelist or Testing with LetMeInAsANewUser **********'
+      puts
       redirect_to '/users/qq2'
     else
-      p '**********DEBUG********** TOS: A REPEAT USER'
+      print '******************* TOS: A REPEAT USER ************************'
+      puts
       # set 24 hr survey attempts in separate sessions from same device/IP address here
       if user.SurveysCompleted.empty? then
         if (user.number_of_attempts_in_last_24hrs < 10) then
