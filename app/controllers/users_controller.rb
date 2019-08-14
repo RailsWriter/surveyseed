@@ -188,17 +188,62 @@ class UsersController < ApplicationController
     end
   end
 
+
+  def trap_question_2a
+    
+    #  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')  
+    
+    user=User.find_by session_id: session.id
+  
+    #  tracker.track(user.ip_address, 'Trap Q2')
+    
+    user.trap_question_2a_response = params[:tq2a_userentry]
+    if (params[:tq2a_userentry].gibberish?) || 
+      (user.clickid[0..4] == "7518c") then
+      # (user.clickid[0..4] == "1074c") then
+      print  "******** Blacklisting for Gibberish or Aanicca 7518c user Found *********** userId: ", user.id, " wrote: ", params[:tq2a_userentry]
+      puts
+      user.black_listed = true
+      user.save
+      redirect_to '/users/nosuccess'
+    else
+      user.save
+      redirect_to '/users/tos'
+    end
+  end
+
+
   def capturefp
 
     if params[:fingerprint].empty? == false      
       @fp = params[:fingerprint].to_i
     #  print "----------------->>>>>>>>>>>> fp: ", @fp
     #  puts
-      
       user=User.find_by session_id: session.id
       user.fingerprint = @fp
       user.save    
-      
+      # Check if this fingerprint has completed a survey in last 12 hrs.
+      # fingerprint_found_12hr = false
+      print "@@@@@@@@@@@@@@@@@@@@@@@@ Testing fingerprint ", user.fingerprint, " for userid ", user.id
+      puts
+      if ((User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).count) > 1) then
+        print "@@@@@@@@@@@@@@@@@@ Duplicate Fingerprints Found in last 12 hrs. for user_id: ", user.id, " @@@@@@@@@@@@@@@@@@@@@@@"
+        puts
+        User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).each do |f|
+          if f.SurveysCompleted.empty? then
+            # do nothing
+            # It matters only if this user has completed a survey in last 12 hrs otherwise it does not matter to let him continue as a new user.
+            print "@@@@@@@@@@@@@@@ Duplicate fp_12hrs uid for sessions && ip with no completes: ", f.id, " @@@@@@@@@@@@@@@@"
+            puts
+          else
+            # fingerprint_found_12hr = true
+            print "@@@@@@@@@@@@@@@ First duplicate fp_12hrs uid for sessions && ip with completes: ", f.id, " @@@@@@@@@@@@@@@@"
+            puts
+            redirect_to '/users/nosuccess' and return
+          end
+        end   
+      else
+      end
       redirect_to '/users/tos'
     else
       redirect_to '/users/tos'
@@ -224,27 +269,6 @@ class UsersController < ApplicationController
     
     # Address good and bad repeat access behaviour after they have resigned TOS (PP)
     # Use LetMeInAsANewUser in Dev testing only. Can be used with normal mode in browser - not incognito.
-
-    # Check if this fingerprint has completed a survey in last 12 hrs.
-    # fingerprint_found_12hr = false
-    if ((User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).count) > 1) then
-      print "@@@@@@@@@@@@@@@@@@ Duplicate Fingerprints Found in last 12 hrs. for user_id: ", user.id, " @@@@@@@@@@@@@@@@@@@@@@@"
-      puts
-      User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).each do |f|
-        if f.SurveysCompleted.empty? then
-          # do nothing
-          # It matters only if this user has completed a survey in last 12 hrs otherwise it does not matter to let him continue as a new user.
-          print "@@@@@@@@@@@@@@@ Duplicate fp_12hrs uid for sessions && ip with no completes: ", f.id, " @@@@@@@@@@@@@@@@"
-          puts
-        else
-          # fingerprint_found_12hr = true
-          print "@@@@@@@@@@@@@@@ First duplicate fp_12hrs uid for sessions && ip with completes: ", f.id, " @@@@@@@@@@@@@@@@"
-          puts
-          redirect_to '/users/nosuccess' and return
-        end
-      end   
-    else
-    end
 
     if (user.clickid == "LetMeInAsANewUser") || (user.attempts_time_stamps_array.length==1 ) then
       print '******************* TOS: FIRST TIME USER or First time returning Panelist or Testing with LetMeInAsANewUser **********'
@@ -379,28 +403,7 @@ class UsersController < ApplicationController
   # end
 
 
-  def trap_question_2a
-    
-    #  tracker = Mixpanel::Tracker.new('e5606382b5fdf6308a1aa86a678d6674')  
-    
-    user=User.find_by session_id: session.id
   
-    #  tracker.track(user.ip_address, 'Trap Q2')
-    
-    user.trap_question_2a_response = params[:tq2a_userentry]
-    if (params[:tq2a_userentry].gibberish?) || 
-      (user.clickid[0..4] == "7518c") then
-      # (user.clickid[0..4] == "1074c") then
-      print  "******** Blacklisting for Gibberish or Aanicca 7518c user Found *********** userId: ", user.id, " wrote: ", params[:tq2a_userentry]
-      puts
-      user.black_listed = true
-      user.save
-      redirect_to '/users/nosuccess'
-    else
-      user.save
-      redirect_to '/users/tos'
-    end
-  end
 
   
   # def trap_question_2a_US
