@@ -234,8 +234,12 @@ class UsersController < ApplicationController
         if f.SurveysCompleted.empty? then
           # do nothing
           # It matters only if this user has completed a survey in last 12 hrs otherwise it does not matter to let him continue as a new user.
+          print "@@@@@@@@@@@@@@@ Duplicate fp_12hrs uid for sessions && ip with no completes: ", f.id, " @@@@@@@@@@@@@@@@"
+          puts
         else
           # fingerprint_found_12hr = true
+          print "@@@@@@@@@@@@@@@ First duplicate fp_12hrs uid for sessions && ip with completes: ", f.id, " @@@@@@@@@@@@@@@@"
+          puts
           redirect_to '/users/nosuccess' and return
         end
       end   
