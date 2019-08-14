@@ -224,9 +224,9 @@ class UsersController < ApplicationController
       user.save    
       # Check if this fingerprint has completed a survey in last 12 hrs.
       # fingerprint_found_12hr = false
-      print "@@@@@@@@@@@@@@@@@@@@@@@@ Testing fingerprint ", user.fingerprint, " for userid ", user.id
+      print "@@@@@@@@@@@@@@@@@@@@@@@@ Testing fingerprint ", user.fingerprint, " for userid ", user.id, " @@@@@@@@@@@@@@@@"
       puts
-      if ((User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).count) > 1) then
+      if ((User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).count) > 0) then
         print "@@@@@@@@@@@@@@@@@@ Duplicate Fingerprints Found in last 12 hrs. for user_id: ", user.id, " @@@@@@@@@@@@@@@@@@@@@@@"
         puts
         User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).each do |f|
@@ -235,6 +235,7 @@ class UsersController < ApplicationController
             # It matters only if this user has completed a survey in last 12 hrs otherwise it does not matter to let him continue as a new user.
             print "@@@@@@@@@@@@@@@ Duplicate fp_12hrs uid for sessions && ip with no completes: ", f.id, " @@@@@@@@@@@@@@@@"
             puts
+            redirect_to '/users/tos'
           else
             # fingerprint_found_12hr = true
             print "@@@@@@@@@@@@@@@ First duplicate fp_12hrs uid for sessions && ip with completes: ", f.id, " @@@@@@@@@@@@@@@@"
@@ -243,8 +244,10 @@ class UsersController < ApplicationController
           end
         end   
       else
+        print "@@@@@@@@@@@@@@@@@@ Duplicate Fingerprints NOT Found in last 12 hrs. for user_id: ", user.id, " @@@@@@@@@@@@@@@@@@@@@@@"
+        puts
+        redirect_to '/users/tos'
       end
-      redirect_to '/users/tos'
     else
       redirect_to '/users/tos'
     end        
