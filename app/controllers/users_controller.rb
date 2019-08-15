@@ -221,6 +221,7 @@ class UsersController < ApplicationController
     #  puts
       user=User.find_by session_id: session.id
       user.fingerprint = @fp
+      user.watch_listed = false
       user.save    
       # Check if this fingerprint has completed a survey in last 12 hrs.
       # fingerprint_found_12hr = false
@@ -238,9 +239,14 @@ class UsersController < ApplicationController
             redirect_to '/users/tos'
           else
             # fingerprint_found_12hr = true
+            user.watch_listed = true
             print "@@@@@@@@@@@@@@@ First duplicate fp_12hrs uid for sessions && ip with completes: ", f.id, " @@@@@@@@@@@@@@@@"
             puts
-            redirect_to '/users/nosuccess' and return
+            user.save
+            # userride (session.id)
+            # redirect_to '/users/nosuccess'
+            # return
+            redirect_to '/users/tos'
           end
         end   
       else
@@ -266,9 +272,14 @@ class UsersController < ApplicationController
     if ( user.number_of_attempts_in_last_24hrs==nil ) then
       user.number_of_attempts_in_last_24hrs=user.attempts_time_stamps_array.count { |x| x > (Time.now-1.day) }
     else
-    end
-    
+    end    
     user.save
+
+    if user.watch_listed == true then
+      redirect_to '/users/nosuccess'
+      return
+    else
+    end
     
     # Address good and bad repeat access behaviour after they have resigned TOS (PP)
     # Use LetMeInAsANewUser in Dev testing only. Can be used with normal mode in browser - not incognito.
@@ -2676,8 +2687,8 @@ class UsersController < ApplicationController
 
 
     # If user is blacklisted, then qterm
-    if user.black_listed == true then
-      print '******************** Userride: UserID is BLACKLISTED: ', user.user_id
+    if (user.black_listed == true) || (user.watch_listed == true) then
+      print '@@@@@@@@@@@@@@@@@@@@@@@@ Userride: UserID is BLACKLISTED or Watchlisted: ', user.user_id, " @@@@@@@@@@@@@@@@@@@@"
       puts
       # tracker.track(user.ip_address, 'NS_BL')
       redirect_to '/users/nosuccess'
