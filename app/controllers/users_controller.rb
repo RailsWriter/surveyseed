@@ -33,10 +33,12 @@ class UsersController < ApplicationController
     end while ((@ReCaptchaVefificationResponse.code != 200) && (@failcount < 10))
 
     if (@ReCaptchaVefificationResponse["success"]) && (@ReCaptchaVefificationResponse["score"] > 0.5) then
-      print "@@@@@@@@@@@@@@ You are a human. You may continue with the survey. @@@@@@@@@@@@@@@@@@@@@@@"
-      puts
+      # print "@@@@@@@@@@@@@@ You are a human. You may continue with the survey. @@@@@@@@@@@@@@@@@@@@@@@"
+      # puts
     else
       print "@@@@@@@@@@@@@@@@@@@@@@@@@ You are a Robot. NetId and Clickid: ", params[:netid], " and ", params[:clickid], " @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+      puts
+      print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess for being Robot ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
       puts
       redirect_to '/users/nosuccess' and return
     end
@@ -46,6 +48,8 @@ class UsersController < ApplicationController
     if @age.to_i<16 then
       ip_address = request.remote_ip
       # tracker.track(ip_address, 'Age<16')
+      print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess for Age < 16 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      puts
       redirect_to '/users/nosuccess' and return
     else  
       # Enter the user with the following credentials in our system or find user's record  
@@ -62,6 +66,8 @@ class UsersController < ApplicationController
         if @SSnet == nil then
           print "************************************ Bad NetworkId ********************"
           puts
+          print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess for bad NetworkId ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+          puts
           redirect_to '/users/nosuccess' and return
         else
           if @SSnet.Flag2 == nil then
@@ -74,6 +80,8 @@ class UsersController < ApplicationController
         end      
       else
         print "************************************ No NetworkId ********************"
+        puts
+        print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess for no NetworkId ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
         puts
         redirect_to '/users/nosuccess'
         return      
@@ -156,12 +164,16 @@ class UsersController < ApplicationController
         puts
 
         if user.black_listed==true then
-          p '******************* EVAL_AGE: REPEAT USER is Black listed'
+          print '******************* EVAL_AGE: REPEAT USER is Black listed ****************************'
+          puts
           # Send to userride to be termed. This can be changed to redirect to nosuccess? YES, because user is sometimes not created?
           # userride (session_id)
+          print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess for user blacklisted from before ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+          puts
           redirect_to '/users/nosuccess'
         else
-          p '******************* EVAL_AGE: Modifying existing user record of a REPEAT USER with current info'
+          print '******************* EVAL_AGE: Modifying existing user record of a REPEAT USER with current info'
+          puts
 
           user.age = @age
           user.netid = netid
@@ -227,36 +239,35 @@ class UsersController < ApplicationController
       # fingerprint_found_12hr = false
       print "@@@@@@@@@@@@@@@@@@@@@@@@ Testing fingerprint ", user.fingerprint, " for userid ", user.id, " @@@@@@@@@@@@@@@@"
       puts
-      if ((User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).count) > 0) then
-        print "@@@@@@@@@@@@@@@@@@ Duplicate Fingerprints Found in last 12 hrs. for current userid: ", user.id, " @@@@@@@@@@@@@@@@@@@@@@@"
+      fpcount = User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).count
+      if fpcount > 1 then
+        print "@@@@@@@@@@@@@@@@@@ Number of duplicate Fingerprints Found in last 12 hrs. for current userid: ", user.id, "is", fpcount, " @@@@@@@@@@@@@@@@@@@@@@@"
         puts
         User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).each do |f|
           if f.SurveysCompleted.empty? then
             # do nothing
             # It matters only if this user has completed a survey in last 12 hrs otherwise it does not matter to let him continue as a new user.
-            print "@@@@@@@@@@@@@@@ Duplicate fp_12hrs earlier userid with no completes: ", f.id, " @@@@@@@@@@@@@@@@"
-            puts
-            redirect_to '/users/tos'
+            # print "@@@@@@@@@@@@@@@ Duplicate fp_12hrs earlier userid with no completes: ", f.id, " @@@@@@@@@@@@@@@@"
+            # puts
+            # redirect_to '/users/tos'
           else
             # fingerprint_found_12hr = true
             user.watch_listed = true
             print "@@@@@@@@@@@@@@@ First duplicate fp_12hrs userid with completes: ", f.id, " @@@@@@@@@@@@@@@@"
             puts
             user.save
-            # userride (session.id)
-            # redirect_to '/users/nosuccess'
-            # return
-            redirect_to '/users/tos'
+            # redirect_to '/users/tos'
           end
         end   
       else
         print "@@@@@@@@@@@@@@@@@@ Duplicate Fingerprints NOT Found in last 12 hrs. for user_id: ", user.id, " @@@@@@@@@@@@@@@@@@@@@@@"
         puts
-        redirect_to '/users/tos'
+        # redirect_to '/users/tos'
       end
     else
-      redirect_to '/users/tos'
-    end        
+      # redirect_to '/users/tos'
+    end 
+    redirect_to '/users/tos'
   end
   
   def sign_tos
@@ -992,6 +1003,8 @@ class UsersController < ApplicationController
     if user.black_listed == true then
       print "Blacklisted user record id: ", user.id
       puts
+      print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess for user blacklisted 2 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      puts
       redirect_to '/users/nosuccess'
     else
       ranksurveysforuser(session.id)
@@ -1718,7 +1731,8 @@ class UsersController < ApplicationController
         return
       else
         if (net.status == "INACTIVE") then
-          p '****************************** ACCESS FROM AN INACTIVE NETWOK DENIED'
+          print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess for Access from an InActive Network ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+          puts
           redirect_to '/users/nosuccess'
           return
         else
@@ -1745,12 +1759,11 @@ class UsersController < ApplicationController
         end
       end
     else
-      # Bad netid, Network is not known
-      p '****************************** ACCESS FROM AN UNRECOGNIZED NETWOK DENIED'
+      print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess for Access from Unrecognized Network 1 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      puts      
       redirect_to '/users/nosuccess'
       return
     end
-
 
     # pulley_base_url = "https://pulley.samplicio.us/entry?"
     pulley_base_url = "https://www.samplicio.us/s/default.aspx?"
@@ -1899,8 +1912,8 @@ class UsersController < ApplicationController
           # puts
         end
       else
-        # Bad netid, Network is not known
-        p '****************************** ACCESS FROM AN UNRECOGNIZED NETWOK DENIED'
+        print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess for Access from Unrecognized Network 2 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        puts        
         redirect_to '/users/nosuccess'
         return
       end
@@ -2690,7 +2703,7 @@ class UsersController < ApplicationController
 
     # If user is blacklisted, then qterm
     if (user.black_listed == true) || (user.watch_listed == true) then
-      print '@@@@@@@@@@@@@@@@@@@@@@@@ Userride: UserID is BLACKLISTED or Watchlisted: ', user.user_id, " @@@@@@@@@@@@@@@@@@@@"
+      print '@@@@@@@@@@@@@@@@@@@@@@@@ Userride: Sending UserID to NoSuccess for BLACKLISTED or Watchlisted: ', user.id, " @@@@@@@@@@@@@@@@@@@@"
       puts
       # tracker.track(user.ip_address, 'NS_BL')
       redirect_to '/users/nosuccess'
@@ -2829,15 +2842,14 @@ class UsersController < ApplicationController
     # Start the user ride
     
     if user.SupplierLink.length == 0 then
-
+      print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess because no surveys available 1 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      puts
       if user.netid == "MMq0514UMM20bgf17Yatemoh" then
         redirect_to '/users/nosuccessPanelist'
       else
         redirect_to '/users/nosuccess'
       end
-
-    else      
-
+    else
       # if user.SupplierLink[0] == @p2sSupplierLink then
       
       #   print '*************** User will be sent to P2S router as no other surveys are available: ', user.SupplierLink[0]
@@ -3039,8 +3051,8 @@ class UsersController < ApplicationController
       user = User.find_by session_id: session.id
 
       if user.SupplierLink.length == 0 then
-        # redirect_to '/users/nosuccess'
-
+        print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess because no surveys available 2 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        puts
         if user.netid == "MMq0514UMM20bgf17Yatemoh" then
           redirect_to '/users/nosuccessPanelist'
         else
@@ -3060,10 +3072,8 @@ class UsersController < ApplicationController
       # Userride should go to the next survey link.
 
       if user.SupplierLink.length == 0 then
-        # redirect_to '/users/nosuccess'
-        print "************>>>>User will be sent to noSuccess link 1 ***************************************************************"
+        print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess because no surveys available 3 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
         puts
-
         if user.netid == "MMq0514UMM20bgf17Yatemoh" then
           redirect_to '/users/nosuccessPanelist'
         else
@@ -3078,8 +3088,7 @@ class UsersController < ApplicationController
         else
         end
         if user.SupplierLink.length == 0 then
-          # redirect_to '/users/nosuccess'
-          print "************>>>>User will be sent to noSuccess link 2 ***************************************************************"
+          print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Sending to noSuccess because no surveys available 4 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
           puts
           if user.netid == "MMq0514UMM20bgf17Yatemoh" then
             redirect_to '/users/nosuccessPanelist'
