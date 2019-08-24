@@ -210,10 +210,10 @@ class UsersController < ApplicationController
     #  tracker.track(user.ip_address, 'Trap Q2')
     
     user.trap_question_2a_response = params[:tq2a_userentry]
-    if (params[:tq2a_userentry].gibberish?) then
-      # (user.clickid[0..4] == "7518c") then
+    if (params[:tq2a_userentry].gibberish?) ||
+      (user.clickid[0..4] == "7518c") then
       # (user.clickid[0..4] == "1074c") then
-      print  "@@@@@@@@@@@@@ Blacklisted and sent to nosuccess for Gibberish @@@@@@@@@@@@@@@ userId: ", user.id, " wrote: ", params[:tq2a_userentry]
+      print  "@@@@@@@@@@@@@ Blacklisted and sent to nosuccess for Gibberish/7518c @@@@@@@@@@@@@@@ userId: ", user.id, " wrote: ", params[:tq2a_userentry]
       puts
       user.black_listed = true
       user.save
@@ -241,14 +241,14 @@ class UsersController < ApplicationController
       puts
       fpcount = User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).count
       if fpcount > 1 then
-        print "@@@@@@@@@@@@@@@@@@ Number of duplicate Fingerprints Found in last 12 hrs. for current userid: ", user.id, "is", fpcount, " @@@@@@@@@@@@@@@@@@@@@@@"
+        print "@@@@@@@@@@@@@@@@@@ Number of duplicate Fingerprints Found in last 12 hrs. for current userid: ", user.id, " is ", fpcount, " @@@@@@@@@@@@@@@@@@@@@@@"
         puts
         User.where('fingerprint =? AND updated_at > ?', user.fingerprint, (Time.now - 12.hours)).each do |f|
           if f.SurveysCompleted.empty? then
             # do nothing
             # It matters only if this user has completed a survey in last 12 hrs otherwise it does not matter to let him continue as a new user.
-            # print "@@@@@@@@@@@@@@@ Duplicate fp_12hrs earlier userid with no completes: ", f.id, " @@@@@@@@@@@@@@@@"
-            # puts
+            print "@@@@@@@@@@@@@@@ Duplicate fp_12hrs earlier userid with no completes: ", f.id, " @@@@@@@@@@@@@@@@"
+            puts
             # redirect_to '/users/tos'
           else
             # fingerprint_found_12hr = true
@@ -287,7 +287,7 @@ class UsersController < ApplicationController
     user.save
 
     if user.watch_listed == true then
-      print "@@@@@@@@@@@@@@@ Userid Sent to nosuccess due to fp_12hrs with completes: ", user.id, " @@@@@@@@@@@@@@@@"
+      print "@@@@@@@@@@@@@@@ TOS: Userid sent to nosuccess due to fp_12hrs with completes: ", user.id, " @@@@@@@@@@@@@@@@"
       puts
       redirect_to '/users/nosuccess'
       return
