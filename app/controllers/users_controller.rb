@@ -210,10 +210,18 @@ class UsersController < ApplicationController
     #  tracker.track(user.ip_address, 'Trap Q2')
     
     user.trap_question_2a_response = params[:tq2a_userentry]
+
+    # CAN ALSO COMPARE ZIP IN LAST 30 MINS -> ususally no duplicates should be there -> might be more specific
+    # print "@@@@@@@@@@@@@@@@@@@@@@@@ Testing trap_question_2a_response ", user.trap_question_2a_response, " for userid ", user.id, " @@@@@@@@@@@@@@@@"
+    # puts
+    # tq2a_response_count = User.where('trap_question_2a_response = ? AND updated_at > ?', user.trap_question_2a_response, (Time.now - 2.hours)).count
+
     if (params[:tq2a_userentry].gibberish?) ||
-      (user.clickid[0..4] == "7518c") then
+      (user.clickid[0..4] == "7518c") ||
+      (user.clickid[0..4] == "7833c") then
+      # (tq2a_count > 1)
       # (user.clickid[0..4] == "1074c") then
-      print  "@@@@@@@@@@@@@ Blacklisted and sent to nosuccess for Gibberish/7518c @@@@@@@@@@@@@@@ userId: ", user.id, " wrote: ", params[:tq2a_userentry]
+      print  "@@@@@@@@@@@@@ Blacklisted and sent to nosuccess for Gibberish/7518c/7833c/tq2a_response_count>1 @@@@@@@@@@@@@@@ userId: ", user.id, " wrote: ", params[:tq2a_userentry]
       puts
       user.black_listed = true
       user.save
@@ -247,13 +255,13 @@ class UsersController < ApplicationController
           if f.SurveysCompleted.empty? then
             # do nothing
             # It matters only if this user has completed a survey in last 12 hrs otherwise it does not matter to let him continue as a new user.
-            print "@@@@@@@@@@@@@@@ Duplicate fp_12hrs earlier userid with no completes: ", f.id, " @@@@@@@@@@@@@@@@"
+            print "@@@@@@@@@@@@@@@ Duplicate fp_12hrs earlier userid and netid with no completes: ", f.id, f.netid, " @@@@@@@@@@@@@@@@"
             puts
             # redirect_to '/users/tos'
           else
             # fingerprint_found_12hr = true
             user.watch_listed = true
-            print "@@@@@@@@@@@@@@@ First duplicate fp_12hrs userid with completes: ", f.id, " @@@@@@@@@@@@@@@@"
+            print "@@@@@@@@@@@@@@@ First duplicate fp_12hrs userid and netid with completes: ", f.id, f.netid, " @@@@@@@@@@@@@@@@"
             puts
             user.save
             # redirect_to '/users/tos'
